@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BF2E485F-FF39-4164-87A5-C71038063555}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Maintenance</RootNamespace>
+    <AssemblyName>Maintenance</AssemblyName>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>..\PlannedMaintenance\bin\Debug\</OutputPath>
+    <DocumentationFile>Maintenance.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>Maintenance.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>..\PlannedMaintenance\bin\x86\Debug\</OutputPath>
+    <DocumentationFile>Maintenance.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.vb</CodeAnalysisModuleSuppressionsFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DocumentationFile>Maintenance.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>C:\Program Files (x86)\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.vb</CodeAnalysisModuleSuppressionsFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLL References\Common.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Images.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraBars.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGrid.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPrinting.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Charts.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v15.2.Wizard, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Sparkline.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v15.2.UI, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v15.2.Extensions, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeList.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Common" />
+    <Import Include="DevExpress.XtraReports.UI" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="Utility" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PART.Designer.vb">
+      <DependentUpon>PART.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PART.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PARTLIST.Designer.vb">
+      <DependentUpon>PARTLIST.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PARTLIST.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WDOCVIEWER.Designer.vb">
+      <DependentUpon>WDOCVIEWER.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WDOCVIEWER.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WDOCVIEWERLIST.Designer.vb">
+      <DependentUpon>WDOCVIEWERLIST.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WDOCVIEWERLIST.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="frmImageViewer.Designer.vb">
+      <DependentUpon>frmImageViewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmImageViewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PARTPURCHASE.Designer.vb">
+      <DependentUpon>PARTPURCHASE.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PARTPURCHASE.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PURCHASELIST.Designer.vb">
+      <DependentUpon>PURCHASELIST.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PURCHASELIST.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="frmPlannedDate.Designer.vb">
+      <DependentUpon>frmPlannedDate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmPlannedDate.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MDOCVIEWER.Designer.vb">
+      <DependentUpon>MDOCVIEWER.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MDOCVIEWER.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MDOCVIEWERLIST.Designer.vb">
+      <DependentUpon>MDOCVIEWERLIST.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MDOCVIEWERLIST.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WORKDUE.Designer.vb">
+      <DependentUpon>WORKDUE.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WORKDUE.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="frmWork.Designer.vb">
+      <DependentUpon>frmWork.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmWork.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDefaultDate.Designer.vb">
+      <DependentUpon>frmDefaultDate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmDefaultDate.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NCMEASURES.Designer.vb">
+      <DependentUpon>NCMEASURES.vb</DependentUpon>
+    </Compile>
+    <Compile Include="NCMEASURES.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="frmUpdateNC.Designer.vb">
+      <DependentUpon>frmUpdateNC.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmUpdateNC.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NONCONFORM.Designer.vb">
+      <DependentUpon>NONCONFORM.vb</DependentUpon>
+    </Compile>
+    <Compile Include="NONCONFORM.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="frmNC.Designer.vb">
+      <DependentUpon>frmNC.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmNC.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RUNNINGHOURS.Designer.vb">
+      <DependentUpon>RUNNINGHOURS.vb</DependentUpon>
+    </Compile>
+    <Compile Include="RUNNINGHOURS.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WORKDONE.Designer.vb">
+      <DependentUpon>WORKDONE.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WORKDONE.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WORKLIST.Designer.vb">
+      <DependentUpon>WORKLIST.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WORKLIST.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PART.resx">
+      <DependentUpon>PART.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PARTLIST.resx">
+      <DependentUpon>PARTLIST.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WDOCVIEWER.resx">
+      <DependentUpon>WDOCVIEWER.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WDOCVIEWERLIST.resx">
+      <DependentUpon>WDOCVIEWERLIST.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmImageViewer.resx">
+      <DependentUpon>frmImageViewer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PARTPURCHASE.resx">
+      <DependentUpon>PARTPURCHASE.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PURCHASELIST.resx">
+      <DependentUpon>PURCHASELIST.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPlannedDate.resx">
+      <DependentUpon>frmPlannedDate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MDOCVIEWER.resx">
+      <DependentUpon>MDOCVIEWER.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MDOCVIEWERLIST.resx">
+      <DependentUpon>MDOCVIEWERLIST.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WORKDUE.resx">
+      <DependentUpon>WORKDUE.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmWork.resx">
+      <DependentUpon>frmWork.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDefaultDate.resx">
+      <DependentUpon>frmDefaultDate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NCMEASURES.resx">
+      <DependentUpon>NCMEASURES.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmUpdateNC.resx">
+      <DependentUpon>frmUpdateNC.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NONCONFORM.resx">
+      <DependentUpon>NONCONFORM.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmNC.resx">
+      <DependentUpon>frmNC.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RUNNINGHOURS.resx">
+      <DependentUpon>RUNNINGHOURS.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WORKDONE.resx">
+      <DependentUpon>WORKDONE.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WORKLIST.resx">
+      <DependentUpon>WORKLIST.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\licenses.licx" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BaseControl\BaseControl.vbproj">
+      <Project>{868D4ED4-A0B1-4B3D-8510-C5D9D67C70E8}</Project>
+      <Name>BaseControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.vbproj">
+      <Project>{7915F0F1-4CA4-4B72-AA01-3FDED09DFB5E}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
