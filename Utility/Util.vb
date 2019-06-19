@@ -3,10 +3,10 @@ Imports System.Drawing.Drawing2D
 
 Public Module Util
 
-    Public USE_SPECTRAL_CON As Boolean = True, USE_TRUSTED_CON As Boolean, SQL_SERVER As String, SQL_USER_NAME As String, SQL_PASSWORD As String
-    Public VERSION_NUMBER As String, VERSION_DATE As Date, HDD_ID As String
     Public Declare Function GetWindowThreadProcessId Lib "user32.dll" (ByVal hWnd As IntPtr, ByRef lpdwProcessId As Integer) As Integer
     Public Declare Function FindWindow Lib "user32.dll" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As IntPtr
+    Public USE_SPECTRAL_CON As Boolean = True, USE_TRUSTED_CON As Boolean, SQL_SERVER As String, SQL_USER_NAME As String, SQL_PASSWORD As String
+    Public VERSION_NUMBER As String, VERSION_DATE As Date, HDD_ID As String
     Public SEL_COLOR As System.Drawing.Color = System.Drawing.Color.FromArgb(200, 247, 200)
     Public EDITED_COLOR As System.Drawing.Color = System.Drawing.Color.FromArgb(87, 191, 200)
     Public EDITED_FOCUSED_COLOR As System.Drawing.Color = System.Drawing.Color.FromArgb(144, 219, 200)
@@ -23,6 +23,784 @@ Public Module Util
     Public CURRENT_DEPARTMENT As String, CURRENT_RANK As String, CURRENT_MAINUNIT As String, CURRENT_CATEGORY As String, CURRENT_UNIT As String = "", CURRENT_WORK As Integer, CURRENT_DUEDAYS As String, CURRENT_DUEHOURS As Integer, CURRENT_PERIOD As Integer, CURRENT_WOMAINTENANCE As Boolean = False, CURRENT_CONDITION_CHECKED As Boolean = False
     Public AdmRank As DataTable, AdmDept As DataTable
     Public Const APP_SHORT_NAME = "PMS"
+
+#Region "Utility functions"
+
+    ''' <summary>
+    ''' Get the application directory.
+    ''' </summary>
+    ''' <returns>Application Directory</returns>
+    ''' <remarks>
+    ''' Value of APP_PATH which is set via SetAppPath(System.Windows.Forms.Application.StartupPath) called on the Application Events of the Main Form.
+    ''' </remarks>
+    Public Function GetAppPath() As String
+        Return APP_PATH
+    End Function
+
+    ''' <summary>
+    ''' Set the application directory.
+    ''' </summary>
+    ''' <param name="nPath">System.Windows.Forms.Application.StartupPath</param>
+    ''' <remarks>called on the Application Events of the Main Form.</remarks>
+    Public Sub SetAppPath(ByVal nPath As String)
+        APP_PATH = nPath
+    End Sub
+
+    ''' <summary>
+    ''' Convert integer mCode/Period with YYYYmm format to Date. If cDay is 0, it will return days of month.
+    ''' </summary>
+    ''' <param name="nPeriod">Serve as Year and Month for the date</param>
+    ''' <param name="nDay">Day part of the date</param>
+    ''' <returns>Date based on MCode/Period and cDay</returns>
+    ''' <remarks>If nDay is 0 then it will return Days of Month.</remarks>
+    Public Function NumCodeToDate(ByVal nPeriod As Integer, ByVal nDay As Integer) As Date
+        Return DateSerial(nPeriod \ 100, nPeriod Mod 100, IIf(nDay > 0, nDay, GetDaysOfMonth(DateSerial(nPeriod \ 100, nPeriod Mod 100, 1))))
+    End Function
+
+    ''' <summary>
+    ''' Gets the number of days in a month.
+    ''' </summary>
+    ''' <param name="dDate">Applicable date</param>
+    ''' <returns>Number of days of given date.</returns>
+    ''' <remarks></remarks>
+    Public Function GetDaysOfMonth(ByVal dDate As Date) As Integer
+        dDate = DateAdd(DateInterval.Month, 1, dDate)
+        Return DateAdd(DateInterval.Day, -1, DateSerial(dDate.Year, dDate.Month, 1)).Day
+    End Function
+
+    ''' <summary>
+    ''' Gets the number of days in a month.
+    ''' </summary>
+    ''' <param name="nPeriod">Applicable Period</param>
+    ''' <returns>Number of days of given Period.</returns>
+    ''' <remarks></remarks>
+    Public Function GetDaysOfMonth(ByVal nPeriod As Integer) As Integer
+        Dim dDate = DateAdd(DateInterval.Month, 1, DateSerial(nPeriod \ 100, nPeriod Mod 100, 1))
+        Return DateAdd(DateInterval.Day, -1, dDate).Day
+    End Function
+
+    ''' <summary>
+    ''' Add default value to a nullable object.
+    ''' </summary>
+    ''' <param name="obj">Object to be replaced if it's null</param>
+    ''' <param name="objValueIfNull">Replacement value</param>
+    ''' <returns>The obj if not null, otherwise objValueIfNull</returns>
+    ''' <remarks></remarks>
+    Public Function IfNull(ByVal obj As Object, ByVal objValueIfNull As Object) As Object
+        If obj Is System.DBNull.Value Or obj Is Nothing Then
+            Return objValueIfNull
+        Else
+            Return obj
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Get the age based on Birth date.
+    ''' </summary>
+    ''' <param name="bday">Date of Birth</param>
+    ''' <returns>The age based on birthday.</returns>
+    ''' <remarks></remarks>
+    Public Function GetAge(ByVal bday As Date) As Integer
+        Return Now.Year - bday.Year - IIf(Now.Month < bday.Month OrElse (Now.Month = bday.Month And Now.Day < bday.Day), 1, 0)
+    End Function
+
+    ''' <summary>
+    ''' Check if the string is Unicode.
+    ''' </summary>
+    ''' <param name="str">String to be checked.</param>
+    ''' <returns>True if the string is Unicode, otherwise false.</returns>
+    ''' <remarks></remarks>
+    Public Function ISUnicode(ByVal str As String) As Boolean
+        Dim c As Integer
+        For c = 0 To str.Length - 1
+            If AscW(str.Chars(c)) > 255 Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
+
+    ''' <summary>
+    ''' Converts a memory stream to string.
+    ''' </summary>
+    ''' <param name="str">Stream</param>
+    ''' <returns>Converted string from stream</returns>
+    ''' <remarks></remarks>
+    Public Function StreamToString(str As System.IO.MemoryStream) As String
+        Dim reader As New System.IO.StreamReader(str)
+        str.Seek(0, System.IO.SeekOrigin.Begin)
+        Return reader.ReadToEnd()
+    End Function
+
+    ''' <summary>
+    ''' Removes invalid characters on specified path.
+    ''' </summary>
+    ''' <param name="path"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function RemoveInvalidFileNameChars(path As String)
+        Dim c As Char, invalidChar As String = System.IO.Path.GetInvalidFileNameChars()
+        For Each c In invalidChar
+            path = path.Replace(c.ToString(), "")
+        Next
+        Return path
+    End Function
+
+    ''' <summary>
+    ''' Logs error on the App_Dir\Errors directory. 
+    ''' </summary>
+    ''' <param name="ErrMsg">Error message</param>
+    ''' <remarks>Writes error message on Errors directory.</remarks>
+    Public Sub LogErrors(ErrMsg As String)
+        Dim strFileName As String, stTrace As New System.Diagnostics.StackTrace()
+        Dim sfFrame As System.Diagnostics.StackFrame, sfFrames() As System.Diagnostics.StackFrame = stTrace.GetFrames, strMethods As String = ""
+        For Each sfFrame In sfFrames
+            Dim strMethodName As String = sfFrame.GetMethod.Name
+            If strMethodName = "Invoke" Then Exit For
+            'Exclude current sub
+            If strMethodName <> "LogErrors" Then strMethods = strMethods & "<" & strMethodName & ">"
+        Next
+        If Not System.IO.Directory.Exists(GetAppPath() & "\Errors") Then
+            MkDir(GetAppPath() & "\Errors")
+        End If
+        strFileName = GetAppPath() & "\Errors" & "\Error_" & Now.ToString("yyyyMMdd") & ".txt"
+        Using sw As New System.IO.StreamWriter(strFileName, True)
+            sw.WriteLine(Format(Now, "yyyy-MM-dd hh:mm:ss") & " " & strMethods & " : " & ErrMsg)
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' Converts date into a YYYYMM number code.
+    ''' </summary>
+    ''' <param name="dDay">Date to be converted</param>
+    ''' <returns>Integer YYYYMM</returns>
+    ''' <remarks></remarks>
+    Public Function DateToNumCode(ByVal dDay As Date) As Int32
+        Return CType(dDay.Year.ToString("0000") & dDay.Month.ToString("00"), Int32)
+    End Function
+
+    ''' <summary>
+    ''' Converts image into Bytes.
+    ''' </summary>
+    ''' <param name="img">Image to be converted</param>
+    ''' <returns>Binary version of the image</returns>
+    ''' <remarks></remarks>
+    Public Function ImageToByte(ByVal img As System.Drawing.Image) As Byte()
+        Dim ms = New IO.MemoryStream()
+        img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg) ' Use appropriate format here
+        Return ms.ToArray()
+    End Function
+
+#End Region
+
+#Region "SQL Encryption"
+
+    ''' <summary>
+    ''' Replaces the default database in a connection string.
+    ''' </summary>
+    ''' <param name="strConnection">Connection String</param>
+    ''' <param name="strNewDB">Name of the default database.</param>
+    ''' <returns>Connection string with a new default database</returns>
+    ''' <remarks></remarks>
+    Public Function Replace_DB_Connection(strConnection As String, strNewDB As String) As String
+        Dim strTmp As String, strRetVal As String = ""
+        For Each strTmp In strConnection.Split(";"c)
+            If strTmp.Split("="c).GetValue(0).ToString.ToLower = "database" Then
+                If strNewDB <> "" Then strRetVal = strRetVal & "Database=" & strNewDB & ";"
+            Else
+                If strTmp <> "" Then strRetVal = strRetVal & strTmp & ";"
+            End If
+        Next
+        Return strRetVal
+    End Function
+
+    ''' <summary>
+    ''' Get the database on a specified connection string.
+    ''' </summary>
+    ''' <param name="strConnection">Connect string</param>
+    ''' <returns>Database name from the connection string</returns>
+    ''' <remarks></remarks>
+    Private Function GetConnectionDbName(strConnection As String) As String
+        Dim strTmp As String
+        For Each strTmp In strConnection.Split(";"c)
+            If strTmp.Split("="c).GetValue(0).ToString.ToLower = "database" Then
+                Return strTmp.Split("="c).GetValue(1).ToString.ToLower
+            End If
+        Next
+        Return ""
+    End Function
+
+    ''' <summary>
+    ''' Create Master Key for STI_SYS database which will be used to encrypt the details of the main(wrh_db, sas_tbl e.t.c.) database key
+    ''' </summary>
+    ''' <param name="strConnection">Connection string to the server.</param>
+    ''' <param name="strClientPassword">Password supplied by client.</param>
+    ''' <remarks></remarks>
+    Function Create_STI_SYS_Key(strConnection As String, strClientPassword As String) As String
+        Dim strRandomPass As String = System.Guid.NewGuid.ToString
+        Dim con As SqlClient.SqlConnection, cmd As SqlClient.SqlCommand, strSQL As String
+        con = New SqlClient.SqlConnection(Replace_DB_Connection(strConnection, "sti_sys"))
+        Try
+            strSQL = "CREATE MASTER KEY ENCRYPTION BY PASSWORD = '" & strRandomPass & "'" & Environment.NewLine & _
+                     "CREATE CERTIFICATE STICertificate WITH SUBJECT= 'STI Certificate'" & Environment.NewLine & _
+                     "CREATE SYMMETRIC KEY STIKEy WITH ALGORITHM =AES_256 ENCRYPTION BY CERTIFICATE STICertificate" & Environment.NewLine & _
+                     "OPEN SYMMETRIC KEY STIKEy DECRYPTION BY CERTIFICATE STICertificate" & Environment.NewLine & _
+                     "DELETE FROM [sti_sys].[dbo].[sys_config] WHERE CONVERT(VARCHAR(max), DECRYPTBYKEY(Code)) IN('VAL','KEY')" & Environment.NewLine & _
+                     "INSERT INTO [dbo].[sys_config] VALUES (ENCRYPTBYKEY(KEY_GUID('STIKEy'),'VAL'),ENCRYPTBYKEY(KEY_GUID('STIKEy'),'" & sysMpsUserPassword("ENCRYPT", strClientPassword) & "'))" & Environment.NewLine & _
+                     "INSERT INTO [dbo].[sys_config] VALUES (ENCRYPTBYKEY(KEY_GUID('STIKEy'),'KEY'),ENCRYPTBYKEY(KEY_GUID('STIKEy'),'" & sysMpsUserPassword("ENCRYPT", strRandomPass) & "'))" & Environment.NewLine & _
+                     "CLOSE symmetric key STIKEy"
+            cmd = New SqlClient.SqlCommand(strSQL, con)
+            con.Open()
+            cmd.ExecuteNonQuery()
+            cmd.Dispose()
+            con.Close()
+            Return strRandomPass
+        Catch ex As Exception
+            LogErrors(ex.Message)
+            If con.State <> ConnectionState.Closed Then
+                con.Close()
+            End If
+            Return ""
+        End Try
+    End Function
+
+#End Region
+
+
+#Region "MPS Encryption functions"
+    Function usrRailFence(ByVal cMode As String, ByVal nInterval As Integer, ByVal cDocument As String) As String
+        Dim nCtr As Integer, cTopSum As String = "", cBottomSum As String = ""
+        Dim cTempSum As String = "", nCutPos As Integer
+
+        Select Case UCase(cMode)
+            Case "ENCRYPT"
+                'do railfence encryption
+                nCtr = 1
+                Do
+                    If (nCtr Mod 2) = 1 Then
+                        'odd positions on top
+                        cTopSum = cTopSum & Mid$(cDocument, ((nCtr - 1) * nInterval) + 1, nInterval)
+                    Else
+                        cBottomSum = cBottomSum & Mid$(cDocument, ((nCtr - 1) * nInterval) + 1, nInterval)
+                    End If
+
+                    If (nCtr * nInterval) > Len(cDocument) Then
+                        Exit Do
+                    End If
+
+                    nCtr = nCtr + 1
+
+                Loop
+
+                Return cTopSum & cBottomSum
+
+            Case "DECRYPT"
+
+                'split top & bottom sums
+                Do While Len(cDocument) > 0
+                    cTopSum = cTopSum & Left$(cDocument, nInterval)
+                    cDocument = Mid(cDocument, nInterval + 1)
+                    If Len(cDocument) > 0 Then
+                        cBottomSum = Right$(cDocument, CType(IIf(Len(cDocument) >= nInterval, nInterval, Len(cDocument)), Integer)) & cBottomSum
+                        cDocument = Mid$(cDocument, 1, CType(Len(cDocument) - CType(IIf(Len(cDocument) >= nInterval, nInterval, Len(cDocument)), Integer), Integer))
+                    End If
+                Loop
+
+                nCutPos = Len(cTopSum)
+
+                'do railfence decryption
+                For nCtr = 1 To nCutPos Step nInterval
+                    cTempSum = cTempSum & Mid$(cTopSum, nCtr, nInterval) & CType(IIf((Len(cDocument) Mod (nInterval + 1)) = 0 Or nCtr < nCutPos, Mid$(cBottomSum, nCtr, nInterval), ""), String)
+                Next
+
+                Return cTempSum
+            Case Else
+                Return ""
+        End Select
+
+    End Function
+
+    Function usrCryptography(ByVal cMode As String, ByVal cDocument As String) As String
+        On Error Resume Next
+        Dim nCtr As Integer, cCheckSum As String, cOrigString As String
+        Dim nCutPos As Integer, cTopSum As String, cBottomSum As String, cTempSum As String
+
+        Select Case UCase(cMode)
+            Case "ENCRYPT"
+                cTopSum = ""
+                cBottomSum = ""
+                cCheckSum = ""
+
+                'get ascii value
+                For nCtr = 1 To Len(cDocument)
+                    cCheckSum = cCheckSum & Format$(Asc(Mid$(cDocument, nCtr, 1)), "000")
+                Next
+
+                'do railfence encryption
+                Return usrRailFence("ENCRYPT", 1, cCheckSum)
+
+            Case "DECRYPT"
+                cOrigString = ""
+
+                cTempSum = usrRailFence("DECRYPT", 1, cDocument)
+                'convert to ascii
+                For nCtr = 1 To Len(cTempSum) Step 3
+                    cOrigString = cOrigString & Chr(CType(Mid$(cTempSum, nCtr, 3), Integer))
+                Next
+
+                Return cOrigString
+            Case Else
+                Return ""
+        End Select
+
+    End Function
+
+    Public Function sysMpsUserPassword(ByVal cMode As String, ByVal cPassword As String) As String
+        Dim cRetVal As String, x() As String
+        Select Case UCase(cMode)
+            Case "ENCRYPT"
+                Randomize()
+                cPassword = Format(Rnd() * 999, "000") & "|" & cPassword & "|" & Format(Rnd() * 999, "000")
+                cRetVal = usrRailFence("encrypt", 1, cPassword)
+                Return usrCryptography("encrypt", cRetVal)
+            Case "DECRYPT"
+                cRetVal = usrCryptography("decrypt", cPassword)
+                x = Split(usrRailFence("decrypt", 1, cRetVal), "|")
+                Try
+                    If x.Length > 1 Then
+                        Return x(1)
+                    Else
+                        Return ""
+                    End If
+                Catch ex As Exception
+                    Return ""
+                End Try
+            Case Else
+                Return ""
+        End Select
+
+    End Function
+#End Region
+
+#Region "Chilkat Functions"
+
+    'Send email using the Email Account saved in tblSTIService_internet_settings
+    Public Function SendEmail(INET_Host As String, INET_Port As Integer, INET_User As String, INET_Pwd As String, INET_UseSSL As Boolean, INET_TLS As Boolean, strEmailFrom As String, strEmailTo As String, ByVal subject As String, ByVal body As String, ByVal attachment As String) As Boolean
+        Try
+            Dim smtp As New Chilkat.MailMan, email As New Chilkat.Email
+            If smtp.UnlockComponent("SPCTASMAILQ_8962DBBgnC9s") Then
+                smtp.SmtpHost = INET_Host
+                smtp.SmtpPort = INET_Port
+                smtp.SmtpUsername = INET_User
+                smtp.SmtpPassword = INET_Pwd
+                smtp.ConnectTimeout = 60
+                smtp.SmtpSsl = INET_UseSSL
+                smtp.StartTLS = INET_TLS
+                email.AddTo("SM Office Email Address", strEmailTo)
+                email.From = strEmailFrom
+                email.Subject = subject
+                email.Body = body
+                If attachment <> "" Then email.AddFileAttachment(attachment)
+                If smtp.SendEmail(email) Then
+                    smtp.CloseSmtpConnection()
+                    Return True
+                Else
+                    LogErrors("Send Email Error: " & smtp.LastErrorText)
+                    smtp.CloseSmtpConnection()
+                    Return False
+                End If
+            Else
+                LogErrors("Send Email Error: " & smtp.LastErrorText)
+                Return False
+            End If
+        Catch ex As Exception
+            LogErrors("Send Email Error: " & ex.Message)
+            Return False
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' FUNCTION : zip files given by cFileSpec (a semi-colon delimited list of masks) ex: cFileSpec = "*.csv;*log.txt"
+    ''' </summary>
+    ''' <param name="cZipFile"></param>
+    ''' <param name="cFileSpec"></param>
+    ''' <param name="cErr"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function ZipFiles(ByVal cZipFile As String, ByVal cFileSpec As String, Optional ByRef cErr As String = "") As Boolean
+        Dim bSuccess As Boolean = True
+        Dim zip As New Chilkat.Zip()
+        Dim nCtr As Integer
+
+        '  Any string unlocks the component for the 1st 30-days.
+        If bSuccess Then
+            bSuccess = zip.UnlockComponent("SPCTASZIP_4gpKXqstjEuf")
+            If Not bSuccess Then
+                cErr = zip.LastErrorText
+            End If
+        End If
+
+        If bSuccess Then
+            bSuccess = zip.NewZip(cZipFile)
+            If (bSuccess <> True) Then
+                cErr = zip.LastErrorText
+            End If
+        End If
+
+        '  Append a directory tree.  The call to AppendFiles does
+        '  not read the file contents or append them to the zip
+        '  object in memory.  It simply appends references
+        '  to the files so that when WriteZip or WriteZipAndClose
+        '  is called, the referenced files are streamed and compressed
+        '  into the .zip output file.
+
+        If bSuccess Then
+            Dim recurse As Boolean
+            recurse = False
+            For nCtr = 1 To CountItemDelimited(cFileSpec, ";")
+                bSuccess = bSuccess And zip.AppendFiles(GetItemDelimited(cFileSpec, nCtr, ";"), recurse)
+                If (bSuccess <> True) Then
+                    cErr = cErr & IIf(cErr.Length > 0, vbCrLf, "") & zip.LastErrorText
+                End If
+            Next
+        End If
+
+        If bSuccess Then
+            bSuccess = zip.WriteZipAndClose()
+            If (bSuccess <> True) Then
+                cErr = zip.LastErrorText
+            End If
+        End If
+
+        Return bSuccess
+    End Function
+
+    ''' <summary>
+    ''' Unzip files in [cZipFile] and extract to folder [cExtractTo]
+    ''' </summary>
+    ''' <param name="cZipFile"></param>
+    ''' <param name="cExtractTo"></param>
+    ''' <param name="cErr"></param>
+    ''' <param name="nFileCount"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function ZipExtract(ByVal cZipFile As String, ByVal cExtractTo As String, Optional ByRef cErr As String = "", Optional ByRef nFileCount As Integer = 0) As Boolean
+        Dim bSuccess As Boolean = True
+        Dim zip As New Chilkat.Zip()
+
+        '  Any string unlocks the component for the 1st 30-days.
+        If bSuccess Then
+            bSuccess = zip.UnlockComponent("SPCTASZIP_4gpKXqstjEuf")
+            If (bSuccess <> True) Then
+                cErr = zip.LastErrorText
+            End If
+        End If
+
+        If bSuccess Then
+            bSuccess = zip.OpenZip(cZipFile)
+            If (bSuccess <> True) Then
+                cErr = zip.LastErrorText
+            End If
+        End If
+
+        If bSuccess Then
+            nFileCount = zip.Unzip(cExtractTo)
+            If nFileCount = -1 Then
+                cErr = zip.LastErrorText
+            End If
+        End If
+
+        Return bSuccess
+
+    End Function
+
+    Public Function ZipFile(ByVal cSourceFiles() As String, ByVal cDestFile As String) As Boolean
+        Try
+            Dim zip As New Chilkat.Zip(), cFile As String
+            zip.UnlockComponent("SPCTASZIP_4gpKXqstjEuf")
+            zip.NewZip(cDestFile)
+            For Each cFile In cSourceFiles
+                zip.AppendOneFileOrDir(cFile, AcceptRejectRule.Cascade)
+            Next
+            Return zip.WriteZipAndClose()
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    Public Function ZipFile(ByVal cSourceFile As String, ByVal cDestFile As String) As Boolean
+        Try
+            Dim zip As New Chilkat.Zip()
+            zip.UnlockComponent("SPCTASZIP_4gpKXqstjEuf")
+            zip.NewZip(cDestFile)
+            zip.AppendOneFileOrDir(cSourceFile, False)
+            Return zip.WriteZipAndClose()
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    Public Function UnzipFile(ByVal cSourceFile As String, ByVal cDestFile As String) As String
+        Dim zip As New Chilkat.Zip, nFile As String
+        Try
+            zip.UnlockComponent("SPCTASZIP_4gpKXqstjEuf")
+            zip.OpenZip(cSourceFile)
+            nFile = zip.FirstEntry.FileName
+            zip.Unzip(cDestFile)
+            zip.CloseZip()
+            If nFile = "" Then
+                LogErrors(String.Format("UZF: {0}", zip.LastErrorText))
+                Return ""
+            Else
+                Return nFile
+            End If
+        Catch ex As Exception
+            LogErrors(String.Format("UZF: {0}", zip.LastErrorText))
+            Return ""
+        End Try
+    End Function
+
+    Public Function UnzipFile(ByVal cSourceFile As String, ByVal cDestFile As String, ByVal OverwriteExisting As Boolean) As String
+        Dim zip As New Chilkat.Zip, nFile As String
+        Try
+            zip.UnlockComponent("SPCTASZIP_4gpKXqstjEuf")
+            zip.OverwriteExisting = OverwriteExisting
+            zip.OpenZip(cSourceFile)
+            nFile = zip.FirstEntry.FileName
+            zip.Unzip(cDestFile)
+            zip.CloseZip()
+            If nFile = "" Then
+                LogErrors(String.Format("UZF: {0}", zip.LastErrorText))
+                Return ""
+            Else
+                Return nFile
+            End If
+        Catch ex As Exception
+            LogErrors(String.Format("UZF: {0}", zip.LastErrorText))
+            Return ""
+        End Try
+    End Function
+
+#End Region
+
+#Region "ItemDelimited: Legacy functions from MPS"
+
+    'RETURNS: <nItemNo> value item in <cPairedList> being delimited by <cPairSet>
+    '   example:
+    '                             "[]"  <--- <cPairSet>
+    '       "[item1][item2]...[itemN]"   <--- <cPairedList>
+    '
+    '
+    '       ** setting <nItemNo> parameter to 2 will make the function return the text "item2"
+    '
+    Public Function usrGetPairedValue(ByVal cPairedList As String, ByVal cPairSet As String, ByVal nItemNo As Integer) As String
+        Dim cDelimiter As String, nItemCnt As Integer
+        Dim cRetVal As String
+
+        If Len(cPairSet) <> 2 Then
+            'Msgbox("<cPairSet> parameter must be 2 characters in length. This will denote the starting and ending delimiter for each item in <cPairedList> parameter.", vbCritical, "usrGetPairedValue()")
+            Return ""
+            Exit Function
+        End If
+
+        cDelimiter = Right$(cPairSet, 1) & Left$(cPairSet, 1) 'reverse pair set
+        nItemCnt = CountItemDelimited(cPairedList, cDelimiter)
+        cRetVal = GetItemDelimited(cPairedList, nItemNo, cDelimiter)
+
+        If nItemNo = 1 Then
+            cRetVal = Mid$(cRetVal, 2, IIf(nItemCnt = 1, Len(cRetVal) - 2, Len(cRetVal) - 1))
+        ElseIf nItemNo = nItemCnt Then
+            If Len(cRetVal) > 0 Then
+                cRetVal = Left$(cRetVal, Len(cRetVal) - 1)
+            Else
+                cRetVal = ""
+            End If
+        End If
+
+        usrGetPairedValue = cRetVal
+
+    End Function
+    'RETURNS: item index of cSearchStr in cItemList
+    '
+    'NOTES:
+    'Search is CASE-SENSITIVE
+    '
+    Public Function SearchItemDelimited(ByVal cItemList, ByVal cDelimitedBy, ByVal cSearchStr)
+        Dim nPos As Integer
+
+        cItemList = cDelimitedBy & cItemList & cDelimitedBy
+        nPos = InStr(cItemList, cDelimitedBy & cSearchStr & cDelimitedBy)
+        If nPos > 1 Then
+            nPos = nPos - 1
+        End If
+        SearchItemDelimited = IndexItemDelimited(cItemList, cDelimitedBy, nPos) 'get index number
+
+    End Function
+
+    Public Function CountItemDelimited(ByVal cItemList, ByVal cDelimitedBy)
+        Dim nCount As Integer
+        nCount = CountStr(cItemList, cDelimitedBy)
+        If nCount > 0 Then
+            nCount = nCount + 1
+        ElseIf Len(cItemList) > 0 Then
+            nCount = 1
+        End If
+        CountItemDelimited = nCount
+    End Function
+
+
+    Public Function DeleteItemDelimited(ByVal cItemList As String, ByVal nItemNo As Integer, ByVal cDelimitedBy As String)
+        Dim nPlace As Integer, nCount As Integer, nStart As Integer, bAppended As Integer
+        Dim cNewItemList As String
+
+        DeleteItemDelimited = cItemList
+
+        If nItemNo > 0 Then
+
+            bAppended = False
+
+            If CountStr(cItemList, cDelimitedBy) < nItemNo Then
+                cItemList = cItemList & cDelimitedBy
+                bAppended = True
+            End If
+            nStart = 1
+            nCount = 0
+            nPlace = InStr(nStart, cItemList, cDelimitedBy)
+            Do While nPlace
+                nCount = nCount + 1
+                If nCount = nItemNo Then
+                    cNewItemList = Mid$(cItemList, 1, nStart - 1) & Mid$(cItemList, nPlace + Len(cDelimitedBy))
+                    If bAppended And Len(cNewItemList) > 0 Then
+                        cNewItemList = Left$(cNewItemList, Len(cNewItemList) - Len(cDelimitedBy))
+                    End If
+                    DeleteItemDelimited = cNewItemList
+                    Exit Do
+                Else
+                    nStart = nPlace + Len(cDelimitedBy)
+                    nPlace = InStr(nStart, cItemList, cDelimitedBy)
+                End If
+            Loop
+
+        End If
+
+    End Function
+
+    Public Function GetItemDelimited(ByVal cItemList As String, ByVal nItemNo As Integer, ByVal cDelimitedBy As String)
+        Dim nPlace As Integer, nCount As Integer, nStart As Integer
+        Dim bAppended
+
+        GetItemDelimited = ""
+
+        If CountStr(cItemList, cDelimitedBy) < nItemNo Then
+            cItemList = cItemList & cDelimitedBy
+            bAppended = True
+        End If
+        nStart = 1
+        nCount = 0
+        nPlace = InStr(nStart, cItemList, cDelimitedBy)
+        Do While nPlace
+            nCount = nCount + 1
+            If nCount = nItemNo Then
+                GetItemDelimited = Mid$(cItemList, nStart, (nPlace) - nStart)
+                Exit Do
+            Else
+                nStart = nPlace + Len(cDelimitedBy)
+                nPlace = InStr(nStart, cItemList, cDelimitedBy)
+            End If
+        Loop
+
+    End Function
+
+    'FUNCTION: Returns the Index of the item occupied by
+    'a certain character position
+    '
+    '
+    Public Function IndexItemDelimited(ByVal cItemList, ByVal cDelimitedBy, ByVal nCharPos)
+        Dim nTotItems As Integer, nEndCount As Integer
+        If nCharPos <= Len(cItemList) And Len(cItemList) <> 0 And nCharPos <> 0 Then
+            nTotItems = CountItemDelimited(cItemList, cDelimitedBy)
+            cItemList = Mid$(cItemList, nCharPos)
+            nEndCount = CountItemDelimited(cItemList, cDelimitedBy)
+            IndexItemDelimited = nTotItems - nEndCount + 1
+        Else
+            IndexItemDelimited = 0
+        End If
+    End Function
+
+
+    Public Function SaveItemDelimited(ByRef cItemList As String, ByVal nItemNo As Integer, ByVal cDelimitedBy As String, ByVal cSaveStr As String)
+        Dim nPlace As Integer, nCount As Integer, nStart As Integer
+        Dim cNewItemList As String
+        Dim bFound As Boolean = False, nCtr As Integer
+
+        SaveItemDelimited = False
+
+        If CountItemDelimited(cItemList, cDelimitedBy) = 1 And nItemNo = 1 Then
+            cItemList = cSaveStr
+        Else
+            If CountStr(cItemList, cDelimitedBy) < nItemNo Then
+                For nCtr = 1 To (nItemNo - CountItemDelimited(cItemList, cDelimitedBy))
+                    cItemList = cItemList & cDelimitedBy & "?"
+                Next
+            End If
+            nStart = 1
+            nCount = 0
+            nPlace = InStr(nStart, cItemList, cDelimitedBy)
+
+            Do While nPlace
+                nCount = nCount + 1
+                If nCount = nItemNo Then
+                    'first position to (last position - 1)
+                    cNewItemList = Mid$(cItemList, 1, nStart - 1) & cSaveStr & Mid$(cItemList, nPlace)
+                    SaveItemDelimited = True
+                    cItemList = cNewItemList
+                    bFound = True
+                    Exit Do
+                Else
+                    nStart = nPlace + Len(cDelimitedBy)
+                    nPlace = InStr(nStart, cItemList, cDelimitedBy)
+                    If nPlace = 0 And nCount = (nItemNo - 1) Then
+                        'last position
+                        cNewItemList = Mid$(cItemList, 1, nStart - 1) & cSaveStr
+                        SaveItemDelimited = True
+                        cItemList = cNewItemList
+                        bFound = True
+                        Exit Do
+                    End If
+                End If
+            Loop
+        End If
+
+    End Function
+    'FUNCTION: Counts the occurence of cCountWhat in cCount string
+    '
+    '
+    Public Function CountStr(ByVal cCount, ByVal cCountWhat) As Integer
+        Dim nCount As Integer, nnCtr As Integer
+        If Not IsNull(cCount) And Not IsNull(cCountWhat) Then
+            cCount = UCase(cCount)
+            cCountWhat = UCase(cCountWhat)
+            nCount = 0
+            For nnCtr = 1 To Len(cCount)
+                If Len(cCount) - nnCtr + 1 >= Len(cCountWhat) Then
+                    If Mid$(cCount, nnCtr, Len(cCountWhat)) = cCountWhat Then
+                        nCount = nCount + 1
+                    End If
+                End If
+            Next
+        End If
+        CountStr = nCount
+    End Function
+
+    Private Function IsNull(ByVal xItem) As Boolean
+        If xItem Is Nothing Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+#End Region
 
     Public Function ExtractFromTextFile(strFile As String) As String
         Dim strRetval As String = ""
@@ -50,6 +828,13 @@ Public Module Util
             ccolumn.DataType = System.Type.GetType("System.String")
             ctable.Columns.Add(ccolumn)
 
+            If strField2 <> "" Then
+                ccolumn = New DataColumn
+                ccolumn.ColumnName = strField2
+                ccolumn.DataType = System.Type.GetType("System.String")
+                ctable.Columns.Add(ccolumn)
+            End If
+
             ccolumn = New DataColumn
             ccolumn.ColumnName = "Selected"
             ccolumn.DataType = System.Type.GetType("System.Boolean")
@@ -58,8 +843,19 @@ Public Module Util
             For Each strTemp In strFileText.Split(Environment.NewLine)
                 strTemp = strTemp.Replace(vbLf, "")
                 If strTemp <> "" Then
-                    Dim crow() As Object = {strTemp, True}
-                    ctable.Rows.Add(crow)
+                    If strField2 = "" Then
+                        Dim crow() As Object = {strTemp, True}
+                        ctable.Rows.Add(crow)
+                    Else
+                        Dim strRows() As String = strTemp.Split(vbTab)
+                        If strRows.Length > 1 Then
+                            Dim crow() As Object = {strRows(0), strRows(1), True}
+                            ctable.Rows.Add(crow)
+                        Else
+                            Dim crow() As Object = {strRows(0), "", True}
+                            ctable.Rows.Add(crow)
+                        End If
+                    End If
                 End If
             Next
             frm.MainGrid.DataSource = ctable
@@ -93,6 +889,13 @@ Public Module Util
         ccolumn.DataType = System.Type.GetType("System.String")
         ctable.Columns.Add(ccolumn)
 
+        If strField2 <> "" Then
+            ccolumn = New DataColumn
+            ccolumn.ColumnName = strField2
+            ccolumn.DataType = System.Type.GetType("System.String")
+            ctable.Columns.Add(ccolumn)
+        End If
+
         ccolumn = New DataColumn
         ccolumn.ColumnName = "Selected"
         ccolumn.DataType = System.Type.GetType("System.Boolean")
@@ -101,8 +904,19 @@ Public Module Util
         For Each strTemp In strFromClip.Split(Environment.NewLine)
             strTemp = strTemp.Replace(vbLf, "")
             If strTemp <> "" Then
-                Dim crow() As Object = {strTemp, True}
-                ctable.Rows.Add(crow)
+                If strField2 = "" Then
+                    Dim crow() As Object = {strTemp, True}
+                    ctable.Rows.Add(crow)
+                Else
+                    Dim strRows() As String = strTemp.Split(vbTab)
+                    If strRows.Length > 1 Then
+                        Dim crow() As Object = {strRows(0), strRows(1), True}
+                        ctable.Rows.Add(crow)
+                    Else
+                        Dim crow() As Object = {strRows(0), "", True}
+                        ctable.Rows.Add(crow)
+                    End If
+                End If
             End If
         Next
         frm.MainGrid.DataSource = ctable
@@ -123,7 +937,6 @@ Public Module Util
         Else
             Return Nothing
         End If
-
     End Function
 
     Public Function PasteAdminData(db As SQLDB, strKey As String, strTable As String, ByRef strValue As String, ByRef bExist As Boolean) As String
@@ -136,6 +949,18 @@ Public Module Util
         End If
         Return strCode
     End Function
+
+    Public Function PastePartData(db As SQLDB, strKey As String, strTable As String, ByRef strValue As String, ByRef strPartNumber As String, ByRef bExist As Boolean) As String
+        strValue = strValue.ToString.Replace("'", "''")
+        Dim strCode As String = db.DLookUp(strKey, "dbo." & strTable, "", "Name='" & strValue & "' AND PartNumber='" & strPartNumber & "'")
+        If strCode = "" Then
+            bExist = False
+            strCode = GenerateID(db, strKey, strTable)
+            db.RunSql("INSERT INTO dbo." & strTable & "(" & strKey & ", Name, PartNumber, LastUpdatedBy) VALUES('" & strCode & "', '" & strValue & "', '" & strPartNumber & "','" & GetUserName() & "')")
+        End If
+        Return strCode
+    End Function
+
 
     Public Function ExtractTextFromPDF(file As String)
         Dim strText As String = ""
@@ -176,13 +1001,6 @@ Public Module Util
         Return retImg
     End Function
 
-    Public Function StreamToString(stream As System.IO.MemoryStream) As String
-        stream.Position = 0
-        Using sr As New System.IO.StreamReader(stream, System.Text.Encoding.UTF8)
-            Return sr.ReadToEnd
-        End Using
-    End Function
-
     Public Function StringToStream(strStream As String) As System.IO.MemoryStream
         Dim arrByte As Byte() = System.Text.Encoding.UTF8.GetBytes(strStream)
         Return New System.IO.MemoryStream(arrByte)
@@ -200,13 +1018,6 @@ Public Module Util
         Return cDir & IIf(Microsoft.VisualBasic.Right(cDir, 1) = cSeparator, "", cSeparator)
     End Function
 
-    Public Function RemoveInvalidFileNameChars(ByVal path As String)
-        Dim c As Char, invalidChar As String = System.IO.Path.GetInvalidFileNameChars()
-        For Each c In invalidChar
-            path = path.Replace(c.ToString(), "")
-        Next
-        Return path
-    End Function
 
     <System.Diagnostics.DebuggerStepThrough()> _
     Public Function GetUserName() As String
@@ -318,10 +1129,6 @@ Public Module Util
         Return "DateSerial(" & (mCode \ 100).ToString("0000") & "," & (mCode Mod 100).ToString("00") & "," & cDay.ToString("00") & ")"
     End Function
 
-    Public Function GetDaysOfMonth(ByVal dDate As Date) As Integer
-        dDate = DateAdd(DateInterval.Month, 1, dDate)
-        Return Day(DateAdd(DateInterval.Day, -1, NumCodeToDate(CType(Year(dDate).ToString("0000") & Month(dDate).ToString("00"), Integer), 1)))
-    End Function
 
     <System.Diagnostics.DebuggerStepThrough()> _
     Public Function MultiString(ByVal _Number As Integer, ByVal _Char As Char)
@@ -702,16 +1509,6 @@ Public Module Util
         Return retVal
     End Function
 
-
-    Public Function ISUnicode(ByVal str As String) As Boolean
-        Dim c As Integer
-        For c = 0 To str.Length - 1
-            If AscW(str.Chars(c)) > 255 Then
-                Return True
-            End If
-        Next
-        Return False
-    End Function
 
     'Public Sub LogErrors(ErrMsg As String)
     '    Dim strFileName As String

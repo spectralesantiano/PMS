@@ -182,13 +182,13 @@
         End If
 
         LoadSettings()
-        'If Debugger.IsAttached Then
-        '    BypassLogonForDebugging()
-        '    LoadContent("UNITS", True)
-        'Else
-        Logon()
-        ' End If
-        rpTools.Visible = False
+        If Debugger.IsAttached Then
+            BypassLogonForDebugging()
+            LoadContent("UNITS", True)
+        Else
+            Logon()
+        End If
+        'rpTools.Visible = False
         IsLoaded = True
         Me.Visible = True
     End Sub
@@ -963,6 +963,7 @@
 
     Private Sub EXPORTADMIN_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles EXPORTADMIN.ItemClick
         Dim frm As New frmExportAdmin, strFile As String, nExpType As Integer = 1
+        Dim sqls As New ArrayList, tbl As DataTable, drRow As DataRow
         frm.ShowDialog()
         If frm.IS_EXPORTED Then
             If MsgBox("Please specify where you want to save export files.", MsgBoxStyle.Information Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
@@ -974,18 +975,48 @@
                     If frm.chkUnits.Checked Then nExpType += 2
                     If frm.chkParts.Checked Then nExpType += 4
 
-                    Using sw As New System.IO.StreamWriter(strFile & ".txt", False, System.Text.Encoding.Unicode)
-                        PMSDB.BeginReader("EXEC [dbo].[EXPORTDATA] @nExpType=" & nExpType & ", @bFullExport=1, @strParameter=''")
-                        While PMSDB.Read
-                            sw.Write(Shuffle(PMSDB.ReaderItem(0), True) & "Ç")
-                        End While
-                        PMSDB.CloseReader()
+                    sqls.Add(IMO_NUMBER & "|1|" & ChangeToSQLDate(Now).Replace("'", "") & "|" & "PMS Admin Data.")
+
+                    tbl = PMSDB.CreateTable("SELECT [WorkCode],[Name],[LastUpdatedBy],ISNULL([SortCode],0) SortCode FROM [dbo].[tblAdmWork]")
+                    sqls.Add("tblAdmWork")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("WorkCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'," & drRow("SortCode"))
+                    Next
+                    sqls.Add("END")
+
+                    tbl = PMSDB.CreateTable("SELECT [ComponentCode],[Name],[LastUpdatedBy] FROM [dbo].[tblAdmComponent]")
+                    sqls.Add("tblAdmComponent")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("ComponentCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = PMSDB.CreateTable("SELECT [UnitCode],[UnitDesc],[ParentCode],[ComponentCode],[LocCode],[UnitNumber],[SerialNumber],[LastUpdatedBy],[Critical],[DeptCode],[CatCode],[RunningHours],[ReadingDate],[Active],[MakerCode],[Type],[Model],[RefNo],[VendorCode],[HoursPerDay] FROM [dbo].[tblAdmUnit]")
+                    sqls.Add("tblAdmUnit")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("UnitCode") & "','" & drRow("UnitDesc").ToString.Replace("'", "''") & "','" & drRow("ParentCode") & "','" & drRow("ComponentCode") & "','" & drRow("LocCode") & "','" & drRow("UnitNumber") & "','" & drRow("SerialNumber") & "','" & drRow("LastUpdatedBy") & "'," & IIf(drRow("Critical"), 1, 0) & ",'" & drRow("RunningHours") & "'," & ChangeToExportDate(drRow("ReadingDate")) & "," & IIf(drRow("Active"), 1, 0) & ",'" & drRow("MakerCode") & "','" & drRow("Type") & "','" & drRow("Model") & "','" & drRow("RefNo") & "','" & drRow("VendorCode") & "'," & drRow("HoursPerDay"))
+                    Next
+                    sqls.Add("END")
+
+                    tbl = PMSDB.CreateTable("SELECT [LocCode],[Name],[LastUpdatedBy] FROM [dbo].[tblAdmLocation]")
+                    sqls.Add("tblAdmComponent")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("LocCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    Using sw As New System.IO.StreamWriter(GetFileDir(strFile) & GetFileNameWithoutExtension(strFile) & ".txt", False, System.Text.Encoding.Unicode)
+                        Dim strTemp As String
+                        For Each strTemp In sqls
+                            'sw.Write(Shuffle(strTemp, True) & "Ç")
+                            sw.WriteLine(strTemp)
+                        Next
                     End Using
 
-                    If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
-                        Application.DoEvents()
-                        Kill(strFile & ".txt")
-                    End If
+                    'If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
+                    '    Application.DoEvents()
+                    '    Kill(strFile & ".txt")
+                    'End If
                 End If
             End If
         End If
