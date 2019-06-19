@@ -218,11 +218,10 @@ Public Class UNITS
         End If
         If e.Button = MouseButtons.Right Then
             downHitInfo = hitInfo
-            strCurrView = "pView"
+            strCurrView = "Part"
             pmCustomMenu.ShowPopup(Control.MousePosition)
         End If
     End Sub
-
     'Private Sub pView_InitNewRow(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.InitNewRowEventArgs) Handles pView.InitNewRow
     '    Dim View As DevExpress.XtraGrid.Views.Base.ColumnView = sender
     '    View.SetRowCellValue(e.RowHandle, View.Columns("pEdited"), True)
@@ -1101,6 +1100,26 @@ Public Class UNITS
                         MainView.SetRowCellValue(MainView.FocusedRowHandle, "Component", strValue)
                         MainView.UpdateCurrentRow()
                         MainView.CloseEditor()
+                    End If
+                Next
+            End If
+        ElseIf strCurrView = "Part" Then
+            If e.Item.Name = "bbiPaste" Then
+                nRow = ImportFromClipboard("Part", "PartNumber")
+            Else
+                nRow = ImportFromFile("Part", "PartNumber")
+            End If
+            If Not nRow Is Nothing Then
+                For Each crow In nRow
+                    Dim bExist As Boolean = True, strValue As String = crow("Part"), strPartNumber As String = crow("PartNumber")
+                    Dim strCode As String = PastePartData(DB, "PartCode", "tblAdmPart", strValue, strPartNumber, bExist)
+                    If Not bExist Then
+                        pView.AddNewRow()
+                        pView.SetRowCellValue(pView.FocusedRowHandle, "PartCode", strCode)
+                        pView.SetRowCellValue(pView.FocusedRowHandle, "Part", strValue)
+                        pView.SetRowCellValue(pView.FocusedRowHandle, "PartNumber", strPartNumber)
+                        pView.UpdateCurrentRow()
+                        pView.CloseEditor()
                     End If
                 Next
             End If
