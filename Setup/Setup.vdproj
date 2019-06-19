@@ -1960,6 +1960,36 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4CCF5081326A6E42ABB7289F52FE194D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5FEC305057C2400E96D110C192CC1C26"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5FFAD23CAEA742DABC85522A96A28F65"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DCAE96360C1BBCB129864809416A0347"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4692F6BC68E7426C8315134A8C54B23B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E5C2BB8A4A091A6D3B70FD12E35063A5"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1985,36 +2015,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8BB496369702496DA5DD681ED3BEE994"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5FFAD23CAEA742DABC85522A96A28F65"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DCAE96360C1BBCB129864809416A0347"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4CCF5081326A6E42ABB7289F52FE194D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5FEC305057C2400E96D110C192CC1C26"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4692F6BC68E7426C8315134A8C54B23B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -4162,7 +4162,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PMS"
         "ProductCode" = "8:{6AAE18C5-9DFE-4FFB-B734-CE0A6FDC9449}"
-        "PackageCode" = "8:{EAF1DDEF-BD92-4786-A1C4-B24F354F5AB7}"
+        "PackageCode" = "8:{2238241A-70E9-4C55-90DA-9CE5A3C59C8C}"
         "UpgradeCode" = "8:{1E2FB3CC-81AC-4220-BD49-259B66575154}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

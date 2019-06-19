@@ -84,7 +84,7 @@ Partial Class frmExportAdmin
         Me.gDetails.Controls.Add(Me.chkEquipment)
         Me.gDetails.Controls.Add(Me.chkParts)
         Me.gDetails.Controls.Add(Me.chkUnits)
-        Me.gDetails.Location = New System.Drawing.Point(18, 20)
+        Me.gDetails.Location = New System.Drawing.Point(20, 20)
         Me.gDetails.Name = "gDetails"
         Me.gDetails.Size = New System.Drawing.Size(272, 128)
         Me.gDetails.TabIndex = 9

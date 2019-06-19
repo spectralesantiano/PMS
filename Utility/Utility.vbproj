@@ -76,9 +76,6 @@
     <Reference Include="ChilkatDotNet4">
       <HintPath>..\DLL References\ChilkatDotNet4.dll</HintPath>
     </Reference>
-    <Reference Include="Common">
-      <HintPath>..\..\DLL References\Common.dll</HintPath>
-    </Reference>
     <Reference Include="DevExpress.Data.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Docs.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Pdf.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -105,7 +102,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Import Include="Common" />
     <Import Include="DevExpress.XtraPrinting.Localization" />
     <Import Include="Microsoft.VisualBasic" />
     <Import Include="System" />
@@ -117,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsVersioning.vb" />
+    <Compile Include="ExcelFile.vb" />
     <Compile Include="frmImport.Designer.vb">
       <DependentUpon>frmImport.vb</DependentUpon>
     </Compile>
@@ -147,6 +144,7 @@
     </Compile>
     <Compile Include="MyLocalization.vb" />
     <Compile Include="MyProgressBar.vb" />
+    <Compile Include="SQLDB.vb" />
     <Compile Include="Util.vb" />
   </ItemGroup>
   <ItemGroup>
