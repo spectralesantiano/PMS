@@ -17,7 +17,7 @@ Public Class MAINTENANCE
                 sqls.Add(GenerateInsertScript(Me.header, 3, "tblAdmWork", "WorkCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
                 bUpdateList = True
             Else
-                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmWork", "LastUpdatedBy='" & GetUserName() & "'", "WorkCode='" & strID & "'"))
+                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmWork", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "WorkCode='" & strID & "'"))
                 bUpdateList = True
             End If
             DB.RunSqls(sqls)

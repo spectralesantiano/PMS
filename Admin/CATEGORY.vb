@@ -19,7 +19,7 @@ Public Class CATEGORY
                 blList.SetSelection(strID)
                 RefreshData()
             Else
-                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmCategory", "LastUpdatedBy='" & GetUserName() & "'", "CatCode='" & strID & "'"))
+                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmCategory", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "CatCode='" & strID & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
                 RefreshData()
