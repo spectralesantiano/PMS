@@ -17,7 +17,7 @@ Public Class PART
                 sqls.Add(GenerateInsertScript(Me.header, 3, "tblAdmPart", "PartCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
                 bUpdateList = True
             Else
-                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmPart", "LastUpdatedBy='" & GetUserName() & "'", "PartCode='" & strID & "'"))
+                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmPart", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "PartCode='" & strID & "'"))
                 bUpdateList = True
             End If
             DB.RunSqls(sqls)
