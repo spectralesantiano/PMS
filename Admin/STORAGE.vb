@@ -18,7 +18,7 @@ Public Class STORAGE
                 blList.RefreshData()
                 blList.SetSelection(strID)
             Else
-                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmStorage", "LastUpdatedBy='" & GetUserName() & "'", "StorageCode='" & strID & "'"))
+                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmStorage", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "StorageCode='" & strID & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
                 RefreshData()
