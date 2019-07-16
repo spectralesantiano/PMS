@@ -1,9 +1,12 @@
 ﻿Imports System.ComponentModel
 Imports System.Text
+Imports System.IO
+
 Public Class frmUpdate
 
     Private Const cTable_config As String = "[sti_sys].[dbo].[tblPMSConfig]"
 
+    Dim cDatabaseName As String = "pms_db"
     Dim cServerName As String
     Dim cServerUser As String
     Dim cServerPwd As String
@@ -29,6 +32,10 @@ Public Class frmUpdate
     Dim cUpdatesFolder As String
     Dim cTemp_Folder As String
 
+    Dim versionNumber As String
+    Dim versionDate As String
+    Dim versionDesc As String
+
     Private Sub _timer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _timer.Tick
         tmr += 10
         If tmr = 100 Then
@@ -45,7 +52,7 @@ Public Class frmUpdate
     Public Sub New()
         InitializeComponent()
 
-        Dim args() As String = Environment.GetCommandLineArgs()
+        'Dim args() As String = Environment.GetCommandLineArgs()
 
         'Dim args() As String = {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam"} 'test update
         'Dim args() As String = {"APP.exe", "LOAD", "5.01.00", "C:\Spectral\UpdateSM5.obx", "Administrator", "Data Source=.\STISQLSERVER;Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"} 'test load
@@ -55,7 +62,24 @@ Public Class frmUpdate
         'For Each d In args
         '    MsgBox(d.ToString)
         'Next
+        'LOAD  "C:\Users\DeveloperOne\Documents\The Desktop\TEST_UPDFOLDER\object_update\object_update.obx" "Admin" "localhost\sqlexpress" "sa" "admin1234" "False" "False"
 
+        'For i As Integer = 0 To args.Count - 1
+        '    System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", i + " - " + args(i) & Environment.NewLine)
+        'Next
+
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Length of Params = " & args.Length & Environment.NewLine)
+
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Action Type = " & args(1) & Environment.NewLine)
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Current Version = " & args(2) & Environment.NewLine)
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Server Name = " & args(3) & Environment.NewLine)
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Server User = " & args(4) & Environment.NewLine)
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Server Password = " & args(5) & Environment.NewLine)
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " bUSE_SPECTRAL_CON = " & args(6) & Environment.NewLine)
+        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " bUSE_TRUSTED_CON = " & args(7) & Environment.NewLine)
+
+        'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Users\DeveloperOne\Documents\The Desktop\TEST_UPDFOLDER\object_update\object_update.obx", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
+        Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.01", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
         If args.Count = 8 Then
             'Update Version
             'sample: {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam", "False", "False"}
@@ -66,7 +90,7 @@ Public Class frmUpdate
             cServerPwd = args(5)
             bUSE_SPECTRAL_CON = CType(args(6), Boolean)
             bUSE_TRUSTED_CON = CType(args(7), Boolean)
-            Dim oparamClsDb As New clsDB(ConstructConnString("pms_db"))
+            Dim oparamClsDb As New clsDB(ConstructConnString(cDatabaseName))
             oDb = oparamClsDb
         ElseIf args.Count = 10 Then
             'Load Version
@@ -80,10 +104,15 @@ Public Class frmUpdate
             cServerPwd = args(7)
             bUSE_SPECTRAL_CON = CType(args(8), Boolean)
             bUSE_TRUSTED_CON = CType(args(9), Boolean)
-            Dim oparamClsDb As New clsDB(ConstructConnString("pms_db"))
+            cDatabaseName = "pms_db"
+            Dim oparamClsDb As New clsDB(ConstructConnString(cDatabaseName))
             oDb = oparamClsDb
         End If
+
+        Return
     End Sub
+
+
 
     Sub UpdateProgram()
         '******** Shared Parameters *******
@@ -184,7 +213,7 @@ Public Class frmUpdate
                                 cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
 
                                 If bSuccess Then
-                                    PerformObjectUpdates(cBak_folder, dStart)
+                                    'PerformObjectUpdates(cBak_folder, dStart)
                                 End If
 
                                 Log_Write(cFullBak_folder & cBak_folder & ".txt", sbVersionLog)
@@ -244,105 +273,42 @@ Public Class frmUpdate
                 Log_Append("Getting latest version :".PadRight(nColStandard) & nServerVersion)
                 Log_Append(StrDup(100, "-"))
 
-                'create temp folder
-                SetStatus("Creating temp_update folder ..")
-                cTemp_Folder = CleanPath(GetAppFolder) & "temp_update"
-                bSuccess = CreateUpdateFolder(cTemp_Folder)
-                Log_Append(sbVersionLog, "Create temp_folder :".PadRight(nColStandard) & GetResult(bSuccess, ""))
+                SetStatus("Reading extracted files..")
+
+                Log_Append(sbVersionLog, "Reading files :".PadRight(nColStandard) & GetResult(bSuccess, ""))
 
                 If Not bSuccess Then Exit Select
 
-                'extract update file to temp folder
-                SetStatus("Extracting Files..")
-                bSuccess = ZipExtract(cObxPath, cTemp_Folder, cErr)
-                Log_Append(sbVersionLog, "Extract Update File :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
-
-                If Not bSuccess Then Exit Select
-
-                'locate Update.txt
-                SetStatus("Locating [ Update.txt ] ..")
-                If IsPathExist(CleanPath(cTemp_Folder) & "Update.txt", False) Then
-                    bSuccess = True
-                Else
-                    bSuccess = False
-                    cErr = "Unable to find [ Update.txt ]"
-                End If
-                Log_Append(sbVersionLog, "Locate [ Update.txt ] :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
-
-                If Not bSuccess Then Exit Select
-
-                'read [ Update.txt ]
-                Dim cLine As String, cMode As String = ""
+                cCurVersion = GetVersionValueForDB(GetVersionInfo(cObxPath & "\Update.txt")(1)).ToString() '-> Get version number.
+                cTemp_Folder = cObxPath
                 cVersion = ""
-                Using sw As New System.IO.StreamReader(CleanPath(cTemp_Folder) & "Update.txt")
+
+                'Revised using the update process from ERB - 20190715 *****************************************
+                Try
                     Try
-                        While Not sw.EndOfStream
-
-                            If Not bSuccess Then Exit While
-
-                            cLine = sw.ReadLine()
-                            If Trim(cLine) <> "" Then
-                                If cLine = "[UPDATEOBJECTS]" Then
-                                    PerformObjectUpdates(cBak_folder, dStart)
-                                ElseIf cLine.Substring(0, 1) = "[" Then
-                                    cMode = cLine
-                                    Select Case UCase(cLine)
-                                        Case "[VERSION]"
-                                        Case "[/VERSIONDESC]"
-                                            cDesc = cBuilderDesc.ToString
-                                        Case "[SQLS]"
-                                            Log_Append(sbVersionLog, StrDup(100, "-"))
-                                            Log_Append(sbVersionLog, "Running Script(s)")
-                                            Log_Append(sbVersionLog, StrDup(100, "-"))
-                                            Log_Append(sbVersionLog, "Run Script".PadRight(nColStandard) & "Status")
-                                            Try
-                                                Dim bTemp As Boolean = False
-                                                bTemp = oDb.oVersionRunSql("IF NOT EXISTS (SELECT * FROM pms_db.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='MSysScripts_Loaded')" & _
-                                                        "CREATE TABLE [pms_db].[dbo].[MSysScripts_Loaded]([ID] [int] IDENTITY(1,1) NOT NULL,[ScriptFile] [varchar](200) NULL,[RunFrom] [varchar](200) NULL,[DateRun] [datetime] NULL, CONSTRAINT [PK_MSysScripts_Loaded] PRIMARY KEY CLUSTERED ( [ID] ASC )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY] ) ON [PRIMARY]")
-                                            Catch ex As Exception
-                                            End Try
-                                    End Select
-                                ElseIf cLine.Substring(0, 1) <> "'" Then
-                                    If cMode = "[VERSION]" Then
-                                        Try
-                                            If CType(cLine, String) = nServerVersion Or oDb.IsNewVersion(cLine, nServerVersion) Then
-                                                Log_Append(sbVersionLog, "Object Update Version :".PadRight(nColStandard) & cLine)
-                                                cVersion = cLine
-                                                cBak_folder = "Load_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cLine
-                                                cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
-                                                bSuccess = True
-                                            Else
-                                                Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Cannot proceed. Trying to load older version.")
-                                                bSuccess = False
-                                            End If
-                                        Catch ex As Exception
-                                            Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Error occured validating object update version.")
-                                            bSuccess = False
-                                        End Try
-                                    ElseIf cMode = "[VERSIONDATE]" Then
-                                        cVersionDate = cLine
-                                    ElseIf cMode = "[VERSIONDESC]" Then
-                                        cBuilderDesc.Append(cLine & vbCrLf)
-                                    ElseIf cMode = "[SQLS]" Then
-                                        If cLine <> "" Then
-                                             RunScript(cLine, cErr)
-                                        End If
-                                    ElseIf cMode = "[TEMPLATES]" Then
-
-                                    End If
-                                End If
-                            End If
-                        End While
+                        If oDb.IsNewVersion(cCurVersion, nServerVersion) Then
+                            Log_Append(sbVersionLog, "Object Update Version :".PadRight(nColStandard) & cCurVersion)
+                            cVersion = cCurVersion
+                            cBak_folder = "Load_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cCurVersion
+                            cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
+                            PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cCurVersion)
+                            bSuccess = True
+                        Else
+                            Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Cannot proceed. Trying to load older version.")
+                            bSuccess = False
+                        End If
                     Catch ex As Exception
-                        cErr = ex.Message
+                        Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Error occured validating object update version.")
                         bSuccess = False
                     End Try
-                End Using
+                Catch ex As Exception
+                    cErr = ex.Message
+                    bSuccess = False
+                End Try
+                'End Revise *****************************************
 
                 If Not bSuccess Then Exit Select
-
                 If cVersion <> "" Then
-
                     'put files in updates folder
                     Try
                         My.Computer.FileSystem.CopyDirectory(cTemp_Folder, CleanPath(cUpdatesFolder) & cVersion, True)
@@ -359,7 +325,7 @@ Public Class frmUpdate
                     'insert to update table
                     cUsername = cUsername & " - ( " & My.Computer.Name & " )"
                     cUsername = cUsername.Replace("'", "''")
-                    bSuccess = oDb.UpdateServerVersion(cVersion, cVersionDate, cDesc.Replace("'", "''"), cUsername, cErr)
+                    bSuccess = oDb.UpdateServerVersion(versionNumber, versionDate, versionDesc.Replace("'", "''"), cUsername, cErr)
                     Log_Append(sbVersionLog, "Update Server Version :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
 
                     'bakup files in local
@@ -370,6 +336,9 @@ Public Class frmUpdate
                         Dim cZipFiles As String
                         Dim cObjectsBakFile As String = cFullBak_folder & cBak_folder & ".obxbak"
                         cZipFiles = cFullBak_folder & "*.*"
+
+                        CreateBackupFolder(GetAppFolder(), cBak_folder)
+
                         bTmpSuccess = ZipFiles(cObjectsBakFile, cZipFiles, cErr)
                         bSuccess = bSuccess And bTmpSuccess
 
@@ -405,6 +374,302 @@ Public Class frmUpdate
                 Finish("LOAD", "Load Version_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & ".txt") 'finish process
         End Select
     End Sub
+
+#Region "Updated Object Update Feature"
+
+    Private Sub CreateBackupFolder(rootFolder As String, backupFolder As String)
+        Try
+            Dim backup As String = rootFolder & "\obj_bak"
+            If (Not Directory.Exists(backup)) Then
+                MkDir(backup)
+            End If
+
+            MkDir(backup & "\" & backupFolder)
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+
+    Private Sub RunScripts(path As String, ByVal scripts As String(), Optional ByRef cErr As String = "")
+
+        Try
+            Dim queries As New List(Of String)
+            Dim result As Boolean = oDb.oVersionRunSql("IF NOT EXISTS (SELECT * FROM pms_db.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='MSysScripts_Loaded')" & _
+                   "CREATE TABLE [pms_db].[dbo].[MSysScripts_Loaded]([ID] [int] IDENTITY(1,1) NOT NULL,[ScriptFile] [varchar](200) NULL,[RunFrom] [varchar](200) NULL,[DateRun] [datetime] NULL, CONSTRAINT [PK_pms_db_MSysScripts_Loaded] PRIMARY KEY CLUSTERED ( [ID] ASC )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY] ) ON [PRIMARY]")
+
+            For Each query As String In scripts
+                If (query.EndsWith(".sql")) Then
+                    If oDb.oVersionDLookUp("[ScriptFile]", "[pms_db].[dbo].[MSysScripts_Loaded]", "", "[ScriptFile]='" & query & "'").Equals("") Then
+                        Using sqlw As New System.IO.StreamReader(CleanPath(path) & "\" & Trim(query))
+                            Dim scriptToAdd As String = sqlw.ReadToEnd()
+                            queries.Add(scriptToAdd)
+                            queries.Add("INSERT INTO [pms_db].[dbo].[MSysScripts_Loaded]([ScriptFile],[RunFrom],[DateRun]) VALUES ('" & query & "','" & My.Computer.Name.Replace("'", "") & "',GETDATE())")
+                        End Using
+                    Else
+                        cErr = "Script File Already Executed."
+                        'File.AppendAllText(statusFilePath, oDb.MSSql_GetServerTime() & " - SCRIPT FILE ALREADY EXECUTED : " & query & Environment.NewLine)
+                    End If
+                Else   '-> This is a sql script in Update.txt
+                    cErr = ""
+                    queries.Add(query)
+                End If
+                'construct Log
+                Dim cDisplayLine As String = ""
+                If query.Length >= 40 Then
+                    cDisplayLine = query.Substring(0, 40) & " .. "
+                Else
+                    cDisplayLine = query & " .. "
+                End If
+                Log_Append(sbVersionLog, cDisplayLine.PadRight(nColStandard) & GetResult(True, cErr))
+            Next
+            If (queries.Count >= 1) Then
+                oDb.RunTransaction(queries, cErr)
+
+            End If
+        Catch ex As Exception
+            cErr = "Error encountered: " & ex.Message
+        End Try
+    End Sub
+
+
+
+
+    Private Function RunSqlScriptForUpdate(val As String(), sourceFolder As String) As Boolean
+        Log_Append(sbVersionLog, StrDup(100, "-"))
+        Log_Append(sbVersionLog, "Running Script(s)")
+        Log_Append(sbVersionLog, StrDup(100, "-"))
+        Log_Append(sbVersionLog, "Run Script".PadRight(nColStandard) & "Status")
+        Try
+            Dim bTemp As Boolean = False
+            bTemp = oDb.oVersionRunSql("IF NOT EXISTS (SELECT * FROM " & cDatabaseName & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='MSysScripts_Loaded')" & _
+                    "CREATE TABLE [" & cDatabaseName & "].[dbo].[MSysScripts_Loaded]([ID] [int] IDENTITY(1,1) NOT NULL,[ScriptFile] [varchar](200) NULL,[RunFrom] [varchar](200) NULL,[DateRun] [datetime] NULL, CONSTRAINT [PK_pms_db_MSysScripts_Loaded] PRIMARY KEY CLUSTERED ( [ID] ASC )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY] ) ON [PRIMARY]")
+            RunScripts(sourceFolder, val, cErr)
+
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    Private Function GetItemsOnLineItem(arr As String(), val As String) As String()
+        Dim retVal As New List(Of String)
+        Dim started As Boolean = False
+        For Each item As String In arr
+            If (item.Equals(val)) Then
+                started = True
+                Continue For
+            End If
+            If (item.Equals("UpdateManager.exe")) Then Continue For 'Ignore UpdateManager.exe
+            If (started And (Not val.Equals("[SQLS]")) And item.Contains("[")) Then Exit For
+            If (started) Then retVal.Add(item)
+        Next
+        Return retVal.ToArray()
+    End Function
+
+    Private Function GetFileContentsToUpdate(arr As String()) As List(Of String)
+        Dim retVal As New List(Of String)
+        For Each contents As String In arr
+            If (IsNotVersionKeywords(UCase(contents))) Then
+                retVal.Add(contents)
+            End If
+        Next
+        Return retVal
+    End Function
+
+    Private Function GetVersionValueForDB(val As String)
+        Try
+            If (val.Length > 0) Then
+                Dim r = val.Split("=")
+                If (r.Length > 1) Then
+                    Return r(1).Trim()
+                End If
+            End If
+        Catch ex As Exception
+            Dim msg = ex.Message
+        End Try
+        Return ""
+    End Function
+
+    Private Function GetVersionInfo(scriptFile As String) As ArrayList
+        Dim retVal As New ArrayList
+        Try
+            Dim contents = System.IO.File.ReadAllLines(scriptFile)
+            For i As Integer = 0 To contents.Length - 1
+                If (contents(i).Equals("[OBJECTS]")) Then
+                    Return retVal
+                Else
+                    retVal.Add(contents(i))
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("GetVersionInfo - " & ex.Message)
+        End Try
+        Return retVal
+    End Function
+
+    Private Function IsNotVersionKeywords(val As String) As Boolean
+        If (val.Contains("[INFO]") Or
+            val.Contains("VERSION=") Or
+            val.Contains("DATE=") Or
+            val.Contains("DESC=")) Then
+            Return False
+        End If
+        Return True
+    End Function
+
+    Private Function GetUpdateFile(arr As String(), valToFind As String) As String
+        For Each content As String In arr
+            If (content.ToLower().Contains(valToFind.ToLower())) Then
+                Return content
+            End If
+        Next
+        Return ""
+    End Function
+
+    Public Sub PerformObjectUpdates(ByVal sourceFolder As String, ByVal backupFolder As String, ByVal startDate As DateTime, cFolder As String)
+        Try
+            SetStatus("Performing updates..")
+            Log_Append(sbVersionLog, StrDup(100, "-"))
+            Log_Append(sbVersionLog, "Performing updates ..")
+            Log_Append(sbVersionLog, StrDup(100, "-"))
+            Log_Append(sbVersionLog, "OBJECT NAME".PadRight(nColStandard) & "STATUS".PadRight(30) & "CREATE BACKUP")
+
+            Dim arrProgramFiles() As String = UCase(oDb.oVersionDLookUp("Value", cTable_config, "", "Code='PROGRAMFILES'").ToString).Split(";"c)
+            Dim arrUpdateFiles() As String = getFiles(cTemp_Folder, "*.*", IO.SearchOption.TopDirectoryOnly)
+            Dim updateFile = GetUpdateFile(arrUpdateFiles, "Update.txt")
+            If (updateFile <> "" And System.IO.File.Exists(updateFile)) Then '-> If the Update.txt exists, read to contents, ignore the version portion. 
+                Dim versionInfo = GetVersionInfo(updateFile)
+                If (Not IsNothing(versionInfo) Or versionInfo.Count > 0) Then
+                    versionNumber = GetVersionValueForDB(versionInfo(1).ToString()) '-> Get version number of Update.txt
+                    versionDate = GetVersionValueForDB(versionInfo(2).ToString())   '-> Get version Date number of Update.txt
+                    versionDesc = GetVersionValueForDB(versionInfo(3).ToString())   '-> Get version Description of Update.txt
+                End If
+                Dim contentsToUpdate As List(Of String) = GetFileContentsToUpdate(System.IO.File.ReadAllLines(updateFile))
+
+                'Get update files based on type.
+                Dim scripts As String() = GetItemsOnLineItem(contentsToUpdate.ToArray(), "[SQLS]")    '-> For script files .sql or hardcoded sql command on Update.txt
+                Dim objects As String() = GetItemsOnLineItem(contentsToUpdate.ToArray(), "[OBJECTS]") '-> For files like .dll, .exe, etc.
+                Dim images As String() = GetItemsOnLineItem(contentsToUpdate.ToArray(), "[IMAGES]")   '-> For files like .png, .jpg, .ico, .gif, .etc
+                Dim docFiles As String() = GetItemsOnLineItem(contentsToUpdate.ToArray(), "[DOCS]")   '-> For files like .xlsx, .doc, .txt, .etc
+
+                'Process each update files.
+                Dim isScriptsUpdated As Boolean = RunSqlScriptForUpdate(scripts, IIf(sourceFolder.Contains(cFolder), sourceFolder, sourceFolder & "\" & cFolder)) 'Execute sql scripts first.
+                Dim isObjectsUpdated As Boolean = ProcessUpdateFiles(arrProgramFiles, sourceFolder, backupFolder, objects, startDate) 'Execute for Objects, DLLs, and exes.
+                Dim isImagesUpdated As Boolean = ProcessUpdateFiles(arrProgramFiles, sourceFolder, backupFolder, images, startDate)
+                Dim isDocFilesUpdated As Boolean = ProcessUpdateFiles(arrProgramFiles, sourceFolder, backupFolder, docFiles, startDate)
+            End If
+            Log_Append(sbVersionLog, StrDup(100, "-"))
+            Log_Append(sbVersionLog, "Files Updated :".PadRight(nColStandard) & nFilesUpdated.ToString)
+            Log_Append(sbVersionLog, "Files Error :".PadRight(nColStandard) & nFilesError.ToString)
+            Log_Append(sbVersionLog, "Invalid Files :".PadRight(nColStandard) & nFilesInvalid.ToString)
+            Log_Append(sbVersionLog, StrDup(100, "-"))
+        Catch ex As Exception
+            Dim str As String = ex.Message
+        End Try
+    End Sub
+
+
+    Private Function ProcessProgramObjects(ByVal programObjects As String(), fileName As String, cBak_Folder As String, dStart As DateTime) As Boolean
+        Try
+            SetStatus("Updating Object [ " & fileName & " ] ..")
+            Dim cErr() As String = {"", ""}
+            Dim bCopiedUpdated() As Boolean = UpdateObjectFile(fileName, cBak_Folder, cTemp_Folder, dStart, cErr)
+            Log_Append(sbVersionLog, fileName.PadRight(nColStandard) & GetResult(bCopiedUpdated(1), cErr(1)).PadRight(30) & GetResult(bCopiedUpdated(0), cErr(0)))
+        Catch ex As Exception
+
+        End Try
+    End Function
+
+    Private Sub BackUpFileIfExists(fullFileName As String, file As String, sourceFolder As String, backupFolder As String, dStart As DateTime, ByRef errorMessages As String(), ByRef updateResult As Boolean())
+        Try
+            If (FileIO.FileSystem.FileExists(fullFileName)) Then 'If it exists in the destination folder, backup the file.
+                FileIO.FileSystem.CopyFile(sourceFolder & "\" & file, backupFolder & "\" & GetFileWithoutExtension(file) & "_" & dStart.ToString("yyyyMMddHHmmss") & GetFileExtension(file), True) 'The backup folder usually named as the current date with the updated version number.
+                errorMessages(0) = "OK"
+                updateResult(0) = True
+            Else
+                errorMessages(0) = "N/A"
+                updateResult(0) = True
+            End If
+        Catch ex As Exception
+            errorMessages(0) = ex.Message
+            updateResult(0) = False
+        End Try
+    End Sub
+
+    Private Function GetFolderHeirarchy(val As String) As String()
+        Dim retVal As String() = {}
+        If (val.Length > 0) Then
+            If (val.StartsWith("\")) Then
+                retVal = val.Substring(1).Split("\")
+            Else
+                retVal = val.Split("\")
+            End If
+        End If
+        Return retVal
+    End Function
+
+    Private Function ProcessUpdateFiles(ByVal programObjects As String(), ByVal sourceFolder As String, ByVal backupFolder As String, itemsToProcess As String(), dStart As DateTime) As Boolean
+
+        Dim file As String = ""
+        Dim fullFileName As String = ""
+        Dim errorMessages() As String = {"", ""}
+        Dim updateResult() As Boolean = {False, False}
+        For Each item As String In itemsToProcess
+            Try
+                Dim itemPart As String() = GetFolderHeirarchy(item) '-> Extract folder heirarchy to create. Format should be \Folder\SubFolder\..\..\File.dll
+                If (IsNothing(itemPart) Or itemPart.Count.Equals(0)) Then Return False '-> If there is no item to process, halt the function. 
+                Dim rootPath As String = Application.StartupPath
+                If (itemPart.Count = 1) Then 'Save file to Root.
+                    file = itemPart(0) 'Get file.
+                ElseIf (itemPart.Count > 1) Then 'Has subfolders
+                    For i As Integer = 0 To itemPart.Count - 2 'Ignore the last part, which contains the file name to update.
+                        If (CreateFolder(rootPath & "\" & itemPart(i))) Then 'Check if folder exists. If so, create it, otherwise do nothing.
+                            rootPath &= "\" & itemPart(i) 'Contruct the destination folder for this update.
+                        End If
+                    Next
+                    file = itemPart(itemPart.Count - 1) 'Get the file name.
+                End If
+                fullFileName = rootPath & "\" & file 'Construct the full path of the file to update.
+                If (programObjects.Contains(UCase(file))) Then
+                    ProcessProgramObjects(programObjects, file, backupFolder, dStart) '-> From original code of ProcessUpdateFiles() method, 
+                Else
+                    SetStatus("Updating Other Object [ " & file & " ] ..")
+                    BackUpFileIfExists(fullFileName, file, sourceFolder, backupFolder, dStart, errorMessages, updateResult)
+                    FileIO.FileSystem.CopyFile(sourceFolder & "\" & file, fullFileName, True) 'Copy the file
+                    nFilesUpdated = nFilesUpdated + 1
+                    errorMessages(1) = "OK"
+                    updateResult(1) = True
+                    Log_Append(sbVersionLog, file.PadRight(nColStandard) & GetResult(updateResult(1), errorMessages(1)).PadRight(30) & GetResult(updateResult(0), errorMessages(0)))
+                End If
+            Catch ex As Exception
+                nFilesError = nFilesError + 1
+                errorMessages(1) = ex.Message
+                updateResult(1) = False
+            End Try
+            'Log_Append(sbVersionLog, file.PadRight(nColStandard) & GetResult(updateResult(1), errorMessages(1)).PadRight(30) & GetResult(updateResult(0), errorMessages(0)))
+        Next
+        Return True
+    End Function
+
+    Private Function CreateFolder(path As String) As Boolean
+        Try
+            If (FileIO.FileSystem.DirectoryExists(path)) Then
+                Return True
+            Else
+                FileIO.FileSystem.CreateDirectory(path)
+                Return True
+            End If
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+
+#End Region
+
+
 
 #Region "Main Methods/Functions"
     Private Sub Init(ByVal cActionType As String, ByRef bSuccess As Boolean)
@@ -469,42 +734,6 @@ Public Class frmUpdate
         Log_Append(StrDup(100, "*"))
         Log_Append("END")
         Log_Append(StrDup(100, "*"))
-    End Sub
-
-    Public Sub PerformObjectUpdates(ByVal cBak_folder As String, ByVal dStart As DateTime)
-        SetStatus("Performing updates..")
-        Log_Append(sbVersionLog, StrDup(100, "-"))
-        Log_Append(sbVersionLog, "Performing updates ..")
-        Log_Append(sbVersionLog, StrDup(100, "-"))
-        Log_Append(sbVersionLog, "OBJECT NAME".PadRight(nColStandard) & "STATUS".PadRight(30) & "CREATE BACKUP")
-
-        Dim arrProgramFiles() As String = UCase(oDb.oVersionDLookUp("Value", cTable_config, "", "Code='PROGRAMFILES'").ToString).Split(";"c)
-
-        Dim arrUpdateFiles() As String = getFiles(cTemp_Folder, "*.*", IO.SearchOption.TopDirectoryOnly)
-        Dim updatefile As String
-        For Each updatefile In arrUpdateFiles
-            Dim cFile As String = GetFile(updatefile)
-            If cFile <> "Update.txt" Then
-                If arrProgramFiles.Contains(UCase(cFile)) Then
-                    'update program objects
-                    SetStatus("Updating Object [ " & cFile & " ] ..")
-                    Dim cErr() As String = {"", ""}
-                    Dim bCopiedUpdated() As Boolean = UpdateObjectFile(cFile, cBak_folder, cTemp_Folder, dStart, cErr)
-                    Log_Append(sbVersionLog, cFile.PadRight(nColStandard) & GetResult(bCopiedUpdated(1), cErr(1)).PadRight(30) & GetResult(bCopiedUpdated(0), cErr(0)))
-                Else
-                    'other objects
-                    SetStatus("Updating Other Object [ " & cFile & " ] ..")
-                    Dim cErr() As String = {"", ""}
-                    Dim bCopiedUpdated() As Boolean = UpdateOtherObjects(cFile, cBak_folder, cTemp_Folder, dStart, cErr)
-                    Log_Append(sbVersionLog, cFile.PadRight(nColStandard) & GetResult(bCopiedUpdated(1), cErr(1)).PadRight(30) & GetResult(bCopiedUpdated(0), cErr(0)))
-                End If
-            End If
-        Next
-        Log_Append(sbVersionLog, StrDup(100, "-"))
-        Log_Append(sbVersionLog, "Files Updated :".PadRight(nColStandard) & nFilesUpdated.ToString)
-        Log_Append(sbVersionLog, "Files Error :".PadRight(nColStandard) & nFilesError.ToString)
-        Log_Append(sbVersionLog, "Invalid Files :".PadRight(nColStandard) & nFilesInvalid.ToString)
-        Log_Append(sbVersionLog, StrDup(100, "-"))
     End Sub
 
     Private Sub RunScript(ByVal cLine As String, Optional ByRef cErr As String = "")
@@ -903,4 +1132,5 @@ Public Class frmUpdate
 
     End Function
 #End Region
+
 End Class
