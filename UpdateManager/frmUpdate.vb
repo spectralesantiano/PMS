@@ -80,6 +80,7 @@ Public Class frmUpdate
 
         'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Users\DeveloperOne\Documents\The Desktop\TEST_UPDFOLDER\object_update\object_update.obx", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
         'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.01", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
+        'Dim args() As String = {"APP.exe", "UPDATE", "1.00.00", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
         If args.Count = 8 Then
             'Update Version
             'sample: {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam", "False", "False"}
@@ -111,8 +112,6 @@ Public Class frmUpdate
         Return
     End Sub
 
-
-
     Sub UpdateProgram()
         '******** Shared Parameters *******
         Dim bSuccess As Boolean = False
@@ -142,12 +141,16 @@ Public Class frmUpdate
                     Log_Append(StrDup(100, "-"))
 
                     'get latest versions
-                    Dim dtVersions As DataTable = oDb.oGetLatestVersions(cCurVersion)
+                    Dim dtVersions As DataTable = Nothing
+                    Try
+                        dtVersions = oDb.oGetLatestVersions(cCurVersion)
+                    Catch ex As Exception
+                        MessageBox.Show("Getting version " & ex.Message)
+                    End Try
 
                     If dtVersions.Rows.Count > 0 Then
                         Dim dr As DataRow
                         For Each dr In dtVersions.Rows
-
                             cVersion = IfNull(dr("AppVersion").ToString, "")
                             cVersionDate = IfNull(CType(dr("VersionDate"), DateTime).ToString("yyyy-MM-dd"), "")
                             cDesc = IfNull(dr("VersionDesc").ToString, "")
@@ -213,6 +216,7 @@ Public Class frmUpdate
 
                                 If bSuccess Then
                                     'PerformObjectUpdates(cBak_folder, dStart)
+                                    PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cFolder)
                                 End If
 
                                 Log_Write(cFullBak_folder & cBak_folder & ".txt", sbVersionLog)

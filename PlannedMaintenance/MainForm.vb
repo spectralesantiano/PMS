@@ -622,7 +622,15 @@ Public Class MainForm
                         Dim strArgs As String = "LOAD " & GetIni("VERSION") & " """ & tempObxFilePath & """ """ & USER_NAME & """ """ & SQL_SERVER & """ """ & SQL_USER_NAME & """ """ & SQL_PASSWORD & """ """ & USE_SPECTRAL_CON.ToString & """ """ & USE_TRUSTED_CON.ToString & """"
 
                         If (extractionSuccess) Then
-
+                            Try
+                                If (ReviseUpdateManager(versionNo, "LOAD") = -1) Then
+                                    MessageBox.Show("There is a problem revising the UpdateManager.exe", "Spectral Service", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                    Return
+                                End If
+                            Catch ex As Exception
+                                MessageBox.Show("Could not update the UpdateManger application - " & ex.Message, GetAppName(), MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                Return
+                            End Try
                             If System.Environment.OSVersion.Version.Major < 6 Then ' Windows XP
                                 Try
                                     Shell("UpdateManager.exe " & strArgs, AppWinStyle.NormalFocus)
