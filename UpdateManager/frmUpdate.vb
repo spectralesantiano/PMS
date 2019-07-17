@@ -52,7 +52,7 @@ Public Class frmUpdate
     Public Sub New()
         InitializeComponent()
 
-        'Dim args() As String = Environment.GetCommandLineArgs()
+        Dim args() As String = Environment.GetCommandLineArgs()
 
         'Dim args() As String = {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam"} 'test update
         'Dim args() As String = {"APP.exe", "LOAD", "5.01.00", "C:\Spectral\UpdateSM5.obx", "Administrator", "Data Source=.\STISQLSERVER;Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"} 'test load
@@ -79,7 +79,7 @@ Public Class frmUpdate
         'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " bUSE_TRUSTED_CON = " & args(7) & Environment.NewLine)
 
         'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Users\DeveloperOne\Documents\The Desktop\TEST_UPDFOLDER\object_update\object_update.obx", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
-        Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.01", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
+        'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.01", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
         If args.Count = 8 Then
             'Update Version
             'sample: {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam", "False", "False"}
@@ -104,7 +104,6 @@ Public Class frmUpdate
             cServerPwd = args(7)
             bUSE_SPECTRAL_CON = CType(args(8), Boolean)
             bUSE_TRUSTED_CON = CType(args(9), Boolean)
-            cDatabaseName = "pms_db"
             Dim oparamClsDb As New clsDB(ConstructConnString(cDatabaseName))
             oDb = oparamClsDb
         End If
@@ -327,7 +326,7 @@ Public Class frmUpdate
                     cUsername = cUsername.Replace("'", "''")
                     bSuccess = oDb.UpdateServerVersion(versionNumber, versionDate, versionDesc.Replace("'", "''"), cUsername, cErr)
                     Log_Append(sbVersionLog, "Update Server Version :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
-
+                    Log_Write(cFullBak_folder & cBak_folder & ".txt", sbVersionLog)
                     'bakup files in local
                     If nFilesUpdated > 0 Then
                         'zip files
@@ -336,8 +335,6 @@ Public Class frmUpdate
                         Dim cZipFiles As String
                         Dim cObjectsBakFile As String = cFullBak_folder & cBak_folder & ".obxbak"
                         cZipFiles = cFullBak_folder & "*.*"
-
-                        CreateBackupFolder(GetAppFolder(), cBak_folder)
 
                         bTmpSuccess = ZipFiles(cObjectsBakFile, cZipFiles, cErr)
                         bSuccess = bSuccess And bTmpSuccess
@@ -356,8 +353,8 @@ Public Class frmUpdate
                     'evaluate process
                     If bSuccess Then
                         If cVersion <> "" Then
-                            bSuccess = WriteSettingsIni("VERSION", cVersion, cErr)
-                            bSuccess = bSuccess And WriteSettingsIni("VERSIONDATE", cVersionDate, cErr)
+                            bSuccess = WriteSettingsIni("VERSION", versionNumber, cErr)
+                            bSuccess = bSuccess And WriteSettingsIni("VERSIONDATE", versionDate, cErr)
                             Log_Append(sbVersionLog, "Update Version INI File :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
                         End If
                     End If
@@ -376,21 +373,6 @@ Public Class frmUpdate
     End Sub
 
 #Region "Updated Object Update Feature"
-
-    Private Sub CreateBackupFolder(rootFolder As String, backupFolder As String)
-        Try
-            Dim backup As String = rootFolder & "\obj_bak"
-            If (Not Directory.Exists(backup)) Then
-                MkDir(backup)
-            End If
-
-            MkDir(backup & "\" & backupFolder)
-
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
-    End Sub
-
 
     Private Sub RunScripts(path As String, ByVal scripts As String(), Optional ByRef cErr As String = "")
 
