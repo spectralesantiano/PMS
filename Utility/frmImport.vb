@@ -2,6 +2,18 @@
     Public bSaved As Boolean = False
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSave.Click
+        Dim i As Integer
+        For i = 0 To MainView.RowCount - 1
+            If MainView.GetRowCellValue(i, Field1) = "" Then
+                MsgBox("Please enter the value for " & Field1.Caption & " field.", vbCritical)
+                Exit Sub
+            ElseIf Field2.Visible Then
+                If MainView.GetRowCellValue(i, Field2) = "" Then
+                    MsgBox("Please enter the value for " & Field2.Caption & " field.", vbCritical)
+                    Exit Sub
+                End If
+            End If
+        Next
         bSaved = True
         Me.Close()
     End Sub

@@ -218,11 +218,10 @@ Public Class UNITS
         End If
         If e.Button = MouseButtons.Right Then
             downHitInfo = hitInfo
-            strCurrView = "pView"
+            strCurrView = "Part"
             pmCustomMenu.ShowPopup(Control.MousePosition)
         End If
     End Sub
-
     'Private Sub pView_InitNewRow(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.InitNewRowEventArgs) Handles pView.InitNewRow
     '    Dim View As DevExpress.XtraGrid.Views.Base.ColumnView = sender
     '    View.SetRowCellValue(e.RowHandle, View.Columns("pEdited"), True)
@@ -706,7 +705,7 @@ Public Class UNITS
                         sqls.Add("INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy],[ImageDoc]) " & _
                                  "Values(dbo.MAINTENANCEID(),'" & mView.GetRowCellValue(i, "WorkCode") & "', '" & strID & "', '" & mView.GetRowCellValue(i, "RankCode") & "', " & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ", '" & mView.GetRowCellValue(i, "IntCode") & "', '" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "', " & strDateIssue & ", '" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "','" & GetUserName() & "','" & mView.GetRowCellValue(i, "ImageDoc") & "')")
                     Else
-                        sqls.Add("Update dbo.tblAdmMaintenance set WorkCode='" & mView.GetRowCellValue(i, "WorkCode") & "',RankCode='" & mView.GetRowCellValue(i, "RankCode") & "',Number=" & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ",IntCode='" & mView.GetRowCellValue(i, "IntCode") & "',InsCrossRef='" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "',InsEditor='" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "',InsDocument='" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "',InsDateIssue=" & strDateIssue & ",InsDesc='" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "', LastUpdatedBy='" & GetUserName() & "', ImageDoc='" & mView.GetRowCellValue(i, "ImageDoc") & "' Where MaintenanceCode='" & mView.GetRowCellValue(i, "MaintenanceCode") & "'")
+                        sqls.Add("Update dbo.tblAdmMaintenance set WorkCode='" & mView.GetRowCellValue(i, "WorkCode") & "',RankCode='" & mView.GetRowCellValue(i, "RankCode") & "',Number=" & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ",IntCode='" & mView.GetRowCellValue(i, "IntCode") & "',InsCrossRef='" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "',InsEditor='" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "',InsDocument='" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "',InsDateIssue=" & strDateIssue & ",InsDesc='" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "', LastUpdatedBy='" & GetUserName() & ", DateUpdated=GETDATE()', ImageDoc='" & mView.GetRowCellValue(i, "ImageDoc") & "' Where MaintenanceCode='" & mView.GetRowCellValue(i, "MaintenanceCode") & "'")
                     End If
                 End If
             Next
@@ -1101,6 +1100,26 @@ Public Class UNITS
                         MainView.SetRowCellValue(MainView.FocusedRowHandle, "Component", strValue)
                         MainView.UpdateCurrentRow()
                         MainView.CloseEditor()
+                    End If
+                Next
+            End If
+        ElseIf strCurrView = "Part" Then
+            If e.Item.Name = "bbiPaste" Then
+                nRow = ImportFromClipboard("Part", "PartNumber")
+            Else
+                nRow = ImportFromFile("Part", "PartNumber")
+            End If
+            If Not nRow Is Nothing Then
+                For Each crow In nRow
+                    Dim bExist As Boolean = True, strValue As String = crow("Part"), strPartNumber As String = crow("PartNumber")
+                    Dim strCode As String = PastePartData(DB, "PartCode", "tblAdmPart", strValue, strPartNumber, bExist)
+                    If Not bExist Then
+                        pView.AddNewRow()
+                        pView.SetRowCellValue(pView.FocusedRowHandle, "PartCode", strCode)
+                        pView.SetRowCellValue(pView.FocusedRowHandle, "Part", strValue)
+                        pView.SetRowCellValue(pView.FocusedRowHandle, "PartNumber", strPartNumber)
+                        pView.UpdateCurrentRow()
+                        pView.CloseEditor()
                     End If
                 Next
             End If

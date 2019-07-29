@@ -18,7 +18,7 @@ Public Class VLOCATION
                 blList.RefreshData()
                 blList.SetSelection(strID)
             Else
-                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmLocation", "LastUpdatedBy='" & GetUserName() & "'", "LocCode='" & strID & "'"))
+                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmLocation", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "LocCode='" & strID & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
                 RefreshData()
