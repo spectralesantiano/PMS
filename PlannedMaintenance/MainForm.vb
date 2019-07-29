@@ -1,4 +1,6 @@
-﻿Public Class MainForm
+﻿Imports System.IO
+
+Public Class MainForm
 
     Dim extAssembly As System.Reflection.Assembly
     Private WithEvents maincontent As New BaseControl.BaseControl
@@ -594,54 +596,125 @@
     End Sub
 
     Private Sub bbUpdate_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbUpdate.ItemClick
-        If MsgBox("This will update the current program, would you like to continue?", MsgBoxStyle.Question Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            Dim nPMS As Integer = 0
-            nPMS = System.Diagnostics.Process.GetProcessesByName("PlannedMaintenance").Count
+        'Manual update for PMS - Jul 11 2019
+        If (PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "Code='UpdatesFolder'").Equals("")) Then
+            MessageBox.Show("Please select first an update folder location.", "ERB", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Else
+            If MsgBox("This will update the current program, would you like to continue?", MsgBoxStyle.Question Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                Dim nPMS As Integer = 0
+                nPMS = System.Diagnostics.Process.GetProcessesByName("PlannedMaintenance").Count
 
-            If nPMS > 1 Then
-                MsgBox("Cannot proceed update!" & vbCrLf & vbCrLf & "Another instance of Planned Maintenance 5 detected. Please close it before continuing.", MsgBoxStyle.Exclamation, GetAppName)
-                Exit Sub
-            End If
+                If nPMS > 1 Then
+                    MsgBox("Cannot proceed update!" & vbCrLf & vbCrLf & "Another instance of Planned Maintenance 5 detected. Please close it before continuing.", MsgBoxStyle.Exclamation, GetAppName)
+                    Exit Sub
+                End If
 
-            Dim odMain As New System.Windows.Forms.OpenFileDialog
-            odMain.Filter = "Object File (*.obx)|*.obx"
-            If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-                If odMain.FileName <> "" Then
-
-                    'defining arguments should be : [ACTIONTYPE] [CURRENT_INTERFACE_VERSION] [obx file path] [username] [SQLSERVER] [SQLUSER] [SQLPWD] [USE_SPECTRAL_CON] [USE_TRUSTED_CON]
-                    'param ACTIONTYPE: [UPDATE or LOAD]
-                    Dim strArgs As String = "LOAD " & GetIni("VERSION") & " """ & odMain.FileName & """ """ & USER_NAME & """ """ & SQL_SERVER & """ """ & SQL_USER_NAME & """ """ & SQL_PASSWORD & """ """ & USE_SPECTRAL_CON.ToString & """ """ & USE_TRUSTED_CON.ToString & """"
-
-                    If System.Environment.OSVersion.Version.Major < 6 Then ' Windows XP
-                        Try
-                            Shell("UpdateManager.exe " & strArgs, AppWinStyle.NormalFocus)
-                        Catch ex As Exception
-                            MsgBox(ex.Message, MsgBoxStyle.Exclamation, GetAppName)
-                        End Try
-                        'stop application
-                        Process.GetCurrentProcess.Kill()
-
-                    Else ' Higher OS Versions
-
-                        Dim pUpdater As New ProcessStartInfo
-                        pUpdater.FileName = "UpdateManager.exe"
+                Dim odMain As New System.Windows.Forms.OpenFileDialog
+                Dim versionNo As String = ""
+                odMain.Filter = "Object File (*.obx)|*.obx"
+                odMain.InitialDirectory = "C:\\Spectral"
+                If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+                    If odMain.FileName <> "" Then
+                        Dim tempObxFilePath As String = ""
+                        Dim extractionSuccess As Boolean = LoadAndExtractObxFile(odMain.FileName, versionNo, tempObxFilePath)
                         'defining arguments should be : [ACTIONTYPE] [CURRENT_INTERFACE_VERSION] [obx file path] [username] [SQLSERVER] [SQLUSER] [SQLPWD] [USE_SPECTRAL_CON] [USE_TRUSTED_CON]
                         'param ACTIONTYPE: [UPDATE or LOAD]
-                        pUpdater.Arguments = strArgs
-                        pUpdater.UseShellExecute = True
-                        pUpdater.WindowStyle = ProcessWindowStyle.Normal
-                        Try
-                            Dim proc As Process = Process.Start(pUpdater)
-                        Catch ex As Exception
-                            MsgBox(ex.Message, MsgBoxStyle.Exclamation, GetAppName)
-                        End Try
-                        'stop application
-                        Process.GetCurrentProcess.Kill()
+                        Dim strArgs As String = "LOAD " & GetIni("VERSION") & " """ & tempObxFilePath & """ """ & USER_NAME & """ """ & SQL_SERVER & """ """ & SQL_USER_NAME & """ """ & SQL_PASSWORD & """ """ & USE_SPECTRAL_CON.ToString & """ """ & USE_TRUSTED_CON.ToString & """"
+
+                        If (extractionSuccess) Then
+                            Try
+                                If (ReviseUpdateManager(versionNo, "LOAD") = -1) Then
+                                    MessageBox.Show("There is a problem revising the UpdateManager.exe", "Spectral Service", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                    Return
+                                End If
+                            Catch ex As Exception
+                                MessageBox.Show("Could not update the UpdateManger application - " & ex.Message, GetAppName(), MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                Return
+                            End Try
+                            If System.Environment.OSVersion.Version.Major < 6 Then ' Windows XP
+                                Try
+                                    Shell("UpdateManager.exe " & strArgs, AppWinStyle.NormalFocus)
+                                Catch ex As Exception
+                                    MsgBox(ex.Message, MsgBoxStyle.Exclamation, GetAppName)
+                                End Try
+                                'stop application
+                                Process.GetCurrentProcess.Kill()
+
+                            Else ' Higher OS Versions
+
+                                Dim pUpdater As New ProcessStartInfo
+                                pUpdater.FileName = "UpdateManager.exe"
+                                'defining arguments should be : [ACTIONTYPE] [CURRENT_INTERFACE_VERSION] [obx file path] [username] [SQLSERVER] [SQLUSER] [SQLPWD] [USE_SPECTRAL_CON] [USE_TRUSTED_CON]
+                                'param ACTIONTYPE: [UPDATE or LOAD]
+                                pUpdater.Arguments = strArgs
+                                pUpdater.UseShellExecute = True
+                                pUpdater.WindowStyle = ProcessWindowStyle.Normal
+                                Try
+                                    Dim proc As Process = Process.Start(pUpdater)
+                                Catch ex As Exception
+                                    MsgBox(ex.Message, MsgBoxStyle.Exclamation, GetAppName)
+                                End Try
+                                'stop application
+                                Process.GetCurrentProcess.Kill()
+                            End If
+                        Else
+                            MessageBox.Show("There is a problem extrancting the obx file. Please contact Spectral for details.", "PMS", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        End If
                     End If
                 End If
             End If
         End If
     End Sub
+
+    Private Function LoadAndExtractObxFile(fileName As String, ByRef versionNo As String, ByRef tempObxFilePath As String) As Boolean
+
+        Dim versioningUtil As New clsVersioning(PMSDB.GetConnectionString())
+        Try
+            Dim updatePath As String = PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "Code='UpdatesFolder'")
+            Dim currentVersion As String = PMSDB.DLookUp("AppVersion", "[sti_sys].[dbo].[tblPMSVersion]", "", "1=1 ORDER BY AppVersion DESC")
+            Dim localPath As String = APP_PATH & "\temp_update\"
+
+            If (File.Exists(fileName) And fileName.EndsWith(".obx", StringComparison.CurrentCultureIgnoreCase)) Then
+
+                Dim updateVersionNo = fileName.Split("\"c)(fileName.Split("\"c).Length - 1).Split("_"c)(1).Replace(".obx", "")
+
+                If versioningUtil.IsNewVersion(updateVersionNo, currentVersion) Then
+                    'Copy the obx file and extract it on local location.
+                    If (Not Directory.Exists(localPath)) Then 'Create a temporary obx folder locally for Spectral Service
+                        MkDir(localPath)
+                    End If
+                    versionNo = updateVersionNo
+                    Dim zipFile As String = localPath & GetFileNameWithoutExtension(fileName) & ".zip"
+                    Dim copiedFile As String = zipFile.Replace(".zip", "") & "_" & DateTime.Now.ToString("MMddyyyy_hhmmss") & "_bak.obx"
+                    Dim extractedFolder As String = localPath & updateVersionNo
+
+                    File.Copy(fileName, zipFile)
+                    MkDir(extractedFolder)
+                    File.Copy(fileName, copiedFile)
+                    UnzipFile(zipFile, extractedFolder)
+
+                    If (File.Exists(extractedFolder & "\Update.txt")) Then
+                        File.Delete(zipFile)
+                        tempObxFilePath = extractedFolder
+                        Return True
+                    Else
+                        MessageBox.Show("The object update does not contain a Update.txt file.", "Update Manager", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Directory.Delete(extractedFolder, True)
+                        File.Delete(zipFile)
+                        File.Delete(copiedFile)
+                        Return False
+                    End If
+                Else
+                    Return False
+                End If
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+            Return False
+        End Try
+        Return True
+    End Function
 
     Private Sub maincontent_RightClick(ByVal sender As String) Handles maincontent.RightClick
         pmMainMenu.ShowPopup(Control.MousePosition)

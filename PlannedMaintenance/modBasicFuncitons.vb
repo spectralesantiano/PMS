@@ -1,3 +1,5 @@
+Imports System.IO
+
 Module modBasicFuncitons
     Public PMSDB As SQLDB
     Private Declare Ansi Function WritePrivateProfileString Lib "kernel32.dll" Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, ByVal lpKeyName As String, ByVal lpString As String, ByVal lpFileName As String) As Integer
@@ -93,6 +95,12 @@ Module modBasicFuncitons
                             'defining arguments should be : [ACTIONTYPE] [CURRENT_INTERFACE_VERSION] [SQLSERVER] [SQLUSER] [SQLPWD] [USE_SPECTRAL_CON] [USE_TRUSTED_CON]
                             'param ACTIONTYPE: [UPDATE or LOAD]
                             Dim strArgs As String = "UPDATE " & cCurVersion & " " & """" & SQL_SERVER & """ """ & SQL_USER_NAME & """ """ & SQL_PASSWORD & """ """ & USE_SPECTRAL_CON.ToString & """ """ & USE_TRUSTED_CON.ToString & """"
+                            Dim result As Integer = ReviseUpdateManager(nCurDBVersion, "UPDATE")
+
+                            If (result = -1) Then
+                                MessageBox.Show("There is a problem revising the UpdateManager.exe", "Spectral Service", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                Process.GetCurrentProcess.Kill()
+                            End If
 
                             If System.Environment.OSVersion.Version.Major < 6 Then ' Windows XP
                                 Try
@@ -158,6 +166,38 @@ Module modBasicFuncitons
             Process.GetCurrentProcess.Kill()
         End Try
     End Sub
+
+    Public Function ReviseUpdateManager(Optional ByVal versionNo As String = "", Optional ByVal updateType As String = "") As Integer
+        'If an UpdateManager.exe is present on UpdatesFolder, it will be copied to ERB main dir before calling the UpdateManager.exe
+        Try
+            Dim updatePath As String = PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "CODE='UpdatesFolder'")
+            If updatePath.Equals("") Then Return 0
+            Dim updateFilesPath As System.IO.FileInfo() = Nothing
+            Select Case updateType
+                'If the type is UPDATE, look on the share folder (updatePath) where the contents of this version is location, and get all the files. 
+                Case "UPDATE"
+                    updateFilesPath = New System.IO.DirectoryInfo(updatePath & (IIf(versionNo.Equals(""), "", "\" & versionNo))).GetFiles()
+                    'If the type is LOAD, go to temp_update folder, where the obx contents is temporarily extracted when obx is loaded.
+                Case "LOAD"
+                    updateFilesPath = New System.IO.DirectoryInfo(APP_PATH & "\temp_update\" & versionNo).GetFiles()
+            End Select
+
+            If (Not IsNothing(updateFilesPath)) Then
+                For Each f As FileInfo In updateFilesPath
+                    If (f.Name.Contains("UpdateManager.exe")) Then
+                        File.Copy(APP_PATH & "\UpdateManager.exe", APP_PATH & "\temp_update\" & versionNo & "\UpdateManager_bak_" & DateTime.Now.ToString("MMddyyyy_hhmmss") & ".bakobx") 'Backup original UpdateManager.exe
+                        File.Copy(updatePath & "\UpdateManager.exe", APP_PATH & "\UpdateManager.exe", True) 'Copy new UpdateManager.exe
+                        File.Delete(updatePath & "\UpdateManager.exe") 'Delete UpdateManager.exe from the update source folder.
+                        Return 1 'The UpdateManager.exe is found and successfully updated.
+                    End If
+                Next
+            End If
+            Return 0 'There is no UpdateManager.exe on this obx update. So skip it.
+        Catch ex As Exception
+            Return -1 'There is a problem loading the UpdateManager.exe on specified folder (temp_update)
+            LogErrors("There is a problem loading the UpdateManager.exe from obx verion no " + versionNo + " : " + ex.Message)
+        End Try
+    End Function
 
 
     '************** Licensing Purposes ******************

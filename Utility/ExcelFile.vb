@@ -1,3 +1,5 @@
+Imports System.Windows.Forms
+
 Public Class ExcelFile
     Dim oXL As Excel.Application
     Dim oWB As Excel.Workbook

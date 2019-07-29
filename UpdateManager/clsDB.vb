@@ -1,4 +1,6 @@
-﻿' this is standalone class to support different applications (MPS,WRH,SAS)
+﻿Imports System.Data.SqlClient
+
+' this is standalone class to support different applications (MPS,WRH,SAS)
 Public Class clsDB
     Private Const SchemaName As String = "sti_sys"
     Private Const TableName As String = "tblPMSVersion"
@@ -67,6 +69,47 @@ Public Class clsDB
         nRecordCount = ctable.Rows.Count
         Return ctable
     End Function
+
+    Public Function RunTransaction(ByVal sqls As List(Of String), Optional ByRef cErr As String = "") As Boolean
+        Dim success As Boolean = False
+        Try
+
+            If oVersionSqlcon.State = ConnectionState.Closed Then oVersionSqlcon.Open()
+            Dim err As String = ""
+            Dim sqlcmd As SqlCommand = oVersionSqlcon.CreateCommand()
+            Dim transaction As SqlClient.SqlTransaction = oVersionSqlcon.BeginTransaction(), sql As String
+            sqlcmd.Connection = oVersionSqlcon
+            sqlcmd.Transaction = transaction
+            Try
+                For Each sql In sqls
+                    If sql <> "" Then
+                        err = sql
+                        sqlcmd.CommandText = sql
+                        sqlcmd.ExecuteNonQuery()
+                    End If
+                Next
+                transaction.Commit()
+                success = True
+            Catch ex As Exception
+                Dim msg As String = ex.Message & " " & err
+                transaction.Rollback()
+                success = False
+            End Try
+            sqlcmd.Dispose()
+            oVersionSqlcon.Close()
+            Return success
+        Catch ex As Exception
+            'ErrMsg = ex.Message
+            If oVersionSqlcon.State <> ConnectionState.Closed Then
+                oVersionSqlcon.Close()
+            End If
+            Return success
+        End Try
+        Return success
+    End Function
+
+
+
 
     'Execute the specified sql statement
     '<System.Diagnostics.DebuggerStepThrough()> _
