@@ -802,6 +802,105 @@ Public Module Util
 
 #End Region
 
+    Public Sub ExportPMSData(db As SQLDB, nExpType As Integer)
+        If nExpType = 1 Then
+            Dim strFile As String
+            Dim sqls As New ArrayList, tbl As DataTable, drRow As DataRow
+            If MsgBox("Please specify where you want to save export files.", MsgBoxStyle.Information Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                Dim odMain As New System.Windows.Forms.SaveFileDialog
+                odMain.FileName = "AdminData"
+                If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+                    strFile = odMain.FileName
+
+                    sqls.Add(IMO_NUMBER & "|" & nExpType & "|" & ChangeToSQLDate(Now).Replace("'", "") & "|" & "PMS Admin Data.")
+
+                    tbl = db.CreateTable("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
+                    sqls.Add("tblAdmVsl")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("VslCode") & "','" & drRow("Vessel").ToString.Replace("'", "''") & "','" & drRow("IMONo") & "','" & drRow("Email") & "','" & drRow("VslTypeCode") & "','" & drRow("Flag") & "','" & VERSION_NUMBER & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [LocCode],[Name],[LastUpdatedBy] FROM [dbo].[tblAdmLocation]")
+                    sqls.Add("tblAdmLocation")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("LocCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [StorageCode],[Name],[LastUpdatedBy] FROM [dbo].[tblAdmStorage]")
+                    sqls.Add("tblAdmStorage")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("StorageCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [CatCode],[Name],[LastUpdatedBy] FROM [dbo].[tblAdmCategory]")
+                    sqls.Add("tblAdmCategory")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("CatCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [WorkCode],[Name],[LastUpdatedBy],ISNULL([SortCode],0) SortCode FROM [dbo].[tblAdmWork] WHERE LEFT([WorkCode],3)<>'SYS'")
+                    sqls.Add("tblAdmWork")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("WorkCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'," & drRow("SortCode"))
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [PartCode],[Name],[PartNumber],[OnStock],[Minimum],[InitStock],[LocCode],[StorageCode],[LastUpdatedBy] FROM [dbo].[tblAdmPart]")
+                    sqls.Add("tblAdmPart")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("PartCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("PartNumber") & "'," & IfNull(drRow("OnStock"), "0") & "," & IfNull(drRow("Minimum"), "0") & "," & IfNull(drRow("InitStock"), 0) & ",'" & drRow("LocCode") & "','" & drRow("StorageCode") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [ComponentCode],[Name],[LastUpdatedBy] FROM [dbo].[tblAdmComponent]")
+                    sqls.Add("tblAdmComponent")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("ComponentCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [UnitCode],[UnitDesc],[ParentCode],[ComponentCode],[LocCode],[UnitNumber],[SerialNumber],[LastUpdatedBy],[Critical],[DeptCode],[CatCode],[RunningHours],[ReadingDate],[Active],[MakerCode],[Type],[Model],[RefNo],[VendorCode],[HoursPerDay] FROM [dbo].[tblAdmUnit]")
+                    sqls.Add("tblAdmUnit")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("UnitCode") & "','" & drRow("UnitDesc").ToString.Replace("'", "''") & "','" & drRow("ParentCode") & "','" & drRow("ComponentCode") & "','" & drRow("LocCode") & "','" & drRow("UnitNumber") & "','" & drRow("SerialNumber") & "','" & drRow("LastUpdatedBy") & "'," & IIf(drRow("Critical"), 1, 0) & ",'" & drRow("DeptCode") & "','" & drRow("CatCode") & "'," & IfNull(drRow("RunningHours"), "0") & "," & ChangeToExportDate(drRow("ReadingDate")) & "," & IIf(drRow("Active"), 1, 0) & ",'" & drRow("MakerCode") & "','" & drRow("Type") & "','" & drRow("Model") & "','" & drRow("RefNo") & "','" & drRow("VendorCode") & "'," & IfNull(drRow("HoursPerDay"), "NULL"))
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT [MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy] FROM [dbo].[tblAdmMaintenance] WHERE LEFT([MaintenanceCode],3)<>'SYS'")
+                    sqls.Add("tblAdmMaintenance")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("MaintenanceCode") & "','" & drRow("WorkCode") & "','" & drRow("UnitCode") & "','" & drRow("RankCode") & "'," & IfNull(drRow("Number"), "NULL") & ",'" & drRow("IntCode") & "','" & drRow("InsCrossRef") & "','" & drRow("InsEditor") & "','" & drRow("InsDocument") & "'," & ChangeToExportDate(drRow("InsDateIssue")) & ",'" & drRow("InsDesc") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    tbl = db.CreateTable("SELECT '" & IMO_NUMBER & "' + RIGHT('00000000' + RTRIM( [UnitPartID]),8) UnitPartID,[UnitCode],[PartCode] FROM [dbo].[tblUnitPart]")
+                    sqls.Add("tblUnitPart")
+                    For Each drRow In tbl.Rows
+                        sqls.Add("'" & drRow("UnitPartID") & "','" & drRow("UnitCode") & "','" & drRow("PartCode") & "'")
+                    Next
+                    sqls.Add("END")
+
+                    Using sw As New System.IO.StreamWriter(GetFileDir(strFile) & GetFileNameWithoutExtension(strFile) & ".txt", False, System.Text.Encoding.Unicode)
+                        Dim strTemp As String
+                        For Each strTemp In sqls
+                            sw.Write(Shuffle(strTemp, True) & "Ç")
+                            'sw.WriteLine(strTemp)
+                        Next
+                    End Using
+
+                    If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
+                        System.Windows.Forms.Application.DoEvents()
+                        Kill(strFile & ".txt")
+                    End If
+                End If
+            End If
+        End If
+    End Sub
+
     Public Function ExtractFromTextFile(strFile As String) As String
         Dim strRetval As String = ""
         Using sr As New System.IO.StreamReader(strFile)
