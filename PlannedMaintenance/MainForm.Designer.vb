@@ -136,6 +136,8 @@ Partial Class MainForm
         Me.pmListMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
         Me.rpgVslAccount = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.ledEquipment = New DevExpress.XtraBars.BarEditItem()
+        Me.VENDOR = New DevExpress.XtraBars.BarButtonItem()
+        Me.MAKER = New DevExpress.XtraBars.BarButtonItem()
         CType(Me.RibbonControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledDepartmentRep, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledRankRep, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -160,9 +162,9 @@ Partial Class MainForm
         Me.RibbonControl.ApplicationIcon = CType(resources.GetObject("RibbonControl.ApplicationIcon"), System.Drawing.Bitmap)
         Me.RibbonControl.AutoSizeItems = True
         Me.RibbonControl.ExpandCollapseItem.Id = 0
-        Me.RibbonControl.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl.ExpandCollapseItem, Me.bbAdd, Me.bbSave, Me.bbDelete, Me.RANK, Me.DEPARTMENT, Me.bbSaveLayout, Me.cmdHelp, Me.SECUSERS, Me.SECGROUPS, Me.cmdChangePassword, Me.bbResetPassword, Me.cmdChangeUser, Me.SWITCHBOARD, Me.COMPANYINFO, Me.LICENSEINFO, Me.bbPreview, Me.bbResetLayout, Me.BACKUPRESTORE, Me.bbBackUp, Me.bbRestore, Me.VERSIONUPDATE, Me.bbUpdate, Me.cmdNotification, Me.bbExport, Me.bbEdit, Me.bbSelectAll, Me.bbDeselect, Me.SETTINGS, Me.PMSREP, Me.ARCHIVEDATA, Me.RECOVERARCHIVE, Me.UNITS, Me.PART, Me.CATEGORY, Me.COUNTER, Me.VLOCATION, Me.ledDepartment, Me.WORKDONE, Me.ledRank, Me.ledCategory, Me.INTERVAL, Me.WORKDUE, Me.MAINTENANCE, Me.COMPONENT, Me.NONCONFORM, Me.bbNC, Me.bbUpdateNC, Me.NCMEASURES, Me.EXPORTADMIN, Me.IMPORTDATA, Me.bbWOMaintenance, Me.RUNNINGHOURS, Me.txtDueHours, Me.EXPMAINTENANCE, Me.VESSELINFO, Me.bbCopy, Me.ledMainUnits, Me.bbCopyMaintenance, Me.bbShowComponents, Me.txtDateDue, Me.bbAddPlannedDate, Me.ledPeriod, Me.bbCondition, Me.PARTPURCHASE, Me.bbViewImage, Me.STORAGE, Me.MDOCVIEWER, Me.WDOCVIEWER, Me.bbPaste, Me.bbImportFromFile})
+        Me.RibbonControl.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl.ExpandCollapseItem, Me.bbAdd, Me.bbSave, Me.bbDelete, Me.RANK, Me.DEPARTMENT, Me.bbSaveLayout, Me.cmdHelp, Me.SECUSERS, Me.SECGROUPS, Me.cmdChangePassword, Me.bbResetPassword, Me.cmdChangeUser, Me.SWITCHBOARD, Me.COMPANYINFO, Me.LICENSEINFO, Me.bbPreview, Me.bbResetLayout, Me.BACKUPRESTORE, Me.bbBackUp, Me.bbRestore, Me.VERSIONUPDATE, Me.bbUpdate, Me.cmdNotification, Me.bbExport, Me.bbEdit, Me.bbSelectAll, Me.bbDeselect, Me.SETTINGS, Me.PMSREP, Me.ARCHIVEDATA, Me.RECOVERARCHIVE, Me.UNITS, Me.PART, Me.CATEGORY, Me.COUNTER, Me.VLOCATION, Me.ledDepartment, Me.WORKDONE, Me.ledRank, Me.ledCategory, Me.INTERVAL, Me.WORKDUE, Me.MAINTENANCE, Me.COMPONENT, Me.NONCONFORM, Me.bbNC, Me.bbUpdateNC, Me.NCMEASURES, Me.EXPORTADMIN, Me.IMPORTDATA, Me.bbWOMaintenance, Me.RUNNINGHOURS, Me.txtDueHours, Me.EXPMAINTENANCE, Me.VESSELINFO, Me.bbCopy, Me.ledMainUnits, Me.bbCopyMaintenance, Me.bbShowComponents, Me.txtDateDue, Me.bbAddPlannedDate, Me.ledPeriod, Me.bbCondition, Me.PARTPURCHASE, Me.bbViewImage, Me.STORAGE, Me.MDOCVIEWER, Me.WDOCVIEWER, Me.bbPaste, Me.bbImportFromFile, Me.VENDOR, Me.MAKER})
         Me.RibbonControl.Location = New System.Drawing.Point(0, 0)
-        Me.RibbonControl.MaxItemId = 235
+        Me.RibbonControl.MaxItemId = 237
         Me.RibbonControl.Name = "RibbonControl"
         Me.RibbonControl.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.rpMaintenance, Me.rpInventory, Me.rpDocViewer, Me.rpAdmin, Me.rpTools, Me.rpSecurity, Me.rpReports, Me.rpHome})
         Me.RibbonControl.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.ledDepartmentRep, Me.ledEquipmentRep, Me.ledRankRep, Me.ledCategoryRep, Me.ledDueDays, Me.ledDueHours, Me.ledUnitRep, Me.DateDueEdit, Me.ledPeriodRep})
@@ -245,6 +247,7 @@ Partial Class MainForm
         Me.cmdHelp.Id = 28
         Me.cmdHelp.ItemShortcut = New DevExpress.XtraBars.BarShortcut(System.Windows.Forms.Keys.F1)
         Me.cmdHelp.Name = "cmdHelp"
+        Me.cmdHelp.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
         '
         'SECUSERS
         '
@@ -390,6 +393,7 @@ Partial Class MainForm
         Me.cmdNotification.Glyph = CType(resources.GetObject("cmdNotification.Glyph"), System.Drawing.Image)
         Me.cmdNotification.Id = 87
         Me.cmdNotification.Name = "cmdNotification"
+        Me.cmdNotification.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
         '
         'bbExport
         '
@@ -702,7 +706,7 @@ Partial Class MainForm
         'RUNNINGHOURS
         '
         Me.RUNNINGHOURS.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check
-        Me.RUNNINGHOURS.Caption = "Running Rours"
+        Me.RUNNINGHOURS.Caption = "Running Hours"
         Me.RUNNINGHOURS.GroupIndex = 1
         Me.RUNNINGHOURS.Id = 190
         Me.RUNNINGHOURS.LargeGlyph = CType(resources.GetObject("RUNNINGHOURS.LargeGlyph"), System.Drawing.Image)
@@ -1012,6 +1016,8 @@ Partial Class MainForm
         Me.rpgAdmin.ItemLinks.Add(Me.STORAGE)
         Me.rpgAdmin.ItemLinks.Add(Me.DEPARTMENT)
         Me.rpgAdmin.ItemLinks.Add(Me.RANK)
+        Me.rpgAdmin.ItemLinks.Add(Me.VENDOR)
+        Me.rpgAdmin.ItemLinks.Add(Me.MAKER)
         Me.rpgAdmin.Name = "rpgAdmin"
         Me.rpgAdmin.ShowCaptionButton = False
         Me.rpgAdmin.Tag = "1"
@@ -1255,6 +1261,26 @@ Partial Class MainForm
         Me.ledEquipment.Id = 167
         Me.ledEquipment.Name = "ledEquipment"
         '
+        'VENDOR
+        '
+        Me.VENDOR.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check
+        Me.VENDOR.Caption = "Vendor"
+        Me.VENDOR.GroupIndex = 5
+        Me.VENDOR.Id = 235
+        Me.VENDOR.LargeGlyph = Global.PlannedMaintenance.My.Resources.Resources.rankDep_2
+        Me.VENDOR.LargeWidth = 60
+        Me.VENDOR.Name = "VENDOR"
+        '
+        'MAKER
+        '
+        Me.MAKER.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check
+        Me.MAKER.Caption = "Maker"
+        Me.MAKER.GroupIndex = 5
+        Me.MAKER.Id = 236
+        Me.MAKER.LargeGlyph = Global.PlannedMaintenance.My.Resources.Resources.rankDep_2
+        Me.MAKER.LargeWidth = 60
+        Me.MAKER.Name = "MAKER"
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1404,6 +1430,8 @@ Partial Class MainForm
     Friend WithEvents rpgDocViewer As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents bbPaste As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents bbImportFromFile As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents VENDOR As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents MAKER As DevExpress.XtraBars.BarButtonItem
 
 
 End Class

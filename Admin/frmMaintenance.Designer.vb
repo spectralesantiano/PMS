@@ -170,7 +170,7 @@ Partial Class frmMaintenance
         '
         'LabelControl6
         '
-        Me.LabelControl6.Location = New System.Drawing.Point(209, 65)
+        Me.LabelControl6.Location = New System.Drawing.Point(339, 62)
         Me.LabelControl6.Name = "LabelControl6"
         Me.LabelControl6.Size = New System.Drawing.Size(37, 13)
         Me.LabelControl6.TabIndex = 207
@@ -179,19 +179,19 @@ Partial Class frmMaintenance
         'txtNumber
         '
         Me.txtNumber.EditValue = ""
-        Me.txtNumber.Location = New System.Drawing.Point(208, 82)
+        Me.txtNumber.Location = New System.Drawing.Point(338, 79)
         Me.txtNumber.Name = "txtNumber"
         Me.txtNumber.Properties.Appearance.Options.UseTextOptions = True
         Me.txtNumber.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far
         Me.txtNumber.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
-        Me.txtNumber.Properties.Mask.EditMask = "f0"
-        Me.txtNumber.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
+        Me.txtNumber.Properties.Mask.EditMask = "\d+"
+        Me.txtNumber.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
         Me.txtNumber.Size = New System.Drawing.Size(96, 20)
         Me.txtNumber.TabIndex = 3
         '
         'cboIntCode
         '
-        Me.cboIntCode.Location = New System.Drawing.Point(303, 82)
+        Me.cboIntCode.Location = New System.Drawing.Point(208, 79)
         Me.cboIntCode.Name = "cboIntCode"
         Me.cboIntCode.Properties.AutoSearchColumnIndex = 1
         Me.cboIntCode.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
@@ -223,7 +223,7 @@ Partial Class frmMaintenance
         '
         'LabelControl11
         '
-        Me.LabelControl11.Location = New System.Drawing.Point(304, 66)
+        Me.LabelControl11.Location = New System.Drawing.Point(209, 63)
         Me.LabelControl11.Name = "LabelControl11"
         Me.LabelControl11.Size = New System.Drawing.Size(24, 13)
         Me.LabelControl11.TabIndex = 206
@@ -301,7 +301,6 @@ Partial Class frmMaintenance
         Me.ShowIcon = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Maintenance"
-        Me.TopMost = True
         CType(Me.txtInsDesc.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtInsCrossRef.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtInsDateIssued.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()

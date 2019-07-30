@@ -113,6 +113,30 @@
     <Compile Include="CATEGORYLIST.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="VENDOR.Designer.vb">
+      <DependentUpon>VENDOR.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VENDOR.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="VENDORLIST.Designer.vb">
+      <DependentUpon>VENDORLIST.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VENDORLIST.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MAKER.Designer.vb">
+      <DependentUpon>MAKER.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MAKER.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MAKERLIST.Designer.vb">
+      <DependentUpon>MAKERLIST.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MAKERLIST.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="STORAGE.Designer.vb">
       <DependentUpon>STORAGE.vb</DependentUpon>
     </Compile>
@@ -270,6 +294,22 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CATEGORYLIST.resx">
       <DependentUpon>CATEGORYLIST.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VENDOR.resx">
+      <DependentUpon>VENDOR.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VENDORLIST.resx">
+      <DependentUpon>VENDORLIST.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MAKER.resx">
+      <DependentUpon>MAKER.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MAKERLIST.resx">
+      <DependentUpon>MAKERLIST.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="STORAGE.resx">

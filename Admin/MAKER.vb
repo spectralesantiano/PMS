@@ -1,8 +1,8 @@
-Public Class STORAGE
+Public Class MAKER
 
     Public Overrides Sub DeleteData()
-        If MsgBox("Are you sure want to delete the " & strDesc & " Storage?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            DB.RunSql("DELETE FROM dbo.tblAdmStorage WHERE StorageCode='" & strID & "'")
+        If MsgBox("Are you sure want to delete the " & strDesc & " Maker?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            DB.RunSql("DELETE FROM dbo.tblAdmMaker WHERE MakerCode='" & strID & "'")
         End If
         blList.RefreshData()
         RefreshData()
@@ -12,13 +12,14 @@ Public Class STORAGE
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
             If bAddMode Then
-                strID = GenerateID(DB, "StorageCode", "tblAdmStorage")
-                DB.RunSql(GenerateInsertScript(Me.header, 3, "tblAdmStorage", "StorageCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
+                strID = GenerateID(DB, "MakerCode", "tblAdmMaker")
+                DB.RunSql(GenerateInsertScript(Me.header, 3, "tblAdmMaker", "MakerCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
                 blList.SetSelection(strID)
+                RefreshData()
             Else
-                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmStorage", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "StorageCode='" & strID & "'"))
+                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmMaker", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "MakerCode='" & strID & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
                 RefreshData()
@@ -45,7 +46,7 @@ Public Class STORAGE
 
     'Overriden From Base Control
     Public Overrides Function GetDesc() As String
-        Return "Storage - " & strDesc
+        Return "Maker - " & strDesc
     End Function
 
     'Overriden From Base Control
@@ -54,8 +55,6 @@ Public Class STORAGE
         If Not bLoaded Then
             AllowAddition(Name, (bPermission And 2) > 0)
             AllowDeletion(Name, (bPermission And 8) > 0)
-            RaiseCustomEvent(Name, New Object() {"EnableImport", IIf((bPermission And 16) > 0, "True", "False")})
-            cboLocCode.Properties.DataSource = DB.CreateTable("SELECT * FROM dbo.LOCATIONLIST")
             AddEditListener(Me.header)
             bLoaded = True
         End If
@@ -66,12 +65,10 @@ Public Class STORAGE
             AddData()
         Else
             Me.txtName.EditValue = blList.GetDesc
-            Me.cboLocCode.EditValue = blList.GetFocusedRowData("LocCode")
         End If
         ClearFields(Me.header, True)
         MyBase.RefreshData()
-        Me.header.Text = "EDIT STORAGE DETAILS - " & blList.GetDesc.ToUpper
-        txtName.Focus()
+        Me.header.Text = "EDIT MAKER DETAILS - " & blList.GetDesc.ToUpper
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp

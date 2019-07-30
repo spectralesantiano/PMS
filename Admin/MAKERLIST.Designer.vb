@@ -1,5 +1,5 @@
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class PURCHASELIST
+Partial Class MAKERLIST
     Inherits BaseControl.BaseList
 
     'Form overrides dispose to clean up the component list.
@@ -19,23 +19,14 @@ Partial Class PURCHASELIST
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.treeListBand1 = New DevExpress.XtraTreeList.Columns.TreeListBand()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.BandedGrid.AdvBandedGridView()
         Me.gridBand4 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
-        Me.PurchaseDate = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
-        Me.Status = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
-        Me.PartPurchaseCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
-        Me.VendorCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.Maker = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.MakerCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'treeListBand1
-        '
-        Me.treeListBand1.Caption = "Machines & Equipments"
-        Me.treeListBand1.MinWidth = 33
-        Me.treeListBand1.Name = "treeListBand1"
         '
         'MainGrid
         '
@@ -44,8 +35,8 @@ Partial Class PURCHASELIST
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.Size = New System.Drawing.Size(449, 323)
-        Me.MainGrid.TabIndex = 3
+        Me.MainGrid.Size = New System.Drawing.Size(303, 323)
+        Me.MainGrid.TabIndex = 2
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
         'MainView
@@ -53,7 +44,7 @@ Partial Class PURCHASELIST
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
         Me.MainView.Bands.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.GridBand() {Me.gridBand4})
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.PartPurchaseCode, Me.PurchaseDate, Me.Status, Me.VendorCode})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.MakerCode, Me.Maker})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -73,64 +64,44 @@ Partial Class PURCHASELIST
         Me.MainView.OptionsView.ColumnAutoWidth = True
         Me.MainView.OptionsView.ShowBands = False
         Me.MainView.OptionsView.ShowGroupPanel = False
-        Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.PurchaseDate, DevExpress.Data.ColumnSortOrder.Descending)})
+        Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.Maker, DevExpress.Data.ColumnSortOrder.Ascending)})
         '
         'gridBand4
         '
         Me.gridBand4.Caption = "gridBand4"
-        Me.gridBand4.Columns.Add(Me.PurchaseDate)
-        Me.gridBand4.Columns.Add(Me.Status)
+        Me.gridBand4.Columns.Add(Me.Maker)
         Me.gridBand4.Name = "gridBand4"
         Me.gridBand4.VisibleIndex = 0
-        Me.gridBand4.Width = 431
+        Me.gridBand4.Width = 253
         '
-        'PurchaseDate
+        'Maker
         '
-        Me.PurchaseDate.Caption = "Date Ordered"
-        Me.PurchaseDate.FieldName = "PurchaseDate"
-        Me.PurchaseDate.MinWidth = 100
-        Me.PurchaseDate.Name = "PurchaseDate"
-        Me.PurchaseDate.Visible = True
-        Me.PurchaseDate.Width = 100
+        Me.Maker.Caption = "Maker"
+        Me.Maker.FieldName = "Maker"
+        Me.Maker.Name = "Maker"
+        Me.Maker.Visible = True
+        Me.Maker.Width = 253
         '
-        'Status
+        'MakerCode
         '
-        Me.Status.Caption = "Status"
-        Me.Status.FieldName = "Status"
-        Me.Status.Name = "Status"
-        Me.Status.Visible = True
-        Me.Status.Width = 331
+        Me.MakerCode.Caption = "MakerCode"
+        Me.MakerCode.FieldName = "MakerCode"
+        Me.MakerCode.Name = "MakerCode"
         '
-        'PartPurchaseCode
-        '
-        Me.PartPurchaseCode.Caption = "PartPurchaseCode"
-        Me.PartPurchaseCode.FieldName = "PartPurchaseCode"
-        Me.PartPurchaseCode.Name = "PartPurchaseCode"
-        '
-        'VendorCode
-        '
-        Me.VendorCode.Caption = "VendorCode"
-        Me.VendorCode.FieldName = "VendorCode"
-        Me.VendorCode.Name = "VendorCode"
-        '
-        'PURCHASELIST
+        'MAKERLIST
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.MainGrid)
-        Me.Name = "PURCHASELIST"
-        Me.Size = New System.Drawing.Size(449, 323)
+        Me.Name = "MAKERLIST"
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents treeListBand1 As DevExpress.XtraTreeList.Columns.TreeListBand
     Friend WithEvents MainGrid As DevExpress.XtraGrid.GridControl
     Friend WithEvents MainView As DevExpress.XtraGrid.Views.BandedGrid.AdvBandedGridView
+    Friend WithEvents Maker As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents MakerCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
-    Friend WithEvents PurchaseDate As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
-    Friend WithEvents Status As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
-    Friend WithEvents PartPurchaseCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
-    Friend WithEvents VendorCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
 
 End Class
