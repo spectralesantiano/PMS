@@ -24,6 +24,7 @@ Partial Class STORAGELIST
         Me.gridBand4 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         Me.Storage = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.StorageCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.LocCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -44,7 +45,7 @@ Partial Class STORAGELIST
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
         Me.MainView.Bands.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.GridBand() {Me.gridBand4})
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.StorageCode, Me.Storage})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.StorageCode, Me.LocCode, Me.Storage})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -88,6 +89,12 @@ Partial Class STORAGELIST
         Me.StorageCode.FieldName = "StorageCode"
         Me.StorageCode.Name = "StorageCode"
         '
+        'LocCode
+        '
+        Me.LocCode.Caption = "LocCode"
+        Me.LocCode.FieldName = "LocCode"
+        Me.LocCode.Name = "LocCode"
+        '
         'STORAGELIST
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -103,5 +110,6 @@ Partial Class STORAGELIST
     Friend WithEvents Storage As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents StorageCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
+    Friend WithEvents LocCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
 
 End Class

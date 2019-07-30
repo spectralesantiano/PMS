@@ -10,7 +10,11 @@ Public Class WORKDONE
                 frm.imgLogo.BackgroundImage = StringToImage(MainView.GetFocusedRowCellValue("ImageDoc"))
                 frm.ShowDialog()
             Case "Preview"
-                RaiseCustomEvent(Name, New Object() {"Preview", "WORKRECORD", "PMSReports", "|" & strID & "|"})
+                If MainView.RowCount = 0 Then
+                    MsgBox("Please select at least one record to preview.", MsgBoxStyle.Information, GetAppName)
+                Else
+                    RaiseCustomEvent(Name, New Object() {"Preview", "WORKRECORD", "PMSReports", "|" & strID & "|"})
+                End If
             Case "COPY"
                 CopyData()
             Case "EditNC"

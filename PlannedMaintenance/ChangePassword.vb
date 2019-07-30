@@ -9,6 +9,8 @@
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOk.Click
         If Me.txtOldPassword.Text <> USER_PASSWORD Then
             MsgBox("The current password you entered is incorrect.", MsgBoxStyle.Critical)
+        ElseIf Me.txtNewPass.Text = DEFAULT_PASSWORD Then
+            MsgBox("The new password should not be the same as the default password.", MsgBoxStyle.Critical)
         ElseIf Me.txtNewPass.Text = Me.txtOldPassword.Text Then
             MsgBox("The new password should not be the same as the old password.", MsgBoxStyle.Critical)
         ElseIf Me.txtNewPass.Text <> Me.txtConfirmPassword.Text Then

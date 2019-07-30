@@ -133,6 +133,7 @@ Public Class WORKDUE
         If Not bLoaded Then
             AllowAddition(Name, (bPermission And 2) > 0)
             AllowDeletion(Name, (bPermission And 8) > 0)
+            RaiseCustomEvent(Name, New Object() {"RenameEdit", "Edit"})
             AddEditListener(Me.header)
             bLoaded = True
             RankEdit.DataSource = AdmRank
@@ -157,9 +158,11 @@ Public Class WORKDUE
         Dim pt As Drawing.Point = view.GridControl.PointToClient(System.Windows.Forms.Control.MousePosition)
         Dim info As DevExpress.XtraGrid.Views.Grid.ViewInfo.GridHitInfo = view.CalcHitInfo(pt)
         If (info.HitTest = DevExpress.XtraGrid.Views.Grid.ViewInfo.GridHitTest.RowIndicator) Then
-            Dim frm As New frmImageViewer
-            frm.imgLogo.BackgroundImage = StringToImage(DB.DLookUp("ImageDoc", "tblAdmMaintenance", "", "MaintenanceCode='" & MainView.GetFocusedRowCellValue("MaintenanceCode") & "'"))
-            frm.ShowDialog()
+            If MainView.GetFocusedRowCellValue("HasImage") Then
+                Dim frm As New frmImageViewer
+                frm.imgLogo.BackgroundImage = StringToImage(DB.DLookUp("ImageDoc", "tblAdmMaintenance", "", "MaintenanceCode='" & MainView.GetFocusedRowCellValue("MaintenanceCode") & "'"))
+                frm.ShowDialog()
+            End If
         End If
     End Sub
 

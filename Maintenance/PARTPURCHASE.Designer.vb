@@ -20,7 +20,7 @@ Partial Class PARTPURCHASE
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PARTPURCHASE))
-        Dim SerializableAppearanceObject1 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
+        Dim SerializableAppearanceObject3 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Me.header = New DevExpress.XtraEditors.GroupControl()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.Grid.GridView()
@@ -62,6 +62,8 @@ Partial Class PARTPURCHASE
         Me.cmdReceiveAll = New DevExpress.XtraEditors.SimpleButton()
         Me.txtDefaultDate = New DevExpress.XtraEditors.DateEdit()
         Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
+        Me.LabelControl4 = New DevExpress.XtraEditors.LabelControl()
+        Me.cboVendorCode = New DevExpress.XtraEditors.LookUpEdit()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -83,6 +85,7 @@ Partial Class PARTPURCHASE
         Me.MainPanel.SuspendLayout()
         CType(Me.txtDefaultDate.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtDefaultDate.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.cboVendorCode.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'header
@@ -293,7 +296,7 @@ Partial Class PARTPURCHASE
         'DeleteEdit
         '
         Me.DeleteEdit.AutoHeight = False
-        Me.DeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("DeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject1, "", Nothing, Nothing, True)})
+        Me.DeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("DeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject3, "", Nothing, Nothing, True)})
         Me.DeleteEdit.Name = "DeleteEdit"
         Me.DeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
         '
@@ -516,15 +519,15 @@ Partial Class PARTPURCHASE
         '
         'txtStatus
         '
-        Me.txtStatus.Location = New System.Drawing.Point(149, 26)
+        Me.txtStatus.Location = New System.Drawing.Point(300, 26)
         Me.txtStatus.Name = "txtStatus"
         Me.txtStatus.Properties.MaxLength = 30
-        Me.txtStatus.Size = New System.Drawing.Size(198, 20)
+        Me.txtStatus.Size = New System.Drawing.Size(122, 20)
         Me.txtStatus.TabIndex = 207
         '
         'LabelControl12
         '
-        Me.LabelControl12.Location = New System.Drawing.Point(151, 7)
+        Me.LabelControl12.Location = New System.Drawing.Point(302, 7)
         Me.LabelControl12.Name = "LabelControl12"
         Me.LabelControl12.Size = New System.Drawing.Size(31, 13)
         Me.LabelControl12.TabIndex = 208
@@ -537,6 +540,8 @@ Partial Class PARTPURCHASE
         Me.MainPanel.Location = New System.Drawing.Point(0, 0)
         Me.MainPanel.Name = "MainPanel"
         Me.MainPanel.Panel1.Controls.Add(Me.GroupControl3)
+        Me.MainPanel.Panel2.Controls.Add(Me.LabelControl4)
+        Me.MainPanel.Panel2.Controls.Add(Me.cboVendorCode)
         Me.MainPanel.Panel2.Controls.Add(Me.cmdReceiveAll)
         Me.MainPanel.Panel2.Controls.Add(Me.txtDefaultDate)
         Me.MainPanel.Panel2.Controls.Add(Me.LabelControl2)
@@ -577,6 +582,30 @@ Partial Class PARTPURCHASE
         Me.LabelControl2.TabIndex = 209
         Me.LabelControl2.Text = "Default Date Receive"
         '
+        'LabelControl4
+        '
+        Me.LabelControl4.Location = New System.Drawing.Point(150, 10)
+        Me.LabelControl4.Name = "LabelControl4"
+        Me.LabelControl4.Size = New System.Drawing.Size(52, 13)
+        Me.LabelControl4.TabIndex = 213
+        Me.LabelControl4.Text = "Address to"
+        '
+        'cboVendorCode
+        '
+        Me.cboVendorCode.Location = New System.Drawing.Point(149, 26)
+        Me.cboVendorCode.Name = "cboVendorCode"
+        Me.cboVendorCode.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.cboVendorCode.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("VendorCode", "Name5", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Vendor", "Name6")})
+        Me.cboVendorCode.Properties.DisplayMember = "Vendor"
+        Me.cboVendorCode.Properties.DropDownRows = 10
+        Me.cboVendorCode.Properties.NullText = ""
+        Me.cboVendorCode.Properties.ShowFooter = False
+        Me.cboVendorCode.Properties.ShowHeader = False
+        Me.cboVendorCode.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard
+        Me.cboVendorCode.Properties.ValueMember = "VendorCode"
+        Me.cboVendorCode.Size = New System.Drawing.Size(154, 20)
+        Me.cboVendorCode.TabIndex = 1
+        '
         'PARTPURCHASE
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -605,6 +634,7 @@ Partial Class PARTPURCHASE
         Me.MainPanel.ResumeLayout(False)
         CType(Me.txtDefaultDate.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtDefaultDate.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.cboVendorCode.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -649,5 +679,7 @@ Partial Class PARTPURCHASE
     Friend WithEvents txtDefaultDate As DevExpress.XtraEditors.DateEdit
     Friend WithEvents LabelControl2 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents cmdReceiveAll As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents LabelControl4 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents cboVendorCode As DevExpress.XtraEditors.LookUpEdit
 
 End Class

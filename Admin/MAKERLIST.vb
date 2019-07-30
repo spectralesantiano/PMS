@@ -1,4 +1,4 @@
-Public Class USERLIST
+Public Class MAKERLIST
 
     Public Overrides Sub HideSelection()
         bAddMode = True
@@ -38,7 +38,7 @@ Public Class USERLIST
             nRow = MainView.FocusedRowHandle
         End If
         bDisableSelectionEvent = True
-        Me.MainGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.USERLIST")
+        Me.MainGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.MAKERLIST ORDER BY Maker")
         If System.IO.File.Exists(LayoutFileName) Then
             MainView.RestoreLayoutFromXml(LayoutFileName)
         End If
@@ -51,7 +51,7 @@ Public Class USERLIST
 
     Public Overrides Function GetID() As String
         If MainView.RowCount > 0 Then
-            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "UserID").ToString
+            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "MakerCode")
         Else
             Return ""
         End If
@@ -59,7 +59,7 @@ Public Class USERLIST
 
     Public Overrides Function GetDesc() As String
         If MainView.RowCount > 0 Then
-            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "UserName")
+            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "Maker")
         Else
             Return ""
         End If
@@ -78,8 +78,8 @@ Public Class USERLIST
         Try
             bAddMode = False
             Dim RowHandle As Integer = 0
-            Dim Col As DevExpress.XtraGrid.Columns.GridColumn = MainView.Columns("UserID")
-            RowHandle = MainView.LocateByValue(0, Col, CInt(id))
+            Dim Col As DevExpress.XtraGrid.Columns.GridColumn = MainView.Columns("MakerCode")
+            RowHandle = MainView.LocateByValue(0, Col, id)
             MainView.FocusedRowHandle = RowHandle
         Catch ex As Exception
         End Try
@@ -99,5 +99,5 @@ Public Class USERLIST
             e.Handled = True
         End If
     End Sub
-    
+
 End Class

@@ -12,7 +12,7 @@ Public Class UNITS
     Dim downHitInfo As GridHitInfo = Nothing, tblUnitSource As DataTable, tblUnitCopy As DataTable, sqls As New ArrayList, strCurrView As String
     Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False
     Dim strCounterCode As String, nCounter As Integer, nReading As Integer, strActiveCounter As String, nRunningHours As Integer, nCurrNode As TreeListNode
-
+    Dim dDateIssue As Object = DBNull.Value, strEditor As String
     Private Sub cboLocCode_ProcessNewValue(sender As Object, e As DevExpress.XtraEditors.Controls.ProcessNewValueEventArgs) Handles cboLocCode.ProcessNewValue
         Dim row As DataRow, tbl As DataTable, strLocCode As String = GenerateID(DB, "LocCode", "tblAdmLocation")
         tbl = cboLocCode.Properties.DataSource
@@ -265,8 +265,8 @@ Public Class UNITS
                     frm.cboRankCode.EditValue = ""
                     frm.cboIntCode.EditValue = ""
                     frm.txtInsCrossRef.EditValue = ""
-                    frm.txtInsDateIssued.EditValue = System.DBNull.Value
-                    frm.txtInsEditor.EditValue = ""
+                    frm.txtInsDateIssued.EditValue = dDateIssue
+                    frm.txtInsEditor.EditValue = strEditor
                     frm.txtInsDesc.EditValue = ""
                 Else
                     frm.cboWorkCode.EditValue = mView.GetRowCellValue(mView.FocusedRowHandle, "WorkCode")
@@ -284,11 +284,10 @@ Public Class UNITS
                     If IfNull(mView.GetRowCellValue(mView.FocusedRowHandle, "ImageDoc"), "") <> "" Then
                         frm.imgLogo.BackgroundImage = StringToImage(mView.GetRowCellValue(mView.FocusedRowHandle, "ImageDoc"))
                     End If
-                End If
-
-                frm.ShowDialog()
-                If frm.IS_SAVED Then
-                    If mView.IsNewItemRow(mView.FocusedRowHandle) Then mView.AddNewRow()
+            End If
+            frm.ShowDialog()
+            If frm.IS_SAVED Then
+                If mView.IsNewItemRow(mView.FocusedRowHandle) Then mView.AddNewRow()
                     mView.SetRowCellValue(mView.FocusedRowHandle, "mEdited", True)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "WorkCode", frm.cboWorkCode.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "RankCode", frm.cboRankCode.EditValue)
@@ -298,6 +297,8 @@ Public Class UNITS
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsDateIssue", frm.txtInsDateIssued.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsEditor", frm.txtInsEditor.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsDesc", frm.txtInsDesc.EditValue)
+                    dDateIssue = frm.txtInsDateIssued.EditValue
+                    strEditor = IfNull(frm.txtInsEditor.EditValue, "")
                     If frm.bImageUpdated Then
                         If frm.imgLogo.BackgroundImage Is Nothing Then
                             mView.SetRowCellValue(mView.FocusedRowHandle, "ImageDoc", "")
@@ -336,6 +337,8 @@ Public Class UNITS
     Private Sub mView_cellvaluechanged(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles mView.CellValueChanged
         If e.Column.Name <> "mEdited" Then
             mView.SetRowCellValue(e.RowHandle, "mEdited", True)
+            bbiPaste.Enabled = False
+            bbiImport.Enabled = False
             bRefreshMaintenance = True
         End If
     End Sub
@@ -352,6 +355,7 @@ Public Class UNITS
         If Not (Control.ModifierKeys = Keys.Control Or Control.ModifierKeys = Keys.None Or Control.ModifierKeys = Keys.Shift) Then
             Exit Sub
         End If
+
         If e.Button = MouseButtons.Right Then
             downHitInfo = hitInfo
             strCurrView = "Maintenance"
@@ -432,7 +436,6 @@ Public Class UNITS
                 xrow(0)("UnitNumber") = nCompNum
                 xrow(0)("UnitDesc") = tree.GetValue("Component") & " " & nCompNum
                 If IfNull(parent, "") = xrow(0)("UnitCode") Then
-                    MsgBox("Error")
                     Exit Sub
                 End If
                 sqls.Add("UPDATE dbo.tblAdmUnit SET ParentCode=" & strParent & ", UnitNumber=" & nCompNum & ", UnitDesc='" & xrow(0)("UnitDesc") & "', LastUpdatedBy='" & GetUserName() & "' WHERE UnitCode='" & xrow(0)("UnitCode") & "'")
@@ -687,6 +690,7 @@ Public Class UNITS
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtUnitDesc}) Then
             Dim i As Integer, strPartID As String
+            Dim nNode As TreeListNode = tlUnits.FindNodeByFieldValue("UnitCode", strID)
             sqls.Clear()
             sqls.Add(GenerateUpdateScript(Me.gUnitInfo, 3, "tblAdmUnit", "LastUpdatedBy='" & GetUserName() & "'", "UnitCode='" & strID & "'"))
 
@@ -740,18 +744,6 @@ Public Class UNITS
             Next
 
             DB.RunSqls(sqls)
-            If txtUnitDesc.Tag = 1 Then tlUnits.FocusedNode.SetValue("UnitDesc", txtUnitDesc.EditValue)
-            If cboDeptCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("DeptCode", cboDeptCode.EditValue)
-            If cboLocCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("LocCode", cboLocCode.EditValue)
-            If cboCatCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("CatCode", cboCatCode.EditValue)
-            If cboMakerCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("MakerCode", cboMakerCode.EditValue)
-            If cboVendorCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("VendorCode", cboVendorCode.EditValue)
-            If txtType.Tag = 1 Then tlUnits.FocusedNode.SetValue("Type", txtType.EditValue)
-            If txtModel.Tag = 1 Then tlUnits.FocusedNode.SetValue("Model", txtModel.EditValue)
-            If txtRefNo.Tag = 1 Then tlUnits.FocusedNode.SetValue("RefNo", txtRefNo.EditValue)
-            If txtSerialNumber.Tag = 1 Then tlUnits.FocusedNode.SetValue("SerialNumber", txtSerialNumber.EditValue)
-            If chkCritical.Tag = 1 Then tlUnits.FocusedNode.SetValue("Critical", chkCritical.Checked)
-            If chkActive.Tag = 1 Then tlUnits.FocusedNode.SetValue("Active", chkActive.Checked)
 
             If bRefreshMaintenance Then
                 mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
@@ -759,7 +751,7 @@ Public Class UNITS
                 bRefreshMaintenance = False
             End If
             If bRefreshCounter Then
-                'tlUnits.FocusedNode.SetValue("RunningHours", nRunningHours)
+                'nNode.SetValue("RunningHours", nRunningHours)
                 cGrid.DataSource = DB.CreateTable("SELECT *, CAST(0 AS BIT) cEdited FROM dbo.COUNTERLATESTREADING WHERE UnitCode='" & strID & "' ORDER BY ReadingDate Desc")
                 bRefreshCounter = False
             End If
@@ -768,6 +760,25 @@ Public Class UNITS
                 bRefreshParts = False
             End If
             bRecordUpdated = False
+
+            RemoveHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
+            RemoveHandler tlUnits.CellValueChanging, AddressOf tlUnits_CellValueChanging
+            If txtUnitDesc.Tag = 1 Then nNode.SetValue("UnitDesc", txtUnitDesc.EditValue)
+            If cboDeptCode.Tag = 1 Then nNode.SetValue("DeptCode", cboDeptCode.EditValue)
+            If cboLocCode.Tag = 1 Then nNode.SetValue("LocCode", cboLocCode.EditValue)
+            If cboCatCode.Tag = 1 Then nNode.SetValue("CatCode", cboCatCode.EditValue)
+            If cboMakerCode.Tag = 1 Then nNode.SetValue("MakerCode", cboMakerCode.EditValue)
+            If cboVendorCode.Tag = 1 Then nNode.SetValue("VendorCode", cboVendorCode.EditValue)
+            If txtType.Tag = 1 Then nNode.SetValue("Type", txtType.EditValue)
+            If txtModel.Tag = 1 Then nNode.SetValue("Model", txtModel.EditValue)
+            If txtRefNo.Tag = 1 Then nNode.SetValue("RefNo", txtRefNo.EditValue)
+            If txtSerialNumber.Tag = 1 Then nNode.SetValue("SerialNumber", txtSerialNumber.EditValue)
+            If chkCritical.Tag = 1 Then nNode.SetValue("Critical", chkCritical.Checked)
+            If chkActive.Tag = 1 Then nNode.SetValue("Active", chkActive.Checked)
+            AddHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
+            AddHandler tlUnits.CellValueChanging, AddressOf tlUnits_CellValueChanging
+            bbiPaste.Enabled = (bPermission And 16) > 0
+            bbiImport.Enabled = (bPermission And 16) > 0
             ClearFields(gUnitInfo, True)
             'RefreshData()
         End If
@@ -864,7 +875,11 @@ Public Class UNITS
             Case "Copy"
                 Copy()
             Case "Preview"
-                RaiseCustomEvent(Name, New Object() {"Preview", "COMPONENTREP", "PMSReports", "|" & tlUnits.FocusedNode.GetValue("UnitCode") & "|"})
+                If tlUnits.FocusedNode Is Nothing Then
+                    MsgBox("Please select at least one record to preview.", MsgBoxStyle.Information, GetAppName)
+                Else
+                    RaiseCustomEvent(Name, New Object() {"Preview", "COMPONENTREP", "PMSReports", "|" & tlUnits.FocusedNode.GetValue("UnitCode") & "|"})
+                End If
         End Select
     End Sub
 
