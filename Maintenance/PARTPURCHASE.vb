@@ -7,13 +7,17 @@ Public Class PARTPURCHASE
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtPurchaseDate}) Then
+            If MainView.RowCount = 0 Then
+                MsgBox("Please fill in the Purchase Details section.", MsgBoxStyle.Critical, GetAppName)
+                Exit Sub
+            End If
             Dim i As Integer, strDateReceived As String = "NULL", bHasUnreceived As Boolean = False, bHasReceived As Boolean = False
             sqls.Clear()
             If bAddMode Then
                 strID = GenerateID(DB, "PartPurchaseCode", "tblPartPurchase")
-                sqls.Add("INSERT INTO dbo.tblPartPurchase(PartPurchaseCode,PurchaseDate,Status,LastUpdatedBy) VALUES('" & strID & "', " & ChangeToSQLDate(txtPurchaseDate.EditValue) & ", 'Pending', '" & GetUserName() & "')")
+                sqls.Add("INSERT INTO dbo.tblPartPurchase(PartPurchaseCode,PurchaseDate, VendorCode,Status,LastUpdatedBy) VALUES('" & strID & "', " & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",'" & IfNull(cboVendorCode.EditValue, "") & "', 'Pending', '" & GetUserName() & "')")
             Else
-                sqls.Add("UPDATE dbo.tblPartPurchase SET PurchaseDate=" & ChangeToSQLDate(txtPurchaseDate.EditValue) & ", LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
+                sqls.Add("UPDATE dbo.tblPartPurchase SET PurchaseDate=" & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",VendorCode='" & IfNull(cboVendorCode.EditValue, "") & "', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             End If
             MainView.CloseEditor()
             MainView.UpdateCurrentRow()
@@ -66,6 +70,9 @@ Public Class PARTPURCHASE
             Me.txtPurchaseDate.EditValue = DBNull.Value
             Me.txtPurchaseDate.Focus()
             Me.txtPurchaseDate.Tag = 0
+            Me.cboVendorCode.EditValue = DBNull.Value
+            Me.cboVendorCode.Tag = 0
+            Me.cboVendorCode.BackColor = Color.White
             Me.txtPurchaseDate.BackColor = REQUIRED_SELECTED_COLOR
             Me.txtStatus.Text = "Pending"
             MainGrid.DataSource = DB.CreateTable("SELECT *, CAST(CASE WHEN DateReceived IS NULL THEN 0 ELSE 1 END AS BIT) Received, CAST(0 AS BIT) Edited FROM dbo.tblPartPurchaseDetail WHERE PartPurchaseCode='xyz'")
@@ -89,10 +96,12 @@ Public Class PARTPURCHASE
             AllowSaving(Name, False)
             AllowDeletion(Name, (bPermission And 8) > 0)
             AddEditListener(Me.txtPurchaseDate)
+            AddEditListener(Me.cboVendorCode)
             SetAddVisibility(Name, IIf((bPermission And 2) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             SetSaveVisibility(Name, IIf((bPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             SetDeleteVisibility(Name, IIf((bPermission And 8) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             VendorEdit.DataSource = DB.CreateTable("SELECT VendorCode, Name Vendor FROM dbo.tblAdmVendor")
+            cboVendorCode.Properties.DataSource = VendorEdit.DataSource
             cboUnit.Properties.DataSource = DB.CreateTable("SELECT UnitCode, UnitDesc, ParentCode FROM dbo.tblAdmUnit")
             bLoaded = True
         End If
@@ -106,9 +115,12 @@ Public Class PARTPURCHASE
         Else
             Me.txtPurchaseDate.EditValue = blList.GetFocusedRowData("PurchaseDate")
             Me.txtStatus.Text = blList.GetFocusedRowData("Status")
+            Me.cboVendorCode.EditValue = blList.GetFocusedRowData("VendorCode")
         End If
         Me.txtPurchaseDate.Tag = 0
         Me.txtPurchaseDate.BackColor = REQUIRED_SELECTED_COLOR
+        Me.cboVendorCode.Tag = 0
+        Me.cboVendorCode.BackColor = Color.White
         MyBase.RefreshData()
         RemoveEditListener(txtStatus)
         MainGrid.DataSource = DB.CreateTable("SELECT *, CAST(CASE WHEN DateReceived IS NULL THEN 0 ELSE 1 END AS BIT) Received, CAST(0 AS BIT) Edited FROM dbo.tblPartPurchaseDetail WHERE PartPurchaseCode='" & strID & "'")
@@ -117,6 +129,7 @@ Public Class PARTPURCHASE
             strPartCodes = strPartCodes & ",'" & MainView.GetRowCellValue(i, "PartCode") & "'"
         Next
         FilterParts()
+        txtPurchaseDate.Focus()
     End Sub
 
     Private Sub pView_RowCellStyle(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.RowCellStyleEventArgs) Handles pView.RowCellStyle

@@ -962,7 +962,15 @@
     End Sub
 
     Private Sub EXPORTADMIN_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles EXPORTADMIN.ItemClick
-        ExportPMSData(PMSDB, 1)
+        'ExportPMSData(PMSDB, 1)
+        If MsgBox("Please specify where you want to save export files.", MsgBoxStyle.Information Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            Dim odMain As New System.Windows.Forms.SaveFileDialog
+            odMain.Filter = "Files (*.pmsf) | *.pmsf"
+            odMain.FileName = "AdminData"
+            If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+                ExportPMSData(PMSDB, 1, odMain.FileName, System.DBNull.Value, False)
+            End If
+        End If
     End Sub
 
     Private Sub EXPORTADMIN_ItemClick_OLD(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) 'Handles EXPORTADMIN.ItemClick

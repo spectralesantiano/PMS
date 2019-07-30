@@ -105,6 +105,7 @@ Public Class SECUSERS
             AddEditListener(Me.txtUserName)
             AddEditListener(Me.GroupList)
         End If
+        GroupList.Enabled = (USER_ID = 1)
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp
