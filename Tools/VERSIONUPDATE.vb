@@ -7,6 +7,7 @@ Public Class VERSIONUPDATE
             If System.IO.Directory.Exists(odMain.SelectedPath) Then
                 strUpdatesDir = odMain.SelectedPath
                 txtUpdatesFolder.EditValue = strUpdatesDir
+                DB.SaveConfig("UpdatesFolder", txtUpdatesFolder.EditValue, "PMS")
             End If
         Else
             Return False
@@ -69,6 +70,7 @@ Public Class VERSIONUPDATE
         If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Clear Then
             strUpdatesDir = ""
             txtUpdatesFolder.EditValue = ""
+            DB.SaveConfig("UpdatesFolder", txtUpdatesFolder.EditValue, "PMS")
         ElseIf e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Search Then
             Browse()
         End If
