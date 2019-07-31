@@ -215,9 +215,11 @@ Module modBasicFuncitons
             strLicType = "NO"
         End If
 
-        MyLicenseStatus = xValidateLicense(wrhsm5_app, strLicType, MyLicense)
+        'MyLicenseStatus = xValidateLicense(wrhsm5_app, strLicType, MyLicense)
+        MyLicenseStatus = xValidateLicense(pms_app, strLicType, MyLicense)
         If MyLicenseStatus.ErrMsg <> "NETWORK LICENSE COMPROMISED" And MyLicenseStatus.StrLicenseMsg <> "DATETIME TAMPERED ERROR" Then
-            EvaluateMyLicense(wrhsm5_app.App_DbName, wrhsm5_app.App_BackRegGPeriod, MyLicense, MyLicenseStatus)
+            EvaluateMyLicense(pms_app.App_DbName, pms_app.App_BackRegGPeriod, MyLicense, MyLicenseStatus)
+            'EvaluateMyLicense(wrhsm5_app.App_DbName, wrhsm5_app.App_BackRegGPeriod, MyLicense, MyLicenseStatus)
         End If
 
         If MyLicenseStatus.ExpDays <= 30 Then

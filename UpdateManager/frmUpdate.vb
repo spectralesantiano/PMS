@@ -655,8 +655,6 @@ Public Class frmUpdate
 
 #End Region
 
-
-
 #Region "Main Methods/Functions"
     Private Sub Init(ByVal cActionType As String, ByRef bSuccess As Boolean)
 
