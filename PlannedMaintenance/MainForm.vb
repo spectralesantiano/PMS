@@ -162,7 +162,7 @@ Public Class MainForm
         CheckAppVersion()
 
         ''''''''''''''''uncomment this line when debugging mode''''''''''
-        'CheckLicense()
+        CheckLicense()
         '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
         PMSDB.BeginReader("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")

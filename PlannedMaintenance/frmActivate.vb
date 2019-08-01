@@ -42,9 +42,9 @@ Public Class frmActivate
                 strLictype = "NO"
             End If
 
-            MyLicenseStatus = xValidateLicense(wrhsm5_app, strLictype, MyLicense)
+            MyLicenseStatus = xValidateLicense(pms_app, strLictype, MyLicense)
             If MyLicenseStatus.ErrMsg <> "NETWORK LICENSE COMPROMISED" And MyLicenseStatus.StrLicenseMsg <> "DATETIME TAMPERED ERROR" Then
-                EvaluateMyLicense(wrhsm5_app.App_DbName, wrhsm5_app.App_BackRegGPeriod, MyLicense, MyLicenseStatus)
+                EvaluateMyLicense(pms_app.App_DbName, pms_app.App_BackRegGPeriod, MyLicense, MyLicenseStatus)
             End If
 
         End If
@@ -76,9 +76,9 @@ Public Class frmActivate
 
         'create log
         If MyLicenseStatus.StrLicenseMsg <> "" Then
-            Log_Append(wrhsm5_app, MyLicenseStatus.StrLicenseMsg.PadRight(25) & MyLicenseStatus.ErrMsg, , , True)
+            Log_Append(pms_app, MyLicenseStatus.StrLicenseMsg.PadRight(25) & MyLicenseStatus.ErrMsg, , , True)
         ElseIf MyLicenseStatus.ExpDays = 0 Then
-            Log_Append(wrhsm5_app, "License has expired.".PadRight(25) & MyLicenseStatus.ErrMsg, , , True)
+            Log_Append(pms_app, "License has expired.".PadRight(25) & MyLicenseStatus.ErrMsg, , , True)
         End If
 
         'Set button access
@@ -126,7 +126,7 @@ Public Class frmActivate
 
         Dim cApp As New Working_App
         Try
-            cApp = wrhsm5_app
+            cApp = pms_app
 
             Dim back_reg_gp As String = cApp.App_BackRegGPeriod
 
@@ -288,7 +288,7 @@ Public Class frmActivate
     End Sub
 
     Private Sub cmdOpentroubleshooter_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOpentroubleshooter.Click
-        Dim frm As New frmLicenseTroubleshooter(wrhsm5_app)
+        Dim frm As New frmLicenseTroubleshooter(pms_app)
         frm.ShowDialog()
 
     End Sub
