@@ -61,8 +61,6 @@ Partial Class WORKDUE
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.MainGrid)
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
         Me.header.Location = New System.Drawing.Point(0, 0)
@@ -74,22 +72,20 @@ Partial Class WORKDUE
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 23)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 30)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RemarksEdit, Me.NumberEdit, Me.RankEdit, Me.MaintenanceEdit, Me.UnitEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(1149, 485)
+        Me.MainGrid.Size = New System.Drawing.Size(1149, 478)
         Me.MainGrid.TabIndex = 8
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
         'MainView
         '
         Me.MainView.Appearance.GroupRow.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.MainView.Appearance.GroupRow.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Bold)
         Me.MainView.Appearance.GroupRow.ForeColor = System.Drawing.Color.Black
         Me.MainView.Appearance.GroupRow.Options.UseBackColor = True
-        Me.MainView.Appearance.GroupRow.Options.UseFont = True
         Me.MainView.Appearance.GroupRow.Options.UseForeColor = True
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True

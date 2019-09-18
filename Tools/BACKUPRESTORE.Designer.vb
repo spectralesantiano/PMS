@@ -41,7 +41,6 @@ Partial Class BACKUPRESTORE
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.XtraScrollableControl1)
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
@@ -59,9 +58,9 @@ Partial Class BACKUPRESTORE
         Me.XtraScrollableControl1.Controls.Add(Me.lblDir)
         Me.XtraScrollableControl1.Controls.Add(Me.LabelControl4)
         Me.XtraScrollableControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.XtraScrollableControl1.Location = New System.Drawing.Point(2, 23)
+        Me.XtraScrollableControl1.Location = New System.Drawing.Point(2, 30)
         Me.XtraScrollableControl1.Name = "XtraScrollableControl1"
-        Me.XtraScrollableControl1.Size = New System.Drawing.Size(868, 438)
+        Me.XtraScrollableControl1.Size = New System.Drawing.Size(868, 431)
         Me.XtraScrollableControl1.TabIndex = 47
         '
         'LabelControl1
@@ -69,11 +68,10 @@ Partial Class BACKUPRESTORE
         Me.LabelControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelControl1.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
         Me.LabelControl1.Appearance.ForeColor = System.Drawing.Color.Red
         Me.LabelControl1.Location = New System.Drawing.Point(37, 66)
         Me.LabelControl1.Name = "LabelControl1"
-        Me.LabelControl1.Size = New System.Drawing.Size(1259, 13)
+        Me.LabelControl1.Size = New System.Drawing.Size(1071, 13)
         Me.LabelControl1.TabIndex = 80
         Me.LabelControl1.Text = resources.GetString("LabelControl1.Text")
         '
@@ -82,11 +80,10 @@ Partial Class BACKUPRESTORE
         Me.lblNote.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblNote.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
         Me.lblNote.Appearance.ForeColor = System.Drawing.Color.Red
         Me.lblNote.Location = New System.Drawing.Point(37, 45)
         Me.lblNote.Name = "lblNote"
-        Me.lblNote.Size = New System.Drawing.Size(684, 13)
+        Me.lblNote.Size = New System.Drawing.Size(577, 13)
         Me.lblNote.TabIndex = 79
         Me.lblNote.Text = "Note: Backups from Tools menu can only be done from a PMS program installed on sa" & _
     "me hard drive as the PMS database"
@@ -100,7 +97,7 @@ Partial Class BACKUPRESTORE
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.Size = New System.Drawing.Size(823, 321)
+        Me.MainGrid.Size = New System.Drawing.Size(823, 314)
         Me.MainGrid.TabIndex = 78
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '

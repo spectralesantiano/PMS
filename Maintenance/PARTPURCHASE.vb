@@ -29,9 +29,16 @@ Public Class PARTPURCHASE
                     ElseIf MainView.GetRowCellValue(i, "Received") And MainView.GetRowCellValue(i, "DateReceived") Is DBNull.Value Then
                         MsgBox("Please enter the Date Received for " & MainView.GetRowCellDisplayText(i, "PartCode"), MsgBoxStyle.Critical)
                         Exit Sub
+                    ElseIf MainView.GetRowCellValue(i, "Received") And IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), 0) = 0 Then
+                        MsgBox("Please enter the Received Quantity for " & MainView.GetRowCellDisplayText(i, "PartCode"), MsgBoxStyle.Critical)
+                        Exit Sub
                     End If
 
-                    If Not MainView.GetRowCellValue(i, "DateReceived") Is DBNull.Value Then strDateReceived = ChangeToSQLDate(MainView.GetRowCellValue(i, "DateReceived"))
+                    If MainView.GetRowCellValue(i, "DateReceived") Is DBNull.Value Then
+                        strDateReceived = "NULL"
+                    Else
+                        strDateReceived = ChangeToSQLDate(MainView.GetRowCellValue(i, "DateReceived"))
+                    End If
 
                     If IfNull(MainView.GetRowCellValue(i, "PartPurchaseDetailID"), 0) = 0 Then
                         sqls.Add("INSERT Into dbo.tblPartPurchaseDetail([PartPurchaseCode],[PartCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[LastUpdatedBy]) Values('" & strID & "','" & MainView.GetRowCellValue(i, "PartCode") & "','" & MainView.GetRowCellValue(i, "VendorCode") & "'," & MainView.GetRowCellValue(i, "Quantity") & "," & strDateReceived & "," & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & ",'" & GetUserName() & "')")
@@ -282,4 +289,20 @@ Public Class PARTPURCHASE
             End If
         End If
     End Sub
+
+    Private Sub txtPurchaseDate_EditValueChanged(sender As Object, e As System.EventArgs) Handles txtPurchaseDate.EditValueChanged
+        If Not txtPurchaseDate.EditValue Is DBNull.Value Then
+            DateReceiveEdit.MinValue = txtPurchaseDate.EditValue
+            txtDefaultDate.Properties.MinValue = txtPurchaseDate.EditValue
+        End If
+
+    End Sub
+
+    Private Sub DateReceiveEdit_EditValueChanged(sender As Object, e As System.EventArgs) Handles DateReceiveEdit.EditValueChanged, NumberEdit.EditValueChanged
+        If MainView.FocusedColumn.Name = "ReceivedQuantity" Or MainView.FocusedColumn.Name = "DateReceived" Then
+            If Not CBool(MainView.GetFocusedRowCellValue("Received")) Then MainView.SetFocusedRowCellValue("Received", True)
+        End If
+    End Sub
+
+
 End Class

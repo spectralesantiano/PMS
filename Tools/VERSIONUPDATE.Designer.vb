@@ -30,8 +30,8 @@ Partial Class VERSIONUPDATE
         Me.VersionNo = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.VersionDate = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.VersionDesc = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.lblDir = New DevExpress.XtraEditors.LabelControl()
         Me.memoDesc = New DevExpress.XtraEditors.Repository.RepositoryItemMemoEdit()
+        Me.lblDir = New DevExpress.XtraEditors.LabelControl()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         Me.XtraScrollableControl1.SuspendLayout()
@@ -43,7 +43,6 @@ Partial Class VERSIONUPDATE
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.XtraScrollableControl1)
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
@@ -62,9 +61,9 @@ Partial Class VERSIONUPDATE
         Me.XtraScrollableControl1.Controls.Add(Me.MainGrid)
         Me.XtraScrollableControl1.Controls.Add(Me.lblDir)
         Me.XtraScrollableControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.XtraScrollableControl1.Location = New System.Drawing.Point(2, 23)
+        Me.XtraScrollableControl1.Location = New System.Drawing.Point(2, 30)
         Me.XtraScrollableControl1.Name = "XtraScrollableControl1"
-        Me.XtraScrollableControl1.Size = New System.Drawing.Size(855, 342)
+        Me.XtraScrollableControl1.Size = New System.Drawing.Size(855, 335)
         Me.XtraScrollableControl1.TabIndex = 47
         '
         'LabelControl2
@@ -72,11 +71,10 @@ Partial Class VERSIONUPDATE
         Me.LabelControl2.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LabelControl2.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
         Me.LabelControl2.Appearance.ForeColor = System.Drawing.Color.Red
         Me.LabelControl2.Location = New System.Drawing.Point(26, 71)
         Me.LabelControl2.Name = "LabelControl2"
-        Me.LabelControl2.Size = New System.Drawing.Size(402, 13)
+        Me.LabelControl2.Size = New System.Drawing.Size(341, 13)
         Me.LabelControl2.TabIndex = 82
         Me.LabelControl2.Text = "(  Example : * Updates Folder: \\server\shared_folder\PMS_UPDATES )"
         '
@@ -85,11 +83,10 @@ Partial Class VERSIONUPDATE
         Me.lblNote.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblNote.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
         Me.lblNote.Appearance.ForeColor = System.Drawing.Color.Red
         Me.lblNote.Location = New System.Drawing.Point(26, 44)
         Me.lblNote.Name = "lblNote"
-        Me.lblNote.Size = New System.Drawing.Size(980, 13)
+        Me.lblNote.Size = New System.Drawing.Size(838, 13)
         Me.lblNote.TabIndex = 81
         Me.lblNote.Text = "Note:  It is mandatory that the updates folder set on this section is a dedicated" & _
     " common SHARED folder on your network in order for the auto update of PMS to wor" & _
@@ -122,12 +119,12 @@ Partial Class VERSIONUPDATE
         Me.MainGrid.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.MainGrid.Location = New System.Drawing.Point(22, 90)
+        Me.MainGrid.Location = New System.Drawing.Point(22, 96)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.memoDesc})
-        Me.MainGrid.Size = New System.Drawing.Size(812, 232)
+        Me.MainGrid.Size = New System.Drawing.Size(812, 225)
         Me.MainGrid.TabIndex = 78
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -189,6 +186,10 @@ Partial Class VERSIONUPDATE
         Me.VersionDesc.VisibleIndex = 2
         Me.VersionDesc.Width = 651
         '
+        'memoDesc
+        '
+        Me.memoDesc.Name = "memoDesc"
+        '
         'lblDir
         '
         Me.lblDir.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical
@@ -197,10 +198,6 @@ Partial Class VERSIONUPDATE
         Me.lblDir.Size = New System.Drawing.Size(522, 13)
         Me.lblDir.TabIndex = 14
         Me.lblDir.Text = " "
-        '
-        'memoDesc
-        '
-        Me.memoDesc.Name = "memoDesc"
         '
         'VERSIONUPDATE
         '

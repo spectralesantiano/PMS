@@ -64,7 +64,6 @@ Partial Class SECGROUPS
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.LabelControl1)
         Me.header.Controls.Add(Me.txtFilter)
@@ -104,10 +103,6 @@ Partial Class SECGROUPS
         '
         'GroupControl2
         '
-        Me.GroupControl2.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl2.Appearance.Options.UseFont = True
-        Me.GroupControl2.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl2.AppearanceCaption.Options.UseFont = True
         Me.GroupControl2.Controls.Add(Me.UserGrid)
         Me.GroupControl2.Location = New System.Drawing.Point(27, 80)
         Me.GroupControl2.Name = "GroupControl2"
@@ -201,8 +196,6 @@ Partial Class SECGROUPS
         '
         Me.GroupControl1.Appearance.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupControl1.Appearance.Options.UseFont = True
-        Me.GroupControl1.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl1.AppearanceCaption.Options.UseFont = True
         Me.GroupControl1.Controls.Add(Me.MainGrid)
         Me.GroupControl1.Location = New System.Drawing.Point(320, 80)
         Me.GroupControl1.Name = "GroupControl1"

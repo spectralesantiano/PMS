@@ -109,8 +109,6 @@ Partial Class frmNC
         '
         'gDetails
         '
-        Me.gDetails.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gDetails.AppearanceCaption.Options.UseFont = True
         Me.gDetails.Controls.Add(Me.LabelControl6)
         Me.gDetails.Controls.Add(Me.txtObjectives)
         Me.gDetails.Controls.Add(Me.LabelControl8)
@@ -281,8 +279,6 @@ Partial Class frmNC
         '
         Me.GroupControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl1.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl1.AppearanceCaption.Options.UseFont = True
         Me.GroupControl1.Controls.Add(Me.MainGrid)
         Me.GroupControl1.Location = New System.Drawing.Point(20, 287)
         Me.GroupControl1.Name = "GroupControl1"
@@ -433,7 +429,6 @@ Partial Class frmNC
         Me.Controls.Add(Me.cmdOk)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmNC"
