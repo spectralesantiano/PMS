@@ -4,7 +4,8 @@ Imports System.Security.AccessControl
 Public Module mdLicense
 
     'initializations
-    Public wrhsm5_app As New Working_App("WRHSM5", "sm5_db", GetAppFolder() & "License Logs\WRHSM5", "C:\Program Files\Common Files\STI_WSM5Lic.lic", "sys_wsm5_g_p")
+    'Public wrhsm5_app As New Working_App("WRHSM5", "sm5_db", GetAppFolder() & "License Logs\WRHSM5", "C:\Program Files\Common Files\STI_WSM5Lic.lic", "sys_wsm5_g_p")
+    Public pms_app As New Working_App("PMS", "pms_db", GetAppFolder() & "License Logs\PMS", GetAppFolder() & "STI_PMSLic.lic", "sys_pms")
 
 #Region "Base Functions"
 
@@ -605,11 +606,11 @@ ReturnLine:
                         Dim newRuns As Integer = noRuns - 1
                         bSuccess = UpdateLicense(dbName, License.LID, "[LNum]", newRuns.ToString)
                         If bSuccess Then
-                            Log_Append(wrhsm5_app, wrhsm5_app.App_Name & " App status: " & newRuns.ToString & " run(s): Last success license validated: " & last_successval.ToString, , , True)
+                            Log_Append(pms_app, pms_app.App_Name & " App status: " & newRuns.ToString & " run(s): Last success license validated: " & last_successval.ToString, , , True)
                             LicenseStatus.ExpDays = newRuns.ToString
                             LicenseStatus.StrLicenseMsg = "DATETIME TAMPERED ERROR"
                         Else
-                            Log_Append(wrhsm5_app, wrhsm5_app.App_Name & " App status: error saving no of runs", , , True)
+                            Log_Append(pms_app, pms_app.App_Name & " App status: error saving no of runs", , , True)
                             LicenseStatus.ExpDays = "0"
                             LicenseStatus.StrLicenseMsg = "DATETIME TAMPERED ERROR"
                         End If
@@ -1144,8 +1145,8 @@ ReturnL:
         Return str
     End Function
 
-    Private Function pms_app() As Working_App
-        Throw New NotImplementedException
-    End Function
+    'Private Function pms_app() As Working_App
+    '    Throw New NotImplementedException
+    'End Function
 
 End Module

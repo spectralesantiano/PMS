@@ -1406,18 +1406,23 @@ Public Module Util
 
     <System.Diagnostics.DebuggerStepThrough()> _
     Public Function GetConfig(ByVal DB As SQLDB, ByVal cCode As String) As String
-        Return DB.DLookUp("Value", "sti_sys.dbo.tblPMS5Config", "", "CODE='" & cCode & "'")
+        'Return DB.DLookUp("Value", "sti_sys.dbo.tblPMS5Config", "", "CODE='" & cCode & "'")
+        Return DB.DLookUp("Value", "sti_sys.dbo.tblPMSConfig", "", "CODE='" & cCode & "'")
     End Function
+
 
     Public Sub SaveConfig(ByVal DB As SQLDB, ByVal cCode As String, ByVal cValue As String)
         Dim has_rec As Boolean = False
-        DB.BeginReader("Select Value from sti_sys.dbo.tblPMS5Config Where Code='" & cCode & "'")
+        'DB.BeginReader("Select Value from sti_sys.dbo.tblPMS5Config Where Code='" & cCode & "'")
+        DB.BeginReader("Select Value from sti_sys.dbo.tblPMSConfig Where Code='" & cCode & "'")
         has_rec = DB.HasRows
         DB.CloseReader()
         If has_rec Then
-            DB.RunSql("Update sti_sys.dbo.tblPMS5Config set Value='" & cValue & "' Where CODE='" & cCode & "'")
+            'DB.RunSql("Update sti_sys.dbo.tblPMS5Config set Value='" & cValue & "' Where CODE='" & cCode & "'")
+            DB.RunSql("Update sti_sys.dbo.tblPMSConfig set Value='" & cValue & "' Where CODE='" & cCode & "'")
         Else
-            DB.RunSql("Insert into sti_sys.dbo.tblPMS5Config(Code,Value) Values('" & cCode & "','" & cValue & "')")
+            'DB.RunSql("Update sti_sys.dbo.tblPMS5Config set Value='" & cValue & "' Where CODE='" & cCode & "'")
+            DB.RunSql("Insert into sti_sys.dbo.tblPMSConfig(Code,Value) Values('" & cCode & "','" & cValue & "')")
         End If
     End Sub
 
