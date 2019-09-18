@@ -70,8 +70,6 @@ Partial Class frmCopyMaintenance
         '
         'gDetails
         '
-        Me.gDetails.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gDetails.AppearanceCaption.Options.UseFont = True
         Me.gDetails.Controls.Add(Me.MainGrid)
         Me.gDetails.Location = New System.Drawing.Point(17, 178)
         Me.gDetails.Name = "gDetails"
@@ -179,8 +177,6 @@ Partial Class frmCopyMaintenance
         '
         Me.gMaintenance.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.gMaintenance.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gMaintenance.AppearanceCaption.Options.UseFont = True
         Me.gMaintenance.Controls.Add(Me.mGrid)
         Me.gMaintenance.Location = New System.Drawing.Point(17, 17)
         Me.gMaintenance.Name = "gMaintenance"
@@ -296,7 +292,6 @@ Partial Class frmCopyMaintenance
         Me.Controls.Add(Me.cmdSave)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmCopyMaintenance"

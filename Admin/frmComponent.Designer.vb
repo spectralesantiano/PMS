@@ -19,7 +19,6 @@ Partial Class frmComponent
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmComponent))
         Me.cmdCancel = New DevExpress.XtraEditors.SimpleButton()
         Me.cmdOk = New DevExpress.XtraEditors.SimpleButton()
         Me.LabelControl1 = New DevExpress.XtraEditors.LabelControl()
@@ -67,14 +66,11 @@ Partial Class frmComponent
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.cmdCancel
         Me.ClientSize = New System.Drawing.Size(280, 96)
-        Me.ControlBox = False
         Me.Controls.Add(Me.LabelControl1)
         Me.Controls.Add(Me.cmdOk)
         Me.Controls.Add(Me.cmdCancel)
         Me.Controls.Add(Me.txtComponent)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmComponent"

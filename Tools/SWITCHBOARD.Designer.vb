@@ -161,7 +161,6 @@ Partial Class Switchboard
         '
         'LabelControl9
         '
-        Me.LabelControl9.Appearance.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelControl9.Location = New System.Drawing.Point(20, 38)
         Me.LabelControl9.Name = "LabelControl9"
         Me.LabelControl9.Size = New System.Drawing.Size(185, 16)

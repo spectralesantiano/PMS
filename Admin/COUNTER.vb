@@ -67,10 +67,11 @@ Public Class COUNTER
             AddData()
         Else
             Me.txtSortCode.Text = IfNull(blList.GetFocusedRowData("SortCode"), 0)
-            Me.txtName.EditValue = blList.GetDesc
+            Me.txtName.EditValue = blList.GetFocusedRowData("Name")
         End If
         ClearFields(Me.header, True)
         MyBase.RefreshData()
+        Me.lblCounter.Text = "* Counter - " & blList.GetFocusedRowData("UnitDesc")
         Me.header.Text = "EDIT COUNTER DETAILS - " & blList.GetDesc.ToUpper
     End Sub
 

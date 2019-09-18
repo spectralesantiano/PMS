@@ -17,6 +17,7 @@ Public Class MainForm
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SHORE_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SHORE_ID','SAMPLE_')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
 
         '*********Settings for Versioning,License And Program Distribution************
@@ -79,6 +80,7 @@ Public Class MainForm
             End If
         End If
         PMSDB.CloseReader()
+        LoadUserPref()
         If Not mainlist Is Nothing Then mainlist.RefreshData()
         InitUserSettings()
     End Sub
@@ -107,12 +109,13 @@ Public Class MainForm
         PMSDB.BeginReader("EXEC dbo.GETSETTINGS")
         If PMSDB.Read Then
             DATE_LAST_EXPORT = PMSDB.ReaderItem("DATE_LAST_EXPORT", "")
+            EXPORT_DIR = PMSDB.ReaderItem("EXPORT_DIR", "")
             SHORE_ID = PMSDB.ReaderItem("SHORE_ID", "")
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
         End If
         PMSDB.CloseReader()
-        DateDueEdit.MinValue = Now.Date.AddDays(1)
-        txtDateDue.EditValue = Now.Date.AddMonths(1)
+        'DateDueEdit.MinValue = Now.Date.AddDays(1)
+        'txtDateDue.EditValue = Now.Date.AddMonths(1)
         bbSaveLayout.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
         bbResetLayout.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
         Me.Text = "<< " & GetAppName() & " - " & GetUserName() & " - " & Now.ToShortDateString & GetServerName() & ">>"
@@ -142,6 +145,7 @@ Public Class MainForm
                 End
             End If
         End If
+        LoadUserPref()
         InitUserSettings()
         LoadContent(strFirstContent, True)
     End Sub
@@ -234,10 +238,10 @@ Public Class MainForm
                 bbViewImage.Enabled = CBool(param(1))
             Case "ShowComponent"
                 If CBool(param(1)) Then
-                    bbShowComponents.Caption = "Hide Components"
+                    bbShowComponents.Caption = "Hide" & Environment.NewLine & "Components"
                     bbShowComponents.Down = True
                 Else
-                    bbShowComponents.Caption = "Show Components"
+                    bbShowComponents.Caption = "Show" & Environment.NewLine & "Components"
                     bbShowComponents.Down = False
                 End If
 
@@ -252,8 +256,6 @@ Public Class MainForm
             Case "EnableEdit"
                 bbEdit.Enabled = CBool(param(1))
                 bbAddPlannedDate.Enabled = CBool(param(1))
-            Case "RefreshEquipment"
-                ledEquipmentRep.DataSource = PMSDB.CreateTable("SELECT Equipment,EquipmentCode FROM dbo.EQUIPMENTLIST ORDER BY Equipment")
             Case "DisableEditNC"
                 bbUpdateNC.Enabled = False
             Case "EnableEditNC"
@@ -429,7 +431,6 @@ Public Class MainForm
             Me.bbShowComponents.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 5) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.ledDepartment.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "COUNTER" Or cContent = "RANK" Or cContent = "RUNNINGHOURS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.rpgAdminFilterOptions.Visible = (cContent = "UNITS" Or cContent = "COUNTER" Or cContent = "RANK") And (xrow(0)("Permission") And 1) > 0
-            Me.ledEquipment.Visibility = IIf((cContent = "WORKDONE" Or cContent = "COMPONENT" Or cContent = "MAINTENANCE" Or cContent = "NONCONFORM" Or cContent = "COUNTER") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.txtDateDue.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.txtDueHours.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             'Me.bbNC.Visibility = IIf((cContent = "WORKDONE" Or cContent = "NONCONFORM") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
@@ -447,6 +448,9 @@ Public Class MainForm
             Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            Me.bbCritical.Visibility = IIf((cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
             Me.Cursor = Cursors.Default
         End If
         IsLoaded = True
@@ -532,12 +536,35 @@ Public Class MainForm
         Next
     End Sub
 
+    Sub LoadUserPref()
+        PMSDB.BeginReader("SELECT * FROM dbo.tblSec_Users_Pref WHERE [USER ID]=" & USER_ID)
+        If PMSDB.Read Then
+            FONT_INCREASE = PMSDB.ReaderItem("FontSizeAdjustment", 0)
+            CURRENT_RANK = PMSDB.ReaderItem("RankCode", "")
+            CURRENT_DUEDAYS = PMSDB.ReaderItem("DueDays", 30)
+            CURRENT_DUEHOURS = PMSDB.ReaderItem("DueHours", 100)
+            CURRENT_FLATVIEW_CHECKED = PMSDB.ReaderItem("FlatView", 0)
+            CURRENT_SHOW_WARNING = PMSDB.ReaderItem("ShowUnitsWarning", 0)
+        End If
+        PMSDB.CloseReader()
+        ledRank.EditValue = CURRENT_RANK
+        txtDateDue.EditValue = CURRENT_DUEDAYS
+        txtDueHours.EditValue = CURRENT_DUEHOURS
+        bbFlatView.Down = CURRENT_FLATVIEW_CHECKED
+        bbFlatView.Caption = IIf(CURRENT_FLATVIEW_CHECKED, "Tree View", "Flat View")
+        DevExpress.XtraEditors.WindowsFormsSettings.DefaultFont = GetDefaultFont()
+        DevExpress.XtraEditors.WindowsFormsSettings.DefaultMenuFont = GetDefaultFont()
+        dbdController.Controller.AppearancesBar.ItemsFont = GetDefaultFont()
+    End Sub
+
     Private Sub InitUserSettings()
         ContentsObject = New DataView(PMSDB.CreateTable("EXEC USERLOGIN @UserID=" & USER_ID))
         ContentsObject.Sort = "ObjectID"
         strFirstContent = ""
         ResetRibbon()
     End Sub
+
+
 
     Private Sub cmdSaveLayout_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbSaveLayout.ItemClick
         If maincontent.Name = "WORKDUE" Then
@@ -853,16 +880,13 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub ledEQUIPMENTRep_ButtonClick(sender As System.Object, ByVal e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles ledEquipmentRep.ButtonClick
-        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Close Then
-            ledEquipment.EditValue = DBNull.Value
-        End If
-    End Sub
-
     Private Sub ledRank_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledRank.EditValueChanged
-        CURRENT_RANK = IfNull(ledRank.EditValue, "")
-        mainlist.SetFilter("")
-        maincontent.RefreshData()
+        If IsLoaded Then
+            CURRENT_RANK = IfNull(ledRank.EditValue, "")
+            mainlist.SetFilter("")
+            maincontent.RefreshData()
+        End If
+        
     End Sub
 
     Private Sub ledMainUnits_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledMainUnits.EditValueChanged
@@ -897,23 +921,26 @@ Public Class MainForm
     End Sub
 
     Private Sub txtDueDate_EditValueChanged(sender As Object, e As System.EventArgs) Handles txtDateDue.EditValueChanged
-        Try
-            If txtDateDue.EditValue Is Nothing Or txtDateDue.EditValue Is System.DBNull.Value Then
+        If IsLoaded Then
+            Try
+                If txtDateDue.EditValue Is Nothing Or txtDateDue.EditValue Is System.DBNull.Value Then
+                    CURRENT_DUEDAYS = "NULL"
+                Else
+                    CURRENT_DUEDAYS = txtDateDue.EditValue
+                End If
+
+            Catch ex As Exception
                 CURRENT_DUEDAYS = "NULL"
-            Else
-                CURRENT_DUEDAYS = ChangeToSQLDate(txtDateDue.EditValue)
-            End If
-        Catch ex As Exception
-            CURRENT_DUEDAYS = "NULL"
-        End Try
-        If maincontent.Name = "WORKDUE" Then maincontent.RefreshData()
+            End Try
+            If maincontent.Name = "WORKDUE" Then maincontent.RefreshData()
+        End If
     End Sub
 
     Private Sub txtDueHours_EditValueChanged(sender As Object, e As System.EventArgs) Handles txtDueHours.EditValueChanged
         If IsLoaded Then
             Try
                 CURRENT_DUEHOURS = IfNull(txtDueHours.EditValue, 0)
-                PMSDB.RunSql("UPDATE sti_sys.dbo.tblPMSConfig SET Value='" & txtDueHours.EditValue & "' WHERE Code='DUE_HOURS'")
+                'PMSDB.RunSql("UPDATE sti_sys.dbo.tblPMSConfig SET Value='" & txtDueHours.EditValue & "' WHERE Code='DUE_HOURS'")
             Catch ex As Exception
                 CURRENT_DUEHOURS = 0
             End Try
@@ -929,110 +956,21 @@ Public Class MainForm
         maincontent.ExecCustomFunction(New Object() {"UpdateNC"})
     End Sub
 
-    Private Sub ExportData(nExpType As Int16, dStart As Date, dEnd As Date)
-        Dim sqls As New ArrayList, drRow As DataRow, tbl As DataTable, strFile As String, strTempCode As String
-        Dim odMain As New System.Windows.Forms.SaveFileDialog
-        odMain.FileName = "MaintenanceData"
-        If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-            strFile = odMain.FileName
-
-            sqls.Add(IMO_NUMBER & "|2|PMS Maintenance Data") 'header admin data.
-
-            '''''''''''export categories
-            tbl = PMSDB.CreateTable("SELECT [CatCode],[Name],[DeptCode] FROM [dbo].[tblAdmCategory]")
-            sqls.Add("tblAdmCategory")
-            For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("CatCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("DeptCode") & "'")
-            Next
-            sqls.Add("END")
-
-            '''''''''''export work desc
-            tbl = PMSDB.CreateTable("SELECT [WorkCode],[Name] FROM [dbo].[tblAdmWork] WHERE LEFT(WorkCode,3)<>'SYS'")
-            sqls.Add("tblAdmWork")
-            For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("WorkCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "'")
-            Next
-            sqls.Add("END")
-
-            '''''''''''export equipments
-            tbl = PMSDB.CreateTable("SELECT [EquipmentCode],[Name],[DeptCode],[CatCode],[RankCode],[IsCritical],[HasComponent],[HasMaintenance] FROM [dbo].[tblAdmEquipment]")
-            sqls.Add("tblAdmEquipment")
-            For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("EquipmentCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("DeptCode") & "','" & drRow("CatCode") & "','" & drRow("RankCode") & "'," & IIf(IfNull(drRow("IsCritical"), False), 1, 0) & "," & IIf(IfNull(drRow("HasComponent"), False), 1, 0) & "," & IIf(IfNull(drRow("HasMaintenance"), False), 1, 0))
-            Next
-            sqls.Add("END")
-
-            '''''''''''export components
-            tbl = PMSDB.CreateTable("SELECT [ComponentCode],[Name],[Specs] FROM [dbo].[tblAdmComponent]")
-            sqls.Add("tblAdmComponent")
-            For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("ComponentCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("Specs").ToString.Replace("'", "''") & "'")
-            Next
-            sqls.Add("END")
-
-            '''''''''''export equipment/component link
-            tbl = PMSDB.CreateTable("SELECT [EquipmentComponentCode],[EquipmentCode],[ComponentCode],[Number] FROM [dbo].[tblEquipmentComponent]")
-            sqls.Add("tblEquipmentComponent")
-            For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("EquipmentComponentCode") & "','" & drRow("EquipmentCode") & "','" & drRow("ComponentCode") & "'," & IfNull(drRow("Number"), "NULL"))
-            Next
-            sqls.Add("END")
-
-            '''''''''''export counters
-            tbl = PMSDB.CreateTable("SELECT [CounterCode],[Name],[UnitCode],[EquipmentComponentCode],[SortCode],[Active] FROM [dbo].[tblAdmCounter] WHERE [Active]=1")
-            sqls.Add("tblAdmCounter")
-            For Each drRow In tbl.Rows
-                If drRow("EquipmentComponentCode") Is DBNull.Value Then
-                    strTempCode = "NULL"
-                Else
-                    strTempCode = "'" & drRow("EquipmentComponentCode") & "'"
-                End If
-                sqls.Add("'" & drRow("CounterCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("UnitCode") & "'," & strTempCode & "," & IfNull(drRow("SortCode"), "NULL") & "," & IIf(drRow("Active"), "1", "0"))
-            Next
-            sqls.Add("END")
-
-            '''''''''''export maintenance
-            tbl = PMSDB.CreateTable("SELECT [MaintenanceCode],[WorkCode],[EquipmentCode],[ComponentCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc] FROM [dbo].[tblAdmMaintenance] WHERE LEFT([MaintenanceCode],3)<>'SYS'")
-            sqls.Add("tblAdmMaintenance")
-            For Each drRow In tbl.Rows
-                If drRow("ComponentCode") Is DBNull.Value Then
-                    strTempCode = "NULL"
-                Else
-                    strTempCode = "'" & drRow("ComponentCode") & "'"
-                End If
-                sqls.Add("'" & drRow("MaintenanceCode") & "','" & drRow("WorkCode") & "','" & drRow("EquipmentCode") & "'," & strTempCode & ",'" & drRow("RankCode") & "'," & IfNull(drRow("Number"), "NULL") & ", '" & IfNull(drRow("IntCode"), "") & "', '" & drRow("InsCrossRef").ToString.Replace("'", "''") & "','" & drRow("InsEditor").ToString.Replace("'", "''") & "','" & drRow("InsDocument") & "'," & ChangeToExportDate(drRow("InsDateIssue")) & ",'" & drRow("InsDesc").ToString.Replace("'", "''") & "'")
-            Next
-            sqls.Add("END")
-
-            '''''''''''export locations
-            tbl = PMSDB.CreateTable("SELECT [LocCode],[Name] FROM [dbo].[tblAdmLocation]")
-            sqls.Add("tblAdmLocation")
-            For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("LocCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "'")
-            Next
-            sqls.Add("END")
-
-            '''''''''''export units
-            tbl = PMSDB.CreateTable("SELECT [UnitCode],[EquipmentCode],[Name],[IsSpare],[LocCode],[ProductNumber],[Manufacturer],[Specs] FROM [dbo].[tblAdmUnit]")
-            sqls.Add("tblAdmUnit")
-            For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("UnitCode") & "','" & drRow("EquipmentCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "'," & IIf(drRow("IsSpare"), 1, 0) & ",'" & drRow("LocCode") & "', '" & drRow("ProductNumber") & "', '" & drRow("Manufacturer").ToString.Replace("'", "''") & "','" & drRow("Specs").ToString.Replace("'", "''") & "'")
-            Next
-            sqls.Add("END")
-
-            Using sw As New System.IO.StreamWriter(strFile & ".txt", False, System.Text.Encoding.Unicode)
-                Dim strTemp As String
-                For Each strTemp In sqls
-                    sw.Write(Shuffle(strTemp, True) & "Ç")
-                Next
-            End Using
-
-            If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
-                Application.DoEvents()
-                Kill(strFile & ".txt")
-            End If
+    Private Sub EXPMAINTENANCE_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles EXPMAINTENANCE.ItemClick
+        Dim nExpType As Integer = 2, frm As New frmExportToSM
+        frm.deFrom.EditValue = ChangeSQLDateStrToDate(DATE_LAST_EXPORT)
+        frm.deTo.EditValue = Now.Date
+        frm.lblLastExp.Text = CDate(frm.deFrom.EditValue).ToShortDateString
+        frm.txtExportDir.EditValue = EXPORT_DIR
+        frm.ShowDialog()
+        If frm.bExported Then
+            EXPORT_DIR = frm.txtExportDir.EditValue
+            ExportPMSData(PMSDB, 3, frm.txtExportDir.EditValue & "\PMS_Maintenance.xxx", frm.deFrom.EditValue, frm.deTo.EditValue, False)
+            PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
+            PMSDB.SaveConfig("DATE_LAST_EXPORT", DATE_LAST_EXPORT, APP_SHORT_NAME)
         End If
     End Sub
+
 
     Private Sub EXPORTADMIN_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles EXPORTADMIN.ItemClick
         'ExportPMSData(PMSDB, 1)
@@ -1041,7 +979,7 @@ Public Class MainForm
             odMain.Filter = "Files (*.pmsf) | *.pmsf"
             odMain.FileName = "AdminData"
             If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-                ExportPMSData(PMSDB, 1, odMain.FileName, System.DBNull.Value, False)
+                ExportPMSData(PMSDB, 1, odMain.FileName, System.DBNull.Value, System.DBNull.Value, False)
             End If
         End If
     End Sub
@@ -1293,40 +1231,7 @@ Public Class MainForm
         maincontent.ExecCustomFunction(New Object() {"View"})
     End Sub
 
-    Private Sub EXPMAINTENANCE_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles EXPMAINTENANCE.ItemClick
-        Dim strFile As String, nExpType As Integer = 15
-        If MsgBox("Please specify where you want to save export files.", MsgBoxStyle.Information Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            Dim odMain As New System.Windows.Forms.SaveFileDialog
-            odMain.FileName = "MaintenanceData_" & Now.ToString("yyyyMMddHHmm")
-            If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-                strFile = odMain.FileName
-                Using sw As New System.IO.StreamWriter(strFile & ".txt", False, System.Text.Encoding.Unicode)
-                    'Export Information.
-                    sw.Write(Shuffle(SHORE_ID & "|" & IMO_NUMBER & "|Maintenance Records", True) & "Ç")
-                    'Update Vessel Information
-                    PMSDB.BeginReader("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
-                    If PMSDB.Read Then
-                        sw.Write(Shuffle("IF NOT EXISTS (SELECT * FROM [dbo].[tblAdmVsl] WHERE [VslCode] = '" & PMSDB.ReaderItem("VslCode") & "') INSERT INTO [dbo].[tblAdmVsl]([VslCode],[Name],[VslTypeCode],[Flag],[Email],[IMONo],[Active]) VALUES('" & PMSDB.ReaderItem("VslCode") & "','" & PMSDB.ReaderItem("Vessel").ToString.Replace("'", "''") & "','" & PMSDB.ReaderItem("VslTypeCode") & "','" & PMSDB.ReaderItem("Flag") & "','" & PMSDB.ReaderItem("Email") & "','" & PMSDB.ReaderItem("VslCode") & "',1) ELSE UPDATE dbo.tblAdmVsl SET [Name]='" & PMSDB.ReaderItem("Vessel").ToString.Replace("'", "''") & "',VslTypeCode='" & PMSDB.ReaderItem("VslTypeCode") & "',Flag='" & PMSDB.ReaderItem("Flag") & "',Email='" & PMSDB.ReaderItem("Email") & "' WHERE [VslCode] = '" & PMSDB.ReaderItem("VslCode") & "'", True) & "Ç")
-                    End If
-                    PMSDB.CloseReader()
-                    'Create sql statements for data update.
-                    PMSDB.BeginReader("EXEC [dbo].[EXPORTDATA] @nExpType=" & nExpType & ", @bFullExport=0, @strParameter='|" & IMO_NUMBER & "|" & DATE_LAST_EXPORT & "|'")
-                    While PMSDB.Read
-                        sw.Write(Shuffle(PMSDB.ReaderItem(0), True) & "Ç")
-                    End While
-                    PMSDB.CloseReader()
-                End Using
-                If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
-                    Application.DoEvents()
-                    Kill(strFile & ".txt")
-                End If
-                DATE_LAST_EXPORT = Now.ToString("yyyy-MM-dd HH:mm")
-                PMSDB.RunSql("UPDATE sti_sys.dbo.tblPMSConfig SET Value='" & DATE_LAST_EXPORT & "' WHERE Code='DATE_LAST_EXPORT'")
-            End If
-        End If
-
-    End Sub
-
+   
     Private Sub VESSELINFO_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles VESSELINFO.ItemClick
         Dim frm As New frmVesselInfo
         PMSDB.BeginReader("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
@@ -1356,10 +1261,10 @@ Public Class MainForm
 
     Private Sub bbShowComponents_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbShowComponents.ItemClick
         If bbShowComponents.Down Then
-            bbShowComponents.Caption = "Hide Components"
+            bbShowComponents.Caption = "Hide" & Environment.NewLine & "Components"
             maincontent.ExecCustomFunction(New Object() {"ShowComponent", "True"})
         Else
-            bbShowComponents.Caption = "Show Components"
+            bbShowComponents.Caption = "Show" & Environment.NewLine & "Components"
             maincontent.ExecCustomFunction(New Object() {"ShowComponent", "False"})
             If IfNull(ledMainUnits.EditValue, "") = "EMPTY" Then
                 ledMainUnits.EditValue = ""
@@ -1392,5 +1297,44 @@ Public Class MainForm
 
     Private Sub bbImportFromFile_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbImportFromFile.ItemClick
         mainlist.ExecCustomFunction(New Object() {"PasteFromFile"})
+    End Sub
+
+    Private Sub bbCritical_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbCritical.ItemClick
+        CURRENT_CRITICAL_CHECKED = bbCritical.Down
+        'bbCondition.Caption = IIf(bbCritical.Down, "Preventive", "Condition Based")
+        If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
+        maincontent.RefreshData()
+    End Sub
+
+    Private Sub bbFlatView_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbFlatView.ItemClick
+        CURRENT_FLATVIEW_CHECKED = bbFlatView.Down
+        bbFlatView.Caption = IIf(CURRENT_FLATVIEW_CHECKED, "Tree View", "Flat View")
+        'If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
+        MainPanel.PanelVisibility = IIf(CURRENT_FLATVIEW_CHECKED, DevExpress.XtraEditors.SplitPanelVisibility.Panel2, DevExpress.XtraEditors.SplitPanelVisibility.Both)
+        maincontent.RefreshData()
+    End Sub
+
+    Private Sub bbUserPreferences_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbUserPreferences.ItemClick
+        Dim frm As New frmUserPref
+        frm.ShowDialog()
+        If frm.IS_SAVED Then
+            If PMSDB.DLookUp("[User ID]", "tblSec_Users_Pref", "", "[User ID]=" & USER_ID) = "" Then
+                PMSDB.RunSql("INSERT INTO dbo.tblSec_Users_Pref VALUES(" & USER_ID & "," & FONT_INCREASE & ", " & CURRENT_DUEDAYS & "," & CURRENT_DUEHOURS & "," & IIf(CURRENT_SHOW_WARNING, 1, 0) & "," & IIf(CURRENT_FLATVIEW_CHECKED, 1, 0) & ",'" & CURRENT_RANK & "')")
+            Else
+                PMSDB.RunSql("UPDATE dbo.tblSec_Users_Pref SET [FontSizeAdjustment]=" & FONT_INCREASE & ",[DueDays]=" & CURRENT_DUEDAYS & ",[DueHours]=" & CURRENT_DUEHOURS & ",[ShowUnitsWarning]=" & IIf(CURRENT_SHOW_WARNING, 1, 0) & ",[FlatView]=" & IIf(CURRENT_FLATVIEW_CHECKED, 1, 0) & ",[RankCode]='" & CURRENT_RANK & "' WHERE [User ID]=" & USER_ID)
+            End If
+            ledRank.EditValue = CURRENT_RANK
+            txtDateDue.EditValue = CURRENT_DUEDAYS
+            txtDueHours.EditValue = CURRENT_DUEHOURS
+            bbFlatView.Down = CURRENT_FLATVIEW_CHECKED
+            bbFlatView.Caption = IIf(CURRENT_FLATVIEW_CHECKED, "Tree View", "Flat View")
+            If maincontent.Name = "WORKDONE" Then
+                MainPanel.PanelVisibility = IIf(CURRENT_FLATVIEW_CHECKED, DevExpress.XtraEditors.SplitPanelVisibility.Panel2, DevExpress.XtraEditors.SplitPanelVisibility.Both)
+                maincontent.RefreshData()
+            End If
+        End If
+        DevExpress.XtraEditors.WindowsFormsSettings.DefaultFont = GetDefaultFont()
+        DevExpress.XtraEditors.WindowsFormsSettings.DefaultMenuFont = GetDefaultFont()
+        dbdController.Controller.AppearancesBar.ItemsFont = GetDefaultFont()
     End Sub
 End Class

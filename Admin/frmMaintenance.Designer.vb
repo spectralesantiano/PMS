@@ -20,6 +20,7 @@ Partial Class frmMaintenance
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMaintenance))
+        Dim SerializableAppearanceObject1 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Me.cmdOk = New DevExpress.XtraEditors.SimpleButton()
         Me.cmdCancel = New DevExpress.XtraEditors.SimpleButton()
         Me.txtInsDesc = New DevExpress.XtraEditors.MemoEdit()
@@ -39,9 +40,17 @@ Partial Class frmMaintenance
         Me.cboRankCode = New DevExpress.XtraEditors.LookUpEdit()
         Me.LabelControl11 = New DevExpress.XtraEditors.LabelControl()
         Me.chkPreventive = New DevExpress.XtraEditors.CheckEdit()
-        Me.imgLogo = New System.Windows.Forms.PictureBox()
-        Me.cmdClear = New DevExpress.XtraEditors.SimpleButton()
         Me.cmdBrowse = New DevExpress.XtraEditors.SimpleButton()
+        Me.MainGrid = New DevExpress.XtraGrid.GridControl()
+        Me.MainView = New DevExpress.XtraGrid.Views.Grid.GridView()
+        Me.FileDesc = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.DocID = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.FileName = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Edited = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Delete = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
+        Me.RepositoryItemLookUpEdit2 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.Doc = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.txtInsDesc.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtInsCrossRef.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtInsDateIssued.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -52,22 +61,25 @@ Partial Class frmMaintenance
         CType(Me.cboIntCode.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cboRankCode.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.chkPreventive.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.imgLogo, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'cmdOk
         '
-        Me.cmdOk.Location = New System.Drawing.Point(304, 353)
+        Me.cmdOk.Location = New System.Drawing.Point(258, 353)
         Me.cmdOk.Name = "cmdOk"
-        Me.cmdOk.Size = New System.Drawing.Size(65, 23)
+        Me.cmdOk.Size = New System.Drawing.Size(86, 23)
         Me.cmdOk.TabIndex = 9
         Me.cmdOk.Text = "Done"
         '
         'cmdCancel
         '
-        Me.cmdCancel.Location = New System.Drawing.Point(373, 353)
+        Me.cmdCancel.Location = New System.Drawing.Point(352, 353)
         Me.cmdCancel.Name = "cmdCancel"
-        Me.cmdCancel.Size = New System.Drawing.Size(61, 23)
+        Me.cmdCancel.Size = New System.Drawing.Size(82, 23)
         Me.cmdCancel.TabIndex = 10
         Me.cmdCancel.Text = "Cancel"
         '
@@ -75,7 +87,7 @@ Partial Class frmMaintenance
         '
         Me.txtInsDesc.Location = New System.Drawing.Point(22, 241)
         Me.txtInsDesc.Name = "txtInsDesc"
-        Me.txtInsDesc.Size = New System.Drawing.Size(283, 93)
+        Me.txtInsDesc.Size = New System.Drawing.Size(236, 98)
         Me.txtInsDesc.TabIndex = 8
         '
         'LabelControl10
@@ -239,40 +251,138 @@ Partial Class frmMaintenance
         Me.chkPreventive.Size = New System.Drawing.Size(138, 19)
         Me.chkPreventive.TabIndex = 2
         '
-        'imgLogo
-        '
-        Me.imgLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.imgLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.imgLogo.Location = New System.Drawing.Point(304, 241)
-        Me.imgLogo.Name = "imgLogo"
-        Me.imgLogo.Size = New System.Drawing.Size(130, 93)
-        Me.imgLogo.TabIndex = 208
-        Me.imgLogo.TabStop = False
-        '
-        'cmdClear
-        '
-        Me.cmdClear.Location = New System.Drawing.Point(373, 216)
-        Me.cmdClear.Name = "cmdClear"
-        Me.cmdClear.Size = New System.Drawing.Size(61, 23)
-        Me.cmdClear.TabIndex = 210
-        Me.cmdClear.Text = "Clear"
-        '
         'cmdBrowse
         '
-        Me.cmdBrowse.Location = New System.Drawing.Point(304, 216)
+        Me.cmdBrowse.Location = New System.Drawing.Point(258, 217)
         Me.cmdBrowse.Name = "cmdBrowse"
-        Me.cmdBrowse.Size = New System.Drawing.Size(64, 23)
+        Me.cmdBrowse.Size = New System.Drawing.Size(176, 23)
         Me.cmdBrowse.TabIndex = 209
-        Me.cmdBrowse.Text = "Browse"
+        Me.cmdBrowse.Text = "Attach"
+        '
+        'MainGrid
+        '
+        Me.MainGrid.Location = New System.Drawing.Point(258, 241)
+        Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
+        Me.MainGrid.MainView = Me.MainView
+        Me.MainGrid.Name = "MainGrid"
+        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit2, Me.DeleteEdit})
+        Me.MainGrid.Size = New System.Drawing.Size(176, 98)
+        Me.MainGrid.TabIndex = 210
+        Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
+        '
+        'MainView
+        '
+        Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
+        Me.MainView.Appearance.ViewCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.MainView.Appearance.ViewCaption.ForeColor = System.Drawing.Color.Black
+        Me.MainView.Appearance.ViewCaption.Options.UseFont = True
+        Me.MainView.Appearance.ViewCaption.Options.UseForeColor = True
+        Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
+        Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.FileDesc, Me.DocID, Me.FileName, Me.Edited, Me.Delete, Me.Doc})
+        Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
+        Me.MainView.GridControl = Me.MainGrid
+        Me.MainView.Name = "MainView"
+        Me.MainView.NewItemRowText = "Click here to add new record"
+        Me.MainView.OptionsBehavior.AutoPopulateColumns = False
+        Me.MainView.OptionsBehavior.AutoSelectAllInEditor = False
+        Me.MainView.OptionsBehavior.ReadOnly = True
+        Me.MainView.OptionsCustomization.AllowColumnMoving = False
+        Me.MainView.OptionsCustomization.AllowColumnResizing = False
+        Me.MainView.OptionsCustomization.AllowFilter = False
+        Me.MainView.OptionsCustomization.AllowGroup = False
+        Me.MainView.OptionsCustomization.AllowQuickHideColumns = False
+        Me.MainView.OptionsCustomization.AllowSort = False
+        Me.MainView.OptionsFilter.AllowFilterEditor = False
+        Me.MainView.OptionsFind.AllowFindPanel = False
+        Me.MainView.OptionsSelection.EnableAppearanceFocusedCell = False
+        Me.MainView.OptionsSelection.EnableAppearanceFocusedRow = False
+        Me.MainView.OptionsSelection.EnableAppearanceHideSelection = False
+        Me.MainView.OptionsSelection.UseIndicatorForSelection = False
+        Me.MainView.OptionsView.HeaderFilterButtonShowMode = DevExpress.XtraEditors.Controls.FilterButtonShowMode.Button
+        Me.MainView.OptionsView.RowAutoHeight = True
+        Me.MainView.OptionsView.ShowColumnHeaders = False
+        Me.MainView.OptionsView.ShowGroupPanel = False
+        '
+        'FileDesc
+        '
+        Me.FileDesc.Caption = "FileDesc"
+        Me.FileDesc.FieldName = "FileDesc"
+        Me.FileDesc.Name = "FileDesc"
+        Me.FileDesc.OptionsColumn.AllowEdit = False
+        Me.FileDesc.OptionsColumn.ReadOnly = True
+        Me.FileDesc.Visible = True
+        Me.FileDesc.VisibleIndex = 0
+        Me.FileDesc.Width = 169
+        '
+        'DocID
+        '
+        Me.DocID.Caption = "DocID"
+        Me.DocID.FieldName = "DocID"
+        Me.DocID.Name = "DocID"
+        '
+        'FileName
+        '
+        Me.FileName.Caption = "File Name"
+        Me.FileName.FieldName = "FileName"
+        Me.FileName.MaxWidth = 55
+        Me.FileName.MinWidth = 55
+        Me.FileName.Name = "FileName"
+        Me.FileName.OptionsColumn.AllowEdit = False
+        Me.FileName.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.[False]
+        Me.FileName.OptionsColumn.ReadOnly = True
+        Me.FileName.Width = 55
+        '
+        'Edited
+        '
+        Me.Edited.Caption = "Edited"
+        Me.Edited.FieldName = "Edited"
+        Me.Edited.Name = "Edited"
+        '
+        'Delete
+        '
+        Me.Delete.Caption = "Delete"
+        Me.Delete.ColumnEdit = Me.DeleteEdit
+        Me.Delete.MaxWidth = 20
+        Me.Delete.Name = "Delete"
+        Me.Delete.Visible = True
+        Me.Delete.VisibleIndex = 1
+        Me.Delete.Width = 20
+        '
+        'DeleteEdit
+        '
+        Me.DeleteEdit.AutoHeight = False
+        Me.DeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("DeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject1, "", Nothing, Nothing, True)})
+        Me.DeleteEdit.Name = "DeleteEdit"
+        Me.DeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
+        '
+        'RepositoryItemLookUpEdit2
+        '
+        Me.RepositoryItemLookUpEdit2.AutoHeight = False
+        Me.RepositoryItemLookUpEdit2.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.RepositoryItemLookUpEdit2.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("CounterCode", "Name10", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Counter", "Name12")})
+        Me.RepositoryItemLookUpEdit2.DisplayMember = "Counter"
+        Me.RepositoryItemLookUpEdit2.DropDownRows = 10
+        Me.RepositoryItemLookUpEdit2.Name = "RepositoryItemLookUpEdit2"
+        Me.RepositoryItemLookUpEdit2.NullText = ""
+        Me.RepositoryItemLookUpEdit2.ShowFooter = False
+        Me.RepositoryItemLookUpEdit2.ShowHeader = False
+        Me.RepositoryItemLookUpEdit2.ValueMember = "CounterCode"
+        '
+        'Doc
+        '
+        Me.Doc.Caption = "Doc"
+        Me.Doc.FieldName = "Doc"
+        Me.Doc.Name = "Doc"
         '
         'frmMaintenance
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(460, 393)
-        Me.Controls.Add(Me.cmdClear)
+        Me.ClientSize = New System.Drawing.Size(460, 396)
+        Me.Controls.Add(Me.MainGrid)
         Me.Controls.Add(Me.cmdBrowse)
-        Me.Controls.Add(Me.imgLogo)
         Me.Controls.Add(Me.chkPreventive)
         Me.Controls.Add(Me.LabelControl5)
         Me.Controls.Add(Me.LabelControl6)
@@ -294,7 +404,6 @@ Partial Class frmMaintenance
         Me.Controls.Add(Me.txtInsCrossRef)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmMaintenance"
@@ -311,7 +420,10 @@ Partial Class frmMaintenance
         CType(Me.cboIntCode.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cboRankCode.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.chkPreventive.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.imgLogo, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -335,7 +447,15 @@ Partial Class frmMaintenance
     Friend WithEvents cboRankCode As DevExpress.XtraEditors.LookUpEdit
     Friend WithEvents LabelControl11 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents chkPreventive As DevExpress.XtraEditors.CheckEdit
-    Friend WithEvents imgLogo As System.Windows.Forms.PictureBox
-    Friend WithEvents cmdClear As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents cmdBrowse As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents MainGrid As DevExpress.XtraGrid.GridControl
+    Friend WithEvents MainView As DevExpress.XtraGrid.Views.Grid.GridView
+    Friend WithEvents FileDesc As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents DocID As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents FileName As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Edited As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents RepositoryItemLookUpEdit2 As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
+    Friend WithEvents Delete As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents DeleteEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit
+    Friend WithEvents Doc As DevExpress.XtraGrid.Columns.GridColumn
 End Class

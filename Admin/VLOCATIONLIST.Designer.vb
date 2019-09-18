@@ -76,7 +76,7 @@ Partial Class VLOCATIONLIST
         '
         'LocName
         '
-        Me.LocName.Caption = "LocName"
+        Me.LocName.Caption = "Location"
         Me.LocName.FieldName = "LocName"
         Me.LocName.Name = "LocName"
         Me.LocName.Visible = True
