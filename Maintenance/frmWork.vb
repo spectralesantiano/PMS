@@ -3,7 +3,7 @@
 Public Class frmWork
 
     Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, bGetPrevWork As Boolean = True, nMaintenanceID As Integer = 0, bImageUpdated As Boolean = False
-    Dim strRequiredFields = "cboUnit;cboMaintenance;cboRankCode;txtWorkDate;txtExecutedBy"
+    Dim strRequiredFields = "cboUnit;cboMaintenance;cboRankCode;txtWorkDate;txtExecutedBy", nCurrentRunningHours As Integer
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOK.Click
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {cboUnit, cboMaintenance, cboRankCode, txtExecutedBy, txtWorkDate}) Then
@@ -12,9 +12,14 @@ Public Class frmWork
                 strIntCode = IfNull(nrow("IntCode"), "")
                 nInterval = IfNull(nrow("Number"), 0)
             End If
-            If strIntCode = "SYSHOURS" And IfNull(txtWorkCounter.EditValue, 0) = 0 Then
-                MsgBox("Please enter the current running hours.", MsgBoxStyle.Critical, GetAppName)
-                Exit Sub
+            If strIntCode = "SYSHOURS" Then
+                If IfNull(txtWorkCounter.EditValue, 0) = 0 Then
+                    MsgBox("Please enter the current running hours.", MsgBoxStyle.Critical, GetAppName)
+                    Exit Sub
+                ElseIf IfNull(txtWorkCounter.EditValue, 0) < nCurrentRunningHours Then
+                    MsgBox("The running hours should not be lower than the latest running hours reading.", MsgBoxStyle.Critical, GetAppName)
+                    Exit Sub
+                End If
             End If
             IS_SAVED = True
             Me.Close()
@@ -105,10 +110,11 @@ Public Class frmWork
         Dim nNode As TreeListNode = cboUnit.Properties.TreeList.FocusedNode
         If Not nNode Is Nothing Then
             cboMaintenance.Properties.DataSource = db.CreateTable("SELECT [MaintenanceCode],[RankCode],[WorkDescription],Interval ,[Interval],[IntDue],[IntCode],[Number],[InsDesc] FROM [dbo].[COMPONENT_MAINTENANCELIST] WHERE UnitCode='" & nNode.GetValue("UnitCode") & "' OR LEFT(MaintenanceCode,3)='SYS' ORDER BY SortCode, WorkDescription")
-            PartEdit.DataSource = db.CreateTable("SELECT [PartCode],[Name] [Part],[OnStock] FROM [dbo].[tblAdmPart] WHERE OnStock>0 AND PartCode IN (SELECT [PartCode] FROM [dbo].[tblUnitPart] WHERE UnitCode='" & nNode.GetValue("UnitCode") & "')")
-            MainGrid.DataSource = db.CreateTable("SELECT *, CAST(0 AS BIT) Edited FROM dbo.tblPartConsumption WHERE MaintenanceWorkID=" & nMaintenanceID)
-            If IfNull(nNode.GetValue("RunningHours"), 0) > 0 Then
-                lblRunningHours.Text = "Running Hours: " & nNode.GetValue("RunningHours")
+            'PartEdit.DataSource = db.CreateTable("SELECT [PartCode],[Name] [Part],[OnStock] FROM [dbo].[tblAdmPart] WHERE OnStock>0 AND PartCode IN (SELECT [PartCode] FROM [dbo].[tblUnitPart] WHERE UnitCode='" & nNode.GetValue("UnitCode") & "')")
+            MainGrid.DataSource = db.CreateTable("SELECT p.PartCode, p.OnStock, p.Name + ISNULL(' - ' + p.PartNumber ,'') AS Part, CAST(0 AS BIT) AS Edited, MaintenanceWorkID, Number, PartConsumptionID FROM dbo.tblAdmPart AS p INNER JOIN (SELECT PartCode FROM dbo.tblUnitPart WHERE (UnitCode = '" & nNode.GetValue("UnitCode") & "')) AS up ON p.PartCode = up.PartCode LEFT JOIN(SELECT PartCode,PartConsumptionID,MaintenanceWorkID,Number FROM dbo.tblPartConsumption WHERE (MaintenanceWorkID = " & nMaintenanceID & ")) AS pc ON p.PartCode = pc.PartCode")
+            nCurrentRunningHours = IfNull(nNode.GetValue("RunningHours"), 0)
+            If nCurrentRunningHours > 0 Then
+                lblRunningHours.Text = "Running Hours: " & nCurrentRunningHours
                 lblReadingDate.Text = "Latest Reading: " & CDate(nNode.GetValue("ReadingDate")).ToShortDateString
             End If
         End If
@@ -160,10 +166,6 @@ Public Class frmWork
         End If
     End Sub
 
-    Private Sub MainView_InitNewRow(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.InitNewRowEventArgs) Handles MainView.InitNewRow
-        Dim View As DevExpress.XtraGrid.Views.Base.ColumnView = sender
-        View.SetRowCellValue(e.RowHandle, View.Columns("Edited"), True)
-    End Sub
 
     Private Sub MainView_RowCellStyle(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.RowCellStyleEventArgs) Handles MainView.RowCellStyle
         If MainView.GetRowCellValue(e.RowHandle, "Edited") And MainView.FocusedRowHandle = e.RowHandle Then
@@ -171,7 +173,13 @@ Public Class frmWork
         ElseIf MainView.GetRowCellValue(e.RowHandle, "Edited") Then
             e.Appearance.BackColor = EDITED_COLOR
         ElseIf e.RowHandle = MainView.FocusedRowHandle Then
-            e.Appearance.BackColor = SEL_COLOR
+            If e.Column.ReadOnly Then
+                e.Appearance.BackColor = DISABLED_COLOR
+            Else
+                e.Appearance.BackColor = SEL_COLOR
+            End If
+        ElseIf e.Column.ReadOnly Then
+            e.Appearance.BackColor = DISABLED_COLOR
         End If
     End Sub
 
@@ -181,20 +189,16 @@ Public Class frmWork
         If IfNull(MainView.GetFocusedRowCellValue("PartConsumptionID"), 0) > 0 Then
             db.RunSql("DELETE FROM dbo.tblPartConsumption WHERE PartConsumptionID=" & MainView.GetFocusedRowCellValue("PartConsumptionID"))
         End If
-        MainView.DeleteRow(MainView.FocusedRowHandle)
+        MainView.SetFocusedRowCellValue("Number", DBNull.Value)
+        MainView.SetFocusedRowCellValue("PartConsumptionID", DBNull.Value)
+        MainView.SetFocusedRowCellValue("Edited", False)
     End Sub
 
-    Private Sub cmdClear_Click(sender As System.Object, e As System.EventArgs) Handles cmdClear.Click
-        imgLogo.BackgroundImage = Nothing
-        bImageUpdated = True
-    End Sub
-
-    Private Sub cmdBrowse_Click(sender As System.Object, e As System.EventArgs) Handles cmdBrowse.Click
-        Dim odMain As New System.Windows.Forms.OpenFileDialog
-        odMain.Filter = "Image files (*.jpg, *.jpeg) | *.jpg; *.jpeg"
-        If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-            imgLogo.BackgroundImage = New System.Drawing.Bitmap(odMain.FileName)
-            bImageUpdated = True
+    Private Sub MainView_ValidatingEditor(sender As Object, e As DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs) Handles MainView.ValidatingEditor
+        If e.Value > IfNull(MainView.GetFocusedRowCellValue("OnStock"), 0) Then
+            e.ErrorText = "Total parts consumed should not be greater than the current parts on stock."
+            e.Valid = False
         End If
     End Sub
+
 End Class

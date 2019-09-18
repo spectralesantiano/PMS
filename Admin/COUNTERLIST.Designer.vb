@@ -22,11 +22,13 @@ Partial Class COUNTERLIST
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.CounterCode = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.Counter = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.CounterName = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DeptCode = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.CatCode = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.UnitCode = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Active = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.UnitDesc = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Counter = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -46,7 +48,7 @@ Partial Class COUNTERLIST
         '
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.CounterCode, Me.Counter, Me.DeptCode, Me.CatCode, Me.UnitCode, Me.Active})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.CounterCode, Me.UnitDesc, Me.CounterName, Me.DeptCode, Me.CatCode, Me.UnitCode, Me.Active, Me.Counter})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -64,7 +66,7 @@ Partial Class COUNTERLIST
         Me.MainView.OptionsSelection.EnableAppearanceHideSelection = False
         Me.MainView.OptionsSelection.UseIndicatorForSelection = False
         Me.MainView.OptionsView.ShowGroupPanel = False
-        Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.Counter, DevExpress.Data.ColumnSortOrder.Ascending)})
+        Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.CounterName, DevExpress.Data.ColumnSortOrder.Ascending)})
         '
         'CounterCode
         '
@@ -72,14 +74,14 @@ Partial Class COUNTERLIST
         Me.CounterCode.FieldName = "CounterCode"
         Me.CounterCode.Name = "CounterCode"
         '
-        'Counter
+        'CounterName
         '
-        Me.Counter.Caption = "Counter"
-        Me.Counter.FieldName = "Counter"
-        Me.Counter.Name = "Counter"
-        Me.Counter.Visible = True
-        Me.Counter.VisibleIndex = 0
-        Me.Counter.Width = 200
+        Me.CounterName.Caption = "Counter"
+        Me.CounterName.FieldName = "Name"
+        Me.CounterName.Name = "CounterName"
+        Me.CounterName.Visible = True
+        Me.CounterName.VisibleIndex = 1
+        Me.CounterName.Width = 105
         '
         'DeptCode
         '
@@ -107,6 +109,21 @@ Partial Class COUNTERLIST
         Me.Active.Name = "Active"
         Me.Active.Width = 45
         '
+        'UnitDesc
+        '
+        Me.UnitDesc.Caption = "Unit"
+        Me.UnitDesc.FieldName = "UnitDesc"
+        Me.UnitDesc.Name = "UnitDesc"
+        Me.UnitDesc.Visible = True
+        Me.UnitDesc.VisibleIndex = 0
+        Me.UnitDesc.Width = 180
+        '
+        'Counter
+        '
+        Me.Counter.Caption = "Counter"
+        Me.Counter.FieldName = "Counter"
+        Me.Counter.Name = "Counter"
+        '
         'COUNTERLIST
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -120,10 +137,12 @@ Partial Class COUNTERLIST
     Friend WithEvents MainGrid As DevExpress.XtraGrid.GridControl
     Friend WithEvents MainView As DevExpress.XtraGrid.Views.Grid.GridView
     Friend WithEvents CounterCode As DevExpress.XtraGrid.Columns.GridColumn
-    Friend WithEvents Counter As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents CounterName As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DeptCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents CatCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents UnitCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Active As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents UnitDesc As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Counter As DevExpress.XtraGrid.Columns.GridColumn
 
 End Class

@@ -62,15 +62,15 @@ Partial Class frmWork
         Me.MainView = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.PartConsumptionID = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.PartCode = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.PartEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.Part = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.OnStock = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Number = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Delete = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.Edited = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.RepositoryItemLookUpEdit1 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
-        Me.cmdClear = New DevExpress.XtraEditors.SimpleButton()
-        Me.cmdBrowse = New DevExpress.XtraEditors.SimpleButton()
-        Me.imgLogo = New System.Windows.Forms.PictureBox()
+        Me.PartEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.GroupControl1 = New DevExpress.XtraEditors.GroupControl()
         CType(Me.cboMaintenance.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cboUnit.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.UnitTree, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -92,15 +92,16 @@ Partial Class frmWork
         Me.GroupControl3.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemLookUpEdit1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.imgLogo, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupControl1.SuspendLayout()
         Me.SuspendLayout()
         '
         'cmdOK
         '
-        Me.cmdOK.Location = New System.Drawing.Point(384, 527)
+        Me.cmdOK.Location = New System.Drawing.Point(503, 558)
         Me.cmdOK.Name = "cmdOK"
         Me.cmdOK.Size = New System.Drawing.Size(78, 23)
         Me.cmdOK.TabIndex = 7
@@ -108,7 +109,7 @@ Partial Class frmWork
         '
         'LabelControl2
         '
-        Me.LabelControl2.Location = New System.Drawing.Point(289, 12)
+        Me.LabelControl2.Location = New System.Drawing.Point(10, 76)
         Me.LabelControl2.Name = "LabelControl2"
         Me.LabelControl2.Size = New System.Drawing.Size(70, 13)
         Me.LabelControl2.TabIndex = 8
@@ -116,7 +117,7 @@ Partial Class frmWork
         '
         'cboMaintenance
         '
-        Me.cboMaintenance.Location = New System.Drawing.Point(289, 31)
+        Me.cboMaintenance.Location = New System.Drawing.Point(10, 95)
         Me.cboMaintenance.Name = "cboMaintenance"
         Me.cboMaintenance.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.cboMaintenance.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("MaintenanceCode", "MaintenanceCode", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("WorkDescription", "WorkDescription"), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("RankCode", "RankCode", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("IntDue", "IntDue", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("IntCode", "IntCode", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Number", "Number", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("InsDesc", "InsDesc", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default])})
@@ -126,12 +127,12 @@ Partial Class frmWork
         Me.cboMaintenance.Properties.ShowFooter = False
         Me.cboMaintenance.Properties.ShowHeader = False
         Me.cboMaintenance.Properties.ValueMember = "MaintenanceCode"
-        Me.cboMaintenance.Size = New System.Drawing.Size(256, 20)
+        Me.cboMaintenance.Size = New System.Drawing.Size(274, 20)
         Me.cboMaintenance.TabIndex = 1
         '
         'cmdCancel
         '
-        Me.cmdCancel.Location = New System.Drawing.Point(468, 527)
+        Me.cmdCancel.Location = New System.Drawing.Point(587, 558)
         Me.cmdCancel.Name = "cmdCancel"
         Me.cmdCancel.Size = New System.Drawing.Size(78, 23)
         Me.cmdCancel.TabIndex = 8
@@ -139,7 +140,7 @@ Partial Class frmWork
         '
         'lblComponent
         '
-        Me.lblComponent.Location = New System.Drawing.Point(22, 12)
+        Me.lblComponent.Location = New System.Drawing.Point(10, 31)
         Me.lblComponent.Name = "lblComponent"
         Me.lblComponent.Size = New System.Drawing.Size(64, 13)
         Me.lblComponent.TabIndex = 214
@@ -147,7 +148,7 @@ Partial Class frmWork
         '
         'cboUnit
         '
-        Me.cboUnit.Location = New System.Drawing.Point(22, 31)
+        Me.cboUnit.Location = New System.Drawing.Point(10, 50)
         Me.cboUnit.Name = "cboUnit"
         Me.cboUnit.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.cboUnit.Properties.DisplayMember = "UnitDesc"
@@ -155,7 +156,7 @@ Partial Class frmWork
         Me.cboUnit.Properties.ShowFooter = False
         Me.cboUnit.Properties.TreeList = Me.UnitTree
         Me.cboUnit.Properties.ValueMember = "UnitCode"
-        Me.cboUnit.Size = New System.Drawing.Size(268, 20)
+        Me.cboUnit.Size = New System.Drawing.Size(274, 20)
         Me.cboUnit.TabIndex = 0
         '
         'UnitTree
@@ -212,8 +213,6 @@ Partial Class frmWork
         '
         'gPrevMaintenance
         '
-        Me.gPrevMaintenance.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gPrevMaintenance.AppearanceCaption.Options.UseFont = True
         Me.gPrevMaintenance.Controls.Add(Me.txtPRemarks)
         Me.gPrevMaintenance.Controls.Add(Me.txtPDate)
         Me.gPrevMaintenance.Controls.Add(Me.LabelControl6)
@@ -222,36 +221,36 @@ Partial Class frmWork
         Me.gPrevMaintenance.Controls.Add(Me.LabelControl9)
         Me.gPrevMaintenance.Controls.Add(Me.LabelControl10)
         Me.gPrevMaintenance.Controls.Add(Me.txtPExec)
-        Me.gPrevMaintenance.Location = New System.Drawing.Point(23, 350)
+        Me.gPrevMaintenance.Location = New System.Drawing.Point(12, 394)
         Me.gPrevMaintenance.Name = "gPrevMaintenance"
-        Me.gPrevMaintenance.Size = New System.Drawing.Size(523, 165)
+        Me.gPrevMaintenance.Size = New System.Drawing.Size(653, 150)
         Me.gPrevMaintenance.TabIndex = 226
         Me.gPrevMaintenance.Text = "Previous Maintenance"
         '
         'txtPRemarks
         '
         Me.txtPRemarks.Enabled = False
-        Me.txtPRemarks.Location = New System.Drawing.Point(14, 94)
+        Me.txtPRemarks.Location = New System.Drawing.Point(22, 94)
         Me.txtPRemarks.Name = "txtPRemarks"
-        Me.txtPRemarks.Size = New System.Drawing.Size(497, 52)
+        Me.txtPRemarks.Size = New System.Drawing.Size(610, 42)
         Me.txtPRemarks.TabIndex = 6
         '
         'txtPDate
         '
         Me.txtPDate.EditValue = Nothing
         Me.txtPDate.Enabled = False
-        Me.txtPDate.Location = New System.Drawing.Point(14, 49)
+        Me.txtPDate.Location = New System.Drawing.Point(22, 49)
         Me.txtPDate.Name = "txtPDate"
         Me.txtPDate.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.txtPDate.Properties.CalendarTimeProperties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.txtPDate.Properties.EditFormat.FormatString = ""
         Me.txtPDate.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.DateTime
-        Me.txtPDate.Size = New System.Drawing.Size(102, 20)
+        Me.txtPDate.Size = New System.Drawing.Size(141, 20)
         Me.txtPDate.TabIndex = 2
         '
         'LabelControl6
         '
-        Me.LabelControl6.Location = New System.Drawing.Point(14, 33)
+        Me.LabelControl6.Location = New System.Drawing.Point(22, 33)
         Me.LabelControl6.Name = "LabelControl6"
         Me.LabelControl6.Size = New System.Drawing.Size(23, 13)
         Me.LabelControl6.TabIndex = 206
@@ -261,19 +260,19 @@ Partial Class frmWork
         '
         Me.txtPRunningHours.EditValue = CType(0, Long)
         Me.txtPRunningHours.Enabled = False
-        Me.txtPRunningHours.Location = New System.Drawing.Point(115, 49)
+        Me.txtPRunningHours.Location = New System.Drawing.Point(162, 49)
         Me.txtPRunningHours.Name = "txtPRunningHours"
         Me.txtPRunningHours.Properties.Appearance.Options.UseTextOptions = True
         Me.txtPRunningHours.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far
         Me.txtPRunningHours.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.txtPRunningHours.Properties.Mask.EditMask = "f0"
         Me.txtPRunningHours.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
-        Me.txtPRunningHours.Size = New System.Drawing.Size(91, 20)
+        Me.txtPRunningHours.Size = New System.Drawing.Size(92, 20)
         Me.txtPRunningHours.TabIndex = 3
         '
         'LabelControl8
         '
-        Me.LabelControl8.Location = New System.Drawing.Point(115, 33)
+        Me.LabelControl8.Location = New System.Drawing.Point(162, 33)
         Me.LabelControl8.Name = "LabelControl8"
         Me.LabelControl8.Size = New System.Drawing.Size(70, 13)
         Me.LabelControl8.TabIndex = 207
@@ -281,7 +280,7 @@ Partial Class frmWork
         '
         'LabelControl9
         '
-        Me.LabelControl9.Location = New System.Drawing.Point(14, 75)
+        Me.LabelControl9.Location = New System.Drawing.Point(22, 75)
         Me.LabelControl9.Name = "LabelControl9"
         Me.LabelControl9.Size = New System.Drawing.Size(41, 13)
         Me.LabelControl9.TabIndex = 208
@@ -289,7 +288,7 @@ Partial Class frmWork
         '
         'LabelControl10
         '
-        Me.LabelControl10.Location = New System.Drawing.Point(205, 33)
+        Me.LabelControl10.Location = New System.Drawing.Point(326, 33)
         Me.LabelControl10.Name = "LabelControl10"
         Me.LabelControl10.Size = New System.Drawing.Size(60, 13)
         Me.LabelControl10.TabIndex = 209
@@ -298,24 +297,24 @@ Partial Class frmWork
         'txtPExec
         '
         Me.txtPExec.Enabled = False
-        Me.txtPExec.Location = New System.Drawing.Point(205, 49)
+        Me.txtPExec.Location = New System.Drawing.Point(253, 49)
         Me.txtPExec.Name = "txtPExec"
         Me.txtPExec.Properties.MaxLength = 30
-        Me.txtPExec.Size = New System.Drawing.Size(306, 20)
+        Me.txtPExec.Size = New System.Drawing.Size(379, 20)
         Me.txtPExec.TabIndex = 4
         '
         'txtRemarks
         '
         Me.txtRemarks.EditValue = ""
-        Me.txtRemarks.Location = New System.Drawing.Point(22, 123)
+        Me.txtRemarks.Location = New System.Drawing.Point(10, 230)
         Me.txtRemarks.Name = "txtRemarks"
-        Me.txtRemarks.Size = New System.Drawing.Size(268, 43)
+        Me.txtRemarks.Size = New System.Drawing.Size(274, 45)
         Me.txtRemarks.TabIndex = 6
         '
         'txtWorkDate
         '
         Me.txtWorkDate.EditValue = Nothing
-        Me.txtWorkDate.Location = New System.Drawing.Point(22, 76)
+        Me.txtWorkDate.Location = New System.Drawing.Point(11, 137)
         Me.txtWorkDate.Name = "txtWorkDate"
         Me.txtWorkDate.Properties.Appearance.BackColor = System.Drawing.Color.White
         Me.txtWorkDate.Properties.Appearance.Options.UseBackColor = True
@@ -323,12 +322,12 @@ Partial Class frmWork
         Me.txtWorkDate.Properties.CalendarTimeProperties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.txtWorkDate.Properties.EditFormat.FormatString = ""
         Me.txtWorkDate.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.DateTime
-        Me.txtWorkDate.Size = New System.Drawing.Size(116, 20)
+        Me.txtWorkDate.Size = New System.Drawing.Size(159, 20)
         Me.txtWorkDate.TabIndex = 2
         '
         'lblDate
         '
-        Me.lblDate.Location = New System.Drawing.Point(22, 60)
+        Me.lblDate.Location = New System.Drawing.Point(11, 121)
         Me.lblDate.Name = "lblDate"
         Me.lblDate.Size = New System.Drawing.Size(32, 13)
         Me.lblDate.TabIndex = 232
@@ -337,19 +336,19 @@ Partial Class frmWork
         'txtWorkCounter
         '
         Me.txtWorkCounter.EditValue = CType(0, Long)
-        Me.txtWorkCounter.Location = New System.Drawing.Point(137, 76)
+        Me.txtWorkCounter.Location = New System.Drawing.Point(169, 137)
         Me.txtWorkCounter.Name = "txtWorkCounter"
         Me.txtWorkCounter.Properties.Appearance.Options.UseTextOptions = True
         Me.txtWorkCounter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far
         Me.txtWorkCounter.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.txtWorkCounter.Properties.Mask.EditMask = "f0"
         Me.txtWorkCounter.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
-        Me.txtWorkCounter.Size = New System.Drawing.Size(91, 20)
+        Me.txtWorkCounter.Size = New System.Drawing.Size(115, 20)
         Me.txtWorkCounter.TabIndex = 3
         '
         'LabelControl3
         '
-        Me.LabelControl3.Location = New System.Drawing.Point(22, 104)
+        Me.LabelControl3.Location = New System.Drawing.Point(10, 211)
         Me.LabelControl3.Name = "LabelControl3"
         Me.LabelControl3.Size = New System.Drawing.Size(41, 13)
         Me.LabelControl3.TabIndex = 234
@@ -357,7 +356,7 @@ Partial Class frmWork
         '
         'LabelControl7
         '
-        Me.LabelControl7.Location = New System.Drawing.Point(227, 60)
+        Me.LabelControl7.Location = New System.Drawing.Point(10, 165)
         Me.LabelControl7.Name = "LabelControl7"
         Me.LabelControl7.Size = New System.Drawing.Size(69, 13)
         Me.LabelControl7.TabIndex = 235
@@ -365,15 +364,15 @@ Partial Class frmWork
         '
         'txtExecutedBy
         '
-        Me.txtExecutedBy.Location = New System.Drawing.Point(227, 76)
+        Me.txtExecutedBy.Location = New System.Drawing.Point(10, 181)
         Me.txtExecutedBy.Name = "txtExecutedBy"
         Me.txtExecutedBy.Properties.MaxLength = 30
-        Me.txtExecutedBy.Size = New System.Drawing.Size(179, 20)
+        Me.txtExecutedBy.Size = New System.Drawing.Size(160, 20)
         Me.txtExecutedBy.TabIndex = 4
         '
         'LabelControl4
         '
-        Me.LabelControl4.Location = New System.Drawing.Point(405, 60)
+        Me.LabelControl4.Location = New System.Drawing.Point(169, 165)
         Me.LabelControl4.Name = "LabelControl4"
         Me.LabelControl4.Size = New System.Drawing.Size(33, 13)
         Me.LabelControl4.TabIndex = 236
@@ -381,7 +380,7 @@ Partial Class frmWork
         '
         'cboRankCode
         '
-        Me.cboRankCode.Location = New System.Drawing.Point(405, 76)
+        Me.cboRankCode.Location = New System.Drawing.Point(169, 181)
         Me.cboRankCode.Name = "cboRankCode"
         Me.cboRankCode.Properties.BestFitMode = DevExpress.XtraEditors.Controls.BestFitMode.BestFitResizePopup
         Me.cboRankCode.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
@@ -392,12 +391,12 @@ Partial Class frmWork
         Me.cboRankCode.Properties.ShowFooter = False
         Me.cboRankCode.Properties.ShowHeader = False
         Me.cboRankCode.Properties.ValueMember = "RankCode"
-        Me.cboRankCode.Size = New System.Drawing.Size(140, 20)
+        Me.cboRankCode.Size = New System.Drawing.Size(115, 20)
         Me.cboRankCode.TabIndex = 5
         '
         'LabelControl12
         '
-        Me.LabelControl12.Location = New System.Drawing.Point(137, 57)
+        Me.LabelControl12.Location = New System.Drawing.Point(169, 121)
         Me.LabelControl12.Name = "LabelControl12"
         Me.LabelControl12.Size = New System.Drawing.Size(70, 13)
         Me.LabelControl12.TabIndex = 238
@@ -405,33 +404,31 @@ Partial Class frmWork
         '
         'lblReadingDate
         '
-        Me.lblReadingDate.Appearance.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblReadingDate.Location = New System.Drawing.Point(23, 330)
+        Me.lblReadingDate.Location = New System.Drawing.Point(14, 374)
         Me.lblReadingDate.Name = "lblReadingDate"
-        Me.lblReadingDate.Size = New System.Drawing.Size(102, 14)
+        Me.lblReadingDate.Size = New System.Drawing.Size(90, 13)
         Me.lblReadingDate.TabIndex = 239
         Me.lblReadingDate.Text = "Reading Date: N/A"
         '
         'lblRunningHours
         '
-        Me.lblRunningHours.Appearance.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblRunningHours.Location = New System.Drawing.Point(251, 330)
+        Me.lblRunningHours.Location = New System.Drawing.Point(314, 374)
         Me.lblRunningHours.Name = "lblRunningHours"
-        Me.lblRunningHours.Size = New System.Drawing.Size(108, 14)
+        Me.lblRunningHours.Size = New System.Drawing.Size(95, 13)
         Me.lblRunningHours.TabIndex = 240
         Me.lblRunningHours.Text = "Running Hours: N/A"
         '
         'txtInsDesc
         '
         Me.txtInsDesc.Enabled = False
-        Me.txtInsDesc.Location = New System.Drawing.Point(289, 123)
+        Me.txtInsDesc.Location = New System.Drawing.Point(10, 300)
         Me.txtInsDesc.Name = "txtInsDesc"
-        Me.txtInsDesc.Size = New System.Drawing.Size(256, 43)
+        Me.txtInsDesc.Size = New System.Drawing.Size(274, 45)
         Me.txtInsDesc.TabIndex = 241
         '
         'LabelControl1
         '
-        Me.LabelControl1.Location = New System.Drawing.Point(289, 107)
+        Me.LabelControl1.Location = New System.Drawing.Point(11, 281)
         Me.LabelControl1.Name = "LabelControl1"
         Me.LabelControl1.Size = New System.Drawing.Size(57, 13)
         Me.LabelControl1.TabIndex = 242
@@ -440,32 +437,30 @@ Partial Class frmWork
         'cmdCopy
         '
         Me.cmdCopy.Enabled = False
-        Me.cmdCopy.Location = New System.Drawing.Point(497, 102)
+        Me.cmdCopy.Location = New System.Drawing.Point(169, 207)
         Me.cmdCopy.Name = "cmdCopy"
-        Me.cmdCopy.Size = New System.Drawing.Size(48, 18)
+        Me.cmdCopy.Size = New System.Drawing.Size(115, 18)
         Me.cmdCopy.TabIndex = 243
-        Me.cmdCopy.Text = "Copy"
+        Me.cmdCopy.Text = "Copy Instructions"
         '
         'GroupControl3
         '
-        Me.GroupControl3.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl3.AppearanceCaption.Options.UseFont = True
         Me.GroupControl3.Controls.Add(Me.MainGrid)
-        Me.GroupControl3.Location = New System.Drawing.Point(22, 177)
+        Me.GroupControl3.Location = New System.Drawing.Point(312, 7)
         Me.GroupControl3.Name = "GroupControl3"
-        Me.GroupControl3.Size = New System.Drawing.Size(379, 139)
+        Me.GroupControl3.Size = New System.Drawing.Size(353, 357)
         Me.GroupControl3.TabIndex = 244
-        Me.GroupControl3.Text = "Consumed Parts"
+        Me.GroupControl3.Text = "Parts"
         '
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 23)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 20)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1, Me.DeleteEdit, Me.PartEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(375, 114)
+        Me.MainGrid.Size = New System.Drawing.Size(349, 335)
         Me.MainGrid.TabIndex = 11
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -479,11 +474,12 @@ Partial Class frmWork
         Me.MainView.Appearance.ViewCaption.Options.UseForeColor = True
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.PartConsumptionID, Me.PartCode, Me.Number, Me.Delete, Me.Edited})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.PartConsumptionID, Me.PartCode, Me.Part, Me.OnStock, Me.Number, Me.Delete, Me.Edited})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
         Me.MainView.NewItemRowText = "Click here to add new record"
+        Me.MainView.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.[True]
         Me.MainView.OptionsCustomization.AllowColumnMoving = False
         Me.MainView.OptionsCustomization.AllowFilter = False
         Me.MainView.OptionsCustomization.AllowGroup = False
@@ -495,7 +491,6 @@ Partial Class frmWork
         Me.MainView.OptionsSelection.EnableAppearanceFocusedRow = False
         Me.MainView.OptionsSelection.EnableAppearanceHideSelection = False
         Me.MainView.OptionsSelection.UseIndicatorForSelection = False
-        Me.MainView.OptionsView.NewItemRowPosition = DevExpress.XtraGrid.Views.Grid.NewItemRowPosition.Top
         Me.MainView.OptionsView.RowAutoHeight = True
         Me.MainView.OptionsView.ShowGroupPanel = False
         '
@@ -507,35 +502,42 @@ Partial Class frmWork
         '
         'PartCode
         '
-        Me.PartCode.Caption = "Part"
-        Me.PartCode.ColumnEdit = Me.PartEdit
+        Me.PartCode.Caption = "PartCode"
         Me.PartCode.FieldName = "PartCode"
         Me.PartCode.Name = "PartCode"
-        Me.PartCode.Visible = True
-        Me.PartCode.VisibleIndex = 0
-        Me.PartCode.Width = 228
         '
-        'PartEdit
+        'Part
         '
-        Me.PartEdit.AutoHeight = False
-        Me.PartEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
-        Me.PartEdit.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Part", "Part"), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("PartCode", "Name32", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("OnStock", "Current Stock")})
-        Me.PartEdit.DisplayMember = "Part"
-        Me.PartEdit.DropDownRows = 10
-        Me.PartEdit.Name = "PartEdit"
-        Me.PartEdit.NullText = ""
-        Me.PartEdit.ShowFooter = False
-        Me.PartEdit.ValueMember = "PartCode"
+        Me.Part.Caption = "Part"
+        Me.Part.FieldName = "Part"
+        Me.Part.MinWidth = 170
+        Me.Part.Name = "Part"
+        Me.Part.OptionsColumn.AllowEdit = False
+        Me.Part.OptionsColumn.ReadOnly = True
+        Me.Part.Visible = True
+        Me.Part.VisibleIndex = 0
+        Me.Part.Width = 170
+        '
+        'OnStock
+        '
+        Me.OnStock.Caption = "On Stock"
+        Me.OnStock.FieldName = "OnStock"
+        Me.OnStock.MinWidth = 60
+        Me.OnStock.Name = "OnStock"
+        Me.OnStock.OptionsColumn.AllowEdit = False
+        Me.OnStock.OptionsColumn.ReadOnly = True
+        Me.OnStock.Visible = True
+        Me.OnStock.VisibleIndex = 1
         '
         'Number
         '
-        Me.Number.Caption = "Total Parts Consumed"
+        Me.Number.Caption = "Consumed"
         Me.Number.DisplayFormat.FormatString = "f0"
         Me.Number.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.Number.FieldName = "Number"
         Me.Number.Name = "Number"
         Me.Number.Visible = True
-        Me.Number.VisibleIndex = 1
+        Me.Number.VisibleIndex = 2
         Me.Number.Width = 149
         '
         'Delete
@@ -544,7 +546,7 @@ Partial Class frmWork
         Me.Delete.Name = "Delete"
         Me.Delete.OptionsColumn.FixedWidth = True
         Me.Delete.Visible = True
-        Me.Delete.VisibleIndex = 2
+        Me.Delete.VisibleIndex = 3
         Me.Delete.Width = 20
         '
         'DeleteEdit
@@ -573,67 +575,57 @@ Partial Class frmWork
         Me.RepositoryItemLookUpEdit1.ShowHeader = False
         Me.RepositoryItemLookUpEdit1.ValueMember = "CounterCode"
         '
-        'cmdClear
+        'PartEdit
         '
-        Me.cmdClear.Location = New System.Drawing.Point(479, 177)
-        Me.cmdClear.Name = "cmdClear"
-        Me.cmdClear.Size = New System.Drawing.Size(66, 23)
-        Me.cmdClear.TabIndex = 247
-        Me.cmdClear.Text = "Clear"
+        Me.PartEdit.AutoHeight = False
+        Me.PartEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.PartEdit.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Part", "Part"), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("PartCode", "Name32", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("OnStock", "Current Stock")})
+        Me.PartEdit.DisplayMember = "Part"
+        Me.PartEdit.DropDownRows = 10
+        Me.PartEdit.Name = "PartEdit"
+        Me.PartEdit.NullText = ""
+        Me.PartEdit.ShowFooter = False
+        Me.PartEdit.ValueMember = "PartCode"
         '
-        'cmdBrowse
+        'GroupControl1
         '
-        Me.cmdBrowse.Location = New System.Drawing.Point(405, 177)
-        Me.cmdBrowse.Name = "cmdBrowse"
-        Me.cmdBrowse.Size = New System.Drawing.Size(67, 23)
-        Me.cmdBrowse.TabIndex = 246
-        Me.cmdBrowse.Text = "Browse"
-        '
-        'imgLogo
-        '
-        Me.imgLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.imgLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.imgLogo.Location = New System.Drawing.Point(405, 200)
-        Me.imgLogo.Name = "imgLogo"
-        Me.imgLogo.Size = New System.Drawing.Size(140, 116)
-        Me.imgLogo.TabIndex = 245
-        Me.imgLogo.TabStop = False
+        Me.GroupControl1.Controls.Add(Me.lblComponent)
+        Me.GroupControl1.Controls.Add(Me.cboUnit)
+        Me.GroupControl1.Controls.Add(Me.cmdCopy)
+        Me.GroupControl1.Controls.Add(Me.cboMaintenance)
+        Me.GroupControl1.Controls.Add(Me.txtInsDesc)
+        Me.GroupControl1.Controls.Add(Me.LabelControl2)
+        Me.GroupControl1.Controls.Add(Me.LabelControl1)
+        Me.GroupControl1.Controls.Add(Me.cboRankCode)
+        Me.GroupControl1.Controls.Add(Me.LabelControl4)
+        Me.GroupControl1.Controls.Add(Me.txtExecutedBy)
+        Me.GroupControl1.Controls.Add(Me.LabelControl12)
+        Me.GroupControl1.Controls.Add(Me.LabelControl7)
+        Me.GroupControl1.Controls.Add(Me.txtRemarks)
+        Me.GroupControl1.Controls.Add(Me.LabelControl3)
+        Me.GroupControl1.Controls.Add(Me.txtWorkDate)
+        Me.GroupControl1.Controls.Add(Me.txtWorkCounter)
+        Me.GroupControl1.Controls.Add(Me.lblDate)
+        Me.GroupControl1.Location = New System.Drawing.Point(12, 7)
+        Me.GroupControl1.Name = "GroupControl1"
+        Me.GroupControl1.Size = New System.Drawing.Size(295, 357)
+        Me.GroupControl1.TabIndex = 227
+        Me.GroupControl1.Text = "Current Maintenance"
         '
         'frmWork
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(567, 558)
-        Me.ControlBox = False
-        Me.Controls.Add(Me.cmdBrowse)
-        Me.Controls.Add(Me.cmdClear)
-        Me.Controls.Add(Me.imgLogo)
+        Me.ClientSize = New System.Drawing.Size(676, 598)
+        Me.Controls.Add(Me.GroupControl1)
         Me.Controls.Add(Me.GroupControl3)
-        Me.Controls.Add(Me.cmdCopy)
-        Me.Controls.Add(Me.txtInsDesc)
-        Me.Controls.Add(Me.LabelControl1)
         Me.Controls.Add(Me.lblReadingDate)
         Me.Controls.Add(Me.lblRunningHours)
-        Me.Controls.Add(Me.LabelControl12)
-        Me.Controls.Add(Me.txtRemarks)
-        Me.Controls.Add(Me.txtWorkDate)
-        Me.Controls.Add(Me.lblDate)
-        Me.Controls.Add(Me.txtWorkCounter)
-        Me.Controls.Add(Me.LabelControl3)
-        Me.Controls.Add(Me.LabelControl7)
-        Me.Controls.Add(Me.txtExecutedBy)
-        Me.Controls.Add(Me.LabelControl4)
-        Me.Controls.Add(Me.cboRankCode)
         Me.Controls.Add(Me.gPrevMaintenance)
-        Me.Controls.Add(Me.lblComponent)
         Me.Controls.Add(Me.cmdCancel)
-        Me.Controls.Add(Me.LabelControl2)
         Me.Controls.Add(Me.cmdOK)
-        Me.Controls.Add(Me.cboMaintenance)
-        Me.Controls.Add(Me.cboUnit)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmWork"
@@ -662,10 +654,12 @@ Partial Class frmWork
         Me.GroupControl3.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RepositoryItemLookUpEdit1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.imgLogo, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.GroupControl1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupControl1.ResumeLayout(False)
+        Me.GroupControl1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -709,7 +703,7 @@ Partial Class frmWork
     Friend WithEvents GroupControl3 As DevExpress.XtraEditors.GroupControl
     Friend WithEvents MainGrid As DevExpress.XtraGrid.GridControl
     Friend WithEvents MainView As DevExpress.XtraGrid.Views.Grid.GridView
-    Friend WithEvents PartCode As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Part As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Number As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Edited As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents RepositoryItemLookUpEdit1 As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
@@ -717,7 +711,7 @@ Partial Class frmWork
     Friend WithEvents DeleteEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit
     Friend WithEvents PartEdit As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
     Friend WithEvents PartConsumptionID As DevExpress.XtraGrid.Columns.GridColumn
-    Friend WithEvents cmdClear As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents cmdBrowse As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents imgLogo As System.Windows.Forms.PictureBox
+    Friend WithEvents OnStock As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents PartCode As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents GroupControl1 As DevExpress.XtraEditors.GroupControl
 End Class

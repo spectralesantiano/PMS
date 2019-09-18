@@ -43,7 +43,6 @@ Partial Class frmImageViewer
         Me.Controls.Add(Me.imgLogo)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmImageViewer"
@@ -54,5 +53,5 @@ Partial Class frmImageViewer
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents imgLogo As System.Windows.Forms.PictureBox
+    Public WithEvents imgLogo As System.Windows.Forms.PictureBox
 End Class

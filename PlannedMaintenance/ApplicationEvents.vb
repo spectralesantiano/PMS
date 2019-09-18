@@ -12,6 +12,8 @@ Namespace My
         Private Sub MyApplication_Startup(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
             DevExpress.LookAndFeel.UserLookAndFeel.Default.SkinName = "Black"
             SetAppPath(System.Windows.Forms.Application.StartupPath)
+            'DevExpress.XtraEditors.WindowsFormsSettings.DefaultMenuFont = GetDefaultFont()
+            'DevExpress.XtraEditors.WindowsFormsSettings.DefaultFont = GetDefaultFont()
             Update_UpdateManagerExe() ' check if theres an update for UpdateManager.exe
             Dim scTemp As String = GetIni("SPECTRAL_CON")
             If scTemp <> "" Then

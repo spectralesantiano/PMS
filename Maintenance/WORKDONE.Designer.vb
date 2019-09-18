@@ -24,6 +24,7 @@ Partial Class WORKDONE
         Me.MainView = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.MaintenanceWorkID = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.UnitCode = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Description = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Maintenance = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.WorkDate = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.WorkCounter = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -50,8 +51,6 @@ Partial Class WORKDONE
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.MainGrid)
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
         Me.header.Location = New System.Drawing.Point(0, 0)
@@ -63,22 +62,20 @@ Partial Class WORKDONE
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 23)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 20)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RemarksEdit, Me.NumberEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(1149, 485)
+        Me.MainGrid.Size = New System.Drawing.Size(1149, 488)
         Me.MainGrid.TabIndex = 8
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
         'MainView
         '
         Me.MainView.Appearance.GroupRow.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.MainView.Appearance.GroupRow.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.MainView.Appearance.GroupRow.ForeColor = System.Drawing.Color.Black
         Me.MainView.Appearance.GroupRow.Options.UseBackColor = True
-        Me.MainView.Appearance.GroupRow.Options.UseFont = True
         Me.MainView.Appearance.GroupRow.Options.UseForeColor = True
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
@@ -89,7 +86,7 @@ Partial Class WORKDONE
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
         Me.MainView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.DueDate, Me.DueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.ImageDoc})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.DueDate, Me.DueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.ImageDoc})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.GroupFormat = "{1} {2}"
@@ -103,7 +100,6 @@ Partial Class WORKDONE
         Me.MainView.OptionsBehavior.Editable = False
         Me.MainView.OptionsBehavior.ReadOnly = True
         Me.MainView.OptionsCustomization.AllowColumnMoving = False
-        Me.MainView.OptionsCustomization.AllowColumnResizing = False
         Me.MainView.OptionsCustomization.AllowFilter = False
         Me.MainView.OptionsCustomization.AllowGroup = False
         Me.MainView.OptionsCustomization.AllowQuickHideColumns = False
@@ -130,6 +126,15 @@ Partial Class WORKDONE
         Me.UnitCode.FieldName = "UnitCode"
         Me.UnitCode.Name = "UnitCode"
         '
+        'Description
+        '
+        Me.Description.Caption = "Description"
+        Me.Description.FieldName = "Description"
+        Me.Description.Name = "Description"
+        Me.Description.Visible = True
+        Me.Description.VisibleIndex = 0
+        Me.Description.Width = 206
+        '
         'Maintenance
         '
         Me.Maintenance.Caption = "Maintenance"
@@ -137,8 +142,8 @@ Partial Class WORKDONE
         Me.Maintenance.Name = "Maintenance"
         Me.Maintenance.SortMode = DevExpress.XtraGrid.ColumnSortMode.Value
         Me.Maintenance.Visible = True
-        Me.Maintenance.VisibleIndex = 0
-        Me.Maintenance.Width = 187
+        Me.Maintenance.VisibleIndex = 1
+        Me.Maintenance.Width = 155
         '
         'WorkDate
         '
@@ -146,11 +151,10 @@ Partial Class WORKDONE
         Me.WorkDate.DisplayFormat.FormatString = "d"
         Me.WorkDate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime
         Me.WorkDate.FieldName = "WorkDate"
-        Me.WorkDate.MaxWidth = 100
         Me.WorkDate.MinWidth = 100
         Me.WorkDate.Name = "WorkDate"
         Me.WorkDate.Visible = True
-        Me.WorkDate.VisibleIndex = 1
+        Me.WorkDate.VisibleIndex = 2
         Me.WorkDate.Width = 100
         '
         'WorkCounter
@@ -160,11 +164,10 @@ Partial Class WORKDONE
         Me.WorkCounter.DisplayFormat.FormatString = "n0"
         Me.WorkCounter.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.WorkCounter.FieldName = "WorkCounter"
-        Me.WorkCounter.MaxWidth = 90
         Me.WorkCounter.MinWidth = 90
         Me.WorkCounter.Name = "WorkCounter"
         Me.WorkCounter.Visible = True
-        Me.WorkCounter.VisibleIndex = 2
+        Me.WorkCounter.VisibleIndex = 3
         Me.WorkCounter.Width = 90
         '
         'NumberEdit
@@ -180,18 +183,17 @@ Partial Class WORKDONE
         Me.ExecutedBy.FieldName = "ExecutedBy"
         Me.ExecutedBy.Name = "ExecutedBy"
         Me.ExecutedBy.Visible = True
-        Me.ExecutedBy.VisibleIndex = 3
-        Me.ExecutedBy.Width = 166
+        Me.ExecutedBy.VisibleIndex = 4
+        Me.ExecutedBy.Width = 137
         '
         'Abbrv
         '
         Me.Abbrv.Caption = "Rank"
         Me.Abbrv.FieldName = "Abbrv"
-        Me.Abbrv.MaxWidth = 70
         Me.Abbrv.MinWidth = 70
         Me.Abbrv.Name = "Abbrv"
         Me.Abbrv.Visible = True
-        Me.Abbrv.VisibleIndex = 4
+        Me.Abbrv.VisibleIndex = 5
         Me.Abbrv.Width = 70
         '
         'Remarks
@@ -201,8 +203,8 @@ Partial Class WORKDONE
         Me.Remarks.FieldName = "Remarks"
         Me.Remarks.Name = "Remarks"
         Me.Remarks.Visible = True
-        Me.Remarks.VisibleIndex = 5
-        Me.Remarks.Width = 290
+        Me.Remarks.VisibleIndex = 6
+        Me.Remarks.Width = 170
         '
         'RemarksEdit
         '
@@ -217,11 +219,10 @@ Partial Class WORKDONE
         Me.DueDate.DisplayFormat.FormatString = "d"
         Me.DueDate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime
         Me.DueDate.FieldName = "DueDate"
-        Me.DueDate.MaxWidth = 100
         Me.DueDate.MinWidth = 100
         Me.DueDate.Name = "DueDate"
         Me.DueDate.Visible = True
-        Me.DueDate.VisibleIndex = 6
+        Me.DueDate.VisibleIndex = 7
         Me.DueDate.Width = 100
         '
         'DueCounter
@@ -229,13 +230,12 @@ Partial Class WORKDONE
         Me.DueCounter.Caption = "Working Hours Due"
         Me.DueCounter.ColumnEdit = Me.NumberEdit
         Me.DueCounter.FieldName = "DueCounter"
-        Me.DueCounter.MaxWidth = 105
         Me.DueCounter.MinWidth = 105
         Me.DueCounter.Name = "DueCounter"
         Me.DueCounter.OptionsColumn.AllowEdit = False
         Me.DueCounter.OptionsColumn.ReadOnly = True
         Me.DueCounter.Visible = True
-        Me.DueCounter.VisibleIndex = 7
+        Me.DueCounter.VisibleIndex = 8
         Me.DueCounter.Width = 105
         '
         'bNC
@@ -310,5 +310,6 @@ Partial Class WORKDONE
     Friend WithEvents UnitCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents RankCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents ImageDoc As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Description As DevExpress.XtraGrid.Columns.GridColumn
 
 End Class

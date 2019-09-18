@@ -1,6 +1,7 @@
 Imports System.Drawing
 
 Public Class WORKDUE
+
     Public Sub SaveLayout(ByVal fileName As String)
         MainView.SaveLayoutToXml(fileName)
     End Sub
@@ -64,7 +65,7 @@ Public Class WORKDUE
             frm.txtExecutedBy.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
             frm.txtPDate.EditValue = MainView.GetFocusedRowCellValue("WorkDate")
             frm.txtPRunningHours.EditValue = MainView.GetFocusedRowCellValue("WorkCounter")
-            frm.txtPExec.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
+            'frm.txtPExec.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
             frm.txtPRemarks.EditValue = MainView.GetFocusedRowCellValue("Remarks")
             If IfNull(MainView.GetFocusedRowCellValue("RunningHours"), 0) > 0 Then
                 frm.lblRunningHours.Text = "Running Hours: " & MainView.GetFocusedRowCellValue("RunningHours")
@@ -142,7 +143,7 @@ Public Class WORKDUE
         SetAddVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         SetDeleteVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.header.Text = "DUE MAINTENANCE"
-        MainGrid.DataSource = DB.CreateTable("EXEC dbo.[GETDUEWORK] @nPeriod = " & CURRENT_PERIOD & ", @dDate =" & CURRENT_DUEDAYS & ", @nHours = " & CURRENT_DUEHOURS & ", @strRankCode='" & CURRENT_RANK & "', @strDeptCode='" & CURRENT_DEPARTMENT & "', @strCatCode='" & CURRENT_CATEGORY & "', @bPreventive=" & IIf(CURRENT_CONDITION_CHECKED, 0, 1))
+        MainGrid.DataSource = DB.CreateTable("EXEC dbo.[GETDUEWORK] @nPeriod = " & CURRENT_PERIOD & ", @dDays =" & CURRENT_DUEDAYS & ", @nHours = " & CURRENT_DUEHOURS & ", @strRankCode='" & CURRENT_RANK & "', @strDeptCode='" & CURRENT_DEPARTMENT & "', @strCatCode='" & CURRENT_CATEGORY & "', @bPreventive=" & IIf(CURRENT_CONDITION_CHECKED, 0, 1) & ", @bCritical=" & IIf(CURRENT_CRITICAL_CHECKED, 1, 0))
         DueCounter.Visible = Not CURRENT_CONDITION_CHECKED
         DueDate.Visible = Not CURRENT_CONDITION_CHECKED
         Interval.Visible = Not CURRENT_CONDITION_CHECKED

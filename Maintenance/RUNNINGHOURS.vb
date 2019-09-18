@@ -23,6 +23,7 @@ Public Class RUNNINGHOURS
     Public Overrides Sub AddData()
         If Not bAddMode Then
             Dim frm As New frmDefaultDate
+            frm.txtDate.Properties.MaxValue = Now.Date
             frm.ShowDialog()
             If frm.IS_SAVED Then
                 Dim i As Integer
@@ -76,6 +77,8 @@ Public Class RUNNINGHOURS
             SetAddVisibility(Name, IIf((bPermission And 2) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             SetSaveVisibility(Name, IIf((bPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             SetDeleteVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
+            CurrDateEdit.MaxValue = Now.Date
+            NewDateEdit.MaxValue = Now.Date
         End If
         MainGrid.DataSource = DB.CreateTable("EXEC [dbo].[RUNNINGHOURS]")
         CurrBand.Visible = False
@@ -177,8 +180,8 @@ Public Class RUNNINGHOURS
                     e.Valid = False
                 ElseIf Not (MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrReading") Is System.DBNull.Value Or MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate") Is System.DBNull.Value) Then
                     Dim dDiff As Integer = DateDiff(DateInterval.Day, MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate"), MainView.GetRowCellValue(MainView.FocusedRowHandle, "NewDate")) + 1, nDiff As Double = e.Value - MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrReading")
-                    e.ErrorText = "Hours per day is more than 24 hours."
-                    e.Valid = (nDiff / dDiff) <= 24
+                    e.ErrorText = "Hours per day is more than " & DAY_MAX_HOURS & " hours."
+                    e.Valid = (nDiff / dDiff) <= DAY_MAX_HOURS
                 End If
             End If
         Else
@@ -189,8 +192,8 @@ Public Class RUNNINGHOURS
                 ElseIf Not (MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevReading") Is System.DBNull.Value Or MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate") Is System.DBNull.Value Or MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate") Is System.DBNull.Value) Then
                     Dim dDiff As Integer = DateDiff(DateInterval.Day, MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate"), MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate")) + 1, nDiff As Double = e.Value - MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevReading")
                     If IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrCounter"), "") <> IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevCounter"), "") Then nDiff = e.Value
-                    e.ErrorText = "Hours per day is more than 24 hours."
-                    e.Valid = (nDiff / dDiff) <= 24
+                    e.ErrorText = "Hours per day is more than " & DAY_MAX_HOURS & " hours."
+                    e.Valid = (nDiff / dDiff) <= DAY_MAX_HOURS
                 End If
 
             End If

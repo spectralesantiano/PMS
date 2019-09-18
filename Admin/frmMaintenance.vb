@@ -1,5 +1,5 @@
 ﻿Public Class frmMaintenance
-    Public IS_SAVED As Boolean = False, strParts As String, DB As SQLDB, bEscaped As Boolean = False, bImageUpdated As Boolean = False
+    Public IS_SAVED As Boolean = False, strParts As String, DB As SQLDB, bEscaped As Boolean = False, bImageUpdated As Boolean = False, bFieldUpdated As Boolean = False
 
     Private Sub cboWorkCode_Closed(sender As Object, e As DevExpress.XtraEditors.Controls.ClosedEventArgs) Handles cboWorkCode.Closed
         If e.CloseMode = DevExpress.XtraEditors.PopupCloseMode.Cancel Then
@@ -25,11 +25,20 @@
     End Sub
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOk.Click
-        IS_SAVED = True
+        If bImageUpdated Then
+            Dim i As Integer
+            MainView.CloseEditor()
+            MainView.UpdateCurrentRow()
+            For i = 0 To MainView.RowCount - 1
+                If MainView.GetRowCellValue(i, "Edited") Then
+                    DB.RunSql("INSERT INTO dbo.tblDocuments(DocType, FileName, Doc) VALUES('ADMWORK', '" & MainView.GetRowCellValue(i, "FileName") & "','" & FileStreamToString(MainView.GetRowCellValue(i, "FileName")) & "')")
+                End If
+            Next
+        End If
+        If bFieldUpdated Then IS_SAVED = True
         Me.Close()
     End Sub
 
-   
     Sub RemoveEditListener(ByVal Ctr As DevExpress.XtraEditors.BaseEdit)
         If TypeOf (Ctr) Is DevExpress.XtraEditors.TextEdit Then
             RemoveHandler CType(Ctr, DevExpress.XtraEditors.TextEdit).EditValueChanged, AddressOf FormField_EditValueChanged
@@ -83,6 +92,7 @@
                 CType(sender, DevExpress.XtraEditors.TextEdit).BackColor = EDITED_FOCUSED_COLOR
             End If
             CType(sender, System.Windows.Forms.Control).Tag = 1
+            bFieldUpdated = True
         End If
     End Sub
 
@@ -133,17 +143,29 @@
         Me.Close()
     End Sub
 
-    Private Sub cmdClear_Click(sender As System.Object, e As System.EventArgs) Handles cmdClear.Click
-        imgLogo.BackgroundImage = Nothing
-        bImageUpdated = True
+    Private Sub cmdBrowse_Click(sender As System.Object, e As System.EventArgs) Handles cmdBrowse.Click
+        Dim odMain As New System.Windows.Forms.OpenFileDialog, strFile As String
+        'odMain.Filter = "Files (*.jpg, *.jpeg, *.pdf) | *.jpg; *.jpeg; *.pdf"
+        odMain.Filter = "Image Files (*.jpg, *.jpeg) | *.jpg; *.jpeg"
+        odMain.Multiselect = True
+        If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            For Each strFile In odMain.FileNames
+                MainView.AddNewRow()
+                MainView.SetRowCellValue(MainView.FocusedRowHandle, "FileDesc", GetFileName(strFile))
+                MainView.SetRowCellValue(MainView.FocusedRowHandle, "FileName", strFile)
+                MainView.SetRowCellValue(MainView.FocusedRowHandle, "Edited", True)
+                MainView.SetRowCellValue(MainView.FocusedRowHandle, "Doc", FileStreamToString(strFile))
+                MainView.UpdateCurrentRow()
+                MainView.CloseEditor()
+            Next
+            bImageUpdated = True
+        End If
     End Sub
 
-    Private Sub cmdBrowse_Click(sender As System.Object, e As System.EventArgs) Handles cmdBrowse.Click
-        Dim odMain As New System.Windows.Forms.OpenFileDialog
-        odMain.Filter = "Image files (*.jpg, *.jpeg) | *.jpg; *.jpeg"
-        If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-            imgLogo.BackgroundImage = New System.Drawing.Bitmap(odMain.FileName)
-            bImageUpdated = True
+    Private Sub DeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles DeleteEdit.ButtonClick
+        If MsgBox("Are you sure want to delete this attachment?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            'DB.RunSql("DELETE FROM dbo.tblAdmComponent WHERE ComponentCode='" & MainView.GetFocusedRowCellValue("ComponentCode") & "'")
+            MainView.DeleteRow(MainView.FocusedRowHandle)
         End If
     End Sub
 End Class

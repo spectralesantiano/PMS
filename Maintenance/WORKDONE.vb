@@ -54,9 +54,6 @@ Public Class WORKDONE
         frm.txtWorkCounter.EditValue = MainView.GetFocusedRowCellValue("WorkCounter")
         frm.txtRemarks.EditValue = MainView.GetFocusedRowCellValue("Remarks")
         frm.nMaintenanceID = MainView.GetFocusedRowCellValue("MaintenanceWorkID")
-        If IfNull(MainView.GetFocusedRowCellValue("ImageDoc"), "") <> "" Then
-            frm.imgLogo.BackgroundImage = StringToImage(MainView.GetFocusedRowCellValue("ImageDoc"))
-        End If
         frm.ShowDialog()
         If frm.IS_SAVED Then
             Dim strDueCounter As String = "null", dDueDate As Date, strDateDue As String = "null", strCounter As String = "null", i As Integer, sqls As New ArrayList, strImage As String = ""
@@ -85,7 +82,6 @@ Public Class WORKDONE
                     dDueDate = CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval)
                     strDateDue = ChangeToSQLDate(dDueDate)
             End Select
-            If Not frm.imgLogo.BackgroundImage Is Nothing Then strImage = ImageToString(frm.imgLogo.BackgroundImage)
             sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) & ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", ImageDoc='" & strImage & "', LastUpdatedBy='" & GetUserName() & "' Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
             frm.MainView.CloseEditor()
@@ -109,13 +105,6 @@ Public Class WORKDONE
             MainView.SetRowCellValue(MainView.FocusedRowHandle, "Remarks", frm.txtRemarks.EditValue)
             If strDueCounter <> "null" Then MainView.SetRowCellValue(MainView.FocusedRowHandle, "DueCounter", strDueCounter)
             If strDateDue <> "null" Then MainView.SetRowCellValue(MainView.FocusedRowHandle, "DueDate", dDueDate)
-            If frm.bImageUpdated Then
-                If frm.imgLogo.BackgroundImage Is Nothing Then
-                    MainView.SetRowCellValue(MainView.FocusedRowHandle, "ImageDoc", "")
-                Else
-                    MainView.SetRowCellValue(MainView.FocusedRowHandle, "ImageDoc", ImageToString(frm.imgLogo.BackgroundImage))
-                End If
-            End If
             MainView.RefreshRow(MainView.FocusedRowHandle)
         End If
     End Sub
@@ -152,7 +141,6 @@ Public Class WORKDONE
                 Case "SYSYEARS"
                     strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
             End Select
-            If Not frm.imgLogo.BackgroundImage Is Nothing Then strImage = ImageToString(frm.imgLogo.BackgroundImage)
             sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0 WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
             sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[ImageDoc]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0,'" & strImage & "')")
             frm.MainView.CloseEditor()
@@ -193,13 +181,26 @@ Public Class WORKDONE
         MyBase.RefreshData()
         SetSaveVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.header.Text = "MAINTENANCE DETAILS - " & blList.GetDesc.ToUpper
-        MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "'")
-        MainView.BeginSort()
-        MainView.Columns("Maintenance").GroupIndex = 1
-        MainView.Columns("WorkDate").SortOrder = DevExpress.Data.ColumnSortOrder.Descending
-        MainView.EndSort()
-        MainView.ExpandAllGroups()
-        MainView.TopRowIndex = 0
+        MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "',@bFlatView=" & CURRENT_FLATVIEW_CHECKED & ",@bCritical=" & CURRENT_CRITICAL_CHECKED)
+        If CURRENT_FLATVIEW_CHECKED Then
+            Description.Visible = True
+            Description.VisibleIndex = 0
+            Maintenance.VisibleIndex = 1
+            MainView.BeginSort()
+            MainView.ClearGrouping()
+            MainView.Columns("Description").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending
+            MainView.Columns("Maintenance").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending
+            MainView.Columns("WorkDate").SortOrder = DevExpress.Data.ColumnSortOrder.Descending
+            MainView.EndSort()
+        Else
+            Description.Visible = False
+            MainView.BeginSort()
+            MainView.Columns("Maintenance").GroupIndex = 0
+            MainView.Columns("WorkDate").SortOrder = DevExpress.Data.ColumnSortOrder.Descending
+            MainView.EndSort()
+            MainView.ExpandAllGroups()
+            MainView.TopRowIndex = 0
+        End If
         If MainView.RowCount > 0 Then
             If nCurrWork >= 0 Then
                 Dim RowHandle As Integer = 0
@@ -208,18 +209,30 @@ Public Class WORKDONE
                 MainView.FocusedRowHandle = RowHandle
                 CURRENT_WORK = nCurrWork
             End If
+            ChangeCurrentUnit()
         End If
         RaiseCustomEvent(Name, New Object() {"EnableEdit", IIf(MainView.FocusedRowHandle > 0, "True", "False")})
     End Sub
 
+    Sub ChangeCurrentUnit()
+        If CURRENT_FLATVIEW_CHECKED Then
+            strID = MainView.GetFocusedRowCellValue("UnitCode")
+            strDesc = MainView.GetFocusedRowCellValue("Description")
+            CURRENT_UNIT = strID
+        End If
+    End Sub
+
     Private Sub MainView_FocusedRowChanged(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs) Handles MainView.FocusedRowChanged
         If MainView.FocusedRowHandle >= 0 Then
+            AllowDeletion(Name, (bPermission And 8) > 0)
             If bLoaded Then
+                ChangeCurrentUnit()
                 CURRENT_WORK = IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "MaintenanceWorkID"), -1)
                 RaiseCustomEvent(Name, New Object() {"EnableEdit", "TRUE"})
                 RaiseCustomEvent(Name, New Object() {"EnableImageViewer", IIf(MainView.GetRowCellValue(MainView.FocusedRowHandle, "ImageDoc") = "", "False", "True")})
             End If
         Else
+            AllowDeletion(Name, False)
             RaiseCustomEvent(Name, New Object() {"EnableEdit", "FALSE"})
             RaiseCustomEvent(Name, New Object() {"EnableImageViewer", "False"})
         End If
