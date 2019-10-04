@@ -258,7 +258,7 @@ Public Class UNITS
             Else
                 Dim frm As New frmMaintenance
                 frm.DB = DB
-                frm.MainGrid.DataSource = DB.CreateTable("SELECT *, CAST(0 AS BIT) Edited FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='ADMWORK'") ' AND [DocID]='" & mView.GetRowCellValue(mView.FocusedRowHandle, "MaintenanceCode") & "'")
+                frm.MainGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='ADMWORK' AND [RefID]='" & mView.GetRowCellValue(mView.FocusedRowHandle, "MaintenanceCode") & "'")
                 frm.cboWorkCode.Properties.DataSource = WorkEdit.DataSource
                 frm.cboRankCode.Properties.DataSource = AdmRank
                 frm.cboIntCode.Properties.DataSource = IntEdit.DataSource
@@ -288,6 +288,7 @@ Public Class UNITS
                 If frm.IS_SAVED Then
                     If mView.IsNewItemRow(mView.FocusedRowHandle) Then mView.AddNewRow()
                     mView.SetRowCellValue(mView.FocusedRowHandle, "mEdited", True)
+                    mView.SetRowCellValue(mView.FocusedRowHandle, "HasImage", frm.MainView.RowCount > 0)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "WorkCode", frm.cboWorkCode.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "RankCode", frm.cboRankCode.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "Number", frm.txtNumber.EditValue)
@@ -296,6 +297,8 @@ Public Class UNITS
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsDateIssue", frm.txtInsDateIssued.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsEditor", frm.txtInsEditor.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsDesc", frm.txtInsDesc.EditValue)
+                    mView.SetRowCellValue(mView.FocusedRowHandle, "AddedImages", frm.strAddedImages)
+                    mView.SetRowCellValue(mView.FocusedRowHandle, "DeletedImages", frm.strDeletedImages)
                     dDateIssue = frm.txtInsDateIssued.EditValue
                     strEditor = IfNull(frm.txtInsEditor.EditValue, "")
                     mView.UpdateCurrentRow()
@@ -397,6 +400,10 @@ Public Class UNITS
         End If
     End Sub
 
+    Private Function DragCanceled(strParent As String, strUnitDesc As String) As Boolean
+        Return MsgBox("Do you want to add all selected components to " & strUnitDesc, vbYesNo) = vbNo
+    End Function
+
     Private Sub tlUnits_DragDrop(ByVal sender As Object, ByVal e As DragEventArgs) Handles tlUnits.DragDrop
         Dim treeList As TreeList = TryCast(sender, TreeList), bRootUpdated As Boolean = False
         Dim row As DataRow, tbl As DataTable = TryCast(e.Data.GetData(GetType(DataTable)), DataTable), rowNew As DataRow
@@ -414,6 +421,11 @@ Public Class UNITS
         If tbl Is Nothing Then 'Dragged from the Treelist
             Dim tree As TreeListNode = TryCast(e.Data.GetData(GetType(TreeListNode)), TreeListNode)
             If Not tree Is Nothing Then
+                If strParent <> "NULL" And CURRENT_SHOW_WARNING Then
+                    If DragCanceled(strParent, info.Node.GetValue("UnitDesc")) Then
+                        Exit Sub
+                    End If
+                End If
                 Dim xrow() As DataRow = tblUnitSource.Select("UnitCode='" & tree.GetValue("UnitCode") & "'")
                 If info.Node Is Nothing Then
                     If CURRENT_MAINUNIT = "" Then
@@ -427,12 +439,15 @@ Public Class UNITS
                 xrow(0)("ParentCode") = parent
                 xrow(0)("UnitNumber") = nCompNum
                 xrow(0)("UnitDesc") = tree.GetValue("Component") & " " & nCompNum
-                If IfNull(parent, "") = xrow(0)("UnitCode") Then
-                    Exit Sub
-                End If
+                If IfNull(parent, "") = xrow(0)("UnitCode") Then Exit Sub
                 sqls.Add("UPDATE dbo.tblAdmUnit SET ParentCode=" & strParent & ", UnitNumber=" & nCompNum & ", UnitDesc='" & xrow(0)("UnitDesc") & "', LastUpdatedBy='" & GetUserName() & "' WHERE UnitCode='" & xrow(0)("UnitCode") & "'")
             End If
         Else 'Dragged from the Data Grid
+            If strParent <> "NULL" And CURRENT_SHOW_WARNING Then
+                If DragCanceled(strParent, info.Node.GetValue("UnitDesc")) Then
+                    Exit Sub
+                End If
+            End If
             For Each row In tbl.Rows
                 If info.Node Is Nothing Then
                     If CURRENT_MAINUNIT = "" Then
@@ -451,6 +466,9 @@ Public Class UNITS
                 rowNew("UnitDesc") = row("Component") & " " & nCompNum
                 rowNew("UnitNumber") = nCompNum
                 rowNew("Critical") = False
+                rowNew("HasCritical") = False
+                rowNew("HasInactive") = False
+                rowNew("Active") = True
                 tblUnitSource.Rows.Add(rowNew)
                 sqls.Add("INSERT INTO dbo.tblAdmUnit(UnitCode, ParentCode, ComponentCode, UnitDesc, UnitNumber, LastUpdatedBy) VALUES('" & rowNew("UnitCode") & "'," & strParent & ",'" & rowNew("ComponentCode") & "','" & rowNew("UnitDesc") & "'," & rowNew("UnitNumber") & ",'" & GetUserName() & "')")
                 nMaxUnitID += 1
@@ -472,9 +490,9 @@ Public Class UNITS
         If e.Node.Selected Then
             e.Appearance.BackColor = SEL_COLOR
         End If
-        If Not e.Node.GetValue("Active") Then
+        If Not IfNull(e.Node.GetValue("Active"), True) Then
             e.Appearance.ForeColor = Color.Red
-        ElseIf e.Node.GetValue("HasInactive") Then
+        ElseIf IfNull(e.Node.GetValue("HasInactive"), False) Then
             e.Appearance.ForeColor = Color.Orange
         End If
     End Sub
@@ -636,7 +654,7 @@ Public Class UNITS
             cboLocCode.Enabled = nNode.Level = 0
             cboCatCode.Enabled = nNode.Level = 0
             'Maintenance
-            mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
+            mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited, '' AddedImages,'' DeletedImages, CAST(0 AS BIT) HasImage FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
             mView.NewItemRowText = "Click here to add new maintenance for " & strDesc
             mGrid.Enabled = True
             'Part
@@ -738,10 +756,24 @@ Public Class UNITS
                     Dim strDateIssue As String = "NULL"
                     If Not mView.GetRowCellValue(i, "InsDateIssue") Is System.DBNull.Value Then strDateIssue = ChangeToSQLDate(mView.GetRowCellValue(i, "InsDateIssue"))
                     If mView.GetRowCellValue(i, "MaintenanceCode") Is System.DBNull.Value Then
-                        sqls.Add("INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy]) " & _
-                                 "Values(dbo.MAINTENANCEID(),'" & mView.GetRowCellValue(i, "WorkCode") & "', '" & strID & "', '" & mView.GetRowCellValue(i, "RankCode") & "', " & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ", '" & mView.GetRowCellValue(i, "IntCode") & "', '" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "', " & strDateIssue & ", '" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "','" & GetUserName() & "')")
+                        sqls.Add("INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy],[HasImage]) " & _
+                                 "Values(dbo.MAINTENANCEID(),'" & mView.GetRowCellValue(i, "WorkCode") & "', '" & strID & "', '" & mView.GetRowCellValue(i, "RankCode") & "', " & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ", '" & mView.GetRowCellValue(i, "IntCode") & "', '" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "', " & strDateIssue & ", '" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "','" & GetUserName() & "'," & IIf(mView.GetRowCellValue(i, "HasImage"), 1, 0) & ")")
                     Else
-                        sqls.Add("Update dbo.tblAdmMaintenance set WorkCode='" & mView.GetRowCellValue(i, "WorkCode") & "',RankCode='" & mView.GetRowCellValue(i, "RankCode") & "',Number=" & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ",IntCode='" & mView.GetRowCellValue(i, "IntCode") & "',InsCrossRef='" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "',InsEditor='" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "',InsDocument='" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "',InsDateIssue=" & strDateIssue & ",InsDesc='" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "', LastUpdatedBy='" & GetUserName() & ", DateUpdated=GETDATE()' Where MaintenanceCode='" & mView.GetRowCellValue(i, "MaintenanceCode") & "'")
+                        sqls.Add("Update dbo.tblAdmMaintenance set WorkCode='" & mView.GetRowCellValue(i, "WorkCode") & "',RankCode='" & mView.GetRowCellValue(i, "RankCode") & "',Number=" & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ",IntCode='" & mView.GetRowCellValue(i, "IntCode") & "',InsCrossRef='" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "',InsEditor='" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "',InsDocument='" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "',InsDateIssue=" & strDateIssue & ",InsDesc='" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "', LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE(), HasImage=" & IIf(mView.GetRowCellValue(i, "HasImage"), 1, 0) & " Where MaintenanceCode='" & mView.GetRowCellValue(i, "MaintenanceCode") & "'")
+                    End If
+
+                    If IfNull(mView.GetRowCellValue(i, "DeletedImages"), "") <> "" Then
+                        Dim strDeletedID() As String = mView.GetRowCellValue(i, "DeletedImages").ToString.Split(";"c), strDocID As String
+                        For Each strDocID In strDeletedID
+                            sqls.Add("DELETE FROM dbo.tblDocuments WHERE DocID=" & strDocID)
+                        Next
+                    End If
+
+                    If IfNull(mView.GetRowCellValue(i, "AddedImages"), "") <> "" Then
+                        Dim strImages() As String = mView.GetRowCellValue(i, "AddedImages").ToString.Split(";"c), strImg As String
+                        For Each strImg In strImages
+                            sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCECODE]('" & mView.GetRowCellValue(i, "WorkCode") & "','" & strID & "'),'ADMWORK', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                        Next
                     End If
                 End If
             Next
@@ -778,7 +810,7 @@ Public Class UNITS
             DB.RunSqls(sqls)
 
             If bRefreshMaintenance Then
-                mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
+                mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited, '' AddedImages,'' DeletedImages, CAST(0 AS BIT) HasImage  FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
                 mGrid.RefreshDataSource()
                 bRefreshMaintenance = False
             End If

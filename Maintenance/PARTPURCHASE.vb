@@ -4,6 +4,17 @@ Imports DevExpress.XtraGrid.Columns
 Public Class PARTPURCHASE
     Dim strPartCodes As String = "", sqls As New ArrayList
 
+    Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
+        Select Case param(0)
+            Case "Preview"
+                If MainView.RowCount = 0 Then
+                    MsgBox("Please select at least one record to preview.", MsgBoxStyle.Information, GetAppName)
+                Else
+                    RaiseCustomEvent(Name, New Object() {"Preview", "PURCHASEREP", "PMSReports", "|" & strID & "|"})
+                End If
+        End Select
+    End Sub
+
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtPurchaseDate}) Then
@@ -109,7 +120,7 @@ Public Class PARTPURCHASE
             SetDeleteVisibility(Name, IIf((bPermission And 8) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             VendorEdit.DataSource = DB.CreateTable("SELECT VendorCode, Name Vendor FROM dbo.tblAdmVendor")
             cboVendorCode.Properties.DataSource = VendorEdit.DataSource
-            cboUnit.Properties.DataSource = DB.CreateTable("SELECT UnitCode, UnitDesc, ParentCode FROM dbo.tblAdmUnit")
+            cboUnit.Properties.DataSource = DB.CreateTable("EXEC dbo.GETCOMPONENT @strUnitCode=''")
             bLoaded = True
         End If
         pGrid.DataSource = DB.CreateTable("SELECT PartCode, PartCode pPartCode, p.Name Part, PartNumber, ISNULL(l.Name,'') + ' ' + ISNULL(s.Name,'') Storage, CAST(0 AS BIT) Selected, STUFF((SELECT '|' + up.UnitCode FROM dbo.tblUnitPart up WHERE up.PartCode=p.PartCode FOR XML PATH('')),1,1,'') UnitList FROM dbo.tblAdmPart p LEFT JOIN dbo.tblAdmLocation l ON p.LocCode=l.LocCode LEFT JOIN dbo.tblAdmStorage s ON p.StorageCode=s.StorageCode")

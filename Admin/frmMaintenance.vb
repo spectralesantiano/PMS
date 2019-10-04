@@ -1,5 +1,5 @@
 ﻿Public Class frmMaintenance
-    Public IS_SAVED As Boolean = False, strParts As String, DB As SQLDB, bEscaped As Boolean = False, bImageUpdated As Boolean = False, bFieldUpdated As Boolean = False
+    Public IS_SAVED As Boolean = False, DB As SQLDB, bEscaped As Boolean = False, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = ""
 
     Private Sub cboWorkCode_Closed(sender As Object, e As DevExpress.XtraEditors.Controls.ClosedEventArgs) Handles cboWorkCode.Closed
         If e.CloseMode = DevExpress.XtraEditors.PopupCloseMode.Cancel Then
@@ -25,17 +25,20 @@
     End Sub
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOk.Click
-        If bImageUpdated Then
+        If bFieldUpdated Then
+            IS_SAVED = True
             Dim i As Integer
             MainView.CloseEditor()
             MainView.UpdateCurrentRow()
             For i = 0 To MainView.RowCount - 1
-                If MainView.GetRowCellValue(i, "Edited") Then
-                    DB.RunSql("INSERT INTO dbo.tblDocuments(DocType, FileName, Doc) VALUES('ADMWORK', '" & MainView.GetRowCellValue(i, "FileName") & "','" & FileStreamToString(MainView.GetRowCellValue(i, "FileName")) & "')")
+                If IfNull(MainView.GetRowCellValue(i, "DocID"), 0) = 0 Then
+                    'DB.RunSql("INSERT INTO dbo.tblDocuments(DocType, FileName, Doc) VALUES('ADMWORK', '" & MainView.GetRowCellValue(i, "FileName") & "','" & FileStreamToString(MainView.GetRowCellValue(i, "FileName")) & "')")
+                    strAddedImages = strAddedImages & MainView.GetRowCellValue(i, "FileName") & ";"
                 End If
             Next
+            If strAddedImages.Length > 0 Then strAddedImages = strAddedImages.Remove(strAddedImages.Length - 1)
+            If strDeletedImages.Length > 0 Then strDeletedImages = strDeletedImages.Remove(strDeletedImages.Length - 1)
         End If
-        If bFieldUpdated Then IS_SAVED = True
         Me.Close()
     End Sub
 
@@ -158,14 +161,17 @@
                 MainView.UpdateCurrentRow()
                 MainView.CloseEditor()
             Next
-            bImageUpdated = True
+            bFieldUpdated = True
         End If
     End Sub
 
     Private Sub DeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles DeleteEdit.ButtonClick
-        If MsgBox("Are you sure want to delete this attachment?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            'DB.RunSql("DELETE FROM dbo.tblAdmComponent WHERE ComponentCode='" & MainView.GetFocusedRowCellValue("ComponentCode") & "'")
-            MainView.DeleteRow(MainView.FocusedRowHandle)
+        'If MsgBox("Are you sure want to delete this attachment?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+        If IfNull(MainView.GetFocusedRowCellValue("DocID"), 0) > 0 Then 'Existing Image.
+            strDeletedImages = strDeletedImages & MainView.GetFocusedRowCellValue("DocID") & ";"
+            bFieldUpdated = True
         End If
+        MainView.DeleteRow(MainView.FocusedRowHandle)
+        'End If
     End Sub
 End Class

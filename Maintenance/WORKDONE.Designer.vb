@@ -25,6 +25,7 @@ Partial Class WORKDONE
         Me.MaintenanceWorkID = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.UnitCode = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Description = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.RemarksEdit = New DevExpress.XtraEditors.Repository.RepositoryItemMemoEdit()
         Me.Maintenance = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.WorkDate = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.WorkCounter = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -32,7 +33,6 @@ Partial Class WORKDONE
         Me.ExecutedBy = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Abbrv = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Remarks = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.RemarksEdit = New DevExpress.XtraEditors.Repository.RepositoryItemMemoEdit()
         Me.DueDate = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DueCounter = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.bNC = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -40,13 +40,15 @@ Partial Class WORKDONE
         Me.bLatest = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.MaintenanceCode = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.RankCode = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.ImageDoc = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.AddedImages = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.DeletedImages = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Locked = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RemarksEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'header
@@ -86,7 +88,7 @@ Partial Class WORKDONE
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
         Me.MainView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.DueDate, Me.DueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.ImageDoc})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.DueDate, Me.DueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.AddedImages, Me.DeletedImages, Me.Locked})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.GroupFormat = "{1} {2}"
@@ -113,6 +115,7 @@ Partial Class WORKDONE
         Me.MainView.OptionsView.RowAutoHeight = True
         Me.MainView.OptionsView.ShowGroupPanel = False
         Me.MainView.RowHeight = 0
+        Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.Description, DevExpress.Data.ColumnSortOrder.Ascending)})
         '
         'MaintenanceWorkID
         '
@@ -129,37 +132,44 @@ Partial Class WORKDONE
         'Description
         '
         Me.Description.Caption = "Description"
+        Me.Description.ColumnEdit = Me.RemarksEdit
         Me.Description.FieldName = "Description"
         Me.Description.Name = "Description"
+        Me.Description.SortMode = DevExpress.XtraGrid.ColumnSortMode.DisplayText
         Me.Description.Visible = True
         Me.Description.VisibleIndex = 0
         Me.Description.Width = 206
+        '
+        'RemarksEdit
+        '
+        Me.RemarksEdit.Appearance.Options.UseTextOptions = True
+        Me.RemarksEdit.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap
+        Me.RemarksEdit.Name = "RemarksEdit"
         '
         'Maintenance
         '
         Me.Maintenance.Caption = "Maintenance"
         Me.Maintenance.FieldName = "Maintenance"
         Me.Maintenance.Name = "Maintenance"
-        Me.Maintenance.SortMode = DevExpress.XtraGrid.ColumnSortMode.Value
         Me.Maintenance.Visible = True
         Me.Maintenance.VisibleIndex = 1
         Me.Maintenance.Width = 155
         '
         'WorkDate
         '
-        Me.WorkDate.Caption = "Date"
+        Me.WorkDate.Caption = "Date Done"
         Me.WorkDate.DisplayFormat.FormatString = "d"
         Me.WorkDate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime
         Me.WorkDate.FieldName = "WorkDate"
         Me.WorkDate.MinWidth = 100
         Me.WorkDate.Name = "WorkDate"
         Me.WorkDate.Visible = True
-        Me.WorkDate.VisibleIndex = 2
+        Me.WorkDate.VisibleIndex = 4
         Me.WorkDate.Width = 100
         '
         'WorkCounter
         '
-        Me.WorkCounter.Caption = "Running Hours"
+        Me.WorkCounter.Caption = "@Running Hours"
         Me.WorkCounter.ColumnEdit = Me.NumberEdit
         Me.WorkCounter.DisplayFormat.FormatString = "n0"
         Me.WorkCounter.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
@@ -167,8 +177,8 @@ Partial Class WORKDONE
         Me.WorkCounter.MinWidth = 90
         Me.WorkCounter.Name = "WorkCounter"
         Me.WorkCounter.Visible = True
-        Me.WorkCounter.VisibleIndex = 3
-        Me.WorkCounter.Width = 90
+        Me.WorkCounter.VisibleIndex = 5
+        Me.WorkCounter.Width = 99
         '
         'NumberEdit
         '
@@ -183,8 +193,8 @@ Partial Class WORKDONE
         Me.ExecutedBy.FieldName = "ExecutedBy"
         Me.ExecutedBy.Name = "ExecutedBy"
         Me.ExecutedBy.Visible = True
-        Me.ExecutedBy.VisibleIndex = 4
-        Me.ExecutedBy.Width = 137
+        Me.ExecutedBy.VisibleIndex = 6
+        Me.ExecutedBy.Width = 134
         '
         'Abbrv
         '
@@ -193,7 +203,7 @@ Partial Class WORKDONE
         Me.Abbrv.MinWidth = 70
         Me.Abbrv.Name = "Abbrv"
         Me.Abbrv.Visible = True
-        Me.Abbrv.VisibleIndex = 5
+        Me.Abbrv.VisibleIndex = 7
         Me.Abbrv.Width = 70
         '
         'Remarks
@@ -203,14 +213,8 @@ Partial Class WORKDONE
         Me.Remarks.FieldName = "Remarks"
         Me.Remarks.Name = "Remarks"
         Me.Remarks.Visible = True
-        Me.Remarks.VisibleIndex = 6
-        Me.Remarks.Width = 170
-        '
-        'RemarksEdit
-        '
-        Me.RemarksEdit.Appearance.Options.UseTextOptions = True
-        Me.RemarksEdit.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap
-        Me.RemarksEdit.Name = "RemarksEdit"
+        Me.Remarks.VisibleIndex = 8
+        Me.Remarks.Width = 164
         '
         'DueDate
         '
@@ -222,7 +226,7 @@ Partial Class WORKDONE
         Me.DueDate.MinWidth = 100
         Me.DueDate.Name = "DueDate"
         Me.DueDate.Visible = True
-        Me.DueDate.VisibleIndex = 7
+        Me.DueDate.VisibleIndex = 2
         Me.DueDate.Width = 100
         '
         'DueCounter
@@ -235,7 +239,7 @@ Partial Class WORKDONE
         Me.DueCounter.OptionsColumn.AllowEdit = False
         Me.DueCounter.OptionsColumn.ReadOnly = True
         Me.DueCounter.Visible = True
-        Me.DueCounter.VisibleIndex = 8
+        Me.DueCounter.VisibleIndex = 3
         Me.DueCounter.Width = 105
         '
         'bNC
@@ -268,11 +272,23 @@ Partial Class WORKDONE
         Me.RankCode.FieldName = "RankCode"
         Me.RankCode.Name = "RankCode"
         '
-        'ImageDoc
+        'AddedImages
         '
-        Me.ImageDoc.Caption = "ImageDoc"
-        Me.ImageDoc.FieldName = "ImageDoc"
-        Me.ImageDoc.Name = "ImageDoc"
+        Me.AddedImages.Caption = "AddedImages"
+        Me.AddedImages.FieldName = "AddedImages"
+        Me.AddedImages.Name = "AddedImages"
+        '
+        'DeletedImages
+        '
+        Me.DeletedImages.Caption = "DeletedImages"
+        Me.DeletedImages.FieldName = "DeletedImages"
+        Me.DeletedImages.Name = "DeletedImages"
+        '
+        'Locked
+        '
+        Me.Locked.Caption = "Locked"
+        Me.Locked.FieldName = "Locked"
+        Me.Locked.Name = "Locked"
         '
         'WORKDONE
         '
@@ -284,8 +300,8 @@ Partial Class WORKDONE
         Me.header.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RemarksEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -309,7 +325,9 @@ Partial Class WORKDONE
     Friend WithEvents MaintenanceCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents UnitCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents RankCode As DevExpress.XtraGrid.Columns.GridColumn
-    Friend WithEvents ImageDoc As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents AddedImages As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Description As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Locked As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents DeletedImages As DevExpress.XtraGrid.Columns.GridColumn
 
 End Class

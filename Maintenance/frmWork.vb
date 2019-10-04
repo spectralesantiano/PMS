@@ -2,26 +2,41 @@
 
 Public Class frmWork
 
-    Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, bGetPrevWork As Boolean = True, nMaintenanceID As Integer = 0, bImageUpdated As Boolean = False
+    Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, bGetPrevWork As Boolean = True, nMaintenanceID As Integer = 0, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = ""
     Dim strRequiredFields = "cboUnit;cboMaintenance;cboRankCode;txtWorkDate;txtExecutedBy", nCurrentRunningHours As Integer
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOK.Click
-        If ValidateFields(New DevExpress.XtraEditors.TextEdit() {cboUnit, cboMaintenance, cboRankCode, txtExecutedBy, txtWorkDate}) Then
-            Dim nrow As DataRowView = cboMaintenance.Properties.GetDataSourceRowByKeyValue(cboMaintenance.EditValue)
-            If Not nrow Is Nothing Then
-                strIntCode = IfNull(nrow("IntCode"), "")
-                nInterval = IfNull(nrow("Number"), 0)
-            End If
-            If strIntCode = "SYSHOURS" Then
-                If IfNull(txtWorkCounter.EditValue, 0) = 0 Then
-                    MsgBox("Please enter the current running hours.", MsgBoxStyle.Critical, GetAppName)
-                    Exit Sub
-                ElseIf IfNull(txtWorkCounter.EditValue, 0) < nCurrentRunningHours Then
-                    MsgBox("The running hours should not be lower than the latest running hours reading.", MsgBoxStyle.Critical, GetAppName)
-                    Exit Sub
+        If bFieldUpdated Then
+            If ValidateFields(New DevExpress.XtraEditors.TextEdit() {cboUnit, cboMaintenance, cboRankCode, txtExecutedBy, txtWorkDate}) Then
+                Dim i As Integer, nrow As DataRowView = cboMaintenance.Properties.GetDataSourceRowByKeyValue(cboMaintenance.EditValue)
+                If Not nrow Is Nothing Then
+                    strIntCode = IfNull(nrow("IntCode"), "")
+                    nInterval = IfNull(nrow("Number"), 0)
                 End If
+                If strIntCode = "SYSHOURS" Then
+                    If IfNull(txtWorkCounter.EditValue, 0) = 0 Then
+                        MsgBox("Please enter the current running hours.", MsgBoxStyle.Critical, GetAppName)
+                        Exit Sub
+                    ElseIf IfNull(txtWorkCounter.EditValue, 0) < nCurrentRunningHours Then
+                        MsgBox("The running hours should not be lower than the latest running hours reading.", MsgBoxStyle.Critical, GetAppName)
+                        Exit Sub
+                    End If
+                End If
+
+                IView.CloseEditor()
+                IView.UpdateCurrentRow()
+                For i = 0 To IView.RowCount - 1
+                    If IfNull(IView.GetRowCellValue(i, "DocID"), 0) = 0 Then
+                        strAddedImages = strAddedImages & IView.GetRowCellValue(i, "FileName") & ";"
+                    End If
+                Next
+                If strAddedImages.Length > 0 Then strAddedImages = strAddedImages.Remove(strAddedImages.Length - 1)
+                If strDeletedImages.Length > 0 Then strDeletedImages = strDeletedImages.Remove(strDeletedImages.Length - 1)
+
+                IS_SAVED = True
+                Me.Close()
             End If
-            IS_SAVED = True
+        Else
             Me.Close()
         End If
     End Sub
@@ -30,10 +45,10 @@ Public Class frmWork
         Me.Close()
     End Sub
 
-    Public Sub AddFormEditListener(ByVal cContainer As System.Windows.Forms.Form)
+    Public Sub AddFormEditListener(ByVal cContainer As DevExpress.XtraEditors.GroupControl)
         Dim ctr As System.Windows.Forms.Control
         For Each ctr In cContainer.Controls
-            If Not (ctr.Name = "gPrevMaintenance" Or ctr.Name = "txtInsDesc") Then
+            If ctr.Name <> "txtInsDesc" Then
                 If TypeOf (ctr) Is DevExpress.XtraEditors.TextEdit Then 'Includes TextEdit, DateEdit, LookupEdit
                     AddHandler CType(ctr, DevExpress.XtraEditors.TextEdit).EditValueChanged, AddressOf FormField_EditValueChanged
                     AddHandler CType(ctr, DevExpress.XtraEditors.TextEdit).GotFocus, AddressOf FormField_GotFocus
@@ -61,6 +76,7 @@ Public Class frmWork
                 CType(sender, DevExpress.XtraEditors.TextEdit).BackColor = EDITED_FOCUSED_COLOR
             End If
             CType(sender, System.Windows.Forms.Control).Tag = 1
+            bFieldUpdated = True
         End If
     End Sub
 
@@ -97,7 +113,7 @@ Public Class frmWork
     End Sub
 
     Private Sub frmWork_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
-        AddFormEditListener(Me)
+        AddFormEditListener(gMain)
         If IfNull(cboUnit.EditValue, "") <> "" Then
             cboUnit.Properties.TreeList.FocusedNode = cboUnit.Properties.TreeList.FindNodeByFieldValue("UnitCode", cboUnit.EditValue)
             InitUnit()
@@ -201,4 +217,32 @@ Public Class frmWork
         End If
     End Sub
 
+    Private Sub cmdBrowse_Click(sender As System.Object, e As System.EventArgs) Handles cmdBrowse.Click
+        Dim odMain As New System.Windows.Forms.OpenFileDialog, strFile As String
+        'odMain.Filter = "Files (*.jpg, *.jpeg, *.pdf) | *.jpg; *.jpeg; *.pdf"
+        odMain.Filter = "Image Files (*.jpg, *.jpeg) | *.jpg; *.jpeg"
+        odMain.Multiselect = True
+        If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            For Each strFile In odMain.FileNames
+                IView.AddNewRow()
+                IView.SetRowCellValue(IView.FocusedRowHandle, "FileDesc", GetFileName(strFile))
+                IView.SetRowCellValue(IView.FocusedRowHandle, "FileName", strFile)
+                IView.SetRowCellValue(IView.FocusedRowHandle, "Edited", True)
+                IView.SetRowCellValue(IView.FocusedRowHandle, "Doc", FileStreamToString(strFile))
+                IView.UpdateCurrentRow()
+                IView.CloseEditor()
+            Next
+            bFieldUpdated = True
+        End If
+    End Sub
+
+    Private Sub IDeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles iDeleteEdit.ButtonClick
+        'If MsgBox("Are you sure want to delete this attachment?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+        If IfNull(IView.GetFocusedRowCellValue("DocID"), 0) > 0 Then 'Existing Image.
+            strDeletedImages = strDeletedImages & IView.GetFocusedRowCellValue("DocID") & ";"
+            bFieldUpdated = True
+        End If
+        IView.DeleteRow(IView.FocusedRowHandle)
+        'End If
+    End Sub
 End Class
