@@ -46,11 +46,10 @@ Partial Class frmMaintenance
         Me.FileDesc = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DocID = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.FileName = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.Edited = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Delete = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
-        Me.RepositoryItemLookUpEdit2 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.Doc = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.RepositoryItemLookUpEdit2 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         CType(Me.txtInsDesc.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtInsCrossRef.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtInsDateIssued.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -280,7 +279,7 @@ Partial Class frmMaintenance
         Me.MainView.Appearance.ViewCaption.Options.UseForeColor = True
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.FileDesc, Me.DocID, Me.FileName, Me.Edited, Me.Delete, Me.Doc})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.FileDesc, Me.DocID, Me.FileName, Me.Delete, Me.Doc})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -334,12 +333,6 @@ Partial Class frmMaintenance
         Me.FileName.OptionsColumn.ReadOnly = True
         Me.FileName.Width = 55
         '
-        'Edited
-        '
-        Me.Edited.Caption = "Edited"
-        Me.Edited.FieldName = "Edited"
-        Me.Edited.Name = "Edited"
-        '
         'Delete
         '
         Me.Delete.Caption = "Delete"
@@ -357,6 +350,12 @@ Partial Class frmMaintenance
         Me.DeleteEdit.Name = "DeleteEdit"
         Me.DeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
         '
+        'Doc
+        '
+        Me.Doc.Caption = "Doc"
+        Me.Doc.FieldName = "Doc"
+        Me.Doc.Name = "Doc"
+        '
         'RepositoryItemLookUpEdit2
         '
         Me.RepositoryItemLookUpEdit2.AutoHeight = False
@@ -369,12 +368,6 @@ Partial Class frmMaintenance
         Me.RepositoryItemLookUpEdit2.ShowFooter = False
         Me.RepositoryItemLookUpEdit2.ShowHeader = False
         Me.RepositoryItemLookUpEdit2.ValueMember = "CounterCode"
-        '
-        'Doc
-        '
-        Me.Doc.Caption = "Doc"
-        Me.Doc.FieldName = "Doc"
-        Me.Doc.Name = "Doc"
         '
         'frmMaintenance
         '
@@ -453,7 +446,6 @@ Partial Class frmMaintenance
     Friend WithEvents FileDesc As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DocID As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents FileName As DevExpress.XtraGrid.Columns.GridColumn
-    Friend WithEvents Edited As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents RepositoryItemLookUpEdit2 As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
     Friend WithEvents Delete As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DeleteEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit

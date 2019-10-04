@@ -30,7 +30,7 @@ Partial Class frmUserPref
         Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
         Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
         Me.txtDueHours = New DevExpress.XtraEditors.TextEdit()
-        Me.chkCritical = New DevExpress.XtraEditors.CheckEdit()
+        Me.chkShowWarning = New DevExpress.XtraEditors.CheckEdit()
         Me.chkTreeView = New DevExpress.XtraEditors.CheckEdit()
         Me.chkFlatView = New DevExpress.XtraEditors.CheckEdit()
         Me.LabelControl5 = New DevExpress.XtraEditors.LabelControl()
@@ -39,7 +39,7 @@ Partial Class frmUserPref
         CType(Me.tbcFontIncrease.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtDueDate.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtDueHours.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.chkCritical.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.chkShowWarning.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.chkTreeView.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.chkFlatView.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -65,7 +65,7 @@ Partial Class frmUserPref
         Me.cboRankCode.Location = New System.Drawing.Point(125, 19)
         Me.cboRankCode.Name = "cboRankCode"
         Me.cboRankCode.Properties.BestFitMode = DevExpress.XtraEditors.Controls.BestFitMode.BestFitResizePopup
-        Me.cboRankCode.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.cboRankCode.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)})
         Me.cboRankCode.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("RankCode", "RankCode", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Abbrv", "Name3"), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("RankDesc", "RankDesc")})
         Me.cboRankCode.Properties.DisplayMember = "Abbrv"
         Me.cboRankCode.Properties.DropDownRows = 10
@@ -136,13 +136,13 @@ Partial Class frmUserPref
         Me.txtDueHours.Size = New System.Drawing.Size(224, 20)
         Me.txtDueHours.TabIndex = 243
         '
-        'chkCritical
+        'chkShowWarning
         '
-        Me.chkCritical.Location = New System.Drawing.Point(125, 218)
-        Me.chkCritical.Name = "chkCritical"
-        Me.chkCritical.Properties.Caption = "Show warning when dragging components"
-        Me.chkCritical.Size = New System.Drawing.Size(232, 19)
-        Me.chkCritical.TabIndex = 245
+        Me.chkShowWarning.Location = New System.Drawing.Point(125, 218)
+        Me.chkShowWarning.Name = "chkShowWarning"
+        Me.chkShowWarning.Properties.Caption = "Show warning when dragging components"
+        Me.chkShowWarning.Size = New System.Drawing.Size(232, 19)
+        Me.chkShowWarning.TabIndex = 245
         '
         'chkTreeView
         '
@@ -176,7 +176,7 @@ Partial Class frmUserPref
         Me.Controls.Add(Me.LabelControl5)
         Me.Controls.Add(Me.chkFlatView)
         Me.Controls.Add(Me.chkTreeView)
-        Me.Controls.Add(Me.chkCritical)
+        Me.Controls.Add(Me.chkShowWarning)
         Me.Controls.Add(Me.LabelControl3)
         Me.Controls.Add(Me.txtDueHours)
         Me.Controls.Add(Me.LabelControl2)
@@ -200,7 +200,7 @@ Partial Class frmUserPref
         CType(Me.tbcFontIncrease, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtDueDate.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtDueHours.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.chkCritical.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.chkShowWarning.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.chkTreeView.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.chkFlatView.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -217,7 +217,7 @@ Partial Class frmUserPref
     Friend WithEvents LabelControl2 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents LabelControl3 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents txtDueHours As DevExpress.XtraEditors.TextEdit
-    Friend WithEvents chkCritical As DevExpress.XtraEditors.CheckEdit
+    Friend WithEvents chkShowWarning As DevExpress.XtraEditors.CheckEdit
     Friend WithEvents chkTreeView As DevExpress.XtraEditors.CheckEdit
     Friend WithEvents chkFlatView As DevExpress.XtraEditors.CheckEdit
     Friend WithEvents LabelControl5 As DevExpress.XtraEditors.LabelControl

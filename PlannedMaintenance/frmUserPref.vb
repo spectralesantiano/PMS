@@ -7,6 +7,8 @@
         CURRENT_DUEDAYS = txtDueDate.EditValue
         CURRENT_DUEHOURS = txtDueHours.EditValue
         FONT_INCREASE = tbcFontIncrease.EditValue
+        CURRENT_FLATVIEW_CHECKED = chkFlatView.Checked
+        CURRENT_SHOW_WARNING = chkShowWarning.Checked
         IS_SAVED = True
         Me.Close()
     End Sub
@@ -15,7 +17,6 @@
         FONT_INCREASE = bPrevFontInc
         Me.Close()
     End Sub
-
 
     Private Sub tbcFontIncrease_EditValueChanged(sender As System.Object, e As System.EventArgs) Handles tbcFontIncrease.EditValueChanged
         If bLoaded Then
@@ -32,6 +33,7 @@
         tbcFontIncrease.EditValue = FONT_INCREASE
         chkFlatView.Checked = CURRENT_FLATVIEW_CHECKED
         chkTreeView.Checked = Not CURRENT_FLATVIEW_CHECKED
+        chkShowWarning.Checked = CURRENT_SHOW_WARNING
         bLoaded = True
     End Sub
 
@@ -39,13 +41,20 @@
         If bLoaded Then
             chkFlatView.Checked = Not chkTreeView.Checked
         End If
-        CURRENT_FLATVIEW_CHECKED = chkFlatView.Checked
+        'CURRENT_FLATVIEW_CHECKED = chkFlatView.Checked
     End Sub
 
     Private Sub chkFlatView_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkFlatView.CheckedChanged
         If bLoaded Then
             chkTreeView.Checked = Not chkFlatView.Checked
         End If
-        CURRENT_FLATVIEW_CHECKED = chkFlatView.Checked
+        'CURRENT_FLATVIEW_CHECKED = chkFlatView.Checked
     End Sub
+
+    Private Sub cboRankCode_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles cboRankCode.ButtonClick
+        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Close Then
+            cboRankCode.EditValue = ""
+        End If
+    End Sub
+   
 End Class
