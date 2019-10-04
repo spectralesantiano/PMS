@@ -960,7 +960,7 @@ Public Class MainForm
             mainlist.SetFilter("")
             maincontent.RefreshData()
         End If
-        
+
     End Sub
 
     Private Sub ledMainUnits_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledMainUnits.EditValueChanged
@@ -1305,7 +1305,7 @@ Public Class MainForm
         maincontent.ExecCustomFunction(New Object() {"View"})
     End Sub
 
-   
+
     Private Sub VESSELINFO_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles VESSELINFO.ItemClick
         Dim frm As New frmVesselInfo
         PMSDB.BeginReader("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
