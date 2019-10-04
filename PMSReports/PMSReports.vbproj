@@ -149,11 +149,11 @@
     <Compile Include="rptDueWork.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NCMEASUREREP.vb" />
-    <Compile Include="rptNCMeasure.Designer.vb">
-      <DependentUpon>rptNCMeasure.vb</DependentUpon>
+    <Compile Include="PURCHASEREP.vb" />
+    <Compile Include="rptPurchase.Designer.vb">
+      <DependentUpon>rptPurchase.vb</DependentUpon>
     </Compile>
-    <Compile Include="rptNCMeasure.vb">
+    <Compile Include="rptPurchase.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NCREP.vb" />
@@ -237,8 +237,8 @@
     <EmbeddedResource Include="rptDueWork.resx">
       <DependentUpon>rptDueWork.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="rptNCMeasure.resx">
-      <DependentUpon>rptNCMeasure.vb</DependentUpon>
+    <EmbeddedResource Include="rptPurchase.resx">
+      <DependentUpon>rptPurchase.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="rptNonConform.resx">
       <DependentUpon>rptNonConform.vb</DependentUpon>

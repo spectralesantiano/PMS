@@ -24,6 +24,7 @@ Public Class MainForm
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LTYPE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
+
         'tblSTIService_profile
         sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
                  "CREATE TABLE [sti_sys].[dbo].[tblSTIService_profile](" & _
@@ -38,6 +39,7 @@ Public Class MainForm
                  ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
                  ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
         'tblSTIService_internet_settings
+
         sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_internet_settings') " & _
                  "CREATE TABLE [sti_sys].[dbo].[tblSTIService_internet_settings](" & _
                  "[INET_Code] [varchar](15) NOT NULL," & _
@@ -64,6 +66,8 @@ Public Class MainForm
                  ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
         '*********************** Add Default WRH 5 Backup Profile *********************
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblSTIService_profile] WHERE [PROF_Code] = '" & BACKUP_CODE & "') INSERT INTO [sti_sys].[dbo].[tblSTIService_profile]([PROF_Code],[PROF_Name],[PROF_Comment],[PROF_ExpFolder]) VALUES('" & BACKUP_CODE & "','" & BACKUP_NAME & "','Default PMS Backup Profile','" & BACKUP_DIR & "')")
+        'Lock PMS Records
+        sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE DATEADD(D,8,DateAdded )>=GETDATE()")
         PMSDB.RunSqls(sqls)
     End Sub
 
@@ -163,11 +167,10 @@ Public Class MainForm
 
         SetDefaultSettings()
 
-        CheckAppVersion()
-
-        ''''''''''''''''uncomment this line when debugging mode''''''''''
-        CheckLicense()
-        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        If Not Debugger.IsAttached Then
+            CheckAppVersion()
+            CheckLicense()
+        End If
 
         PMSDB.BeginReader("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
         If PMSDB.Read Then
@@ -443,7 +446,9 @@ Public Class MainForm
             Me.rpgMaintenanceEditingOptions.Visible = (cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "NCMEASURES" Or cContent = "RUNNINGHOURS")
             Me.rpgToolSelectionOption.Visible = (cContent = "RECOVERARCHIVE")
             Me.rpgToolsFilterOptions.Visible = (cContent = "INITWORK")
+            Me.rpgInventoryPrintingOptions.Visible = (cContent = "PARTPURCHASE")
             Me.bbCondition.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            Me.bbShowAllMaintenance.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.rpgToolsOptions.Visible = xrow(0)("Permission") > 1
             Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
@@ -1346,9 +1351,23 @@ Public Class MainForm
         maincontent.ExecCustomFunction(New Object() {"EditDate"})
     End Sub
 
+    Private Sub bbShowAllMaintenance_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbShowAllMaintenance.ItemClick
+        CURRENT_SHOW_ALL_CHECKED = bbShowAllMaintenance.Down
+        If CURRENT_SHOW_ALL_CHECKED Then
+            CURRENT_CONDITION_CHECKED = False
+            bbCondition.Down = False
+            bbCondition.Caption = "Condition Based"
+        End If
+        maincontent.RefreshData()
+    End Sub
+
     Private Sub bbPreventive_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbCondition.ItemClick
         CURRENT_CONDITION_CHECKED = bbCondition.Down
         bbCondition.Caption = IIf(bbCondition.Down, "Preventive", "Condition Based")
+        If CURRENT_CONDITION_CHECKED Then
+            CURRENT_SHOW_ALL_CHECKED = False
+            bbShowAllMaintenance.Down = False
+        End If
         maincontent.RefreshData()
     End Sub
 
@@ -1370,7 +1389,6 @@ Public Class MainForm
 
     Private Sub bbCritical_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbCritical.ItemClick
         CURRENT_CRITICAL_CHECKED = bbCritical.Down
-        'bbCondition.Caption = IIf(bbCritical.Down, "Preventive", "Condition Based")
         If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
         maincontent.RefreshData()
     End Sub
