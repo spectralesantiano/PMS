@@ -22,9 +22,11 @@ Partial Class MDOCVIEWERLIST
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.BandedGrid.AdvBandedGridView()
         Me.UnitDesc = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
-        Me.MaintenanceCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.Maintenance = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.MaintenanceCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.FileDesc = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.gridBand4 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
+        Me.DocID = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -36,7 +38,7 @@ Partial Class MDOCVIEWERLIST
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.Size = New System.Drawing.Size(303, 323)
+        Me.MainGrid.Size = New System.Drawing.Size(345, 323)
         Me.MainGrid.TabIndex = 2
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -45,7 +47,7 @@ Partial Class MDOCVIEWERLIST
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
         Me.MainView.Bands.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.GridBand() {Me.gridBand4})
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.MaintenanceCode, Me.UnitDesc, Me.Maintenance})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.MaintenanceCode, Me.UnitDesc, Me.Maintenance, Me.FileDesc, Me.DocID})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -73,13 +75,7 @@ Partial Class MDOCVIEWERLIST
         Me.UnitDesc.FieldName = "UnitDesc"
         Me.UnitDesc.Name = "UnitDesc"
         Me.UnitDesc.Visible = True
-        Me.UnitDesc.Width = 217
-        '
-        'MaintenanceCode
-        '
-        Me.MaintenanceCode.Caption = "MaintenanceCode"
-        Me.MaintenanceCode.FieldName = "MaintenanceCode"
-        Me.MaintenanceCode.Name = "MaintenanceCode"
+        Me.UnitDesc.Width = 279
         '
         'Maintenance
         '
@@ -87,22 +83,46 @@ Partial Class MDOCVIEWERLIST
         Me.Maintenance.FieldName = "Maintenance"
         Me.Maintenance.Name = "Maintenance"
         Me.Maintenance.Visible = True
-        Me.Maintenance.Width = 244
+        Me.Maintenance.Width = 415
+        '
+        'MaintenanceCode
+        '
+        Me.MaintenanceCode.Caption = "MaintenanceCode"
+        Me.MaintenanceCode.FieldName = "MaintenanceCode"
+        Me.MaintenanceCode.Name = "MaintenanceCode"
+        '
+        'FileDesc
+        '
+        Me.FileDesc.Caption = "File"
+        Me.FileDesc.FieldName = "FileDesc"
+        Me.FileDesc.Name = "FileDesc"
+        Me.FileDesc.Visible = True
+        Me.FileDesc.Width = 378
         '
         'gridBand4
         '
         Me.gridBand4.Caption = "gridBand4"
         Me.gridBand4.Columns.Add(Me.UnitDesc)
+        Me.gridBand4.Columns.Add(Me.MaintenanceCode)
         Me.gridBand4.Columns.Add(Me.Maintenance)
+        Me.gridBand4.Columns.Add(Me.FileDesc)
         Me.gridBand4.Name = "gridBand4"
         Me.gridBand4.VisibleIndex = 0
-        Me.gridBand4.Width = 461
+        Me.gridBand4.Width = 1072
+        '
+        'DocID
+        '
+        Me.DocID.Caption = "DocID"
+        Me.DocID.FieldName = "DocID"
+        Me.DocID.Name = "DocID"
+        Me.DocID.Visible = True
         '
         'MDOCVIEWERLIST
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.MainGrid)
         Me.Name = "MDOCVIEWERLIST"
+        Me.Size = New System.Drawing.Size(345, 323)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -112,7 +132,9 @@ Partial Class MDOCVIEWERLIST
     Friend WithEvents MainView As DevExpress.XtraGrid.Views.BandedGrid.AdvBandedGridView
     Friend WithEvents UnitDesc As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents MaintenanceCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
-    Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
     Friend WithEvents Maintenance As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents FileDesc As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
+    Friend WithEvents DocID As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
 
 End Class

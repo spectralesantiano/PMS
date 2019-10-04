@@ -10,7 +10,7 @@ Public Class WDOCVIEWER
     Public Overrides Sub RefreshData()
         MyBase.RefreshData()
         If strID <> "" Then
-            imgLogo.BackgroundImage = StringToImage(DB.DLookUp("ImageDoc", "tblMaintenanceWork", "", "MaintenanceWorkID='" & strID & "'"))
+            imgLogo.BackgroundImage = StringToImage(DB.DLookUp("Doc", "tblDocuments", "", "DocID='" & strID & "'"))
             Me.header.Text = strDesc
         End If
     End Sub

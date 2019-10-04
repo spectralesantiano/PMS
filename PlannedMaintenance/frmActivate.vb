@@ -120,7 +120,7 @@ Public Class frmActivate
 
     Private Sub cmdBrowse_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdBrowse.Click
         If Not isElevated() Then
-            MsgBox("You need to run SM as an Administrator before loading license file.", MsgBoxStyle.Exclamation, GetAppName)
+            MsgBox("You need to run PMS as an Administrator before loading license file.", MsgBoxStyle.Exclamation, GetAppName)
             Exit Sub
         End If
 

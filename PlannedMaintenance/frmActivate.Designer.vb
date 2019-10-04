@@ -58,7 +58,7 @@ Partial Class frmActivate
         Me.cmdOk.Name = "cmdOk"
         Me.cmdOk.Size = New System.Drawing.Size(78, 23)
         Me.cmdOk.TabIndex = 6
-        Me.cmdOk.Text = "Open SM"
+        Me.cmdOk.Text = "Open PMS"
         '
         'GroupControl1
         '

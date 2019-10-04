@@ -20,18 +20,18 @@ Partial Class WORKLIST
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.tlMain = New DevExpress.XtraTreeList.TreeList()
+        Me.treeListBand1 = New DevExpress.XtraTreeList.Columns.TreeListBand()
         Me.colUnitDesc = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colComponentCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.Description = New DevExpress.XtraTreeList.Columns.TreeListColumn()
-        Me.colUnitCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
+        Me.TreeListColumn1 = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colDeptCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colCatCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colCritical = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colHoursPerDay = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.LocEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.StatusEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
-        Me.TreeListColumn1 = New DevExpress.XtraTreeList.Columns.TreeListColumn()
-        Me.treeListBand1 = New DevExpress.XtraTreeList.Columns.TreeListBand()
+        Me.colUnitCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         CType(Me.tlMain, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LocEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.StatusEdit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -65,6 +65,13 @@ Partial Class WORKLIST
         Me.tlMain.TreeLevelWidth = 20
         Me.tlMain.TreeLineStyle = DevExpress.XtraTreeList.LineStyle.Solid
         '
+        'treeListBand1
+        '
+        Me.treeListBand1.Caption = "Machines & Equipments"
+        Me.treeListBand1.Columns.Add(Me.colUnitDesc)
+        Me.treeListBand1.MinWidth = 33
+        Me.treeListBand1.Name = "treeListBand1"
+        '
         'colUnitDesc
         '
         Me.colUnitDesc.Caption = "Description"
@@ -74,7 +81,7 @@ Partial Class WORKLIST
         Me.colUnitDesc.OptionsColumn.AllowEdit = False
         Me.colUnitDesc.OptionsColumn.ReadOnly = True
         Me.colUnitDesc.OptionsFilter.AllowFilter = False
-        Me.colUnitDesc.SortOrder = System.Windows.Forms.SortOrder.Descending
+        Me.colUnitDesc.SortOrder = System.Windows.Forms.SortOrder.Ascending
         Me.colUnitDesc.UnboundExpression = "[Component] + ' ' + [UnitNumber]"
         Me.colUnitDesc.UnboundType = DevExpress.XtraTreeList.Data.UnboundColumnType.[String]
         Me.colUnitDesc.Visible = True
@@ -93,11 +100,11 @@ Partial Class WORKLIST
         Me.Description.FieldName = "Description"
         Me.Description.Name = "Description"
         '
-        'colUnitCode
+        'TreeListColumn1
         '
-        Me.colUnitCode.Caption = "UnitCode"
-        Me.colUnitCode.FieldName = "UnitCode"
-        Me.colUnitCode.Name = "colUnitCode"
+        Me.TreeListColumn1.Caption = "UnitCode"
+        Me.TreeListColumn1.FieldName = "UnitCode"
+        Me.TreeListColumn1.Name = "TreeListColumn1"
         '
         'colDeptCode
         '
@@ -149,18 +156,11 @@ Partial Class WORKLIST
         Me.StatusEdit.ShowHeader = False
         Me.StatusEdit.ValueMember = "StatCode"
         '
-        'TreeListColumn1
+        'colUnitCode
         '
-        Me.TreeListColumn1.Caption = "UnitCode"
-        Me.TreeListColumn1.FieldName = "UnitCode"
-        Me.TreeListColumn1.Name = "TreeListColumn1"
-        '
-        'treeListBand1
-        '
-        Me.treeListBand1.Caption = "Machines & Equipments"
-        Me.treeListBand1.Columns.Add(Me.colUnitDesc)
-        Me.treeListBand1.MinWidth = 33
-        Me.treeListBand1.Name = "treeListBand1"
+        Me.colUnitCode.Caption = "UnitCode"
+        Me.colUnitCode.FieldName = "UnitCode"
+        Me.colUnitCode.Name = "colUnitCode"
         '
         'WORKLIST
         '

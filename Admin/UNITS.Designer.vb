@@ -19,7 +19,6 @@ Partial Class UNITS
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UNITS))
         Dim SerializableAppearanceObject1 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Dim SerializableAppearanceObject2 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
@@ -32,7 +31,7 @@ Partial Class UNITS
         Me.cDeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.MainPanel = New DevExpress.XtraEditors.SplitContainerControl()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
-        Me.prEditors = New DevExpress.XtraEditors.Repository.PersistentRepository(Me.components)
+        Me.prEditors = New DevExpress.XtraEditors.Repository.PersistentRepository()
         Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.WorkEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.RankEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
@@ -137,12 +136,14 @@ Partial Class UNITS
         Me.UnitCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.mEdited = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.InsDocument = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
-        Me.ImageDoc = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.AddedImages = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.DeletedImages = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.HasImage = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.TreeListColumn1 = New DevExpress.XtraTreeList.Columns.TreeListColumn()
-        Me.pmCustomMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
+        Me.pmCustomMenu = New DevExpress.XtraBars.PopupMenu()
         Me.bbiPaste = New DevExpress.XtraBars.BarButtonItem()
         Me.bbiImport = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarManager1 = New DevExpress.XtraBars.BarManager(Me.components)
+        Me.BarManager1 = New DevExpress.XtraBars.BarManager()
         Me.barDockControlTop = New DevExpress.XtraBars.BarDockControl()
         Me.barDockControlBottom = New DevExpress.XtraBars.BarDockControl()
         Me.barDockControlLeft = New DevExpress.XtraBars.BarDockControl()
@@ -361,8 +362,6 @@ Partial Class UNITS
         '
         'gridBand4
         '
-        Me.gridBand4.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gridBand4.AppearanceHeader.Options.UseFont = True
         Me.gridBand4.Caption = "Components"
         Me.gridBand4.Columns.Add(Me.Component)
         Me.gridBand4.Columns.Add(Me.ComponentCode)
@@ -425,8 +424,6 @@ Partial Class UNITS
         '
         'tlUnits
         '
-        Me.tlUnits.Appearance.BandPanel.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tlUnits.Appearance.BandPanel.Options.UseFont = True
         Me.tlUnits.Bands.AddRange(New DevExpress.XtraTreeList.Columns.TreeListBand() {Me.treeListBand1})
         Me.tlUnits.Columns.AddRange(New DevExpress.XtraTreeList.Columns.TreeListColumn() {Me.colComponentCode, Me.colComponent, Me.colUnitNum, Me.colUnitDesc, Me.colCounter, Me.colLocCode, Me.colDeptCode, Me.colCatCode, Me.colType, Me.colRefNo, Me.colSerialNumber, Me.colMakerCode, Me.colCounterCode, Me.colRunningHours, Me.colCritical, Me.colModel, Me.colVendorCode, Me.colActive, Me.colPLocCode, Me.colHasCritical, Me.colHasInactive})
         Me.tlUnits.Dock = System.Windows.Forms.DockStyle.Fill
@@ -662,12 +659,10 @@ Partial Class UNITS
         '
         'GroupControl3
         '
-        Me.GroupControl3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.GroupControl3.Controls.Add(Me.pGrid)
         Me.GroupControl3.Location = New System.Drawing.Point(833, 3)
         Me.GroupControl3.Name = "GroupControl3"
-        Me.GroupControl3.Size = New System.Drawing.Size(245, 712)
+        Me.GroupControl3.Size = New System.Drawing.Size(245, 678)
         Me.GroupControl3.TabIndex = 204
         Me.GroupControl3.Text = "  Parts"
         '
@@ -679,7 +674,7 @@ Partial Class UNITS
         Me.pGrid.MainView = Me.pView
         Me.pGrid.Name = "pGrid"
         Me.pGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1})
-        Me.pGrid.Size = New System.Drawing.Size(241, 690)
+        Me.pGrid.Size = New System.Drawing.Size(241, 656)
         Me.pGrid.TabIndex = 11
         Me.pGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.pView})
         '
@@ -1142,12 +1137,10 @@ Partial Class UNITS
         '
         'gMaintenance
         '
-        Me.gMaintenance.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.gMaintenance.Controls.Add(Me.mGrid)
         Me.gMaintenance.Location = New System.Drawing.Point(1, 173)
         Me.gMaintenance.Name = "gMaintenance"
-        Me.gMaintenance.Size = New System.Drawing.Size(826, 542)
+        Me.gMaintenance.Size = New System.Drawing.Size(826, 508)
         Me.gMaintenance.TabIndex = 12
         Me.gMaintenance.Text = "Maintenance"
         '
@@ -1159,7 +1152,7 @@ Partial Class UNITS
         Me.mGrid.LookAndFeel.SkinName = "iMaginary"
         Me.mGrid.MainView = Me.mView
         Me.mGrid.Name = "mGrid"
-        Me.mGrid.Size = New System.Drawing.Size(822, 520)
+        Me.mGrid.Size = New System.Drawing.Size(822, 486)
         Me.mGrid.TabIndex = 38
         Me.mGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.mView})
         '
@@ -1175,7 +1168,7 @@ Partial Class UNITS
         Me.mView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
         Me.mView.Bands.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.GridBand() {Me.gridBand5, Me.gridBand3, Me.gridBand2, Me.gridBand7, Me.OptionBand})
         Me.mView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-        Me.mView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.MaintenanceCode, Me.UnitCode, Me.WorkCode, Me.Number, Me.IntCode, Me.RankCode, Me.mEdited, Me.InsCrossRef, Me.InsDocument, Me.InsEditor, Me.InsDateIssue, Me.InsDesc, Me.mDelete, Me.mEdit, Me.mPreview, Me.ImageDoc})
+        Me.mView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.MaintenanceCode, Me.UnitCode, Me.WorkCode, Me.Number, Me.IntCode, Me.RankCode, Me.mEdited, Me.InsCrossRef, Me.InsDocument, Me.InsEditor, Me.InsDateIssue, Me.InsDesc, Me.mDelete, Me.mEdit, Me.mPreview, Me.AddedImages, Me.DeletedImages, Me.HasImage})
         Me.mView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.mView.GridControl = Me.mGrid
         Me.mView.Name = "mView"
@@ -1403,11 +1396,23 @@ Partial Class UNITS
         Me.InsDocument.Name = "InsDocument"
         Me.InsDocument.Width = 69
         '
-        'ImageDoc
+        'AddedImages
         '
-        Me.ImageDoc.Caption = "ImageDoc"
-        Me.ImageDoc.FieldName = "ImageDoc"
-        Me.ImageDoc.Name = "ImageDoc"
+        Me.AddedImages.Caption = "AddedImages"
+        Me.AddedImages.FieldName = "AddedImages"
+        Me.AddedImages.Name = "AddedImages"
+        '
+        'DeletedImages
+        '
+        Me.DeletedImages.Caption = "DeletedImages"
+        Me.DeletedImages.FieldName = "DeletedImages"
+        Me.DeletedImages.Name = "DeletedImages"
+        '
+        'HasImage
+        '
+        Me.HasImage.Caption = "HasImage"
+        Me.HasImage.FieldName = "HasImage"
+        Me.HasImage.Name = "HasImage"
         '
         'TreeListColumn1
         '
@@ -1599,7 +1604,6 @@ Partial Class UNITS
     Friend WithEvents cboLocCode As DevExpress.XtraEditors.LookUpEdit
     Friend WithEvents lblLocation As DevExpress.XtraEditors.LabelControl
     Friend WithEvents CounterEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit
-    Friend WithEvents treeListBand1 As DevExpress.XtraTreeList.Columns.TreeListBand
     Friend WithEvents cboMakerCode As DevExpress.XtraEditors.LookUpEdit
     Friend WithEvents LabelControl4 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents cboVendorCode As DevExpress.XtraEditors.LookUpEdit
@@ -1638,7 +1642,7 @@ Partial Class UNITS
     Friend WithEvents Counter As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents colPLocCode As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents PartNumber As DevExpress.XtraGrid.Columns.GridColumn
-    Friend WithEvents ImageDoc As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents AddedImages As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents pmCustomMenu As DevExpress.XtraBars.PopupMenu
     Friend WithEvents bbiPaste As DevExpress.XtraBars.BarButtonItem
     Friend WithEvents bbiImport As DevExpress.XtraBars.BarButtonItem
@@ -1657,5 +1661,8 @@ Partial Class UNITS
     Friend WithEvents gridBand1 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
     Friend WithEvents gridBand7 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
     Friend WithEvents OptionBand As DevExpress.XtraGrid.Views.BandedGrid.GridBand
+    Friend WithEvents DeletedImages As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents HasImage As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents treeListBand1 As DevExpress.XtraTreeList.Columns.TreeListBand
 
 End Class
