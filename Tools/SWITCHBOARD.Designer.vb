@@ -81,7 +81,7 @@ Partial Class Switchboard
         Me.lblAppName.Name = "lblAppName"
         Me.lblAppName.Size = New System.Drawing.Size(80, 39)
         Me.lblAppName.TabIndex = 66
-        Me.lblAppName.Text = "PMS"
+        Me.lblAppName.Text = APP_SHORT_NAME
         '
         'lblVersion
         '

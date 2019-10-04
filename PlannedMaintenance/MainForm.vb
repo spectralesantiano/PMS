@@ -690,13 +690,68 @@ Public Class MainForm
                                 Process.GetCurrentProcess.Kill()
                             End If
                         Else
-                            MessageBox.Show("There is a problem extrancting the obx file. Please contact Spectral for details.", "PMS", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            MessageBox.Show("There is a problem extrancting the obx file. Please contact Spectral for details.", APP_SHORT_NAME, MessageBoxButtons.OK, MessageBoxIcon.Warning)
                         End If
                     End If
                 End If
             End If
         End If
     End Sub
+    Private Function GetVersionValueForDB(val As String)
+        Try
+            If (val.Length > 0) Then
+                Dim r = val.Split("=")
+                If (r.Length > 1) Then
+                    Return r(1).Trim()
+                End If
+            End If
+        Catch ex As Exception
+            Dim msg = ex.Message
+        End Try
+        Return ""
+    End Function
+
+    Private Function GetVersionInfo(scriptFile As String) As ArrayList
+        Dim retVal As New ArrayList
+        Try
+            Dim contents = System.IO.File.ReadAllLines(scriptFile)
+            For i As Integer = 0 To contents.Length - 1
+                If (contents(i).Equals("[OBJECTS]")) Then
+                    Return retVal
+                Else
+                    retVal.Add(contents(i))
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+        Return retVal
+    End Function
+    Private Function PeekVesionNo(fileName As String) As String
+        Dim versionNo As String = ""
+        Dim path = APP_PATH & "\temp_update\OBJECT_SNAPSHOT\" '-> temp folder to extract contents of obx file.
+        Dim updatePath = path & "\Update.txt" '-> the file that we need to look for.
+        Dim zipFile As String = path & GetFileNameWithoutExtension(fileName) & ".zip"
+
+        Try
+            If (Directory.Exists(path)) Then '-> If there is an existing extracted file on OBJECT_SNAPSHOT, 
+                Directory.Delete(path, True) '-> delete those. 
+            End If
+            MkDir(path) '-> Recreate the OBJECT_SNAPSHOT
+            File.Copy(fileName, zipFile) '-> Copy zip files to OBJECT_SNAPSHOT
+            UnzipFile(zipFile, path) '-> Extract contents of zip file.
+
+            If (File.Exists(updatePath)) Then '-> If the Update.txt exists.
+                versionNo = GetVersionValueForDB(GetVersionInfo(updatePath)(1)).ToString() '-> Get the version no. 
+            End If
+        Catch ex As Exception
+            LogErrors("Error on loading obx file : " & ex.Message)
+        Finally
+            Directory.Delete(path, True) '-> After the peak, do the cleanup by deleting the OBJECT_SNAPSHOT folder, whether there is an error or not. 
+        End Try
+
+        Return versionNo
+    End Function
 
     Private Function LoadAndExtractObxFile(fileName As String, ByRef versionNo As String, ByRef tempObxFilePath As String) As Boolean
 
@@ -704,45 +759,59 @@ Public Class MainForm
         Try
             Dim updatePath As String = PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "Code='UpdatesFolder'")
             Dim currentVersion As String = PMSDB.DLookUp("AppVersion", "[sti_sys].[dbo].[tblPMSVersion]", "", "1=1 ORDER BY AppVersion DESC")
-            Dim localPath As String = APP_PATH & "\temp_update\"
+            Dim localTempPath As String = APP_PATH & "\temp_update\"
+            Dim zipFile As String = ""
+            Dim copiedFile As String = ""
+            Dim extractedFolder As String = ""
 
             If (File.Exists(fileName) And fileName.EndsWith(".obx", StringComparison.CurrentCultureIgnoreCase)) Then
 
-                Dim updateVersionNo = fileName.Split("\"c)(fileName.Split("\"c).Length - 1).Split("_"c)(1).Replace(".obx", "")
+                'Dim updateVersionNo = fileName.Split("\"c)(fileName.Split("\"c).Length - 1).Split("_"c)(1).Replace(".obx", "")
+                Dim updateVersionNo = PeekVesionNo(fileName) '-> Get the version number included in Update.txt of this obx file.
 
-                If versioningUtil.IsNewVersion(updateVersionNo, currentVersion) Then
-                    'Copy the obx file and extract it on local location.
-                    If (Not Directory.Exists(localPath)) Then 'Create a temporary obx folder locally for Spectral Service
-                        MkDir(localPath)
-                    End If
-                    versionNo = updateVersionNo
-                    Dim zipFile As String = localPath & GetFileNameWithoutExtension(fileName) & ".zip"
-                    Dim copiedFile As String = zipFile.Replace(".zip", "") & "_" & DateTime.Now.ToString("MMddyyyy_hhmmss") & "_bak.obx"
-                    Dim extractedFolder As String = localPath & updateVersionNo
+                'If versioningUtil.IsNewVersion(updateVersionNo, currentVersion) Then
+                'Copy the obx file and extract it on local location.
+                If (Not Directory.Exists(localTempPath)) Then 'Create a temporary obx folder locally for Spectral Service
+                    MkDir(localTempPath)
+                End If
+                versionNo = updateVersionNo
+                zipFile = localTempPath & GetFileNameWithoutExtension(fileName) & ".zip"
+                copiedFile = zipFile.Replace(".zip", "") & "_" & DateTime.Now.ToString("MMddyyyy_hhmmss") & "_bak.obx"
+                extractedFolder = localTempPath & updateVersionNo
 
-                    File.Copy(fileName, zipFile)
-                    MkDir(extractedFolder)
-                    File.Copy(fileName, copiedFile)
-                    UnzipFile(zipFile, extractedFolder)
+                If (File.Exists(zipFile)) Then
+                    File.Delete(zipFile)
+                End If
+                File.Copy(fileName, zipFile)
 
-                    If (File.Exists(extractedFolder & "\Update.txt")) Then
-                        File.Delete(zipFile)
-                        tempObxFilePath = extractedFolder
-                        Return True
-                    Else
-                        MessageBox.Show("The object update does not contain a Update.txt file.", "Update Manager", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        Directory.Delete(extractedFolder, True)
-                        File.Delete(zipFile)
-                        File.Delete(copiedFile)
-                        Return False
-                    End If
+                If (Directory.Exists(extractedFolder)) Then
+                    Directory.Delete(extractedFolder, True)
+                End If
+
+                MkDir(extractedFolder)
+
+                File.Copy(fileName, copiedFile) '-> Create an _bak.obx file from the original object update file.
+                UnzipFile(zipFile, extractedFolder) '-> Extract contents to extractedFolder (which is the same as the version number of object update)
+
+                If (File.Exists(extractedFolder & "\Update.txt")) Then
+                    File.Delete(zipFile)
+                    tempObxFilePath = extractedFolder
+                    Return True
                 Else
+                    MessageBox.Show("The object update does not contain a Update.txt file.", "Update Manager", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Directory.Delete(extractedFolder, True)
+                    File.Delete(zipFile)
+                    File.Delete(copiedFile)
                     Return False
                 End If
+                'Else
+                '    Return False
+                'End If
+            Else
+                MessageBox.Show("The file does not exists or it is not an Spectral object update file.", APP_SHORT_NAME, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End If
-
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            LogErrors("Error while extracting the object update file - " & ex.Message)
             Return False
         End Try
         Return True
