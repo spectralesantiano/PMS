@@ -46,6 +46,7 @@ Public Class WORKLIST
         strFilter = ""
         If CURRENT_DEPARTMENT <> "" Then strFilter = strFilter & "AND DeptCode='" & CURRENT_DEPARTMENT & "'"
         If CURRENT_CATEGORY <> "" Then strFilter = strFilter & "AND CatCode='" & CURRENT_CATEGORY & "'"
+        If CURRENT_CRITICAL_CHECKED Then strFilter = strFilter & "AND Critical=True"
         If strFilter.Length > 0 Then strFilter = strFilter.Remove(0, 4)
         Me.tlMain.ActiveFilterString = strFilter
     End Sub

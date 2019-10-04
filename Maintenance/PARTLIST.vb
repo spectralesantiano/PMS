@@ -30,6 +30,9 @@ Public Class PARTLIST
         If e.RowHandle = MainView.FocusedRowHandle And Not bAddMode Then
             e.Appearance.BackColor = SEL_COLOR
         End If
+        If IfNull(MainView.GetRowCellValue(e.RowHandle, "Minimum"), 0) > IfNull(MainView.GetRowCellValue(e.RowHandle, "OnStock"), 0) Then
+            e.Appearance.ForeColor = Drawing.Color.Red
+        End If
     End Sub
 
     Public Overrides Sub RefreshData()

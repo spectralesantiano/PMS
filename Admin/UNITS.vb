@@ -11,7 +11,8 @@ Public Class UNITS
 
     Dim downHitInfo As GridHitInfo = Nothing, tblUnitSource As DataTable, tblUnitCopy As DataTable, sqls As New ArrayList, strCurrView As String
     Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False
-    Dim strCounterCode As String, nCounter As Integer, nReading As Integer, strActiveCounter As String, nRunningHours As Integer, nCurrNode As TreeListNode
+    Dim strCounterCode As String, strCounter As String, nReading As Integer, strActiveCounter As String, nRunningHours As Integer, nCurrNode As TreeListNode
+    Dim dDateIssue As Object = DBNull.Value, strEditor As String, bUpdating As Boolean
 
     Private Sub cboLocCode_ProcessNewValue(sender As Object, e As DevExpress.XtraEditors.Controls.ProcessNewValueEventArgs) Handles cboLocCode.ProcessNewValue
         Dim row As DataRow, tbl As DataTable, strLocCode As String = GenerateID(DB, "LocCode", "tblAdmLocation")
@@ -37,7 +38,7 @@ Public Class UNITS
                 getUnitsData(False)
             End If
         ElseIf grid.Name = "mGrid" Then
-           
+
         End If
     End Sub
 
@@ -54,7 +55,7 @@ Public Class UNITS
                 MainView.RefreshRow(MainView.FocusedRowHandle)
             End If
         ElseIf grid.Name = "mGrid" Then
-            
+
         End If
     End Sub
 
@@ -105,7 +106,7 @@ Public Class UNITS
 
     Private Sub cView_DoubleClick(sender As Object, e As System.EventArgs) Handles cView.DoubleClick
         strCounterCode = "NEW"
-        nCounter = cView.RowCount + 1
+        strCounter = "Ctr " & cView.RowCount + 1
         nReading = 0
         cView.AddNewRow()
     End Sub
@@ -130,7 +131,7 @@ Public Class UNITS
     Private Sub cView_InitNewRow(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.InitNewRowEventArgs) Handles cView.InitNewRow
         Dim View As DevExpress.XtraGrid.Views.Base.ColumnView = sender
         View.SetRowCellValue(e.RowHandle, View.Columns("cEdited"), True)
-        View.SetRowCellValue(e.RowHandle, View.Columns("Counter"), nCounter)
+        View.SetRowCellValue(e.RowHandle, View.Columns("Counter"), strCounter)
         View.SetRowCellValue(e.RowHandle, View.Columns("Reading"), nReading)
         AllowSaving(Name, (bPermission And 4) > 0)
         bRefreshCounter = True
@@ -257,6 +258,7 @@ Public Class UNITS
             Else
                 Dim frm As New frmMaintenance
                 frm.DB = DB
+                frm.MainGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='ADMWORK' AND [RefID]='" & mView.GetRowCellValue(mView.FocusedRowHandle, "MaintenanceCode") & "'")
                 frm.cboWorkCode.Properties.DataSource = WorkEdit.DataSource
                 frm.cboRankCode.Properties.DataSource = AdmRank
                 frm.cboIntCode.Properties.DataSource = IntEdit.DataSource
@@ -265,8 +267,8 @@ Public Class UNITS
                     frm.cboRankCode.EditValue = ""
                     frm.cboIntCode.EditValue = ""
                     frm.txtInsCrossRef.EditValue = ""
-                    frm.txtInsDateIssued.EditValue = System.DBNull.Value
-                    frm.txtInsEditor.EditValue = ""
+                    frm.txtInsDateIssued.EditValue = dDateIssue
+                    frm.txtInsEditor.EditValue = strEditor
                     frm.txtInsDesc.EditValue = ""
                 Else
                     frm.cboWorkCode.EditValue = mView.GetRowCellValue(mView.FocusedRowHandle, "WorkCode")
@@ -281,15 +283,12 @@ Public Class UNITS
                     frm.txtInsDateIssued.EditValue = mView.GetRowCellValue(mView.FocusedRowHandle, "InsDateIssue")
                     frm.txtInsEditor.EditValue = mView.GetRowCellValue(mView.FocusedRowHandle, "InsEditor")
                     frm.txtInsDesc.EditValue = mView.GetRowCellValue(mView.FocusedRowHandle, "InsDesc")
-                    If IfNull(mView.GetRowCellValue(mView.FocusedRowHandle, "ImageDoc"), "") <> "" Then
-                        frm.imgLogo.BackgroundImage = StringToImage(mView.GetRowCellValue(mView.FocusedRowHandle, "ImageDoc"))
-                    End If
                 End If
-
                 frm.ShowDialog()
                 If frm.IS_SAVED Then
                     If mView.IsNewItemRow(mView.FocusedRowHandle) Then mView.AddNewRow()
                     mView.SetRowCellValue(mView.FocusedRowHandle, "mEdited", True)
+                    mView.SetRowCellValue(mView.FocusedRowHandle, "HasImage", frm.MainView.RowCount > 0)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "WorkCode", frm.cboWorkCode.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "RankCode", frm.cboRankCode.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "Number", frm.txtNumber.EditValue)
@@ -298,13 +297,10 @@ Public Class UNITS
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsDateIssue", frm.txtInsDateIssued.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsEditor", frm.txtInsEditor.EditValue)
                     mView.SetRowCellValue(mView.FocusedRowHandle, "InsDesc", frm.txtInsDesc.EditValue)
-                    If frm.bImageUpdated Then
-                        If frm.imgLogo.BackgroundImage Is Nothing Then
-                            mView.SetRowCellValue(mView.FocusedRowHandle, "ImageDoc", "")
-                        Else
-                            mView.SetRowCellValue(mView.FocusedRowHandle, "ImageDoc", ImageToString(frm.imgLogo.BackgroundImage))
-                        End If
-                    End If
+                    mView.SetRowCellValue(mView.FocusedRowHandle, "AddedImages", frm.strAddedImages)
+                    mView.SetRowCellValue(mView.FocusedRowHandle, "DeletedImages", frm.strDeletedImages)
+                    dDateIssue = frm.txtInsDateIssued.EditValue
+                    strEditor = IfNull(frm.txtInsEditor.EditValue, "")
                     mView.UpdateCurrentRow()
                     AllowSaving(Name, (bPermission And 4) > 0)
                     bRecordUpdated = True
@@ -336,6 +332,8 @@ Public Class UNITS
     Private Sub mView_cellvaluechanged(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles mView.CellValueChanged
         If e.Column.Name <> "mEdited" Then
             mView.SetRowCellValue(e.RowHandle, "mEdited", True)
+            bbiPaste.Enabled = False
+            bbiImport.Enabled = False
             bRefreshMaintenance = True
         End If
     End Sub
@@ -352,6 +350,7 @@ Public Class UNITS
         If Not (Control.ModifierKeys = Keys.Control Or Control.ModifierKeys = Keys.None Or Control.ModifierKeys = Keys.Shift) Then
             Exit Sub
         End If
+
         If e.Button = MouseButtons.Right Then
             downHitInfo = hitInfo
             strCurrView = "Maintenance"
@@ -401,6 +400,10 @@ Public Class UNITS
         End If
     End Sub
 
+    Private Function DragCanceled(strParent As String, strUnitDesc As String) As Boolean
+        Return MsgBox("Do you want to add all selected components to " & strUnitDesc, vbYesNo) = vbNo
+    End Function
+
     Private Sub tlUnits_DragDrop(ByVal sender As Object, ByVal e As DragEventArgs) Handles tlUnits.DragDrop
         Dim treeList As TreeList = TryCast(sender, TreeList), bRootUpdated As Boolean = False
         Dim row As DataRow, tbl As DataTable = TryCast(e.Data.GetData(GetType(DataTable)), DataTable), rowNew As DataRow
@@ -418,6 +421,11 @@ Public Class UNITS
         If tbl Is Nothing Then 'Dragged from the Treelist
             Dim tree As TreeListNode = TryCast(e.Data.GetData(GetType(TreeListNode)), TreeListNode)
             If Not tree Is Nothing Then
+                If strParent <> "NULL" And CURRENT_SHOW_WARNING Then
+                    If DragCanceled(strParent, info.Node.GetValue("UnitDesc")) Then
+                        Exit Sub
+                    End If
+                End If
                 Dim xrow() As DataRow = tblUnitSource.Select("UnitCode='" & tree.GetValue("UnitCode") & "'")
                 If info.Node Is Nothing Then
                     If CURRENT_MAINUNIT = "" Then
@@ -431,13 +439,15 @@ Public Class UNITS
                 xrow(0)("ParentCode") = parent
                 xrow(0)("UnitNumber") = nCompNum
                 xrow(0)("UnitDesc") = tree.GetValue("Component") & " " & nCompNum
-                If IfNull(parent, "") = xrow(0)("UnitCode") Then
-                    MsgBox("Error")
-                    Exit Sub
-                End If
+                If IfNull(parent, "") = xrow(0)("UnitCode") Then Exit Sub
                 sqls.Add("UPDATE dbo.tblAdmUnit SET ParentCode=" & strParent & ", UnitNumber=" & nCompNum & ", UnitDesc='" & xrow(0)("UnitDesc") & "', LastUpdatedBy='" & GetUserName() & "' WHERE UnitCode='" & xrow(0)("UnitCode") & "'")
             End If
         Else 'Dragged from the Data Grid
+            If strParent <> "NULL" And CURRENT_SHOW_WARNING Then
+                If DragCanceled(strParent, info.Node.GetValue("UnitDesc")) Then
+                    Exit Sub
+                End If
+            End If
             For Each row In tbl.Rows
                 If info.Node Is Nothing Then
                     If CURRENT_MAINUNIT = "" Then
@@ -456,6 +466,9 @@ Public Class UNITS
                 rowNew("UnitDesc") = row("Component") & " " & nCompNum
                 rowNew("UnitNumber") = nCompNum
                 rowNew("Critical") = False
+                rowNew("HasCritical") = False
+                rowNew("HasInactive") = False
+                rowNew("Active") = True
                 tblUnitSource.Rows.Add(rowNew)
                 sqls.Add("INSERT INTO dbo.tblAdmUnit(UnitCode, ParentCode, ComponentCode, UnitDesc, UnitNumber, LastUpdatedBy) VALUES('" & rowNew("UnitCode") & "'," & strParent & ",'" & rowNew("ComponentCode") & "','" & rowNew("UnitDesc") & "'," & rowNew("UnitNumber") & ",'" & GetUserName() & "')")
                 nMaxUnitID += 1
@@ -472,9 +485,15 @@ Public Class UNITS
         AllowDeletion(Name, (bPermission And 8) > 0)
     End Sub
 
+    <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub tlUnits_NodeCellStyle(sender As Object, e As DevExpress.XtraTreeList.GetCustomNodeCellStyleEventArgs) Handles tlUnits.NodeCellStyle
         If e.Node.Selected Then
             e.Appearance.BackColor = SEL_COLOR
+        End If
+        If Not IfNull(e.Node.GetValue("Active"), True) Then
+            e.Appearance.ForeColor = Color.Red
+        ElseIf IfNull(e.Node.GetValue("HasInactive"), False) Then
+            e.Appearance.ForeColor = Color.Orange
         End If
     End Sub
 
@@ -535,8 +554,14 @@ Public Class UNITS
 
     Private Sub MainView_CellValueChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles MainView.CellValueChanged
         If e.Column.Name = "Component" Then
+            Dim strComponent As String = MainView.GetFocusedRowCellValue("Component").ToString.Replace("'", "''")
             Dim strComponentCode = GenerateID(DB, "ComponentCode", "tblAdmComponent")
-            DB.RunSql("INSERT INTO dbo.tblAdmComponent(ComponentCode, Name, LastUpdatedBy) VALUES('" & strComponentCode & "', '" & MainView.GetFocusedRowCellValue("Component") & "','" & GetUserName() & "')")
+            If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "'") <> "" Then
+                MsgBox(strComponent & " already exists.", vbCritical, GetAppName)
+                MainView.DeleteRow(MainView.FocusedRowHandle)
+                Exit Sub
+            End If
+            DB.RunSql("INSERT INTO dbo.tblAdmComponent(ComponentCode, Name, LastUpdatedBy) VALUES('" & strComponentCode & "', '" & strComponent & "','" & GetUserName() & "')")
             MainView.SetRowCellValue(MainView.FocusedRowHandle, "ComponentCode", strComponentCode)
         End If
     End Sub
@@ -585,6 +610,7 @@ Public Class UNITS
 
     Sub Editable()
         Dim nNode As TreeListNode = tlUnits.FocusedNode
+        bUpdating = True
         If nNode Is Nothing Then
             strID = ""
             strDesc = "New Record"
@@ -628,7 +654,7 @@ Public Class UNITS
             cboLocCode.Enabled = nNode.Level = 0
             cboCatCode.Enabled = nNode.Level = 0
             'Maintenance
-            mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
+            mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited, '' AddedImages,'' DeletedImages, CAST(0 AS BIT) HasImage FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
             mView.NewItemRowText = "Click here to add new maintenance for " & strDesc
             mGrid.Enabled = True
             'Part
@@ -639,14 +665,20 @@ Public Class UNITS
             cGrid.Enabled = True
             If cView.RowCount > 0 Then
                 strCounterCode = cView.GetRowCellValue(0, "CounterCode")
-                nCounter = cView.GetRowCellValue(0, "Counter")
+                strCounter = cView.GetRowCellValue(0, "Counter")
             Else
                 strCounterCode = ""
-                nCounter = 0
+                strCounter = 0
             End If
             If Not bHasListeners Then AddEditListener(Me.gUnitInfo)
             bHasListeners = True
+            If Not nNode.ParentNode Is Nothing Then
+                chkActive.Enabled = nNode.ParentNode.GetValue("Active")
+            Else
+                chkActive.Enabled = True
+            End If
         End If
+        bUpdating = False
     End Sub
 
     Private Function GetSelectedRows() As DataTable
@@ -687,8 +719,30 @@ Public Class UNITS
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtUnitDesc}) Then
             Dim i As Integer, strPartID As String
+            Dim nNode As TreeListNode = tlUnits.FindNodeByFieldValue("UnitCode", strID)
+
             sqls.Clear()
-            sqls.Add(GenerateUpdateScript(Me.gUnitInfo, 3, "tblAdmUnit", "LastUpdatedBy='" & GetUserName() & "'", "UnitCode='" & strID & "'"))
+            sqls.Add(GenerateUpdateScript(Me.gUnitInfo, 3, "tblAdmUnit", "LastUpdatedBy='" & GetUserName() & "', HasInactive=" & IIf(chkActive.Checked, 0, 1) & ", HasCritical=" & IIf(chkCritical.Checked, 0, 1), "UnitCode='" & strID & "'"))
+
+            RemoveHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
+
+            If chkActive.Tag = 1 Then
+                nNode.SetValue("HasInactive", Not chkActive.Checked)
+                If Not nNode.ParentNode Is Nothing Then
+                    nNode.SetValue("Active", chkActive.Checked)
+                    UpdateActiveParent(nNode.ParentNode) 'Updated parents node's HasInactive values
+                End If
+                UpdateActiveChild(nNode, chkActive.Checked) 'Updated child node's Active values
+            End If
+
+            If chkCritical.Tag = 1 Then
+                If Not nNode.ParentNode Is Nothing Then
+                    nNode.SetValue("Critical", chkCritical.Checked)
+                    UpdateCriticalParent(nNode.ParentNode) 'Updated parents node's HasCritical values
+                End If
+            End If
+
+            AddHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
 
             ''''''''''''MAINTENANCE'''''''''''
             mView.CloseEditor()
@@ -702,10 +756,24 @@ Public Class UNITS
                     Dim strDateIssue As String = "NULL"
                     If Not mView.GetRowCellValue(i, "InsDateIssue") Is System.DBNull.Value Then strDateIssue = ChangeToSQLDate(mView.GetRowCellValue(i, "InsDateIssue"))
                     If mView.GetRowCellValue(i, "MaintenanceCode") Is System.DBNull.Value Then
-                        sqls.Add("INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy],[ImageDoc]) " & _
-                                 "Values(dbo.MAINTENANCEID(),'" & mView.GetRowCellValue(i, "WorkCode") & "', '" & strID & "', '" & mView.GetRowCellValue(i, "RankCode") & "', " & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ", '" & mView.GetRowCellValue(i, "IntCode") & "', '" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "', " & strDateIssue & ", '" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "','" & GetUserName() & "','" & mView.GetRowCellValue(i, "ImageDoc") & "')")
+                        sqls.Add("INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy],[HasImage]) " & _
+                                 "Values(dbo.MAINTENANCEID(),'" & mView.GetRowCellValue(i, "WorkCode") & "', '" & strID & "', '" & mView.GetRowCellValue(i, "RankCode") & "', " & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ", '" & mView.GetRowCellValue(i, "IntCode") & "', '" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "', " & strDateIssue & ", '" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "','" & GetUserName() & "'," & IIf(mView.GetRowCellValue(i, "HasImage"), 1, 0) & ")")
                     Else
-                        sqls.Add("Update dbo.tblAdmMaintenance set WorkCode='" & mView.GetRowCellValue(i, "WorkCode") & "',RankCode='" & mView.GetRowCellValue(i, "RankCode") & "',Number=" & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ",IntCode='" & mView.GetRowCellValue(i, "IntCode") & "',InsCrossRef='" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "',InsEditor='" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "',InsDocument='" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "',InsDateIssue=" & strDateIssue & ",InsDesc='" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "', LastUpdatedBy='" & GetUserName() & ", DateUpdated=GETDATE()', ImageDoc='" & mView.GetRowCellValue(i, "ImageDoc") & "' Where MaintenanceCode='" & mView.GetRowCellValue(i, "MaintenanceCode") & "'")
+                        sqls.Add("Update dbo.tblAdmMaintenance set WorkCode='" & mView.GetRowCellValue(i, "WorkCode") & "',RankCode='" & mView.GetRowCellValue(i, "RankCode") & "',Number=" & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ",IntCode='" & mView.GetRowCellValue(i, "IntCode") & "',InsCrossRef='" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "',InsEditor='" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "',InsDocument='" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "',InsDateIssue=" & strDateIssue & ",InsDesc='" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "', LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE(), HasImage=" & IIf(mView.GetRowCellValue(i, "HasImage"), 1, 0) & " Where MaintenanceCode='" & mView.GetRowCellValue(i, "MaintenanceCode") & "'")
+                    End If
+
+                    If IfNull(mView.GetRowCellValue(i, "DeletedImages"), "") <> "" Then
+                        Dim strDeletedID() As String = mView.GetRowCellValue(i, "DeletedImages").ToString.Split(";"c), strDocID As String
+                        For Each strDocID In strDeletedID
+                            sqls.Add("DELETE FROM dbo.tblDocuments WHERE DocID=" & strDocID)
+                        Next
+                    End If
+
+                    If IfNull(mView.GetRowCellValue(i, "AddedImages"), "") <> "" Then
+                        Dim strImages() As String = mView.GetRowCellValue(i, "AddedImages").ToString.Split(";"c), strImg As String
+                        For Each strImg In strImages
+                            sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCECODE]('" & mView.GetRowCellValue(i, "WorkCode") & "','" & strID & "'),'ADMWORK', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                        Next
                     End If
                 End If
             Next
@@ -735,31 +803,19 @@ Public Class UNITS
             For i = 0 To cView.RowCount - 1
                 If cView.GetRowCellValue(i, "cEdited") Then
                     strCounterCode = GenerateID(DB, "CounterCode", "tblAdmCounter")
-                    sqls.Add("Insert Into dbo.tblAdmCounter([CounterCode],[Counter],[UnitCode],[LastUpdatedBy],[SortCode]) Values('" & strCounterCode & "','" & cView.GetRowCellValue(i, "Counter").ToString.Replace("'", "''") & "','" & strID & "','" & GetUserName() & "',100)")
+                    sqls.Add("Insert Into dbo.tblAdmCounter([CounterCode],[Name],[UnitCode],[LastUpdatedBy],[SortCode]) Values('" & strCounterCode & "','" & cView.GetRowCellValue(i, "Counter").ToString.Replace("'", "''") & "','" & strID & "','" & GetUserName() & "',100)")
                 End If
             Next
 
             DB.RunSqls(sqls)
-            If txtUnitDesc.Tag = 1 Then tlUnits.FocusedNode.SetValue("UnitDesc", txtUnitDesc.EditValue)
-            If cboDeptCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("DeptCode", cboDeptCode.EditValue)
-            If cboLocCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("LocCode", cboLocCode.EditValue)
-            If cboCatCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("CatCode", cboCatCode.EditValue)
-            If cboMakerCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("MakerCode", cboMakerCode.EditValue)
-            If cboVendorCode.Tag = 1 Then tlUnits.FocusedNode.SetValue("VendorCode", cboVendorCode.EditValue)
-            If txtType.Tag = 1 Then tlUnits.FocusedNode.SetValue("Type", txtType.EditValue)
-            If txtModel.Tag = 1 Then tlUnits.FocusedNode.SetValue("Model", txtModel.EditValue)
-            If txtRefNo.Tag = 1 Then tlUnits.FocusedNode.SetValue("RefNo", txtRefNo.EditValue)
-            If txtSerialNumber.Tag = 1 Then tlUnits.FocusedNode.SetValue("SerialNumber", txtSerialNumber.EditValue)
-            If chkCritical.Tag = 1 Then tlUnits.FocusedNode.SetValue("Critical", chkCritical.Checked)
-            If chkActive.Tag = 1 Then tlUnits.FocusedNode.SetValue("Active", chkActive.Checked)
 
             If bRefreshMaintenance Then
-                mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
+                mGrid.DataSource = DB.CreateTable("SELECT *,CAST(0 AS BIT) mEdited, '' AddedImages,'' DeletedImages, CAST(0 AS BIT) HasImage  FROM dbo.MAINTENANCELIST WHERE UnitCode='" & strID & "'")
                 mGrid.RefreshDataSource()
                 bRefreshMaintenance = False
             End If
             If bRefreshCounter Then
-                'tlUnits.FocusedNode.SetValue("RunningHours", nRunningHours)
+                'nNode.SetValue("RunningHours", nRunningHours)
                 cGrid.DataSource = DB.CreateTable("SELECT *, CAST(0 AS BIT) cEdited FROM dbo.COUNTERLATESTREADING WHERE UnitCode='" & strID & "' ORDER BY ReadingDate Desc")
                 bRefreshCounter = False
             End If
@@ -768,6 +824,26 @@ Public Class UNITS
                 bRefreshParts = False
             End If
             bRecordUpdated = False
+
+            RemoveHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
+            RemoveHandler tlUnits.CellValueChanging, AddressOf tlUnits_CellValueChanging
+            If txtUnitDesc.Tag = 1 Then nNode.SetValue("UnitDesc", txtUnitDesc.EditValue)
+            If cboDeptCode.Tag = 1 Then nNode.SetValue("DeptCode", cboDeptCode.EditValue)
+            If cboLocCode.Tag = 1 Then nNode.SetValue("LocCode", cboLocCode.EditValue)
+            If cboCatCode.Tag = 1 Then nNode.SetValue("CatCode", cboCatCode.EditValue)
+            If cboMakerCode.Tag = 1 Then nNode.SetValue("MakerCode", cboMakerCode.EditValue)
+            If cboVendorCode.Tag = 1 Then nNode.SetValue("VendorCode", cboVendorCode.EditValue)
+            If txtType.Tag = 1 Then nNode.SetValue("Type", txtType.EditValue)
+            If txtModel.Tag = 1 Then nNode.SetValue("Model", txtModel.EditValue)
+            If txtRefNo.Tag = 1 Then nNode.SetValue("RefNo", txtRefNo.EditValue)
+            If txtSerialNumber.Tag = 1 Then nNode.SetValue("SerialNumber", txtSerialNumber.EditValue)
+            If chkCritical.Tag = 1 Then nNode.SetValue("Critical", chkCritical.Checked)
+            If chkActive.Tag = 1 Then nNode.SetValue("Active", chkActive.Checked)
+            tlUnits.RefreshNode(nNode)
+            AddHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
+            AddHandler tlUnits.CellValueChanging, AddressOf tlUnits_CellValueChanging
+            bbiPaste.Enabled = (bPermission And 16) > 0
+            bbiImport.Enabled = (bPermission And 16) > 0
             ClearFields(gUnitInfo, True)
             'RefreshData()
         End If
@@ -776,6 +852,7 @@ Public Class UNITS
     Public Overrides Sub RefreshData()
         strRequiredFields = "txtUnitDesc"
         If Not bLoaded Then
+            Mainpanel2.Panel2.AutoScrollPosition = New Point(0, 0)
             SetSaveCaption(Name, "Save")
             SetDeleteCaption(Name, "Delete")
             'Show editing buttons if the user has a permission.
@@ -818,7 +895,7 @@ Public Class UNITS
             strFocusedNode = tlUnits.FocusedNode.GetValue("UnitCode")
         End If
 
-        tblUnitSource = DB.CreateTable("EXEC dbo.GETUNITS @strUnitCode='" & CURRENT_MAINUNIT & "',@strDeptCode='" & CURRENT_DEPARTMENT & "',@strCatCode='" & CURRENT_CATEGORY & "'")
+        tblUnitSource = DB.CreateTable("EXEC dbo.GETUNITS @strUnitCode='" & CURRENT_MAINUNIT & "',@strDeptCode='" & CURRENT_DEPARTMENT & "',@strCatCode='" & CURRENT_CATEGORY & "'" & ",@bCritical=" & IIf(CURRENT_CRITICAL_CHECKED, 1, 0))
         If Not (CURRENT_MAINUNIT = "" Or CURRENT_MAINUNIT = "EMPTY") Then strFocusedNode = CURRENT_MAINUNIT
 
         Me.tlUnits.DataSource = tblUnitSource
@@ -864,7 +941,11 @@ Public Class UNITS
             Case "Copy"
                 Copy()
             Case "Preview"
-                RaiseCustomEvent(Name, New Object() {"Preview", "COMPONENTREP", "PMSReports", "|" & tlUnits.FocusedNode.GetValue("UnitCode") & "|"})
+                If tlUnits.FocusedNode Is Nothing Then
+                    MsgBox("Please select at least one record to preview.", MsgBoxStyle.Information, GetAppName)
+                Else
+                    RaiseCustomEvent(Name, New Object() {"Preview", "COMPONENTREP", "PMSReports", "|" & tlUnits.FocusedNode.GetValue("UnitCode") & "|"})
+                End If
         End Select
     End Sub
 
@@ -891,6 +972,45 @@ Public Class UNITS
             If frm.UpdateSQL <> "" Then
                 DB.RunSql(frm.UpdateSQL)
             End If
+        End If
+    End Sub
+
+    Sub UpdateCriticalParent(pNode As TreeListNode)
+        Dim nNode As TreeListNode, en As IEnumerator = pNode.Nodes.GetEnumerator(), bHasCritical As Boolean = False
+        While en.MoveNext
+            nNode = CType(en.Current, TreeListNode)
+            If nNode.GetValue("Critical") Or nNode.GetValue("HasCritical") Then bHasCritical = True
+        End While
+        pNode.SetValue("HasCritical", bHasCritical)
+        sqls.Add("UPDATE dbo.tblAdmUnit SET HasCritical=" & IIf(bHasCritical, 1, 0) & " WHERE UnitCode='" & pNode.GetValue("UnitCode") & "'")
+        If Not pNode.ParentNode Is Nothing Then
+            UpdateCriticalParent(pNode.ParentNode)
+        End If
+    End Sub
+
+    Sub UpdateActiveParent(pNode As TreeListNode)
+        Dim nNode As TreeListNode, en As IEnumerator = pNode.Nodes.GetEnumerator(), bHasInactive As Boolean = False
+        While en.MoveNext
+            nNode = CType(en.Current, TreeListNode)
+            If Not nNode.GetValue("Active") Or nNode.GetValue("HasInactive") Then bHasInactive = True
+        End While
+        pNode.SetValue("HasInactive", bHasInactive)
+        sqls.Add("UPDATE dbo.tblAdmUnit SET HasInactive=" & IIf(bHasInactive, 1, 0) & " WHERE UnitCode='" & pNode.GetValue("UnitCode") & "'")
+        If Not pNode.ParentNode Is Nothing Then
+            UpdateActiveParent(pNode.ParentNode)
+        End If
+    End Sub
+
+    Sub UpdateActiveChild(pNode As TreeListNode, bActive As Boolean)
+        If pNode.HasChildren Then
+            Dim nNode As TreeListNode, en As IEnumerator = pNode.Nodes.GetEnumerator()
+            While en.MoveNext
+                nNode = CType(en.Current, TreeListNode)
+                nNode.SetValue("Active", bActive)
+                nNode.SetValue("HasInactive", Not bActive)
+                sqls.Add("UPDATE dbo.tblAdmUnit SET HasInactive=" & IIf(bActive, 0, 1) & ", Active=" & IIf(bActive, 1, 0) & " WHERE UnitCode='" & nNode.GetValue("UnitCode") & "'")
+                UpdateActiveChild(nNode, bActive)
+            End While
         End If
     End Sub
 
@@ -944,7 +1064,7 @@ Public Class UNITS
         Else
             strParent = "'" & Parent & "'"
         End If
-        If pNode.GetValue("LocCode") Is System.DBNull.Value Then 
+        If pNode.GetValue("LocCode") Is System.DBNull.Value Then
             strLoc = "NULL"
         Else
             strLoc = "'" & pNode.GetValue("LocCode") & "'"
@@ -1151,4 +1271,6 @@ Public Class UNITS
             End If
         End If
     End Sub
+
+
 End Class

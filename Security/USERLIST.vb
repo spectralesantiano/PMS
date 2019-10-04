@@ -38,7 +38,7 @@ Public Class USERLIST
             nRow = MainView.FocusedRowHandle
         End If
         bDisableSelectionEvent = True
-        Me.MainGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.USERLIST" & IIf(USER_ID = 1, "", " WHERE CreatedBy=" & USER_ID))
+        Me.MainGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.USERLIST")
         If System.IO.File.Exists(LayoutFileName) Then
             MainView.RestoreLayoutFromXml(LayoutFileName)
         End If

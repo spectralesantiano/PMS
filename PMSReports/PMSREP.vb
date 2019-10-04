@@ -1,5 +1,7 @@
 Public Class PMSREP
 
+    Private Property GetHeaderFont As Drawing.Font
+
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
             Case "Export"

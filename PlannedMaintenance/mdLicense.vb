@@ -5,7 +5,7 @@ Public Module mdLicense
 
     'initializations
     'Public wrhsm5_app As New Working_App("WRHSM5", "sm5_db", GetAppFolder() & "License Logs\WRHSM5", "C:\Program Files\Common Files\STI_WSM5Lic.lic", "sys_wsm5_g_p")
-    Public pms_app As New Working_App("PMS", "pms_db", GetAppFolder() & "License Logs\PMS", GetAppFolder() & "STI_PMSLic.lic", "sys_pms")
+    Public pms_app As New Working_App(APP_SHORT_NAME, "pms_db", GetAppFolder() & "License Logs\PMS", GetAppFolder() & "STI_" & APP_SHORT_NAME & "Lic.lic", "sys_pms")
 
 #Region "Base Functions"
 

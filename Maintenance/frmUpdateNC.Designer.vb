@@ -89,8 +89,6 @@ Partial Class frmUpdateNC
         '
         'gDetails
         '
-        Me.gDetails.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gDetails.AppearanceCaption.Options.UseFont = True
         Me.gDetails.Controls.Add(Me.txtVerifiedDate)
         Me.gDetails.Controls.Add(Me.LabelControl2)
         Me.gDetails.Controls.Add(Me.LabelControl1)
@@ -111,7 +109,6 @@ Partial Class frmUpdateNC
         Me.Controls.Add(Me.cmdCancel)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmUpdateNC"

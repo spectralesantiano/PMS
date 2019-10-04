@@ -55,7 +55,7 @@ Public Class frmActivate
         If MyLicenseStatus.StrLicenseMsg = "DATETIME TAMPERED ERROR" Then
             'expdays is = to num of runs
             If MyLicenseStatus.ExpDays <= 0 Then
-                Me.captionLabel.Text = "Your license has been locked. Please contact WRH-SM 5 Support"
+                Me.captionLabel.Text = "Your license has been locked. Please contact " & GetAppName() & " Support"
                 Me.cmdOk.Text = "Close"
             Else
                 Me.captionLabel.Text = " You only have " & MyLicenseStatus.ExpDays & " runs left. Changes on Computer Time/Date setting was detected"
@@ -120,7 +120,7 @@ Public Class frmActivate
 
     Private Sub cmdBrowse_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdBrowse.Click
         If Not isElevated() Then
-            MsgBox("You need to run SM as an Administrator before loading license file.", MsgBoxStyle.Exclamation, GetAppName)
+            MsgBox("You need to run PMS as an Administrator before loading license file.", MsgBoxStyle.Exclamation, GetAppName)
             Exit Sub
         End If
 
@@ -154,7 +154,7 @@ Public Class frmActivate
 
                     'check AppName 
                     Dim LAppName As String = sysMpsUserPassword("DECRYPT", browsedLicense.LAppName)
-                    If Trim(UCase(LAppName)) <> Trim(UCase("WRH-SM5")) Then
+                    If Trim(UCase(LAppName)) <> Trim(UCase(APP_SHORT_NAME)) Then
                         AnErrorOccured(cApp, "Invalid License File." & vbNewLine & vbNewLine & "This license is not for " & GetAppName() & " Application.", True)
                         Exit Sub
                     End If
@@ -228,8 +228,8 @@ Public Class frmActivate
                 End If
 
                 Dim strbackupLicense As String = ""
-                If cApp.App_Name = "WRHSM5" Then
-                    strbackupLicense = dirName & "obj_Wbak\STI_WSM5Lic_" & getServerDateTime() & ".lic"
+                If cApp.App_Name = APP_SHORT_NAME Then
+                    strbackupLicense = dirName & "obj_Wbak\STI_" & APP_SHORT_NAME & "Lic_" & getServerDateTime() & ".lic"
                 End If
 
                 If My.Computer.FileSystem.FileExists(cApp.App_LicensePath) Then
@@ -242,7 +242,7 @@ Public Class frmActivate
                 MsgBox("The license file has been successfuly loaded!")
 
                 'create backup to registry
-                bSuccess = BackupLicenseReg("SET", cApp.App_Name, "sys_wrhsm5", browsedLicense)
+                bSuccess = BackupLicenseReg("SET", cApp.App_Name, "sys_pms", browsedLicense)
 
 
                 Me.Close()
@@ -300,7 +300,7 @@ Public Class frmActivate
         Dim frm As New frmConnect
         frm.ShowDialog()
         If (tempWRHSM_CON <> SQL_SERVER) And (SQL_SERVER <> "") Then
-            MsgBox("Successfully change the server!" & vbNewLine & vbNewLine & "Please restart WRH-SM5 app.", MsgBoxStyle.Information, GetAppName)
+            MsgBox("Successfully change the server!" & vbNewLine & vbNewLine & "Please restart " & GetAppName() & " app.", MsgBoxStyle.Information, GetAppName)
             End
         End If
     End Sub

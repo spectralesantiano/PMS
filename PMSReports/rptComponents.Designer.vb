@@ -26,13 +26,11 @@ Partial Public Class rptComponents
         Me.XrTableCell2 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableCell3 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableCell7 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell8 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableCell9 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableRow2 = New DevExpress.XtraReports.UI.XRTableRow()
         Me.Component = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.ProductNumber = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.RefNo = New DevExpress.XtraReports.UI.XRTableCell()
         Me.SerialNumber = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.Manufacturer = New DevExpress.XtraReports.UI.XRTableCell()
         Me.Critical = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableRow3 = New DevExpress.XtraReports.UI.XRTableRow()
         Me.lblMaintenance = New DevExpress.XtraReports.UI.XRTableCell()
@@ -59,6 +57,10 @@ Partial Public Class rptComponents
         Me.PageFooter = New DevExpress.XtraReports.UI.PageFooterBand()
         Me.XrLabel9 = New DevExpress.XtraReports.UI.XRLabel()
         Me.lblDate = New DevExpress.XtraReports.UI.XRLabel()
+        Me.XrTableCell1 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.Model = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.XrTableCell5 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.Type = New DevExpress.XtraReports.UI.XRTableCell()
         CType(Me.XrTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me, System.ComponentModel.ISupportInitialize).BeginInit()
         '
@@ -87,7 +89,7 @@ Partial Public Class rptComponents
         Me.XrTable1.Name = "XrTable1"
         Me.XrTable1.Padding = New DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100.0!)
         Me.XrTable1.Rows.AddRange(New DevExpress.XtraReports.UI.XRTableRow() {Me.XrTableRow4, Me.XrTableRow2, Me.XrTableRow3})
-        Me.XrTable1.SizeF = New System.Drawing.SizeF(726.0!, 75.0!)
+        Me.XrTable1.SizeF = New System.Drawing.SizeF(727.0!, 75.0!)
         Me.XrTable1.StylePriority.UseBorders = False
         Me.XrTable1.StylePriority.UseFont = False
         Me.XrTable1.StylePriority.UsePadding = False
@@ -95,7 +97,7 @@ Partial Public Class rptComponents
         'XrTableRow4
         '
         Me.XrTableRow4.BackColor = System.Drawing.Color.Gainsboro
-        Me.XrTableRow4.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell2, Me.XrTableCell3, Me.XrTableCell7, Me.XrTableCell8, Me.XrTableCell9})
+        Me.XrTableRow4.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell2, Me.XrTableCell1, Me.XrTableCell5, Me.XrTableCell3, Me.XrTableCell7, Me.XrTableCell9})
         Me.XrTableRow4.Name = "XrTableRow4"
         Me.XrTableRow4.StylePriority.UseBackColor = False
         Me.XrTableRow4.Weight = 1.0R
@@ -114,7 +116,7 @@ Partial Public Class rptComponents
         Me.XrTableCell2.StylePriority.UseBorders = False
         Me.XrTableCell2.StylePriority.UseFont = False
         Me.XrTableCell2.Text = "Component"
-        Me.XrTableCell2.Weight = 0.28585664991092086R
+        Me.XrTableCell2.Weight = 0.31537648496204151R
         '
         'XrTableCell3
         '
@@ -129,8 +131,8 @@ Partial Public Class rptComponents
         Me.XrTableCell3.StylePriority.UseBorderDashStyle = False
         Me.XrTableCell3.StylePriority.UseBorders = False
         Me.XrTableCell3.StylePriority.UseFont = False
-        Me.XrTableCell3.Text = "Product Number"
-        Me.XrTableCell3.Weight = 0.10811472318586113R
+        Me.XrTableCell3.Text = "Makers Reference/Part No."
+        Me.XrTableCell3.Weight = 0.25337434345836718R
         '
         'XrTableCell7
         '
@@ -146,23 +148,7 @@ Partial Public Class rptComponents
         Me.XrTableCell7.StylePriority.UseBorders = False
         Me.XrTableCell7.StylePriority.UseFont = False
         Me.XrTableCell7.Text = "Serial Number"
-        Me.XrTableCell7.Weight = 0.10036966903169176R
-        '
-        'XrTableCell8
-        '
-        Me.XrTableCell8.BackColor = System.Drawing.Color.Gainsboro
-        Me.XrTableCell8.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
-        Me.XrTableCell8.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
-            Or DevExpress.XtraPrinting.BorderSide.Right) _
-            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
-        Me.XrTableCell8.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.XrTableCell8.Name = "XrTableCell8"
-        Me.XrTableCell8.StylePriority.UseBackColor = False
-        Me.XrTableCell8.StylePriority.UseBorderDashStyle = False
-        Me.XrTableCell8.StylePriority.UseBorders = False
-        Me.XrTableCell8.StylePriority.UseFont = False
-        Me.XrTableCell8.Text = "Manufacturer"
-        Me.XrTableCell8.Weight = 0.11623625826175059R
+        Me.XrTableCell7.Weight = 0.14558389506424221R
         '
         'XrTableCell9
         '
@@ -178,11 +164,11 @@ Partial Public Class rptComponents
         Me.XrTableCell9.StylePriority.UseBorders = False
         Me.XrTableCell9.StylePriority.UseFont = False
         Me.XrTableCell9.Text = "Critical"
-        Me.XrTableCell9.Weight = 0.056142870565873894R
+        Me.XrTableCell9.Weight = 0.0821212339965062R
         '
         'XrTableRow2
         '
-        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.Component, Me.ProductNumber, Me.SerialNumber, Me.Manufacturer, Me.Critical})
+        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.Component, Me.Model, Me.Type, Me.RefNo, Me.SerialNumber, Me.Critical})
         Me.XrTableRow2.Name = "XrTableRow2"
         Me.XrTableRow2.Weight = 1.0R
         '
@@ -200,23 +186,23 @@ Partial Public Class rptComponents
         Me.Component.StylePriority.UseBorders = False
         Me.Component.StylePriority.UseFont = False
         Me.Component.Text = "Component"
-        Me.Component.Weight = 0.28585664991092086R
+        Me.Component.Weight = 0.31537649102094945R
         '
-        'ProductNumber
+        'RefNo
         '
-        Me.ProductNumber.BackColor = System.Drawing.Color.Transparent
-        Me.ProductNumber.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
-        Me.ProductNumber.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+        Me.RefNo.BackColor = System.Drawing.Color.Transparent
+        Me.RefNo.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
+        Me.RefNo.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
             Or DevExpress.XtraPrinting.BorderSide.Right) _
             Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
-        Me.ProductNumber.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ProductNumber.Name = "ProductNumber"
-        Me.ProductNumber.StylePriority.UseBackColor = False
-        Me.ProductNumber.StylePriority.UseBorderDashStyle = False
-        Me.ProductNumber.StylePriority.UseBorders = False
-        Me.ProductNumber.StylePriority.UseFont = False
-        Me.ProductNumber.Text = "ProductNumber"
-        Me.ProductNumber.Weight = 0.10811472318586113R
+        Me.RefNo.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RefNo.Name = "RefNo"
+        Me.RefNo.StylePriority.UseBackColor = False
+        Me.RefNo.StylePriority.UseBorderDashStyle = False
+        Me.RefNo.StylePriority.UseBorders = False
+        Me.RefNo.StylePriority.UseFont = False
+        Me.RefNo.Text = "RefNo"
+        Me.RefNo.Weight = 0.25337425027955407R
         '
         'SerialNumber
         '
@@ -232,23 +218,7 @@ Partial Public Class rptComponents
         Me.SerialNumber.StylePriority.UseBorders = False
         Me.SerialNumber.StylePriority.UseFont = False
         Me.SerialNumber.Text = "SerialNumber"
-        Me.SerialNumber.Weight = 0.10036966903169176R
-        '
-        'Manufacturer
-        '
-        Me.Manufacturer.BackColor = System.Drawing.Color.Transparent
-        Me.Manufacturer.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
-        Me.Manufacturer.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
-            Or DevExpress.XtraPrinting.BorderSide.Right) _
-            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
-        Me.Manufacturer.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Manufacturer.Name = "Manufacturer"
-        Me.Manufacturer.StylePriority.UseBackColor = False
-        Me.Manufacturer.StylePriority.UseBorderDashStyle = False
-        Me.Manufacturer.StylePriority.UseBorders = False
-        Me.Manufacturer.StylePriority.UseFont = False
-        Me.Manufacturer.Text = "Manufacturer"
-        Me.Manufacturer.Weight = 0.11623625826175059R
+        Me.SerialNumber.Weight = 0.14558397573035695R
         '
         'Critical
         '
@@ -264,7 +234,7 @@ Partial Public Class rptComponents
         Me.Critical.StylePriority.UseBorders = False
         Me.Critical.StylePriority.UseFont = False
         Me.Critical.Text = "Critical"
-        Me.Critical.Weight = 0.056142870565873894R
+        Me.Critical.Weight = 0.082121206748225789R
         '
         'XrTableRow3
         '
@@ -470,6 +440,70 @@ Partial Public Class rptComponents
         Me.lblDate.StylePriority.UseTextAlignment = False
         Me.lblDate.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight
         '
+        'XrTableCell1
+        '
+        Me.XrTableCell1.BackColor = System.Drawing.Color.Gainsboro
+        Me.XrTableCell1.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
+        Me.XrTableCell1.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+            Or DevExpress.XtraPrinting.BorderSide.Right) _
+            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
+        Me.XrTableCell1.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.XrTableCell1.Name = "XrTableCell1"
+        Me.XrTableCell1.StylePriority.UseBackColor = False
+        Me.XrTableCell1.StylePriority.UseBorderDashStyle = False
+        Me.XrTableCell1.StylePriority.UseBorders = False
+        Me.XrTableCell1.StylePriority.UseFont = False
+        Me.XrTableCell1.Text = "Model"
+        Me.XrTableCell1.Weight = 0.1248901099235679R
+        '
+        'Model
+        '
+        Me.Model.BackColor = System.Drawing.Color.Transparent
+        Me.Model.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
+        Me.Model.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+            Or DevExpress.XtraPrinting.BorderSide.Right) _
+            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
+        Me.Model.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Model.Name = "Model"
+        Me.Model.StylePriority.UseBackColor = False
+        Me.Model.StylePriority.UseBorderDashStyle = False
+        Me.Model.StylePriority.UseBorders = False
+        Me.Model.StylePriority.UseFont = False
+        Me.Model.Text = "Model"
+        Me.Model.Weight = 0.12489002155864486R
+        '
+        'XrTableCell5
+        '
+        Me.XrTableCell5.BackColor = System.Drawing.Color.Gainsboro
+        Me.XrTableCell5.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
+        Me.XrTableCell5.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+            Or DevExpress.XtraPrinting.BorderSide.Right) _
+            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
+        Me.XrTableCell5.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.XrTableCell5.Name = "XrTableCell5"
+        Me.XrTableCell5.StylePriority.UseBackColor = False
+        Me.XrTableCell5.StylePriority.UseBorderDashStyle = False
+        Me.XrTableCell5.StylePriority.UseBorders = False
+        Me.XrTableCell5.StylePriority.UseFont = False
+        Me.XrTableCell5.Text = "Type"
+        Me.XrTableCell5.Weight = 0.11301930427336089R
+        '
+        'Type
+        '
+        Me.Type.BackColor = System.Drawing.Color.Transparent
+        Me.Type.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
+        Me.Type.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+            Or DevExpress.XtraPrinting.BorderSide.Right) _
+            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
+        Me.Type.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Type.Name = "Type"
+        Me.Type.StylePriority.UseBackColor = False
+        Me.Type.StylePriority.UseBorderDashStyle = False
+        Me.Type.StylePriority.UseBorders = False
+        Me.Type.StylePriority.UseFont = False
+        Me.Type.Text = "Type"
+        Me.Type.Weight = 0.1130193900053505R
+        '
         'rptComponents
         '
         Me.Bands.AddRange(New DevExpress.XtraReports.UI.Band() {Me.Detail, Me.TopMargin, Me.BottomMargin, Me.GroupHeader, Me.PageFooter})
@@ -511,9 +545,8 @@ Partial Public Class rptComponents
     Friend WithEvents Loc As DevExpress.XtraReports.UI.XRLabel
     Friend WithEvents XrTableRow2 As DevExpress.XtraReports.UI.XRTableRow
     Friend WithEvents Component As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents ProductNumber As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents RefNo As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents SerialNumber As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents Manufacturer As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents Critical As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents subMaintenance As DevExpress.XtraReports.UI.XRSubreport
     Friend WithEvents XrTableRow3 As DevExpress.XtraReports.UI.XRTableRow
@@ -522,6 +555,9 @@ Partial Public Class rptComponents
     Friend WithEvents XrTableCell2 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell3 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell7 As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents XrTableCell8 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell9 As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents XrTableCell1 As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents XrTableCell5 As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents Model As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents Type As DevExpress.XtraReports.UI.XRTableCell
 End Class

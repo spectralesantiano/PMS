@@ -21,10 +21,12 @@ Partial Class WDOCVIEWERLIST
     Private Sub InitializeComponent()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.BandedGrid.AdvBandedGridView()
+        Me.WorkDate = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.UnitDesc = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.Maintenance = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.MaintenanceWorkID = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
-        Me.WorkDate = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.FileDesc = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.DocID = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.gridBand4 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -46,7 +48,7 @@ Partial Class WDOCVIEWERLIST
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
         Me.MainView.Bands.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.GridBand() {Me.gridBand4})
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.MaintenanceWorkID, Me.WorkDate, Me.UnitDesc, Me.Maintenance})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.MaintenanceWorkID, Me.WorkDate, Me.UnitDesc, Me.Maintenance, Me.FileDesc, Me.DocID})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -68,13 +70,21 @@ Partial Class WDOCVIEWERLIST
         Me.MainView.OptionsView.ShowGroupPanel = False
         Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.WorkDate, DevExpress.Data.ColumnSortOrder.Descending), New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.UnitDesc, DevExpress.Data.ColumnSortOrder.Ascending)})
         '
+        'WorkDate
+        '
+        Me.WorkDate.Caption = "Date"
+        Me.WorkDate.FieldName = "WorkDate"
+        Me.WorkDate.Name = "WorkDate"
+        Me.WorkDate.Visible = True
+        Me.WorkDate.Width = 230
+        '
         'UnitDesc
         '
         Me.UnitDesc.Caption = "Unit"
         Me.UnitDesc.FieldName = "UnitDesc"
         Me.UnitDesc.Name = "UnitDesc"
         Me.UnitDesc.Visible = True
-        Me.UnitDesc.Width = 186
+        Me.UnitDesc.Width = 291
         '
         'Maintenance
         '
@@ -82,7 +92,7 @@ Partial Class WDOCVIEWERLIST
         Me.Maintenance.FieldName = "Maintenance"
         Me.Maintenance.Name = "Maintenance"
         Me.Maintenance.Visible = True
-        Me.Maintenance.Width = 202
+        Me.Maintenance.Width = 268
         '
         'MaintenanceWorkID
         '
@@ -90,13 +100,20 @@ Partial Class WDOCVIEWERLIST
         Me.MaintenanceWorkID.FieldName = "MaintenanceWorkID"
         Me.MaintenanceWorkID.Name = "MaintenanceWorkID"
         '
-        'WorkDate
+        'FileDesc
         '
-        Me.WorkDate.Caption = "Date"
-        Me.WorkDate.FieldName = "WorkDate"
-        Me.WorkDate.Name = "WorkDate"
-        Me.WorkDate.Visible = True
-        Me.WorkDate.Width = 127
+        Me.FileDesc.Caption = "File"
+        Me.FileDesc.FieldName = "FileDesc"
+        Me.FileDesc.Name = "FileDesc"
+        Me.FileDesc.Visible = True
+        Me.FileDesc.Width = 283
+        '
+        'DocID
+        '
+        Me.DocID.Caption = "DocID"
+        Me.DocID.FieldName = "DocID"
+        Me.DocID.Name = "DocID"
+        Me.DocID.Visible = True
         '
         'gridBand4
         '
@@ -104,9 +121,10 @@ Partial Class WDOCVIEWERLIST
         Me.gridBand4.Columns.Add(Me.WorkDate)
         Me.gridBand4.Columns.Add(Me.UnitDesc)
         Me.gridBand4.Columns.Add(Me.Maintenance)
+        Me.gridBand4.Columns.Add(Me.FileDesc)
         Me.gridBand4.Name = "gridBand4"
         Me.gridBand4.VisibleIndex = 0
-        Me.gridBand4.Width = 515
+        Me.gridBand4.Width = 1072
         '
         'WDOCVIEWERLIST
         '
@@ -124,7 +142,9 @@ Partial Class WDOCVIEWERLIST
     Friend WithEvents UnitDesc As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents MaintenanceWorkID As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents Maintenance As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
-    Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
     Friend WithEvents WorkDate As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
+    Friend WithEvents FileDesc As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents DocID As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
 
 End Class

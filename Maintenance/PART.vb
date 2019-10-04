@@ -126,11 +126,14 @@ Public Class PART
 
     Private Sub txtInitStock_EditValueChanged(sender As System.Object, e As System.EventArgs) Handles txtInitStock.EditValueChanged
         If IfNull(txtInitStock.EditValue, 0) > 0 Then
-            Dim nConsumed As Integer = 0, i As Integer
+            Dim nConsumed As Integer = 0, nReceived As Integer = 0, i As Integer
             For i = 0 To cView.RowCount - 1
                 nConsumed += cView.GetRowCellValue(i, "Number")
             Next
-            txtOnStock.EditValue = txtInitStock.EditValue - nConsumed
+            For i = 0 To aView.RowCount - 1
+                nReceived += aView.GetRowCellValue(i, "ReceivedQuantity")
+            Next
+            txtOnStock.EditValue = txtInitStock.EditValue - nConsumed + nReceived
             txtOnStock.Tag = 1
         End If
     End Sub

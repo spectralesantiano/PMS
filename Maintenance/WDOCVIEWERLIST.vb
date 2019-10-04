@@ -51,7 +51,7 @@ Public Class WDOCVIEWERLIST
 
     Public Overrides Function GetID() As String
         If MainView.RowCount > 0 Then
-            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "MaintenanceWorkID")
+            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "DocID")
         Else
             Return ""
         End If
@@ -59,7 +59,7 @@ Public Class WDOCVIEWERLIST
 
     Public Overrides Function GetDesc() As String
         If MainView.RowCount > 0 Then
-            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "UnitDesc") & " - " & MainView.GetRowCellValue(MainView.FocusedRowHandle, "Maintenance")
+            Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "UnitDesc") & " - " & MainView.GetRowCellValue(MainView.FocusedRowHandle, "Maintenance") & " - " & MainView.GetRowCellValue(MainView.FocusedRowHandle, "File")
         Else
             Return ""
         End If

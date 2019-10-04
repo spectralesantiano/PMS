@@ -28,7 +28,6 @@ Partial Class MDOCVIEWER
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.imgLogo)
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill

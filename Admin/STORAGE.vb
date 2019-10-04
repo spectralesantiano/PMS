@@ -55,6 +55,7 @@ Public Class STORAGE
             AllowAddition(Name, (bPermission And 2) > 0)
             AllowDeletion(Name, (bPermission And 8) > 0)
             RaiseCustomEvent(Name, New Object() {"EnableImport", IIf((bPermission And 16) > 0, "True", "False")})
+            cboLocCode.Properties.DataSource = DB.CreateTable("SELECT * FROM dbo.LOCATIONLIST")
             AddEditListener(Me.header)
             bLoaded = True
         End If
@@ -65,10 +66,12 @@ Public Class STORAGE
             AddData()
         Else
             Me.txtName.EditValue = blList.GetDesc
+            Me.cboLocCode.EditValue = blList.GetFocusedRowData("LocCode")
         End If
         ClearFields(Me.header, True)
         MyBase.RefreshData()
         Me.header.Text = "EDIT STORAGE DETAILS - " & blList.GetDesc.ToUpper
+        txtName.Focus()
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp

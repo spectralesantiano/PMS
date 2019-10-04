@@ -80,7 +80,6 @@ Partial Class PART
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.cboStorageCode)
         Me.header.Controls.Add(Me.LabelControl5)
@@ -156,8 +155,6 @@ Partial Class PART
         '
         'GroupControl1
         '
-        Me.GroupControl1.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl1.AppearanceCaption.Options.UseFont = True
         Me.GroupControl1.Controls.Add(Me.aGrid)
         Me.GroupControl1.Location = New System.Drawing.Point(15, 84)
         Me.GroupControl1.Name = "GroupControl1"
@@ -263,8 +260,6 @@ Partial Class PART
         '
         'gConsumed
         '
-        Me.gConsumed.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.gConsumed.AppearanceCaption.Options.UseFont = True
         Me.gConsumed.Controls.Add(Me.cGrid)
         Me.gConsumed.Location = New System.Drawing.Point(15, 327)
         Me.gConsumed.Name = "gConsumed"

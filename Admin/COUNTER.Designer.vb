@@ -19,7 +19,7 @@ Partial Class COUNTER
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
+        Me.lblCounter = New DevExpress.XtraEditors.LabelControl()
         Me.header = New DevExpress.XtraEditors.GroupControl()
         Me.txtName = New DevExpress.XtraEditors.TextEdit()
         Me.txtSortCode = New DevExpress.XtraEditors.TextEdit()
@@ -30,22 +30,21 @@ Partial Class COUNTER
         CType(Me.txtSortCode.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'LabelControl12
+        'lblCounter
         '
-        Me.LabelControl12.Location = New System.Drawing.Point(36, 45)
-        Me.LabelControl12.Name = "LabelControl12"
-        Me.LabelControl12.Size = New System.Drawing.Size(48, 13)
-        Me.LabelControl12.TabIndex = 31
-        Me.LabelControl12.Text = "* Counter"
+        Me.lblCounter.Location = New System.Drawing.Point(36, 45)
+        Me.lblCounter.Name = "lblCounter"
+        Me.lblCounter.Size = New System.Drawing.Size(48, 13)
+        Me.lblCounter.TabIndex = 31
+        Me.lblCounter.Text = "* Counter"
         '
         'header
         '
-        Me.header.AppearanceCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.header.AppearanceCaption.Options.UseFont = True
         Me.header.Controls.Add(Me.txtName)
         Me.header.Controls.Add(Me.txtSortCode)
         Me.header.Controls.Add(Me.LabelControl3)
-        Me.header.Controls.Add(Me.LabelControl12)
+        Me.header.Controls.Add(Me.lblCounter)
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
         Me.header.Location = New System.Drawing.Point(0, 0)
         Me.header.Name = "header"
@@ -92,7 +91,7 @@ Partial Class COUNTER
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents LabelControl12 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents lblCounter As DevExpress.XtraEditors.LabelControl
     Friend WithEvents header As DevExpress.XtraEditors.GroupControl
     Friend WithEvents txtSortCode As DevExpress.XtraEditors.TextEdit
     Friend WithEvents LabelControl3 As DevExpress.XtraEditors.LabelControl

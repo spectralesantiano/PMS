@@ -24,12 +24,14 @@ Partial Class WORKLIST
         Me.colUnitDesc = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colComponentCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.Description = New DevExpress.XtraTreeList.Columns.TreeListColumn()
-        Me.colUnitCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
+        Me.TreeListColumn1 = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colDeptCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colCatCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
+        Me.colCritical = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colHoursPerDay = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.LocEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.StatusEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.colUnitCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         CType(Me.tlMain, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LocEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.StatusEdit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -37,14 +39,14 @@ Partial Class WORKLIST
         '
         'tlMain
         '
-        Me.tlMain.Appearance.BandPanel.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tlMain.Appearance.BandPanel.Options.UseFont = True
         Me.tlMain.Bands.AddRange(New DevExpress.XtraTreeList.Columns.TreeListBand() {Me.treeListBand1})
-        Me.tlMain.Columns.AddRange(New DevExpress.XtraTreeList.Columns.TreeListColumn() {Me.colComponentCode, Me.colUnitDesc, Me.Description, Me.colUnitCode, Me.colDeptCode, Me.colCatCode, Me.colHoursPerDay})
+        Me.tlMain.Columns.AddRange(New DevExpress.XtraTreeList.Columns.TreeListColumn() {Me.colComponentCode, Me.colUnitDesc, Me.Description, Me.TreeListColumn1, Me.colDeptCode, Me.colCatCode, Me.colCritical, Me.colHoursPerDay})
         Me.tlMain.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tlMain.KeyFieldName = "UnitCode"
         Me.tlMain.Location = New System.Drawing.Point(0, 0)
         Me.tlMain.Name = "tlMain"
+        Me.tlMain.OptionsBehavior.Editable = False
+        Me.tlMain.OptionsBehavior.EnableFiltering = True
         Me.tlMain.OptionsFilter.AllowColumnMRUFilterList = False
         Me.tlMain.OptionsFilter.AllowFilterEditor = False
         Me.tlMain.OptionsFilter.AllowMRUFilterList = False
@@ -78,6 +80,7 @@ Partial Class WORKLIST
         Me.colUnitDesc.Name = "colUnitDesc"
         Me.colUnitDesc.OptionsColumn.AllowEdit = False
         Me.colUnitDesc.OptionsColumn.ReadOnly = True
+        Me.colUnitDesc.OptionsFilter.AllowFilter = False
         Me.colUnitDesc.SortOrder = System.Windows.Forms.SortOrder.Ascending
         Me.colUnitDesc.UnboundExpression = "[Component] + ' ' + [UnitNumber]"
         Me.colUnitDesc.UnboundType = DevExpress.XtraTreeList.Data.UnboundColumnType.[String]
@@ -97,11 +100,11 @@ Partial Class WORKLIST
         Me.Description.FieldName = "Description"
         Me.Description.Name = "Description"
         '
-        'colUnitCode
+        'TreeListColumn1
         '
-        Me.colUnitCode.Caption = "UnitCode"
-        Me.colUnitCode.FieldName = "UnitCode"
-        Me.colUnitCode.Name = "colUnitCode"
+        Me.TreeListColumn1.Caption = "UnitCode"
+        Me.TreeListColumn1.FieldName = "UnitCode"
+        Me.TreeListColumn1.Name = "TreeListColumn1"
         '
         'colDeptCode
         '
@@ -114,6 +117,12 @@ Partial Class WORKLIST
         Me.colCatCode.Caption = "CatCode"
         Me.colCatCode.FieldName = "CatCode"
         Me.colCatCode.Name = "colCatCode"
+        '
+        'colCritical
+        '
+        Me.colCritical.Caption = "colCritical"
+        Me.colCritical.FieldName = "Critical"
+        Me.colCritical.Name = "colCritical"
         '
         'colHoursPerDay
         '
@@ -147,6 +156,12 @@ Partial Class WORKLIST
         Me.StatusEdit.ShowHeader = False
         Me.StatusEdit.ValueMember = "StatCode"
         '
+        'colUnitCode
+        '
+        Me.colUnitCode.Caption = "UnitCode"
+        Me.colUnitCode.FieldName = "UnitCode"
+        Me.colUnitCode.Name = "colUnitCode"
+        '
         'WORKLIST
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -160,7 +175,6 @@ Partial Class WORKLIST
 
     End Sub
     Friend WithEvents tlMain As DevExpress.XtraTreeList.TreeList
-    Friend WithEvents treeListBand1 As DevExpress.XtraTreeList.Columns.TreeListBand
     Friend WithEvents colUnitDesc As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents colComponentCode As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents LocEdit As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
@@ -170,5 +184,8 @@ Partial Class WORKLIST
     Friend WithEvents colCatCode As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents Description As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents colHoursPerDay As DevExpress.XtraTreeList.Columns.TreeListColumn
+    Friend WithEvents colCritical As DevExpress.XtraTreeList.Columns.TreeListColumn
+    Friend WithEvents treeListBand1 As DevExpress.XtraTreeList.Columns.TreeListBand
+    Friend WithEvents TreeListColumn1 As DevExpress.XtraTreeList.Columns.TreeListColumn
 
 End Class

@@ -58,7 +58,7 @@ Partial Class frmActivate
         Me.cmdOk.Name = "cmdOk"
         Me.cmdOk.Size = New System.Drawing.Size(78, 23)
         Me.cmdOk.TabIndex = 6
-        Me.cmdOk.Text = "Open SM"
+        Me.cmdOk.Text = "Open PMS"
         '
         'GroupControl1
         '
@@ -187,7 +187,6 @@ Partial Class frmActivate
         Me.Controls.Add(Me.cmdOk)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.LookAndFeel.SkinName = "iMaginary"
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmActivate"
