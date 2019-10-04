@@ -174,7 +174,7 @@ Module modBasicFuncitons
             If updatePath.Equals("") Then Return 0
             Dim updateFilesPath As System.IO.FileInfo() = Nothing
             Select Case updateType
-                'If the type is UPDATE, look on the share folder (updatePath) where the contents of this version is location, and get all the files. 
+                'If the type is UPDATE, look on the shared folder (updatePath) where the contents of this version is located, and get all the files. 
                 Case "UPDATE"
                     updateFilesPath = New System.IO.DirectoryInfo(updatePath & (IIf(versionNo.Equals(""), "", "\" & versionNo))).GetFiles()
                     'If the type is LOAD, go to temp_update folder, where the obx contents is temporarily extracted when obx is loaded.
