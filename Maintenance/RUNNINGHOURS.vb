@@ -5,11 +5,14 @@ Imports DevExpress.XtraGrid.Views.BandedGrid
 
 Public Class RUNNINGHOURS
 
-
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
             Case "Filter"
                 FilterData()
+            Case "Preview"
+                If MainView.RowCount > 0 Then
+                    RaiseCustomEvent(Name, New Object() {"Preview", "COUNTERREP", "PMSReports", MainGrid.DataSource})
+                End If
         End Select
     End Sub
 
@@ -34,6 +37,7 @@ Public Class RUNNINGHOURS
                 AllowSaving(Name, False) 'Disable save button
                 bAddMode = True
                 NewBand.Visible = True
+                PrevBand.Visible = False
                 bRecordUpdated = False
             End If
         End If
@@ -81,6 +85,7 @@ Public Class RUNNINGHOURS
             NewDateEdit.MaxValue = Now.Date
         End If
         MainGrid.DataSource = DB.CreateTable("EXEC [dbo].[RUNNINGHOURS]")
+        SplitContainerControl1.SplitterPosition = MEBand.Width + CurrBand.Width + PrevBand.Width + gSummary.Width + 100
         CurrBand.Visible = False
         If MainView.RowCount > 0 Then
             Dim i As Integer
@@ -92,6 +97,7 @@ Public Class RUNNINGHOURS
             Next
         End If
         NewBand.Visible = False
+        PrevBand.Visible = True
         bLoaded = True
     End Sub
 
@@ -200,4 +206,10 @@ Public Class RUNNINGHOURS
         End If
     End Sub
 
+    Private Sub MainView_FocusedRowChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs) Handles MainView.FocusedRowChanged
+        If MainView.RowCount > 0 Then
+            hGrid.DataSource = DB.CreateTable("SELECT [Counter],[ReadingDate] hDate,[Reading] hReading FROM [dbo].[COUNTERHISTORY] WHERE UnitCode='" & MainView.GetFocusedRowCellValue("UnitCode") & "'")
+            hBand.Caption = MainView.GetFocusedRowCellValue("UnitDesc")
+        End If
+    End Sub
 End Class

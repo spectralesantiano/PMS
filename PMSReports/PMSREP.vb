@@ -6,6 +6,13 @@ Public Class PMSREP
         Select Case param(0)
             Case "Export"
                 Export()
+            Case "Filter"
+                Dim strFilter As String = ""
+                If CURRENT_DEPARTMENT <> "" Then strFilter = strFilter & "AND DeptCode='" & CURRENT_DEPARTMENT & "'"
+                If CURRENT_CATEGORY <> "" Then strFilter = strFilter & "AND CatCode='" & CURRENT_CATEGORY & "'"
+                If CURRENT_RANK <> "" Then strFilter = strFilter & "AND RankCode='" & CURRENT_RANK & "'"
+                If strFilter.Length > 0 Then strFilter = strFilter.Remove(0, 4)
+                Me.MainView.ActiveFilterString = strFilter
             Case "Preview"
                 Preview()
             Case "SelectAll"
@@ -48,14 +55,11 @@ Public Class PMSREP
     Public Overrides Sub RefreshData()
         Me.Cursor = Windows.Forms.Cursors.WaitCursor
         strID = Trim(blList.GetID)
-        'Get Data Displayed
-        If strID = "EQUIPMENTCRIT" Then
-            Me.MainGrid.DataSource = Nothing
-        Else
-            Me.MainGrid.DataSource = DB.CreateTable("SELECT * FROM " & strID & "_REP ORDER BY [Description]")
-        End If
+        'Get Data Displayed        
+        Me.MainGrid.DataSource = DB.CreateTable("SELECT * FROM " & strID & "_REP ORDER BY [Description]")
         header.Text = GetDesc()
         MainView.ClearSelection()
+        RaiseCustomEvent(Name, New Object() {"RANKDEPCAT", IIf(strID = "WORKRECORD", "True", "False")})
         RaiseCustomEvent(Name, New Object() {"EnablePreview"})
         Me.Cursor = Windows.Forms.Cursors.Default
     End Sub

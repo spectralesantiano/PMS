@@ -38,8 +38,8 @@ Public Class MainForm
                         "[PROF_Code] Asc " & _
                  ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
                  ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
-        'tblSTIService_internet_settings
 
+        'tblSTIService_internet_settings
         sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_internet_settings') " & _
                  "CREATE TABLE [sti_sys].[dbo].[tblSTIService_internet_settings](" & _
                  "[INET_Code] [varchar](15) NOT NULL," & _
@@ -67,7 +67,7 @@ Public Class MainForm
         '*********************** Add Default WRH 5 Backup Profile *********************
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblSTIService_profile] WHERE [PROF_Code] = '" & BACKUP_CODE & "') INSERT INTO [sti_sys].[dbo].[tblSTIService_profile]([PROF_Code],[PROF_Name],[PROF_Comment],[PROF_ExpFolder]) VALUES('" & BACKUP_CODE & "','" & BACKUP_NAME & "','Default PMS Backup Profile','" & BACKUP_DIR & "')")
         'Lock PMS Records
-        sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE DATEADD(D,8,DateAdded )>=GETDATE()")
+        sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
         PMSDB.RunSqls(sqls)
     End Sub
 
@@ -193,7 +193,7 @@ Public Class MainForm
         LoadSettings()
         If Debugger.IsAttached Then
             BypassLogonForDebugging()
-            LoadContent("UNITS", True)
+            LoadContent("WORKDONE", True)
         Else
             Logon()
         End If
@@ -234,6 +234,10 @@ Public Class MainForm
     Private Sub CustomEvent(ByVal sender As String, ByVal param() As Object) Handles maincontent.OnCustomEvent
         'Unique commands
         Select Case param(0)
+            Case "RANKDEPCAT"
+                ledRank.Visibility = IIf(CBool(param(1)), DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+                ledDepartment.Visibility = IIf(CBool(param(1)), DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+                ledCategory.Visibility = IIf(CBool(param(1)), DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Case "EnableImport"
                 bbPaste.Enabled = CBool(param(1))
                 bbImportFromFile.Enabled = CBool(param(1))
@@ -247,7 +251,6 @@ Public Class MainForm
                     bbShowComponents.Caption = "Show" & Environment.NewLine & "Components"
                     bbShowComponents.Down = False
                 End If
-
             Case "RefreshMainUnits"
                 RefreshMainUnits()
                 Application.DoEvents()
@@ -428,11 +431,11 @@ Public Class MainForm
             Me.bbEdit.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbRestore.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "VERSIONUPDATE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbUpdate.Visibility = IIf((cContent = "VERSIONUPDATE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledRank.Visibility = IIf((cContent = "WORKDUE" Or cContent = "NCMEASURES") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            Me.ledRank.Visibility = IIf((cContent = "WORKDONE" Or cContent = "WORKDUE" Or cContent = "NCMEASURES") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            Me.ledDepartment.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "COUNTER" Or cContent = "RANK" Or cContent = "RUNNINGHOURS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.ledCategory.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.ledMainUnits.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbShowComponents.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 5) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledDepartment.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "COUNTER" Or cContent = "RANK" Or cContent = "RUNNINGHOURS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.rpgAdminFilterOptions.Visible = (cContent = "UNITS" Or cContent = "COUNTER" Or cContent = "RANK") And (xrow(0)("Permission") And 1) > 0
             Me.txtDateDue.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.txtDueHours.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
@@ -957,10 +960,17 @@ Public Class MainForm
     Private Sub ledRank_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledRank.EditValueChanged
         If IsLoaded Then
             CURRENT_RANK = IfNull(ledRank.EditValue, "")
-            mainlist.SetFilter("")
-            maincontent.RefreshData()
+            If maincontent.Name = "PMSREP" Then
+                maincontent.ExecCustomFunction(New String() {"Filter"})
+            Else
+                mainlist.SetFilter("")
+                If maincontent.Name = "WORKDONE" Then
+                    maincontent.SetFilter("")
+                Else
+                    maincontent.RefreshData()
+                End If
+            End If
         End If
-        
     End Sub
 
     Private Sub ledMainUnits_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledMainUnits.EditValueChanged
@@ -971,17 +981,29 @@ Public Class MainForm
 
     Private Sub ledCategory_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledCategory.EditValueChanged
         CURRENT_CATEGORY = IfNull(ledCategory.EditValue, "")
-        mainlist.SetFilter("")
-        maincontent.RefreshData()
+        If maincontent.Name = "PMSREP" Then
+            maincontent.ExecCustomFunction(New String() {"Filter"})
+        Else
+            mainlist.SetFilter("")
+            If (maincontent.Name = "WORKDONE" AndAlso CURRENT_FLATVIEW_CHECKED) Then
+                maincontent.SetFilter("")
+            Else
+                maincontent.RefreshData()
+            End If
+        End If
     End Sub
 
     Private Sub ledDepartment_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledDepartment.EditValueChanged
         CURRENT_DEPARTMENT = IfNull(ledDepartment.EditValue, "")
-        If maincontent.Name = "RUNNINGHOURS" Then
+        If maincontent.Name = "RUNNINGHOURS" Or maincontent.Name = "PMSREP" Then
             maincontent.ExecCustomFunction(New String() {"Filter"})
         Else
             mainlist.SetFilter("")
-            maincontent.RefreshData()
+            If maincontent.Name = "WORKDONE" AndAlso CURRENT_FLATVIEW_CHECKED Then
+                maincontent.SetFilter("")
+            Else
+                maincontent.RefreshData()
+            End If
         End If
     End Sub
 
@@ -1354,9 +1376,12 @@ Public Class MainForm
     Private Sub bbShowAllMaintenance_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbShowAllMaintenance.ItemClick
         CURRENT_SHOW_ALL_CHECKED = bbShowAllMaintenance.Down
         If CURRENT_SHOW_ALL_CHECKED Then
+            bbShowAllMaintenance.Caption = "Show Due" & Environment.NewLine & "Maintenance"
             CURRENT_CONDITION_CHECKED = False
             bbCondition.Down = False
             bbCondition.Caption = "Condition Based"
+        Else
+            bbShowAllMaintenance.Caption = "Show All" & Environment.NewLine & "Maintenance"
         End If
         maincontent.RefreshData()
     End Sub

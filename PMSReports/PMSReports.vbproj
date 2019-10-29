@@ -118,6 +118,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CHECKLIST.vb" />
+    <Compile Include="COUNTERREP.vb" />
+    <Compile Include="rptRunningHours.Designer.vb">
+      <DependentUpon>rptRunningHours.vb</DependentUpon>
+    </Compile>
+    <Compile Include="rptRunningHours.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="rptWorkRecords.Designer.vb">
       <DependentUpon>rptWorkRecords.vb</DependentUpon>
     </Compile>
@@ -222,6 +229,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="rptRunningHours.resx">
+      <DependentUpon>rptRunningHours.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="rptWorkRecords.resx">
       <DependentUpon>rptWorkRecords.vb</DependentUpon>
     </EmbeddedResource>

@@ -2,7 +2,7 @@
 
 Public Class frmWork
 
-    Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, bGetPrevWork As Boolean = True, nMaintenanceID As Integer = 0, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = ""
+    Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, bGetPrevWork As Boolean = True, nMaintenanceID As Integer = 0, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = "", bInitialMaintenance As Boolean = False, pDueDate As String, pDueCounter As String
     Dim strRequiredFields = "cboUnit;cboMaintenance;cboRankCode;txtWorkDate;txtExecutedBy", nCurrentRunningHours As Integer
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOK.Click
@@ -17,7 +17,7 @@ Public Class frmWork
                     If IfNull(txtWorkCounter.EditValue, 0) = 0 Then
                         MsgBox("Please enter the current running hours.", MsgBoxStyle.Critical, GetAppName)
                         Exit Sub
-                    ElseIf IfNull(txtWorkCounter.EditValue, 0) < nCurrentRunningHours Then
+                    ElseIf Not bInitialMaintenance AndAlso IfNull(txtWorkCounter.EditValue, 0) < nCurrentRunningHours Then
                         MsgBox("The running hours should not be lower than the latest running hours reading.", MsgBoxStyle.Critical, GetAppName)
                         Exit Sub
                     End If
@@ -146,17 +146,22 @@ Public Class frmWork
                     cmdCopy.Enabled = True
                     txtInsDesc.EditValue = IfNull(nrow("InsDesc"), "")
                 End If
-
             End If
             txtWorkCounter.Enabled = strIntCode = "SYSHOURS"
             txtWorkCounter.BackColor = IIf(strIntCode = "SYSHOURS", System.Drawing.Color.White, DISABLED_COLOR)
             If bGetPrevWork Then
-                db.BeginReader("SELECT TOP 1 WorkDate, WorkCounter, ExecutedBy, Remarks FROM dbo.tblMaintenanceWork WHERE UnitCode='" & cboUnit.EditValue & "' AND MaintenanceCode='" & cboMaintenance.EditValue & "' " & IIf(nMaintenanceID = 0, "", " AND MaintenanceWorkID<" & nMaintenanceID) & " ORDER BY WorkDate DESC")
+                db.BeginReader("SELECT TOP 1 WorkDate, WorkCounter, ExecutedBy, Remarks,DueDate,DueCounter FROM dbo.tblMaintenanceWork WHERE UnitCode='" & cboUnit.EditValue & "' AND MaintenanceCode='" & cboMaintenance.EditValue & "' " & IIf(nMaintenanceID = 0, "", " AND MaintenanceWorkID<" & nMaintenanceID) & " ORDER BY WorkDate DESC")
                 If db.Read Then
                     txtPDate.EditValue = db.ReaderItem("WorkDate")
                     txtPRunningHours.EditValue = db.ReaderItem("WorkCounter")
                     txtPExec.EditValue = db.ReaderItem("ExecutedBy")
                     txtPRemarks.EditValue = db.ReaderItem("Remarks")
+                    If db.ReaderItem("DueDate") Is System.DBNull.Value Then
+                        pDueDate = "NULL"
+                    Else
+                        pDueDate = ChangeToSQLDate(db.ReaderItem("DueDate"))
+                    End If
+                    pDueCounter = db.ReaderItem("DueCounter", "NULL")
                 End If
                 db.CloseReader()
             End If
@@ -179,6 +184,7 @@ Public Class frmWork
     Private Sub MainView_cellvaluechanged(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles MainView.CellValueChanged
         If e.Column.Name <> "Edited" Then
             MainView.SetRowCellValue(e.RowHandle, "Edited", True)
+            bFieldUpdated = True
         End If
     End Sub
 

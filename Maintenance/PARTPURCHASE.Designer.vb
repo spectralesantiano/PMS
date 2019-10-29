@@ -21,6 +21,7 @@ Partial Class PARTPURCHASE
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PARTPURCHASE))
         Dim SerializableAppearanceObject1 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
+        Dim SerializableAppearanceObject2 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Me.header = New DevExpress.XtraEditors.GroupControl()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.Grid.GridView()
@@ -61,6 +62,17 @@ Partial Class PARTPURCHASE
         Me.txtStatus = New DevExpress.XtraEditors.TextEdit()
         Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
         Me.MainPanel = New DevExpress.XtraEditors.SplitContainerControl()
+        Me.LabelControl5 = New DevExpress.XtraEditors.LabelControl()
+        Me.IGrid = New DevExpress.XtraGrid.GridControl()
+        Me.IView = New DevExpress.XtraGrid.Views.Grid.GridView()
+        Me.FileDesc = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.DocID = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.FileName = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.iDelete = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.iDeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
+        Me.Doc = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.RepositoryItemLookUpEdit2 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.cmdBrowse = New DevExpress.XtraEditors.SimpleButton()
         Me.LabelControl4 = New DevExpress.XtraEditors.LabelControl()
         Me.cboVendorCode = New DevExpress.XtraEditors.LookUpEdit()
         Me.cmdReceiveAll = New DevExpress.XtraEditors.SimpleButton()
@@ -88,6 +100,10 @@ Partial Class PARTPURCHASE
         CType(Me.txtStatus.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainPanel, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MainPanel.SuspendLayout()
+        CType(Me.IGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.IView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cboVendorCode.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtDefaultDate.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtDefaultDate.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -100,7 +116,7 @@ Partial Class PARTPURCHASE
         Me.header.Controls.Add(Me.MainGrid)
         Me.header.Location = New System.Drawing.Point(1, 52)
         Me.header.Name = "header"
-        Me.header.Size = New System.Drawing.Size(838, 443)
+        Me.header.Size = New System.Drawing.Size(838, 362)
         Me.header.TabIndex = 36
         Me.header.Text = "Purchase Details"
         '
@@ -112,7 +128,7 @@ Partial Class PARTPURCHASE
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.PartEdit, Me.DeleteEdit, Me.VendorEdit, Me.DateReceiveEdit, Me.NumberEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(834, 421)
+        Me.MainGrid.Size = New System.Drawing.Size(834, 340)
         Me.MainGrid.TabIndex = 8
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -329,7 +345,7 @@ Partial Class PARTPURCHASE
         Me.GroupControl3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupControl3.Location = New System.Drawing.Point(0, 0)
         Me.GroupControl3.Name = "GroupControl3"
-        Me.GroupControl3.Size = New System.Drawing.Size(266, 510)
+        Me.GroupControl3.Size = New System.Drawing.Size(266, 518)
         Me.GroupControl3.TabIndex = 205
         Me.GroupControl3.Text = "Parts"
         '
@@ -401,7 +417,7 @@ Partial Class PARTPURCHASE
         '
         Me.cmdAdd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cmdAdd.Location = New System.Drawing.Point(5, 483)
+        Me.cmdAdd.Location = New System.Drawing.Point(5, 491)
         Me.cmdAdd.Name = "cmdAdd"
         Me.cmdAdd.Size = New System.Drawing.Size(256, 23)
         Me.cmdAdd.TabIndex = 12
@@ -417,7 +433,7 @@ Partial Class PARTPURCHASE
         Me.pGrid.MainView = Me.pView
         Me.pGrid.Name = "pGrid"
         Me.pGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1})
-        Me.pGrid.Size = New System.Drawing.Size(263, 437)
+        Me.pGrid.Size = New System.Drawing.Size(263, 445)
         Me.pGrid.TabIndex = 11
         Me.pGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.pView})
         '
@@ -559,6 +575,9 @@ Partial Class PARTPURCHASE
         Me.MainPanel.Location = New System.Drawing.Point(0, 0)
         Me.MainPanel.Name = "MainPanel"
         Me.MainPanel.Panel1.Controls.Add(Me.GroupControl3)
+        Me.MainPanel.Panel2.Controls.Add(Me.LabelControl5)
+        Me.MainPanel.Panel2.Controls.Add(Me.IGrid)
+        Me.MainPanel.Panel2.Controls.Add(Me.cmdBrowse)
         Me.MainPanel.Panel2.Controls.Add(Me.LabelControl4)
         Me.MainPanel.Panel2.Controls.Add(Me.cboVendorCode)
         Me.MainPanel.Panel2.Controls.Add(Me.cmdReceiveAll)
@@ -570,9 +589,139 @@ Partial Class PARTPURCHASE
         Me.MainPanel.Panel2.Controls.Add(Me.LabelControl12)
         Me.MainPanel.Panel2.Controls.Add(Me.LabelControl9)
         Me.MainPanel.Panel2.Text = "Panel2"
-        Me.MainPanel.Size = New System.Drawing.Size(1153, 510)
+        Me.MainPanel.Size = New System.Drawing.Size(1153, 518)
         Me.MainPanel.SplitterPosition = 266
         Me.MainPanel.TabIndex = 209
+        '
+        'LabelControl5
+        '
+        Me.LabelControl5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.LabelControl5.Location = New System.Drawing.Point(1, 422)
+        Me.LabelControl5.Name = "LabelControl5"
+        Me.LabelControl5.Size = New System.Drawing.Size(69, 13)
+        Me.LabelControl5.TabIndex = 250
+        Me.LabelControl5.Text = "Attachment(s)"
+        '
+        'IGrid
+        '
+        Me.IGrid.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.IGrid.Location = New System.Drawing.Point(1, 441)
+        Me.IGrid.LookAndFeel.SkinName = "iMaginary"
+        Me.IGrid.MainView = Me.IView
+        Me.IGrid.Name = "IGrid"
+        Me.IGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit2, Me.iDeleteEdit})
+        Me.IGrid.Size = New System.Drawing.Size(838, 71)
+        Me.IGrid.TabIndex = 249
+        Me.IGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.IView})
+        '
+        'IView
+        '
+        Me.IView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.IView.Appearance.RowSeparator.Options.UseBackColor = True
+        Me.IView.Appearance.ViewCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.IView.Appearance.ViewCaption.ForeColor = System.Drawing.Color.Black
+        Me.IView.Appearance.ViewCaption.Options.UseFont = True
+        Me.IView.Appearance.ViewCaption.Options.UseForeColor = True
+        Me.IView.Appearance.ViewCaption.Options.UseTextOptions = True
+        Me.IView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
+        Me.IView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.FileDesc, Me.DocID, Me.FileName, Me.iDelete, Me.Doc})
+        Me.IView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
+        Me.IView.GridControl = Me.IGrid
+        Me.IView.Name = "IView"
+        Me.IView.NewItemRowText = "Click here to add new record"
+        Me.IView.OptionsBehavior.AutoPopulateColumns = False
+        Me.IView.OptionsBehavior.AutoSelectAllInEditor = False
+        Me.IView.OptionsBehavior.ReadOnly = True
+        Me.IView.OptionsCustomization.AllowColumnMoving = False
+        Me.IView.OptionsCustomization.AllowColumnResizing = False
+        Me.IView.OptionsCustomization.AllowFilter = False
+        Me.IView.OptionsCustomization.AllowGroup = False
+        Me.IView.OptionsCustomization.AllowQuickHideColumns = False
+        Me.IView.OptionsCustomization.AllowSort = False
+        Me.IView.OptionsFilter.AllowFilterEditor = False
+        Me.IView.OptionsFind.AllowFindPanel = False
+        Me.IView.OptionsSelection.EnableAppearanceFocusedCell = False
+        Me.IView.OptionsSelection.EnableAppearanceFocusedRow = False
+        Me.IView.OptionsSelection.EnableAppearanceHideSelection = False
+        Me.IView.OptionsSelection.UseIndicatorForSelection = False
+        Me.IView.OptionsView.HeaderFilterButtonShowMode = DevExpress.XtraEditors.Controls.FilterButtonShowMode.Button
+        Me.IView.OptionsView.RowAutoHeight = True
+        Me.IView.OptionsView.ShowColumnHeaders = False
+        Me.IView.OptionsView.ShowGroupPanel = False
+        '
+        'FileDesc
+        '
+        Me.FileDesc.Caption = "FileDesc"
+        Me.FileDesc.FieldName = "FileDesc"
+        Me.FileDesc.Name = "FileDesc"
+        Me.FileDesc.OptionsColumn.AllowEdit = False
+        Me.FileDesc.OptionsColumn.ReadOnly = True
+        Me.FileDesc.Visible = True
+        Me.FileDesc.VisibleIndex = 0
+        Me.FileDesc.Width = 169
+        '
+        'DocID
+        '
+        Me.DocID.Caption = "DocID"
+        Me.DocID.FieldName = "DocID"
+        Me.DocID.Name = "DocID"
+        '
+        'FileName
+        '
+        Me.FileName.Caption = "File Name"
+        Me.FileName.FieldName = "FileName"
+        Me.FileName.MaxWidth = 55
+        Me.FileName.MinWidth = 55
+        Me.FileName.Name = "FileName"
+        Me.FileName.OptionsColumn.AllowEdit = False
+        Me.FileName.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.[False]
+        Me.FileName.OptionsColumn.ReadOnly = True
+        Me.FileName.Width = 55
+        '
+        'iDelete
+        '
+        Me.iDelete.Caption = "Delete"
+        Me.iDelete.ColumnEdit = Me.iDeleteEdit
+        Me.iDelete.MaxWidth = 20
+        Me.iDelete.Name = "iDelete"
+        Me.iDelete.Visible = True
+        Me.iDelete.VisibleIndex = 1
+        Me.iDelete.Width = 20
+        '
+        'iDeleteEdit
+        '
+        Me.iDeleteEdit.AutoHeight = False
+        Me.iDeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("iDeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject2, "", Nothing, Nothing, True)})
+        Me.iDeleteEdit.Name = "iDeleteEdit"
+        Me.iDeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
+        '
+        'Doc
+        '
+        Me.Doc.Caption = "Doc"
+        Me.Doc.FieldName = "Doc"
+        Me.Doc.Name = "Doc"
+        '
+        'RepositoryItemLookUpEdit2
+        '
+        Me.RepositoryItemLookUpEdit2.AutoHeight = False
+        Me.RepositoryItemLookUpEdit2.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.RepositoryItemLookUpEdit2.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("CounterCode", "Name10", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Counter", "Name12")})
+        Me.RepositoryItemLookUpEdit2.DisplayMember = "Counter"
+        Me.RepositoryItemLookUpEdit2.DropDownRows = 10
+        Me.RepositoryItemLookUpEdit2.Name = "RepositoryItemLookUpEdit2"
+        Me.RepositoryItemLookUpEdit2.NullText = ""
+        Me.RepositoryItemLookUpEdit2.ShowFooter = False
+        Me.RepositoryItemLookUpEdit2.ShowHeader = False
+        Me.RepositoryItemLookUpEdit2.ValueMember = "CounterCode"
+        '
+        'cmdBrowse
+        '
+        Me.cmdBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.cmdBrowse.Location = New System.Drawing.Point(744, 416)
+        Me.cmdBrowse.Name = "cmdBrowse"
+        Me.cmdBrowse.Size = New System.Drawing.Size(95, 23)
+        Me.cmdBrowse.TabIndex = 248
+        Me.cmdBrowse.Text = "Attach"
         '
         'LabelControl4
         '
@@ -630,7 +779,7 @@ Partial Class PARTPURCHASE
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.MainPanel)
         Me.Name = "PARTPURCHASE"
-        Me.Size = New System.Drawing.Size(1153, 510)
+        Me.Size = New System.Drawing.Size(1153, 518)
         CType(Me.header, System.ComponentModel.ISupportInitialize).EndInit()
         Me.header.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
@@ -654,6 +803,10 @@ Partial Class PARTPURCHASE
         CType(Me.txtStatus.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainPanel, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MainPanel.ResumeLayout(False)
+        CType(Me.IGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.IView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cboVendorCode.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtDefaultDate.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtDefaultDate.Properties, System.ComponentModel.ISupportInitialize).EndInit()
@@ -705,5 +858,16 @@ Partial Class PARTPURCHASE
     Friend WithEvents cboVendorCode As DevExpress.XtraEditors.LookUpEdit
     Friend WithEvents DateReceiveEdit As DevExpress.XtraEditors.Repository.RepositoryItemDateEdit
     Friend WithEvents NumberEdit As DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
+    Friend WithEvents LabelControl5 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents IGrid As DevExpress.XtraGrid.GridControl
+    Friend WithEvents IView As DevExpress.XtraGrid.Views.Grid.GridView
+    Friend WithEvents FileDesc As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents DocID As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents FileName As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents iDelete As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents iDeleteEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit
+    Friend WithEvents Doc As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents RepositoryItemLookUpEdit2 As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
+    Friend WithEvents cmdBrowse As DevExpress.XtraEditors.SimpleButton
 
 End Class

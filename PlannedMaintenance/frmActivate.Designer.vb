@@ -46,7 +46,7 @@ Partial Class frmActivate
         '
         'cmdSave
         '
-        Me.cmdSave.Location = New System.Drawing.Point(524, 319)
+        Me.cmdSave.Location = New System.Drawing.Point(514, 319)
         Me.cmdSave.Name = "cmdSave"
         Me.cmdSave.Size = New System.Drawing.Size(78, 23)
         Me.cmdSave.TabIndex = 10
@@ -54,7 +54,7 @@ Partial Class frmActivate
         '
         'cmdOk
         '
-        Me.cmdOk.Location = New System.Drawing.Point(609, 319)
+        Me.cmdOk.Location = New System.Drawing.Point(599, 319)
         Me.cmdOk.Name = "cmdOk"
         Me.cmdOk.Size = New System.Drawing.Size(78, 23)
         Me.cmdOk.TabIndex = 6
@@ -149,7 +149,7 @@ Partial Class frmActivate
         '
         'cmdBrowse
         '
-        Me.cmdBrowse.Location = New System.Drawing.Point(428, 319)
+        Me.cmdBrowse.Location = New System.Drawing.Point(418, 319)
         Me.cmdBrowse.Name = "cmdBrowse"
         Me.cmdBrowse.Size = New System.Drawing.Size(89, 23)
         Me.cmdBrowse.TabIndex = 9
@@ -157,7 +157,7 @@ Partial Class frmActivate
         '
         'cmdOpentroubleshooter
         '
-        Me.cmdOpentroubleshooter.Location = New System.Drawing.Point(290, 319)
+        Me.cmdOpentroubleshooter.Location = New System.Drawing.Point(280, 319)
         Me.cmdOpentroubleshooter.Name = "cmdOpentroubleshooter"
         Me.cmdOpentroubleshooter.Size = New System.Drawing.Size(130, 23)
         Me.cmdOpentroubleshooter.TabIndex = 8
@@ -165,7 +165,7 @@ Partial Class frmActivate
         '
         'cmdServerConfig
         '
-        Me.cmdServerConfig.Location = New System.Drawing.Point(141, 319)
+        Me.cmdServerConfig.Location = New System.Drawing.Point(131, 319)
         Me.cmdServerConfig.Name = "cmdServerConfig"
         Me.cmdServerConfig.Size = New System.Drawing.Size(141, 23)
         Me.cmdServerConfig.TabIndex = 7
@@ -175,7 +175,7 @@ Partial Class frmActivate
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(699, 354)
+        Me.ClientSize = New System.Drawing.Size(692, 354)
         Me.Controls.Add(Me.cmdServerConfig)
         Me.Controls.Add(Me.cmdOpentroubleshooter)
         Me.Controls.Add(Me.cmdBrowse)

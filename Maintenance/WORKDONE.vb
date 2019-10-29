@@ -42,7 +42,7 @@ Public Class WORKDONE
         frm.Text = "Edit " & strDesc & " maintenance."
         frm.db = DB
         frm.IGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='WORKDONE' AND [RefID]='" & MainView.GetFocusedRowCellValue("MaintenanceWorkID").ToString.Trim & "'")
-        frm.cboUnit.Properties.DataSource = DB.CreateTable("[dbo].[GETCOMPONENT] @strUnitCode='" & strID & "'")
+        frm.cboUnit.Properties.DataSource = DB.CreateTable("[dbo].[GETCOMPONENT] @strUnitCode='" & MainView.GetFocusedRowCellValue("UnitCode") & "'")
         frm.cboUnit.ReadOnly = True
         frm.cboUnit.EditValue = MainView.GetFocusedRowCellValue("UnitCode")
         frm.cboRankCode.Properties.DataSource = AdmRank
@@ -85,7 +85,7 @@ Public Class WORKDONE
                     dDueDate = CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval)
                     strDateDue = ChangeToSQLDate(dDueDate)
             End Select
-            sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) & ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", ImageDoc='" & strImage & "', LastUpdatedBy='" & GetUserName() & "', HasImage=" & IIf(frm.IView.RowCount > 0, 1, 0) & " Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
+            sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) & ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", LastUpdatedBy='" & GetUserName() & "', HasImage=" & IIf(frm.IView.RowCount > 0, 1, 0) & " Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
             frm.MainView.CloseEditor()
             frm.MainView.UpdateCurrentRow()
@@ -160,7 +160,7 @@ Public Class WORKDONE
                     strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
             End Select
             sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0 WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
-            sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & ")")
+            sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
             frm.MainView.CloseEditor()
             frm.MainView.UpdateCurrentRow()
             For i = 0 To frm.MainView.RowCount - 1
@@ -212,9 +212,11 @@ Public Class WORKDONE
         End If
         MyBase.RefreshData()
         SetSaveVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
-        Me.header.Text = "MAINTENANCE DETAILS - " & blList.GetDesc.ToUpper
         MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "',@bFlatView=" & CURRENT_FLATVIEW_CHECKED & ",@bCritical=" & CURRENT_CRITICAL_CHECKED)
+
         If CURRENT_FLATVIEW_CHECKED Then
+            Me.header.Text = "MAINTENANCE DETAILS"
+            MainView.OptionsFind.AlwaysVisible = True
             Description.Visible = True
             Description.VisibleIndex = 0
             Maintenance.VisibleIndex = 1
@@ -225,6 +227,8 @@ Public Class WORKDONE
             MainView.Columns("WorkDate").SortOrder = DevExpress.Data.ColumnSortOrder.Descending
             MainView.EndSort()
         Else
+            Me.header.Text = "MAINTENANCE DETAILS - " & blList.GetDesc.ToUpper
+            MainView.OptionsFind.AlwaysVisible = False
             Description.Visible = False
             MainView.BeginSort()
             MainView.Columns("Maintenance").GroupIndex = 0
@@ -242,6 +246,7 @@ Public Class WORKDONE
                 CURRENT_WORK = nCurrWork
             End If
             ChangeCurrentUnit()
+            SetFilter("")
         End If
         RaiseCustomEvent(Name, New Object() {"EnableEdit", IIf(MainView.FocusedRowHandle > 0, "True", "False")})
     End Sub
@@ -408,5 +413,14 @@ Public Class WORKDONE
             e.Graphics.DrawImage(DevExpress.Images.ImageResourceCache.Default.GetImage("images/mail/attachment_16X16.png".ToLower().Replace(" ", "%20")), New RectangleF(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2))
             e.Handled = True
         End If
+    End Sub
+
+    Public Overrides Sub SetFilter(ByVal _criteria As String)
+        Dim strFilter As String = ""
+        If CURRENT_DEPARTMENT <> "" Then strFilter = strFilter & "AND DeptCode='" & CURRENT_DEPARTMENT & "'"
+        If CURRENT_CATEGORY <> "" Then strFilter = strFilter & "AND CatCode='" & CURRENT_CATEGORY & "'"
+        If CURRENT_RANK <> "" Then strFilter = strFilter & "AND RankCode='" & CURRENT_RANK & "'"
+        If strFilter.Length > 0 Then strFilter = strFilter.Remove(0, 4)
+        Me.MainView.ActiveFilterString = strFilter
     End Sub
 End Class

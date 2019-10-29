@@ -22,17 +22,19 @@ Partial Public Class rptChecklist_sub
         Me.Detail = New DevExpress.XtraReports.UI.DetailBand()
         Me.MyTable = New DevExpress.XtraReports.UI.XRTable()
         Me.XrTableRow1 = New DevExpress.XtraReports.UI.XRTableRow()
-        Me.Equipment = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.UnitDesc = New DevExpress.XtraReports.UI.XRTableCell()
         Me.WorkDescription = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTable1 = New DevExpress.XtraReports.UI.XRTable()
         Me.XrTableRow2 = New DevExpress.XtraReports.UI.XRTableRow()
-        Me.Interval = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.Intervalx = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableRow3 = New DevExpress.XtraReports.UI.XRTableRow()
         Me.XrTableCell2 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableCell5 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.TopMargin = New DevExpress.XtraReports.UI.TopMarginBand()
         Me.BottomMargin = New DevExpress.XtraReports.UI.BottomMarginBand()
         Me.GroupHeader = New DevExpress.XtraReports.UI.GroupHeaderBand()
+        Me.XrTableCell3 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.Interval = New DevExpress.XtraReports.UI.XRTableCell()
         CType(Me.MyTable, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.XrTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -60,22 +62,22 @@ Partial Public Class rptChecklist_sub
         '
         'XrTableRow1
         '
-        Me.XrTableRow1.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.Equipment, Me.WorkDescription})
+        Me.XrTableRow1.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.UnitDesc, Me.WorkDescription, Me.Interval})
         Me.XrTableRow1.Name = "XrTableRow1"
         Me.XrTableRow1.Weight = 1.0R
         '
-        'Equipment
+        'UnitDesc
         '
-        Me.Equipment.Name = "Equipment"
-        Me.Equipment.Padding = New DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100.0!)
-        Me.Equipment.StylePriority.UsePadding = False
-        Me.Equipment.Text = "Equipment"
-        Me.Equipment.Weight = 1.2491962667586216R
+        Me.UnitDesc.Name = "UnitDesc"
+        Me.UnitDesc.Padding = New DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100.0!)
+        Me.UnitDesc.StylePriority.UsePadding = False
+        Me.UnitDesc.Text = "UnitDesc"
+        Me.UnitDesc.Weight = 1.0296714130610891R
         '
         'WorkDescription
         '
         Me.WorkDescription.Name = "WorkDescription"
-        Me.WorkDescription.Weight = 1.7549367899586694R
+        Me.WorkDescription.Weight = 1.2728426573213591R
         '
         'XrTable1
         '
@@ -95,32 +97,32 @@ Partial Public Class rptChecklist_sub
         '
         'XrTableRow2
         '
-        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.Interval})
+        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.Intervalx})
         Me.XrTableRow2.Name = "XrTableRow2"
         Me.XrTableRow2.Weight = 1.0R
         '
-        'Interval
+        'Intervalx
         '
-        Me.Interval.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.Interval.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
-        Me.Interval.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+        Me.Intervalx.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Intervalx.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
+        Me.Intervalx.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
             Or DevExpress.XtraPrinting.BorderSide.Right) _
             Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
-        Me.Interval.CanGrow = False
-        Me.Interval.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Interval.Name = "Interval"
-        Me.Interval.StylePriority.UseBackColor = False
-        Me.Interval.StylePriority.UseBorderDashStyle = False
-        Me.Interval.StylePriority.UseBorders = False
-        Me.Interval.StylePriority.UseFont = False
-        Me.Interval.StylePriority.UseTextAlignment = False
-        Me.Interval.Text = "Maintenance Work"
-        Me.Interval.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft
-        Me.Interval.Weight = 0.16694997532328371R
+        Me.Intervalx.CanGrow = False
+        Me.Intervalx.Font = New System.Drawing.Font("Arial", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.Intervalx.Name = "Intervalx"
+        Me.Intervalx.StylePriority.UseBackColor = False
+        Me.Intervalx.StylePriority.UseBorderDashStyle = False
+        Me.Intervalx.StylePriority.UseBorders = False
+        Me.Intervalx.StylePriority.UseFont = False
+        Me.Intervalx.StylePriority.UseTextAlignment = False
+        Me.Intervalx.Text = "Maintenance Work"
+        Me.Intervalx.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft
+        Me.Intervalx.Weight = 0.21503010034104458R
         '
         'XrTableRow3
         '
-        Me.XrTableRow3.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell2, Me.XrTableCell5})
+        Me.XrTableRow3.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell2, Me.XrTableCell5, Me.XrTableCell3})
         Me.XrTableRow3.Name = "XrTableRow3"
         Me.XrTableRow3.Weight = 1.0R
         '
@@ -138,8 +140,8 @@ Partial Public Class rptChecklist_sub
         Me.XrTableCell2.StylePriority.UseBorderDashStyle = False
         Me.XrTableCell2.StylePriority.UseBorders = False
         Me.XrTableCell2.StylePriority.UseFont = False
-        Me.XrTableCell2.Text = "Equipment"
-        Me.XrTableCell2.Weight = 0.11860277739199099R
+        Me.XrTableCell2.Text = "Component"
+        Me.XrTableCell2.Weight = 0.097760370945188385R
         '
         'XrTableCell5
         '
@@ -156,7 +158,7 @@ Partial Public Class rptChecklist_sub
         Me.XrTableCell5.StylePriority.UseBorders = False
         Me.XrTableCell5.StylePriority.UseFont = False
         Me.XrTableCell5.Text = "Maintenance Description"
-        Me.XrTableCell5.Weight = 0.16661942471295957R
+        Me.XrTableCell5.Weight = 0.1208478574753097R
         '
         'TopMargin
         '
@@ -180,6 +182,29 @@ Partial Public Class rptChecklist_sub
         Me.GroupHeader.HeightF = 50.0!
         Me.GroupHeader.Name = "GroupHeader"
         '
+        'XrTableCell3
+        '
+        Me.XrTableCell3.BackColor = System.Drawing.Color.Transparent
+        Me.XrTableCell3.BorderDashStyle = DevExpress.XtraPrinting.BorderDashStyle.Solid
+        Me.XrTableCell3.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+            Or DevExpress.XtraPrinting.BorderSide.Right) _
+            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
+        Me.XrTableCell3.CanGrow = False
+        Me.XrTableCell3.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.XrTableCell3.Name = "XrTableCell3"
+        Me.XrTableCell3.StylePriority.UseBackColor = False
+        Me.XrTableCell3.StylePriority.UseBorderDashStyle = False
+        Me.XrTableCell3.StylePriority.UseBorders = False
+        Me.XrTableCell3.StylePriority.UseFont = False
+        Me.XrTableCell3.Text = "Interval"
+        Me.XrTableCell3.Weight = 0.06661397185189108R
+        '
+        'Interval
+        '
+        Me.Interval.Name = "Interval"
+        Me.Interval.Text = "Interval"
+        Me.Interval.Weight = 0.70161900861614745R
+        '
         'rptChecklist_sub
         '
         Me.Bands.AddRange(New DevExpress.XtraReports.UI.Band() {Me.Detail, Me.TopMargin, Me.BottomMargin, Me.GroupHeader})
@@ -200,13 +225,15 @@ Partial Public Class rptChecklist_sub
     Friend WithEvents BottomMargin As DevExpress.XtraReports.UI.BottomMarginBand
     Friend WithEvents XrTable1 As DevExpress.XtraReports.UI.XRTable
     Friend WithEvents XrTableRow2 As DevExpress.XtraReports.UI.XRTableRow
-    Friend WithEvents Interval As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents Intervalx As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents MyTable As DevExpress.XtraReports.UI.XRTable
     Friend WithEvents XrTableRow1 As DevExpress.XtraReports.UI.XRTableRow
     Friend WithEvents GroupHeader As DevExpress.XtraReports.UI.GroupHeaderBand
     Friend WithEvents WorkDescription As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableRow3 As DevExpress.XtraReports.UI.XRTableRow
     Friend WithEvents XrTableCell2 As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents Equipment As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents UnitDesc As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell5 As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents Interval As DevExpress.XtraReports.UI.XRTableCell
+    Friend WithEvents XrTableCell3 As DevExpress.XtraReports.UI.XRTableCell
 End Class

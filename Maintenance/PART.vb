@@ -1,4 +1,5 @@
 Public Class PART
+    Dim dDateReported As Date, nNumber As Integer, strRemark As String = ""
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Part?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
@@ -11,7 +12,7 @@ Public Class PART
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName, txtPartNumber}) Then
-            Dim sqls As New ArrayList, bUpdateList As Boolean = False
+            Dim sqls As New ArrayList, bUpdateList As Boolean = False, i As Integer
             If bAddMode Then
                 strID = GenerateID(DB, "PartCode", "tblAdmPart")
                 sqls.Add(GenerateInsertScript(Me.header, 3, "tblAdmPart", "PartCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
@@ -20,6 +21,24 @@ Public Class PART
                 sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmPart", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "PartCode='" & strID & "'"))
                 bUpdateList = True
             End If
+            'If strRemark <> "" Then sqls.Add("INSERT INTO [dbo].[tblPart_Missing]([PartCode],[DateMissing],[Number],[Remarks])VALUES('" & strID & "'," & ChangeToSQLDate(dDateReported) & "," & nNumber & ",'" & strRemark.Replace("'", "''") & "')")
+
+            mView.CloseEditor()
+            mView.UpdateCurrentRow()
+            For i = 0 To mView.RowCount - 1
+                If mView.GetRowCellValue(i, "Edited") Then
+                    If mView.GetRowCellValue(i, "DateMissing") Is System.DBNull.Value Or mView.GetRowCellValue(i, "DateMissing") Is Nothing Or IfNull(mView.GetRowCellValue(i, "Number"), 0) = 0 Or IfNull(mView.GetRowCellValue(i, "Remarks"), "") = "" Then
+                        MsgBox("Please fill in all the fields on the Missing section.")
+                        Exit Sub
+                    End If
+                    If IfNull(mView.GetFocusedRowCellValue("Part_MissingID"), 0) = 0 Then
+                        sqls.Add("INSERT INTO [dbo].[tblPart_Missing]([PartCode],[DateMissing],[Number],[Remarks])VALUES('" & strID & "'," & ChangeToSQLDate(mView.GetRowCellValue(i, "DateMissing")) & "," & mView.GetRowCellValue(i, "Number") & ",'" & mView.GetRowCellValue(i, "Remarks").ToString.Replace("'", "''") & "')")
+                    Else
+                        sqls.Add("UPDATE tblPart_Missing SET [DateMissing]=" & ChangeToSQLDate(mView.GetRowCellValue(i, "DateMissing")) & ",[Number]=" & mView.GetRowCellValue(i, "Number") & ",[Remarks]='" & mView.GetRowCellValue(i, "Remarks").ToString.Replace("'", "''") & "' WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
+                    End If
+                End If
+            Next
+
             DB.RunSqls(sqls)
             bRecordUpdated = False
             If bUpdateList Then
@@ -111,7 +130,8 @@ Public Class PART
         ClearFields(Me.header, True)
         MyBase.RefreshData()
         txtOnStock.BackColor = DISABLED_COLOR
-        cGrid.DataSource = DB.CreateTable("SELECT [DateConsumed],[Number],[Remarks] FROM [dbo].[tblPartConsumption] WHERE PartCode='" & strID & "' ORDER BY [DateConsumed] DESC")
+        cGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[tblPartConsumption] WHERE PartCode='" & strID & "' ORDER BY [DateConsumed] DESC")
+        mGrid.DataSource = DB.CreateTable("SELECT *, CAST(0 AS BIT) Edited FROM [dbo].[tblPart_Missing] WHERE PartCode='" & strID & "' ORDER BY [DateMissing] DESC")
         aGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.PURCHASEDETAILLIST WHERE PartCode='" & strID & "' ORDER BY [DateReceived] DESC")
         Me.header.Text = "EDIT PART DETAILS - " & blList.GetDesc.ToUpper
     End Sub
@@ -137,4 +157,64 @@ Public Class PART
             txtOnStock.Tag = 1
         End If
     End Sub
+
+    Private Sub DeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles DeleteEdit.ButtonClick
+        Dim editor As DevExpress.XtraEditors.ButtonEdit = TryCast(sender, DevExpress.XtraEditors.ButtonEdit)
+        Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
+        If mView.RowCount > 0 Then
+            If MsgBox("Are you sure want to delete the missing parts on " & CDate(mView.GetFocusedRowCellDisplayText("DateMissing")).ToShortDateString & "?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                If IfNull(mView.GetFocusedRowCellValue("Part_MissingID"), 0) > 0 Then
+                    DB.RunSql("DELETE FROM dbo.tblPart_Missing WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
+                    blList.RefreshData()
+                    RefreshData()
+                Else
+                    mView.DeleteRow(mView.FocusedRowHandle)
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub mView_CellValueChanging(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles mView.CellValueChanging
+        AllowSaving(Name, (bPermission And 4) > 0)
+        bRecordUpdated = True
+    End Sub
+
+    Private Sub mView_CellValueChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles mView.CellValueChanged
+        If e.Column.Name <> "Edited" Then
+            mView.SetRowCellValue(e.RowHandle, "Edited", True)
+        End If
+    End Sub
+
+    Private Sub mView_RowCellStyle(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.RowCellStyleEventArgs) Handles mView.RowCellStyle
+        Dim bIsEdited As Boolean = IfNull(mView.GetRowCellValue(e.RowHandle, "Edited"), True)
+        If bIsEdited And mView.FocusedRowHandle = e.RowHandle Then
+            e.Appearance.BackColor = EDITED_FOCUSED_COLOR
+        ElseIf bIsEdited Then
+            e.Appearance.BackColor = EDITED_COLOR
+        ElseIf e.RowHandle = mView.FocusedRowHandle Then
+            e.Appearance.BackColor = SEL_COLOR
+        End If
+    End Sub
+    'Private Sub cmdAdd_Click(sender As System.Object, e As System.EventArgs) Handles cmdAdd.Click
+    '    Dim frm As New frmAddMissingPart
+    '    If strRemark <> "" Then
+    '        frm.txtDate.EditValue = dDateReported
+    '        frm.txtNumber.EditValue = nNumber
+    '        frm.txtRemarks.EditValue = strRemark
+    '    End If
+    '    frm.ShowDialog()
+    '    If frm.IS_SAVED Then
+    '        dDateReported = frm.txtDate.EditValue
+    '        nNumber = frm.txtNumber.EditValue
+    '        strRemark = frm.txtRemarks.EditValue
+    '        cView.AddNewRow()
+    '        cView.SetRowCellValue(cView.FocusedRowHandle, "DateConsumed", dDateReported)
+    '        cView.SetRowCellValue(cView.FocusedRowHandle, "Number", nNumber)
+    '        cView.SetRowCellValue(cView.FocusedRowHandle, "Remarks", strRemark)
+    '        cView.UpdateCurrentRow()
+    '        cView.CloseEditor()
+    '        AllowSaving(Name, (bPermission And 4) > 0)
+    '        bRecordUpdated = True
+    '    End If
+    'End Sub
 End Class

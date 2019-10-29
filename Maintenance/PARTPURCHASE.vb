@@ -2,7 +2,7 @@ Imports System.Drawing
 Imports DevExpress.XtraGrid.Columns
 
 Public Class PARTPURCHASE
-    Dim strPartCodes As String = "", sqls As New ArrayList
+    Dim strPartCodes As String = "", sqls As New ArrayList, strDeletedImages As String = ""
 
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
@@ -67,6 +67,22 @@ Public Class PARTPURCHASE
             Else
                 sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Pending', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             End If
+
+            If strDeletedImages <> "" Then
+                Dim strDeletedID() As String = strDeletedImages.ToString.Split(";"c), strDocID As String
+                For Each strDocID In strDeletedID
+                    sqls.Add("DELETE FROM dbo.tblDocuments WHERE DocID=" & strDocID)
+                Next
+            End If
+
+            IView.CloseEditor()
+            IView.UpdateCurrentRow()
+            For i = 0 To IView.RowCount - 1
+                If IfNull(IView.GetRowCellValue(i, "DocID"), 0) = 0 Then
+                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES('" & strID & "','PURCHASE', '" & IView.GetRowCellValue(i, "FileName") & "','" & ImageToString(New Bitmap(IView.GetRowCellValue(i, "FileName").ToString)) & "')")
+                End If
+            Next
+
             DB.RunSqls(sqls)
             bRecordUpdated = False
             blList.RefreshData()
@@ -142,6 +158,7 @@ Public Class PARTPURCHASE
         MyBase.RefreshData()
         RemoveEditListener(txtStatus)
         MainGrid.DataSource = DB.CreateTable("SELECT *, CAST(CASE WHEN DateReceived IS NULL THEN 0 ELSE 1 END AS BIT) Received, CAST(0 AS BIT) Edited FROM dbo.tblPartPurchaseDetail WHERE PartPurchaseCode='" & strID & "'")
+        IGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='PURCHASE' AND [RefID]='" & strID & "'")
         strPartCodes = ""
         For i = 0 To MainView.RowCount - 1
             strPartCodes = strPartCodes & ",'" & MainView.GetRowCellValue(i, "PartCode") & "'"
@@ -163,7 +180,9 @@ Public Class PARTPURCHASE
     End Sub
 
     Public Overrides Sub DeleteData()
-        If MsgBox("Are you sure want to remove this Purchase?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+        If txtStatus.Text = "Delivered" Then
+            MsgBox("Deleting delivered purchases is not allowed.", MsgBoxStyle.Information)
+        ElseIf MsgBox("Are you sure want to remove this Purchase?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             DB.RunSql("DELETE FROM dbo.tblPartPurchase  WHERE PartPurchaseCode='" & strID & "'")
             bRecordUpdated = False
             blList.RefreshData()
@@ -315,5 +334,34 @@ Public Class PARTPURCHASE
         End If
     End Sub
 
+    Private Sub cmdBrowse_Click(sender As System.Object, e As System.EventArgs) Handles cmdBrowse.Click
+        Dim odMain As New System.Windows.Forms.OpenFileDialog, strFile As String
+        'odMain.Filter = "Files (*.jpg, *.jpeg, *.pdf) | *.jpg; *.jpeg; *.pdf"
+        odMain.Filter = "Image Files (*.jpg, *.jpeg) | *.jpg; *.jpeg"
+        odMain.Multiselect = True
+        If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            For Each strFile In odMain.FileNames
+                IView.AddNewRow()
+                IView.SetRowCellValue(IView.FocusedRowHandle, "FileDesc", GetFileName(strFile))
+                IView.SetRowCellValue(IView.FocusedRowHandle, "FileName", strFile)
+                IView.SetRowCellValue(IView.FocusedRowHandle, "Edited", True)
+                IView.SetRowCellValue(IView.FocusedRowHandle, "Doc", FileStreamToString(strFile))
+                IView.UpdateCurrentRow()
+                IView.CloseEditor()
+            Next
+            AllowSaving(Name, (bPermission And 4) > 0)
+            bRecordUpdated = True
+        End If
+    End Sub
 
+    Private Sub IDeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles iDeleteEdit.ButtonClick
+        'If MsgBox("Are you sure want to delete this attachment?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+        If IfNull(IView.GetFocusedRowCellValue("DocID"), 0) > 0 Then 'Existing Image.
+            strDeletedImages = strDeletedImages & IView.GetFocusedRowCellValue("DocID") & ";"
+            AllowSaving(Name, (bPermission And 4) > 0)
+            bRecordUpdated = True
+        End If
+        IView.DeleteRow(IView.FocusedRowHandle)
+        'End If
+    End Sub
 End Class

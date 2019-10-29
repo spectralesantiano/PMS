@@ -52,7 +52,7 @@ Public Class WORKLIST
     End Sub
 
     Public Overrides Function GetID() As String
-        If tlMain.AllNodesCount > 0 Then
+        If tlMain.VisibleNodesCount > 0 Then
             Return tlMain.FocusedNode.GetValue("UnitCode")
         Else
             Return ""
@@ -60,7 +60,7 @@ Public Class WORKLIST
     End Function
 
     Public Overrides Function GetDesc() As String
-        If tlMain.AllNodesCount > 0 Then
+        If tlMain.VisibleNodesCount > 0 Then
             Return tlMain.FocusedNode.GetValue("Description")
         Else
             Return ""

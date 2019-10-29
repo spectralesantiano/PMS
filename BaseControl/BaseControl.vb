@@ -112,6 +112,11 @@
         RaiseEvent AllowDelete(sender, value)
     End Sub
 
+    'Set the filter on the datagrid
+    Public Overridable Sub SetFilter(ByVal _criteria As String)
+
+    End Sub
+
     'This function will be called when the user clicks the Save button on Main form. This is blank for the actual content of this function is defined on Sub classes
     Public Overridable Sub SaveData()
 
