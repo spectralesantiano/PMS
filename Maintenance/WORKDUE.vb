@@ -2,6 +2,16 @@ Imports System.Drawing
 
 Public Class WORKDUE
 
+    Public Overrides Sub SetLayout(strLayout As String)
+        MainView.RestoreLayoutFromStream(StringToStream(strLayout))
+    End Sub
+
+    Public Overrides Function GetLayout() As String
+        Dim str As New System.IO.MemoryStream
+        MainView.SaveLayoutToStream(str)
+        Return StreamToString(str)
+    End Function
+
     Public Sub SaveLayout(ByVal fileName As String)
         MainView.SaveLayoutToXml(fileName)
     End Sub
@@ -228,7 +238,7 @@ Public Class WORKDUE
         End If
         If e.Column.Name = "Critical" Then
             If MainView.GetRowCellValue(e.RowHandle, "Critical") Then
-                e.Appearance.BackColor = Color.Red
+                e.Appearance.BackColor = Color.Yellow
             End If
         End If
     End Sub

@@ -64,6 +64,7 @@ Partial Class PART
         Me.txtPartNumber = New DevExpress.XtraEditors.TextEdit()
         Me.txtName = New DevExpress.XtraEditors.TextEdit()
         Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
+        Me.NumberEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.GroupControl2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -89,6 +90,7 @@ Partial Class PART
         CType(Me.txtOnStock.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtPartNumber.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtName.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'LabelControl12
@@ -144,7 +146,7 @@ Partial Class PART
         Me.mGrid.LookAndFeel.SkinName = "iMaginary"
         Me.mGrid.MainView = Me.mView
         Me.mGrid.Name = "mGrid"
-        Me.mGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit3, Me.DeleteEdit})
+        Me.mGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit3, Me.DeleteEdit, Me.NumberEdit})
         Me.mGrid.Size = New System.Drawing.Size(382, 232)
         Me.mGrid.TabIndex = 11
         Me.mGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.mView})
@@ -201,6 +203,7 @@ Partial Class PART
         'mNumber
         '
         Me.mNumber.Caption = "Quantity"
+        Me.mNumber.ColumnEdit = Me.NumberEdit
         Me.mNumber.FieldName = "Number"
         Me.mNumber.MaxWidth = 70
         Me.mNumber.MinWidth = 70
@@ -540,8 +543,8 @@ Partial Class PART
         '
         Me.txtInitStock.Location = New System.Drawing.Point(658, 56)
         Me.txtInitStock.Name = "txtInitStock"
-        Me.txtInitStock.Properties.Mask.EditMask = "f0"
-        Me.txtInitStock.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
+        Me.txtInitStock.Properties.Mask.EditMask = "\d+"
+        Me.txtInitStock.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
         Me.txtInitStock.Properties.NullText = "0"
         Me.txtInitStock.Size = New System.Drawing.Size(74, 20)
         Me.txtInitStock.TabIndex = 5
@@ -558,8 +561,8 @@ Partial Class PART
         '
         Me.txtMinimum.Location = New System.Drawing.Point(583, 56)
         Me.txtMinimum.Name = "txtMinimum"
-        Me.txtMinimum.Properties.Mask.EditMask = "f0"
-        Me.txtMinimum.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
+        Me.txtMinimum.Properties.Mask.EditMask = "\d+"
+        Me.txtMinimum.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
         Me.txtMinimum.Properties.NullText = "0"
         Me.txtMinimum.Size = New System.Drawing.Size(76, 20)
         Me.txtMinimum.TabIndex = 4
@@ -614,6 +617,13 @@ Partial Class PART
         Me.LabelControl3.TabIndex = 40
         Me.LabelControl3.Text = "* Part Number"
         '
+        'NumberEdit
+        '
+        Me.NumberEdit.AutoHeight = False
+        Me.NumberEdit.Mask.EditMask = "\d+"
+        Me.NumberEdit.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
+        Me.NumberEdit.Name = "NumberEdit"
+        '
         'PART
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -646,6 +656,7 @@ Partial Class PART
         CType(Me.txtOnStock.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtPartNumber.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtName.Properties, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -690,5 +701,6 @@ Partial Class PART
     Friend WithEvents Edited As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Delete As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DeleteEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit
+    Friend WithEvents NumberEdit As DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
 
 End Class

@@ -52,6 +52,12 @@ Public Class PARTLIST
         bDisableSelectionEvent = False
     End Sub
 
+    Public Overrides Sub SetFilter(ByVal _criteria As String)
+        strFilter = ""
+        If CURRENT_CRITICAL_CHECKED Then strFilter = "OnStock<Minimum"
+        Me.MainView.ActiveFilterString = strFilter
+    End Sub
+
     Public Overrides Function GetID() As String
         If MainView.RowCount > 0 Then
             Return MainView.GetRowCellValue(MainView.FocusedRowHandle, "PartCode")

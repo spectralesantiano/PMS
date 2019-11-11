@@ -3,7 +3,7 @@
 Public Class frmWork
 
     Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, bGetPrevWork As Boolean = True, nMaintenanceID As Integer = 0, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = "", bInitialMaintenance As Boolean = False, pDueDate As String, pDueCounter As String
-    Dim strRequiredFields = "cboUnit;cboMaintenance;cboRankCode;txtWorkDate;txtExecutedBy", nCurrentRunningHours As Integer
+    Dim strRequiredFields = "cboUnit;cboMaintenance;cboRankCode;txtWorkDate;txtExecutedBy", nCurrentRunningHours As Integer, dCurrentReadingDate As Date = Nothing
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOK.Click
         If bFieldUpdated Then
@@ -17,12 +17,31 @@ Public Class frmWork
                     If IfNull(txtWorkCounter.EditValue, 0) = 0 Then
                         MsgBox("Please enter the current running hours.", MsgBoxStyle.Critical, GetAppName)
                         Exit Sub
-                    ElseIf Not bInitialMaintenance AndAlso IfNull(txtWorkCounter.EditValue, 0) < nCurrentRunningHours Then
-                        MsgBox("The running hours should not be lower than the latest running hours reading.", MsgBoxStyle.Critical, GetAppName)
-                        Exit Sub
                     End If
-                End If
 
+                    If IfNull(txtPRunningHours.EditValue, 0) > 0 Then
+                        If txtWorkCounter.EditValue < txtPRunningHours.EditValue Then
+                            If Not (Date.Compare(dCurrentReadingDate, txtPDate.EditValue) > 0 And txtPRunningHours.EditValue > nCurrentRunningHours) Then 'Possible change of counter
+                                MsgBox("The running hours should not be lower than the previous running hours reading.", MsgBoxStyle.Critical, GetAppName)
+                                Exit Sub
+                            End If
+                        ElseIf Date.Compare(txtPDate.EditValue, txtWorkDate.EditValue) > 0 Then
+                            MsgBox("The reading date should not be earlier than the previous reading date.", MsgBoxStyle.Critical, GetAppName)
+                            Exit Sub
+                        End If
+                    End If
+
+                    If nCurrentRunningHours > 0 Then
+                        If nCurrentRunningHours > txtWorkCounter.EditValue And Date.Compare(dCurrentReadingDate, txtWorkDate.EditValue) < 0 Then
+                            MsgBox("The running hours and reading date has conflict with the current running hours and reading date.", MsgBoxStyle.Critical, GetAppName)
+                            Exit Sub
+                        End If
+                    End If
+
+                    'ElseIf Not bInitialMaintenance AndAlso IfNull(txtWorkCounter.EditValue, 0) < nCurrentRunningHours Then
+                    '    MsgBox("The running hours should not be lower than the latest running hours reading.", MsgBoxStyle.Critical, GetAppName)
+                    '    Exit Sub
+                End If
                 IView.CloseEditor()
                 IView.UpdateCurrentRow()
                 For i = 0 To IView.RowCount - 1
@@ -130,8 +149,9 @@ Public Class frmWork
             MainGrid.DataSource = db.CreateTable("SELECT p.PartCode, p.OnStock, p.Name + ISNULL(' - ' + p.PartNumber ,'') AS Part, CAST(0 AS BIT) AS Edited, MaintenanceWorkID, Number, PartConsumptionID FROM dbo.tblAdmPart AS p INNER JOIN (SELECT PartCode FROM dbo.tblUnitPart WHERE (UnitCode = '" & nNode.GetValue("UnitCode") & "')) AS up ON p.PartCode = up.PartCode LEFT JOIN(SELECT PartCode,PartConsumptionID,MaintenanceWorkID,Number FROM dbo.tblPartConsumption WHERE (MaintenanceWorkID = " & nMaintenanceID & ")) AS pc ON p.PartCode = pc.PartCode")
             nCurrentRunningHours = IfNull(nNode.GetValue("RunningHours"), 0)
             If nCurrentRunningHours > 0 Then
+                dCurrentReadingDate = nNode.GetValue("ReadingDate")
                 lblRunningHours.Text = "Running Hours: " & nCurrentRunningHours
-                lblReadingDate.Text = "Latest Reading: " & CDate(nNode.GetValue("ReadingDate")).ToShortDateString
+                lblReadingDate.Text = "Latest Reading: " & dCurrentReadingDate.ToShortDateString
             End If
         End If
     End Sub
@@ -149,6 +169,10 @@ Public Class frmWork
             End If
             txtWorkCounter.Enabled = strIntCode = "SYSHOURS"
             txtWorkCounter.BackColor = IIf(strIntCode = "SYSHOURS", System.Drawing.Color.White, DISABLED_COLOR)
+            txtPDate.EditValue = Nothing
+            txtPRunningHours.EditValue = Nothing
+            txtPExec.EditValue = Nothing
+            txtPRemarks.EditValue = Nothing
             If bGetPrevWork Then
                 db.BeginReader("SELECT TOP 1 WorkDate, WorkCounter, ExecutedBy, Remarks,DueDate,DueCounter FROM dbo.tblMaintenanceWork WHERE UnitCode='" & cboUnit.EditValue & "' AND MaintenanceCode='" & cboMaintenance.EditValue & "' " & IIf(nMaintenanceID = 0, "", " AND MaintenanceWorkID<" & nMaintenanceID) & " ORDER BY WorkDate DESC")
                 If db.Read Then
@@ -217,9 +241,11 @@ Public Class frmWork
     End Sub
 
     Private Sub MainView_ValidatingEditor(sender As Object, e As DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs) Handles MainView.ValidatingEditor
-        If e.Value > IfNull(MainView.GetFocusedRowCellValue("OnStock"), 0) Then
-            e.ErrorText = "Total parts consumed should not be greater than the current parts on stock."
-            e.Valid = False
+        If e.Value.ToString.Length > 0 Then
+            If e.Value > IfNull(MainView.GetFocusedRowCellValue("OnStock"), 0) Then
+                e.ErrorText = "Total parts consumed should not be greater than the current parts on stock."
+                e.Valid = False
+            End If
         End If
     End Sub
 

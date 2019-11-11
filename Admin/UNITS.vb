@@ -732,6 +732,7 @@ Public Class UNITS
             Dim i As Integer, strPartID As String
             Dim nNode As TreeListNode = tlUnits.FindNodeByFieldValue("UnitCode", strID)
 
+            If chkActive.Tag = 1 AndAlso chkActive.Checked Then bHasInactive = False
             sqls.Clear()
             sqls.Add(GenerateUpdateScript(Me.gUnitInfo, 3, "tblAdmUnit", "LastUpdatedBy='" & GetUserName() & "', HasInactive=" & IIf(bHasInactive, 1, 0) & ", HasCritical=" & IIf(bHasCritical, 1, 0), "UnitCode='" & strID & "'"))
 
@@ -1290,4 +1291,5 @@ Public Class UNITS
     End Sub
 
 
+   
 End Class

@@ -45,6 +45,7 @@ Partial Class WORKDONE
         Me.Locked = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DueDate = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DueCounter = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Active = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -90,7 +91,7 @@ Partial Class WORKDONE
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
         Me.MainView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.PrevDueDate, Me.PrevDueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.AddedImages, Me.DeletedImages, Me.Locked, Me.DueDate, Me.DueCounter})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.PrevDueDate, Me.PrevDueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.AddedImages, Me.DeletedImages, Me.Locked, Me.DueDate, Me.DueCounter, Me.Active})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.GroupFormat = "{1} {2}"
@@ -107,7 +108,6 @@ Partial Class WORKDONE
         Me.MainView.OptionsCustomization.AllowFilter = False
         Me.MainView.OptionsCustomization.AllowGroup = False
         Me.MainView.OptionsCustomization.AllowQuickHideColumns = False
-        Me.MainView.OptionsFilter.AllowFilterEditor = False
         Me.MainView.OptionsFind.AllowFindPanel = False
         Me.MainView.OptionsSelection.EnableAppearanceFocusedCell = False
         Me.MainView.OptionsSelection.EnableAppearanceFocusedRow = False
@@ -115,6 +115,7 @@ Partial Class WORKDONE
         Me.MainView.OptionsSelection.UseIndicatorForSelection = False
         Me.MainView.OptionsView.HeaderFilterButtonShowMode = DevExpress.XtraEditors.Controls.FilterButtonShowMode.Button
         Me.MainView.OptionsView.RowAutoHeight = True
+        Me.MainView.OptionsView.ShowFilterPanelMode = DevExpress.XtraGrid.Views.Base.ShowFilterPanelMode.Never
         Me.MainView.OptionsView.ShowGroupPanel = False
         Me.MainView.RowHeight = 0
         Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.Description, DevExpress.Data.ColumnSortOrder.Ascending)})
@@ -305,6 +306,12 @@ Partial Class WORKDONE
         Me.DueCounter.FieldName = "DueCounter"
         Me.DueCounter.Name = "DueCounter"
         '
+        'Active
+        '
+        Me.Active.Caption = "Active"
+        Me.Active.FieldName = "Active"
+        Me.Active.Name = "Active"
+        '
         'WORKDONE
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -346,5 +353,6 @@ Partial Class WORKDONE
     Friend WithEvents DeletedImages As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DueDate As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DueCounter As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Active As DevExpress.XtraGrid.Columns.GridColumn
 
 End Class

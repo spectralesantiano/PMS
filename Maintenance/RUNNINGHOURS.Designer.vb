@@ -58,6 +58,7 @@ Partial Class RUNNINGHOURS
         Me.hReading = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.RepositoryItemLookUpEdit2 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.iDeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
+        Me.NumberEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.CurrDateEdit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -72,6 +73,7 @@ Partial Class RUNNINGHOURS
         CType(Me.HView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainGrid
@@ -81,7 +83,7 @@ Partial Class RUNNINGHOURS
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.NewDateEdit, Me.CurrDateEdit})
+        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.NewDateEdit, Me.CurrDateEdit, Me.NumberEdit})
         Me.MainGrid.Size = New System.Drawing.Size(1204, 332)
         Me.MainGrid.TabIndex = 0
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
@@ -224,6 +226,7 @@ Partial Class RUNNINGHOURS
         'CurrReading
         '
         Me.CurrReading.Caption = "Reading"
+        Me.CurrReading.ColumnEdit = Me.NumberEdit
         Me.CurrReading.DisplayFormat.FormatString = "f0"
         Me.CurrReading.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.CurrReading.FieldName = "CurrReading"
@@ -265,6 +268,7 @@ Partial Class RUNNINGHOURS
         'NewReading
         '
         Me.NewReading.Caption = "Reading"
+        Me.NewReading.ColumnEdit = Me.NumberEdit
         Me.NewReading.DisplayFormat.FormatString = "f0"
         Me.NewReading.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.NewReading.FieldName = "NewReading"
@@ -483,6 +487,13 @@ Partial Class RUNNINGHOURS
         Me.iDeleteEdit.Name = "iDeleteEdit"
         Me.iDeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
         '
+        'NumberEdit
+        '
+        Me.NumberEdit.AutoHeight = False
+        Me.NumberEdit.Mask.EditMask = "\d+"
+        Me.NumberEdit.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
+        Me.NumberEdit.Name = "NumberEdit"
+        '
         'RUNNINGHOURS
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -504,6 +515,7 @@ Partial Class RUNNINGHOURS
         CType(Me.HView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -544,5 +556,6 @@ Partial Class RUNNINGHOURS
     Friend WithEvents iDeleteEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit
     Friend WithEvents hBand As DevExpress.XtraGrid.Views.BandedGrid.GridBand
     Friend WithEvents Counter As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents NumberEdit As DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
 
 End Class

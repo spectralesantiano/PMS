@@ -133,6 +133,7 @@ Public Class PART
         cGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[tblPartConsumption] WHERE PartCode='" & strID & "' ORDER BY [DateConsumed] DESC")
         mGrid.DataSource = DB.CreateTable("SELECT *, CAST(0 AS BIT) Edited FROM [dbo].[tblPart_Missing] WHERE PartCode='" & strID & "' ORDER BY [DateMissing] DESC")
         aGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.PURCHASEDETAILLIST WHERE PartCode='" & strID & "' ORDER BY [DateReceived] DESC")
+        txtInitStock.Enabled = aView.RowCount = 0 And cView.RowCount = 0 And mView.RowCount = 0
         Me.header.Text = "EDIT PART DETAILS - " & blList.GetDesc.ToUpper
     End Sub
 
@@ -162,10 +163,18 @@ Public Class PART
         Dim editor As DevExpress.XtraEditors.ButtonEdit = TryCast(sender, DevExpress.XtraEditors.ButtonEdit)
         Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
         If mView.RowCount > 0 Then
-            If MsgBox("Are you sure want to delete the missing parts on " & CDate(mView.GetFocusedRowCellDisplayText("DateMissing")).ToShortDateString & "?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            If mView.GetFocusedRowCellDisplayText("DateMissing").ToString <> "" Then
+                If MsgBox("Are you sure want to delete the missing parts on " & CDate(mView.GetFocusedRowCellDisplayText("DateMissing")).ToShortDateString & "?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                    If IfNull(mView.GetFocusedRowCellValue("Part_MissingID"), 0) > 0 Then
+                        DB.RunSql("DELETE FROM dbo.tblPart_Missing WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
+                        RefreshData()
+                    Else
+                        mView.DeleteRow(mView.FocusedRowHandle)
+                    End If
+                End If
+            Else
                 If IfNull(mView.GetFocusedRowCellValue("Part_MissingID"), 0) > 0 Then
                     DB.RunSql("DELETE FROM dbo.tblPart_Missing WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
-                    blList.RefreshData()
                     RefreshData()
                 Else
                     mView.DeleteRow(mView.FocusedRowHandle)

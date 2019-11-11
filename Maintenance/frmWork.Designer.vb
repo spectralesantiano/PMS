@@ -66,6 +66,7 @@ Partial Class frmWork
         Me.Part = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.OnStock = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Number = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.NumberEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
         Me.Delete = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.Edited = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -105,6 +106,7 @@ Partial Class frmWork
         Me.GroupControl3.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemLookUpEdit1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -361,8 +363,8 @@ Partial Class frmWork
         Me.txtWorkCounter.Properties.Appearance.Options.UseTextOptions = True
         Me.txtWorkCounter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far
         Me.txtWorkCounter.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
-        Me.txtWorkCounter.Properties.Mask.EditMask = "f0"
-        Me.txtWorkCounter.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
+        Me.txtWorkCounter.Properties.Mask.EditMask = "\d+"
+        Me.txtWorkCounter.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
         Me.txtWorkCounter.Size = New System.Drawing.Size(129, 20)
         Me.txtWorkCounter.TabIndex = 3
         '
@@ -480,7 +482,7 @@ Partial Class frmWork
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1, Me.DeleteEdit, Me.PartEdit})
+        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1, Me.DeleteEdit, Me.PartEdit, Me.NumberEdit})
         Me.MainGrid.Size = New System.Drawing.Size(334, 335)
         Me.MainGrid.TabIndex = 11
         Me.MainGrid.TabStop = False
@@ -554,6 +556,7 @@ Partial Class frmWork
         'Number
         '
         Me.Number.Caption = "Consumed"
+        Me.Number.ColumnEdit = Me.NumberEdit
         Me.Number.DisplayFormat.FormatString = "f0"
         Me.Number.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.Number.FieldName = "Number"
@@ -561,6 +564,14 @@ Partial Class frmWork
         Me.Number.Visible = True
         Me.Number.VisibleIndex = 2
         Me.Number.Width = 149
+        '
+        'NumberEdit
+        '
+        Me.NumberEdit.AutoHeight = False
+        Me.NumberEdit.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric
+        Me.NumberEdit.Mask.EditMask = "\d+"
+        Me.NumberEdit.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
+        Me.NumberEdit.Name = "NumberEdit"
         '
         'Delete
         '
@@ -819,6 +830,7 @@ Partial Class frmWork
         Me.GroupControl3.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RepositoryItemLookUpEdit1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).EndInit()
@@ -895,4 +907,5 @@ Partial Class frmWork
     Friend WithEvents cmdBrowse As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents LabelControl5 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents LabelControl11 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents NumberEdit As DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
 End Class

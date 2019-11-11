@@ -19,6 +19,9 @@ Public Class MainForm
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
 
         '*********Settings for Versioning,License And Program Distribution************
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
@@ -378,12 +381,12 @@ Public Class MainForm
                     MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
                     mainlist.Name = "   "
                 Else
-                    Dim PanelWidth As String = GetIni(USER_ID & "SplitterPosition" & cContent)
                     MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Both
-                    If PanelWidth = "" Then
+                    If IfNull(xrow(0)("ListLayout"), "") <> "" Then mainlist.SetLayout(xrow(0)("ListLayout"))
+                    If IfNull(xrow(0)("ListWidth"), 0) = 0 Then
                         MainPanel.SplitterPosition = xrow(0)("ObjectListDefaultWidth")
                     Else
-                        MainPanel.SplitterPosition = CType(PanelWidth, Integer)
+                        MainPanel.SplitterPosition = CType(xrow(0)("ListWidth"), Integer)
                     End If
                     If mainlist.Name <> strDLL & "_" & blList Or ForceRefresh Then
                         mainlist.Dispose()
@@ -409,10 +412,8 @@ Public Class MainForm
                 maincontent.Name = cContent
                 maincontent.bPermission = xrow(0)("Permission")
                 maincontent.strCaption = xrow(0)("Caption")
+                If IfNull(xrow(0)("ContentLayout"), "") <> "" Then maincontent.SetLayout(xrow(0)("ContentLayout"))
                 maincontent.RefreshData()
-                If maincontent.Name = "WORKDUE" Then
-                    maincontent.ExecCustomFunction(New String() {"RestoreLayout", GetAppPath() & "\Users\WORKDUE_" & USER_ID & "layout.xml"})
-                End If
                 Me.Text = GetAppName() & " - << " & Trim(xrow(0)("Caption")) & " - " & GetUserName() & GetServerName() & " >>"
                 bbPreview.Visibility = IIf(xrow(0)("PrintOption") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
                 For Each gGroup In RibbonControl.SelectedPage.Groups
@@ -456,9 +457,10 @@ Public Class MainForm
             Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbCritical.Visibility = IIf((cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            Me.bbCritical.Visibility = IIf((cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
+            Me.rpgInventoryViewingOptions.Visible = (cContent = "PART")
             Me.Cursor = Cursors.Default
         End If
         IsLoaded = True
@@ -575,13 +577,30 @@ Public Class MainForm
 
 
     Private Sub cmdSaveLayout_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbSaveLayout.ItemClick
-        If maincontent.Name = "WORKDUE" Then
-            maincontent.ExecCustomFunction(New String() {"SaveLayout", GetAppPath() & "\Users\WORKDUE_" & USER_ID & "layout.xml"})
+        'If maincontent.Name = "WORKDUE" Then
+        '    maincontent.ExecCustomFunction(New String() {"SaveLayout", GetAppPath() & "\Users\WORKDUE_" & USER_ID & "layout.xml"})
+        If maincontent.Name = "WORKDONE" Or maincontent.Name = "WORKDUE" Then 'new Implementation experiment
+            Dim ListLayout As String = IIf(mainlist.Name = "   ", "", mainlist.GetLayout), ListWidth As Integer = IIf(mainlist.Name = "   ", 0, MainPanel.SplitterPosition), ContentLayout As String = maincontent.GetLayout, i As Integer
+            PMSDB.InitSqlWithParametersSP("UPDATEUSERSETTINGS")
+            PMSDB.AddSqlParameter("@UserID", SqlDbType.Int, USER_ID)
+            PMSDB.AddSqlParameter("@ObjectID", SqlDbType.Text, maincontent.Name)
+            PMSDB.AddSqlParameter("@ListLayout", SqlDbType.VarChar, ListLayout)
+            PMSDB.AddSqlParameter("@ListWidth", SqlDbType.Int, ListWidth)
+            PMSDB.AddSqlParameter("@ContentLayout", SqlDbType.VarChar, ContentLayout)
+            PMSDB.RunSqlWithParameters()
+            For i = 0 To ContentsObject.Count - 1
+                If Trim(ContentsObject(i)("ObjectID")) = maincontent.Name Then
+                    ContentsObject(i)("ListLayout") = ListLayout
+                    ContentsObject(i)("ListWidth") = ListWidth
+                    ContentsObject(i)("ContentLayout") = ContentLayout
+                    Exit For
+                End If
+            Next
         Else
             mainlist.SaveLayout(GetAppPath() & "\Users\" & maincontent.Name & "_" & USER_ID & "layout.xml")
             WriteIni(USER_ID & "SplitterPosition" & maincontent.Name, MainPanel.SplitterPosition)
         End If
-
+        'maincontent.SaveLayout()
     End Sub
 
     Private Sub cmdChangePassword_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles cmdChangePassword.ItemClick
@@ -1414,8 +1433,12 @@ Public Class MainForm
 
     Private Sub bbCritical_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbCritical.ItemClick
         CURRENT_CRITICAL_CHECKED = bbCritical.Down
-        If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
-        maincontent.RefreshData()
+        If maincontent.Name = "PART" Then
+            mainlist.SetFilter("")
+        Else
+            If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
+            maincontent.RefreshData()
+        End If
     End Sub
 
     Private Sub bbFlatView_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbFlatView.ItemClick

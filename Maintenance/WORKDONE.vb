@@ -1,7 +1,17 @@
 Imports System.Drawing
 
 Public Class WORKDONE
-    Dim strNCSql As String = "", ncSQLs As New ArrayList
+    Dim strNCSql As String = "", ncSQLs As New ArrayList, bActiveUnit As Boolean
+
+    Public Overrides Sub SetLayout(strLayout As String)
+        MainView.RestoreLayoutFromStream(StringToStream(strLayout))
+    End Sub
+
+    Public Overrides Function GetLayout() As String
+        Dim str As New System.IO.MemoryStream
+        MainView.SaveLayoutToStream(str)
+        Return StreamToString(str)
+    End Function
 
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
@@ -212,6 +222,8 @@ Public Class WORKDONE
         End If
         MyBase.RefreshData()
         SetSaveVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
+        If Not CURRENT_FLATVIEW_CHECKED Then bActiveUnit = IfNull(blList.GetFocusedRowData("Active"), True)
+        Me.MainView.ActiveFilterString = ""
         MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "',@bFlatView=" & CURRENT_FLATVIEW_CHECKED & ",@bCritical=" & CURRENT_CRITICAL_CHECKED)
 
         If CURRENT_FLATVIEW_CHECKED Then
@@ -260,17 +272,24 @@ Public Class WORKDONE
     End Sub
 
     Private Sub MainView_FocusedRowChanged(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs) Handles MainView.FocusedRowChanged
+        Dim bActive As Boolean
+        If CURRENT_FLATVIEW_CHECKED Then
+            bActive = IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "Active"), True)
+        Else
+            bActive = bActiveUnit
+        End If
         If MainView.FocusedRowHandle >= 0 Then
-            AllowDeletion(Name, (bPermission And 8) > 0)
             If bLoaded Then
                 ChangeCurrentUnit()
                 CURRENT_WORK = IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "MaintenanceWorkID"), -1)
-                AllowDeletion(Name, (bPermission And 8) > 0 And Not IfNull(MainView.GetFocusedRowCellValue("Locked"), False))
-                RaiseCustomEvent(Name, New Object() {"EnableEdit", IIf((bPermission And 4) > 0 And Not IfNull(MainView.GetFocusedRowCellValue("Locked"), False), "TRUE", "FALSE")})
+                AllowAddition(Name, bActive)
+                AllowDeletion(Name, (bPermission And 8) > 0 And bActive And Not IfNull(MainView.GetFocusedRowCellValue("Locked"), False))
+                RaiseCustomEvent(Name, New Object() {"EnableEdit", IIf((bPermission And 4) > 0 And bActive And Not IfNull(MainView.GetFocusedRowCellValue("Locked"), False), "TRUE", "FALSE")})
                 RaiseCustomEvent(Name, New Object() {"EnableImageViewer", IIf(IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "HasImage"), False), "True", "False")})
             End If
         Else
             AllowDeletion(Name, False)
+            AllowAddition(Name, bActive)
             RaiseCustomEvent(Name, New Object() {"EnableEdit", "FALSE"})
             RaiseCustomEvent(Name, New Object() {"EnableImageViewer", "False"})
         End If
@@ -283,8 +302,20 @@ Public Class WORKDONE
     End Sub
 
     Private Sub MainView_RowCellStyle(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.RowCellStyleEventArgs) Handles MainView.RowCellStyle
+        Dim bActive As Boolean
+        If CURRENT_FLATVIEW_CHECKED Then
+            bActive = IfNull(MainView.GetRowCellValue(e.RowHandle, "Active"), True)
+        Else
+            bActive = bActiveUnit
+        End If
         If e.RowHandle = MainView.FocusedRowHandle Then
-            e.Appearance.BackColor = SEL_COLOR
+            If bActive Then
+                e.Appearance.BackColor = SEL_COLOR
+            Else
+                e.Appearance.BackColor = DISABLED_SELECTED_COLOR
+            End If
+        ElseIf Not bActive Then
+            e.Appearance.BackColor = DISABLED_COLOR
         End If
     End Sub
 
@@ -390,8 +421,14 @@ Public Class WORKDONE
         Dim view As DevExpress.XtraGrid.Views.Grid.GridView = CType(sender, DevExpress.XtraGrid.Views.Grid.GridView)
         Dim pt As Drawing.Point = view.GridControl.PointToClient(System.Windows.Forms.Control.MousePosition)
         Dim info As DevExpress.XtraGrid.Views.Grid.ViewInfo.GridHitInfo = view.CalcHitInfo(pt)
+        Dim bActive As Boolean
+        If CURRENT_FLATVIEW_CHECKED Then
+            bActive = IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "Active"), True)
+        Else
+            bActive = bActiveUnit
+        End If
         If (info.InRow Or info.InRowCell) Then
-            If Not MainView.IsGroupRow(MainView.FocusedRowHandle) And (bPermission And 4) > 0 And Not IfNull(MainView.GetFocusedRowCellValue("Locked"), False) Then
+            If Not MainView.IsGroupRow(MainView.FocusedRowHandle) And (bPermission And 4) > 0 And bActive And Not IfNull(MainView.GetFocusedRowCellValue("Locked"), False) Then
                 EditData()
             End If
         End If

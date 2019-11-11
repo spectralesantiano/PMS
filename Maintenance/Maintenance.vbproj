@@ -102,6 +102,12 @@
     <Import Include="Utility" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmInventoryPrintSelection.Designer.vb">
+      <DependentUpon>frmInventoryPrintSelection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmInventoryPrintSelection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="IDOCVIEWER.Designer.vb">
       <DependentUpon>IDOCVIEWER.vb</DependentUpon>
     </Compile>
@@ -251,6 +257,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="frmInventoryPrintSelection.resx">
+      <DependentUpon>frmInventoryPrintSelection.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="IDOCVIEWER.resx">
       <DependentUpon>IDOCVIEWER.vb</DependentUpon>
       <SubType>Designer</SubType>
