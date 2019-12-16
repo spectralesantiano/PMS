@@ -289,17 +289,17 @@ Public Class frmUpdate
                 'Revised using the update process from ERB - 20190715 *****************************************
                 Try
                     Try
-                        If oDb.IsNewVersion(cCurVersion, nServerVersion) Then
-                            Log_Append(sbVersionLog, "Object Update Version :".PadRight(nColStandard) & cCurVersion)
-                            cVersion = cCurVersion
-                            cBak_folder = "Load_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cCurVersion
-                            cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
-                            PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cCurVersion)
-                            bSuccess = True
-                        Else
-                            Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Cannot proceed. Trying to load older version.")
-                            bSuccess = False
-                        End If
+                        'If oDb.IsNewVersion(cCurVersion, nServerVersion) Then
+                        Log_Append(sbVersionLog, "Object Update Version :".PadRight(nColStandard) & cCurVersion)
+                        cVersion = cCurVersion
+                        cBak_folder = "Load_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cCurVersion
+                        cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
+                        PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cCurVersion)
+                        bSuccess = True
+                        'Else
+                        '    Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Cannot proceed. Trying to load older version.")
+                        '    bSuccess = False
+                        'End If
                     Catch ex As Exception
                         Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Error occured validating object update version.")
                         bSuccess = False
