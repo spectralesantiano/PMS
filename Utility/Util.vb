@@ -19,7 +19,7 @@ Public Module Util
     Public USER_NAME As String = "ADMIN", USER_ID As Integer = 0, GROUP_ID As Integer = 0, DEFAULT_PASSWORD As String = "12345", USER_PASSWORD As String
     Public IMO_NUMBER As String = "", VESSEL As String, FLAG_DESC As String, TYPE_DESC As String
     Public APP_PATH As String, DATE_LAST_EXPORT As String = "2000-01-01", SHORE_ID As String, EXPORT_DIR
-    Public GRID_ROW_SEP As Byte = 0, LOGO As Bitmap, FONT_INCREASE As Double = 2
+    Public GRID_ROW_SEP As Byte = 0, LOGO As Bitmap, FONT_INCREASE As Double = 0
     Public CURRENT_DEPARTMENT As String, CURRENT_RANK As String, CURRENT_MAINUNIT As String, CURRENT_CATEGORY As String, CURRENT_UNIT As String = "", CURRENT_WORK As Integer, CURRENT_DUEDAYS As String = "30", CURRENT_DUEHOURS As Integer = "100", CURRENT_PERIOD As Integer, CURRENT_WOMAINTENANCE As Boolean = False, CURRENT_CONDITION_CHECKED As Boolean = False, CURRENT_CRITICAL_CHECKED As Boolean = False, CURRENT_FLATVIEW_CHECKED As Boolean = False, CURRENT_SHOW_WARNING As Boolean = False, CURRENT_SHOW_ALL_CHECKED As Boolean = False
     Public AdmRank As DataTable, AdmDept As DataTable
 
@@ -902,10 +902,10 @@ Public Module Util
         End If
 
         If (nExpType And 2) > 0 Then
-            tbl = db.CreateTable("SELECT [MaintenanceWorkID],[UnitCode],[MaintenanceCode],[RankCode],[WorkDate],[WorkCounter],[ExecutedBy],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[PrevDueDate],[PrevDueCounter] FROM [dbo].[tblMaintenanceWork] WHERE WorkDate>=" & ChangeToExportDate(dStartDate) & " AND WorkDate<=" & ChangeToExportDate(dEndDate))
+            tbl = db.CreateTable("SELECT [MaintenanceWorkID],u.[UnitCode],[MaintenanceCode],[RankCode],[WorkDate],[WorkCounter],[ExecutedBy],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[PrevDueDate],[PrevDueCounter],[Critical] FROM [dbo].[tblMaintenanceWork] m INNER JOIN [dbo].[UNITCOMPLIST] u ON m.UnitCode=u.UnitCode WHERE WorkDate>=" & ChangeToExportDate(dStartDate) & " AND WorkDate<=" & ChangeToExportDate(dEndDate))
             sqls.Add("tblMaintenanceWork")
             For Each drRow In tbl.Rows
-                sqls.Add("'" & Trim(drRow("MaintenanceWorkID")) & "','" & drRow("UnitCode") & "','" & drRow("MaintenanceCode") & "','" & drRow("RankCode") & "'," & ChangeToExportDate(drRow("WorkDate")) & ",'" & drRow("WorkCounter") & "','" & drRow("ExecutedBy").ToString.Replace("'", "''") & "','" & drRow("Remarks").ToString.Replace("'", "''") & "','" & drRow("DueCounter") & "'," & ChangeToExportDate(drRow("DueDate")) & ",'" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'," & ChangeToExportDate(drRow("PrevDueDate")) & "," & IfNull(drRow("PrevDueCounter"), "NULL"))
+                sqls.Add("'" & Trim(drRow("MaintenanceWorkID")) & "','" & drRow("UnitCode") & "','" & drRow("MaintenanceCode") & "','" & drRow("RankCode") & "'," & ChangeToExportDate(drRow("WorkDate")) & ",'" & drRow("WorkCounter") & "','" & drRow("ExecutedBy").ToString.Replace("'", "''") & "','" & drRow("Remarks").ToString.Replace("'", "''") & "','" & drRow("DueCounter") & "'," & ChangeToExportDate(drRow("DueDate")) & ",'" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'," & ChangeToExportDate(drRow("PrevDueDate")) & "," & IfNull(drRow("PrevDueCounter"), "NULL") & "," & IIf(IfNull(drRow("Critical"), False), 1, 0))
             Next
             sqls.Add("END")
 
@@ -923,17 +923,17 @@ Public Module Util
             Next
             sqls.Add("END")
 
-            tbl = db.CreateTable("SELECT [PartPurchaseCode],[PurchaseDate],[Status],[LastUpdatedBy],[VendorCode] FROM [dbo].[tblPartPurchase] WHERE PurchaseDate>=" & ChangeToExportDate(dStartDate) & " AND PurchaseDate<=" & ChangeToExportDate(dEndDate))
+            tbl = db.CreateTable("SELECT [PartPurchaseCode],[PurchaseDate],[Status],[LastUpdatedBy],[PortCode] FROM [dbo].[tblPartPurchase] WHERE PurchaseDate>=" & ChangeToExportDate(dStartDate) & " AND PurchaseDate<=" & ChangeToExportDate(dEndDate))
             sqls.Add("tblPartPurchase")
             For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("PartPurchaseCode") & "'," & ChangeToExportDate(drRow("PurchaseDate")) & ",'" & drRow("Status") & "','" & drRow("VendorCode") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                sqls.Add("'" & drRow("PartPurchaseCode") & "'," & ChangeToExportDate(drRow("PurchaseDate")) & ",'" & drRow("Status") & "','" & drRow("PortCode") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
             Next
             sqls.Add("END")
 
-            tbl = db.CreateTable("SELECT [PartPurchaseCode],[PartCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[LastUpdatedBy] FROM [dbo].[tblPartPurchaseDetail] WHERE DateReceived>=" & ChangeToExportDate(dStartDate) & " AND DateReceived<=" & ChangeToExportDate(dEndDate))
+            tbl = db.CreateTable("SELECT ppd.[PartPurchaseCode],[PartCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],ppd.[LastUpdatedBy],[MakerCode],[Price] FROM [dbo].[tblPartPurchaseDetail] ppd INNER JOIN [dbo].[tblPartPurchase] pp ON pp.PartPurchaseCode=ppd.PartPurchaseCode WHERE pp.PurchaseDate>=" & ChangeToExportDate(dStartDate) & " AND pp.PurchaseDate<=" & ChangeToExportDate(dEndDate))
             sqls.Add("tblPartPurchaseDetail")
             For Each drRow In tbl.Rows
-                sqls.Add("'" & drRow("PartPurchaseCode") & "','" & drRow("PartCode") & "','" & drRow("VendorCode") & "'," & drRow("Quantity") & "," & ChangeToExportDate(drRow("DateReceived")) & ",'" & drRow("ReceivedQuantity") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                sqls.Add("'" & drRow("PartPurchaseCode") & "','" & drRow("PartCode") & "','" & drRow("VendorCode") & "'," & drRow("Quantity") & "," & ChangeToExportDate(drRow("DateReceived")) & ",'" & drRow("ReceivedQuantity") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "','" & IfNull(drRow("MakerCode"), "") & "'," & IfNull(drRow("Price"), "NULL"))
             Next
             sqls.Add("END")
 

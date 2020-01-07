@@ -454,8 +454,8 @@ Public Class WORKDONE
 
     Public Overrides Sub SetFilter(ByVal _criteria As String)
         Dim strFilter As String = ""
-        If CURRENT_DEPARTMENT <> "" Then strFilter = strFilter & "AND DeptCode='" & CURRENT_DEPARTMENT & "'"
-        If CURRENT_CATEGORY <> "" Then strFilter = strFilter & "AND CatCode='" & CURRENT_CATEGORY & "'"
+        If CURRENT_DEPARTMENT <> "" And CURRENT_FLATVIEW_CHECKED Then strFilter = strFilter & "AND DeptCode='" & CURRENT_DEPARTMENT & "'"
+        If CURRENT_CATEGORY <> "" And CURRENT_FLATVIEW_CHECKED Then strFilter = strFilter & "AND CatCode='" & CURRENT_CATEGORY & "'"
         If CURRENT_RANK <> "" Then strFilter = strFilter & "AND RankCode='" & CURRENT_RANK & "'"
         If strFilter.Length > 0 Then strFilter = strFilter.Remove(0, 4)
         Me.MainView.ActiveFilterString = strFilter

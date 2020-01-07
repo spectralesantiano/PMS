@@ -6,6 +6,8 @@ Public Class PARTPURCHASE
 
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
+            Case "FilterCriticalParts"
+                Me.pView.ActiveFilterString = IIf(CURRENT_CRITICAL_CHECKED, "OnStock<Minimum", "")
             Case "Preview"
                 Dim frm As New frmInventoryPrintSelection
                 frm.cboVendorCode.Properties.DataSource = VendorEdit.DataSource
@@ -171,7 +173,7 @@ Public Class PARTPURCHASE
             cboUnit.Properties.DataSource = DB.CreateTable("EXEC dbo.GETCOMPONENT @strUnitCode=''")
             bLoaded = True
         End If
-        pGrid.DataSource = DB.CreateTable("SELECT PartCode, PartCode pPartCode, p.Name Part, PartNumber, ISNULL(l.Name,'') + ' ' + ISNULL(s.Name,'') Storage, CAST(0 AS BIT) Selected, STUFF((SELECT '|' + up.UnitCode FROM dbo.tblUnitPart up WHERE up.PartCode=p.PartCode FOR XML PATH('')),1,1,'') UnitList FROM dbo.tblAdmPart p LEFT JOIN dbo.tblAdmLocation l ON p.LocCode=l.LocCode LEFT JOIN dbo.tblAdmStorage s ON p.StorageCode=s.StorageCode")
+        pGrid.DataSource = DB.CreateTable("SELECT PartCode, PartCode pPartCode, p.Name Part, PartNumber, OnStock, Minimum, ISNULL(l.Name,'') + ' ' + ISNULL(s.Name,'') Storage, CAST(0 AS BIT) Selected, STUFF((SELECT '|' + up.UnitCode FROM dbo.tblUnitPart up WHERE up.PartCode=p.PartCode FOR XML PATH('')),1,1,'') UnitList FROM dbo.tblAdmPart p LEFT JOIN dbo.tblAdmLocation l ON p.LocCode=l.LocCode LEFT JOIN dbo.tblAdmStorage s ON p.StorageCode=s.StorageCode")
         PartEdit.DataSource = pGrid.DataSource
         If (bPermission And 4) = 0 Then
             RemoveEditListener(txtPurchaseDate)
@@ -203,6 +205,9 @@ Public Class PARTPURCHASE
         If e.RowHandle = pView.FocusedRowHandle Then
             e.Appearance.BackColor = SEL_COLOR
         End If
+        If IfNull(pView.GetRowCellValue(e.RowHandle, "Minimum"), 0) > IfNull(pView.GetRowCellValue(e.RowHandle, "OnStock"), 0) Then
+            e.Appearance.ForeColor = Drawing.Color.Red
+        End If
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp
@@ -221,6 +226,8 @@ Public Class PARTPURCHASE
             RefreshData()
         End If
     End Sub
+
+   
 
     Private Sub MainView_CellValueChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles MainView.CellValueChanged
         If e.Column.Name <> "Edited" Then

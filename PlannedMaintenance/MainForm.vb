@@ -18,7 +18,7 @@ Public Class MainForm
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SHORE_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SHORE_ID','SAMPLE_')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_DAYS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_DAYS','30')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
@@ -27,6 +27,11 @@ Public Class MainForm
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LTYPE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
+
+        'Add Trial
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI])" & _
+                "INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) " & _
+                "VALUES('" & sysMpsUserPassword("ENCRYPT", "PMS") & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
 
         'tblSTIService_profile
         sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
@@ -118,6 +123,7 @@ Public Class MainForm
             DATE_LAST_EXPORT = PMSDB.ReaderItem("DATE_LAST_EXPORT", "")
             EXPORT_DIR = PMSDB.ReaderItem("EXPORT_DIR", "")
             SHORE_ID = PMSDB.ReaderItem("SHORE_ID", "")
+            txtDateDue.EditValue = PMSDB.ReaderItem("DUE_DAYS", 30)
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
         End If
         PMSDB.CloseReader()
@@ -440,7 +446,6 @@ Public Class MainForm
             Me.rpgAdminFilterOptions.Visible = (cContent = "UNITS" Or cContent = "COUNTER" Or cContent = "RANK") And (xrow(0)("Permission") And 1) > 0
             Me.txtDateDue.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.txtDueHours.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            'Me.bbNC.Visibility = IIf((cContent = "WORKDONE" Or cContent = "NONCONFORM") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbNC.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
             Me.bbAddPlannedDate.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.ledPeriod.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
@@ -457,10 +462,10 @@ Public Class MainForm
             Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbCritical.Visibility = IIf((cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            Me.bbCritical.Visibility = IIf((cContent = "PARTPURCHASE" Or cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
-            Me.rpgInventoryViewingOptions.Visible = (cContent = "PART")
+            Me.rpgInventoryViewingOptions.Visible = (cContent = "PARTPURCHASE" Or cContent = "PART")
             Me.Cursor = Cursors.Default
         End If
         IsLoaded = True
@@ -1435,6 +1440,8 @@ Public Class MainForm
         CURRENT_CRITICAL_CHECKED = bbCritical.Down
         If maincontent.Name = "PART" Then
             mainlist.SetFilter("")
+        ElseIf maincontent.Name = "PARTPURCHASE" Then
+            maincontent.ExecCustomFunction(New Object() {"FilterCriticalParts"})
         Else
             If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
             maincontent.RefreshData()

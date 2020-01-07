@@ -486,10 +486,10 @@ Public Class UNITS
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub tlUnits_NodeCellStyle(sender As Object, e As DevExpress.XtraTreeList.GetCustomNodeCellStyleEventArgs) Handles tlUnits.NodeCellStyle
         If e.Node.Selected Then
-            e.Appearance.BackColor = SEL_COLOR
+            e.Appearance.BackColor = IIf(IfNull(e.Node.GetValue("Active"), True), SEL_COLOR, DISABLED_SELECTED_COLOR)
         End If
-        If Not IfNull(e.Node.GetValue("Active"), True) Then
-            e.Appearance.ForeColor = Color.Red
+        If Not IfNull(e.Node.GetValue("Active"), True) And Not e.Node.Selected Then
+            e.Appearance.BackColor = DISABLED_COLOR
         ElseIf IfNull(e.Node.GetValue("HasInactive"), False) Then
             e.Appearance.ForeColor = Color.Orange
         End If
@@ -903,7 +903,9 @@ Public Class UNITS
 
     Sub getUnitsData(Optional bHideComponents As Boolean = True)
         Dim strFocusedNode As String = "", strRootNode As String = ""
-        If Not tlUnits.FocusedNode Is Nothing Then
+        If tlUnits.FocusedNode Is Nothing Then
+            AllowDeletion(Name, (bPermission And 8) > 0)
+        Else
             strFocusedNode = tlUnits.FocusedNode.GetValue("UnitCode")
         End If
 
@@ -1034,32 +1036,34 @@ Public Class UNITS
     End Sub
 
     Sub Copy()
-        Dim frm As New frmNumber, nStartNumber As Integer, bRootUpdated As Boolean = False
-        nMaxUnitID = DB.DLookUp("ISNULL(MAX(CAST(right(UnitCode,8) AS INT)),0)", "dbo.tblAdmUnit", "0")
-        If tlUnits.FocusedNode.ParentNode Is Nothing Then
-            nStartNumber = GetMaxNumber(tlUnits.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("UnitDesc"))
-            bRootUpdated = True
-        Else
-            nStartNumber = GetMaxNumber(tlUnits.FocusedNode.ParentNode.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("UnitDesc"))
-        End If
-        frm.txtNumber.Properties.MinValue = 1
-        'If nStartNumber = 1 Then nStartNumber += 1
-        frm.ShowDialog()
-        If frm.bCopied Then
-            Dim nRow As DataRow, i As Integer
-            sqls.Clear()
-            tblUnitCopy = tblUnitSource.Clone
-            For i = 0 To frm.txtNumber.EditValue - 1
-                tblUnitCopy.Rows.Clear()
-                CopyNodes(tlUnits.FocusedNode, tlUnits.FocusedNode.GetValue("ParentCode"), i + nStartNumber, nMaxUnitID, 1)
-                For Each nRow In tblUnitCopy.Rows
-                    tblUnitSource.ImportRow(nRow)
+        If Not tlUnits.FocusedNode Is Nothing Then
+            Dim frm As New frmNumber, nStartNumber As Integer, bRootUpdated As Boolean = False
+            nMaxUnitID = DB.DLookUp("ISNULL(MAX(CAST(right(UnitCode,8) AS INT)),0)", "dbo.tblAdmUnit", "0")
+            If tlUnits.FocusedNode.ParentNode Is Nothing Then
+                nStartNumber = GetMaxNumber(tlUnits.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("UnitDesc"))
+                bRootUpdated = True
+            Else
+                nStartNumber = GetMaxNumber(tlUnits.FocusedNode.ParentNode.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("UnitDesc"))
+            End If
+            frm.txtNumber.Properties.MinValue = 1
+            'If nStartNumber = 1 Then nStartNumber += 1
+            frm.ShowDialog()
+            If frm.bCopied Then
+                Dim nRow As DataRow, i As Integer
+                sqls.Clear()
+                tblUnitCopy = tblUnitSource.Clone
+                For i = 0 To frm.txtNumber.EditValue - 1
+                    tblUnitCopy.Rows.Clear()
+                    CopyNodes(tlUnits.FocusedNode, tlUnits.FocusedNode.GetValue("ParentCode"), i + nStartNumber, nMaxUnitID, 1)
+                    For Each nRow In tblUnitCopy.Rows
+                        tblUnitSource.ImportRow(nRow)
+                    Next
                 Next
-            Next
+            End If
+            DB.RunSqls(sqls)
+            nMaxUnitID += 1
+            If bRootUpdated Then RaiseCustomEvent(Name, New Object() {"RefreshMainUnits", ""})
         End If
-        DB.RunSqls(sqls)
-        nMaxUnitID += 1
-        If bRootUpdated Then RaiseCustomEvent(Name, New Object() {"RefreshMainUnits", ""})
     End Sub
 
     Sub CopyNodes(pNode As TreeListNode, Parent As Object, nNumber As Integer, ByRef nMaxUnitID As Integer, nLevel As Integer)
@@ -1291,5 +1295,5 @@ Public Class UNITS
     End Sub
 
 
-   
+
 End Class

@@ -15,7 +15,43 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_020ACBD765054604B76E7372CD6D6319"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_16565033FFFB4E0AB9BB60891214B125"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A74F1D246F5E42BCB361632334A35AED"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D77E7B6B4498427EAD982EB82392B3B9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DEF6ED2A8D2F4D4D95F4D5368F271F36"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E415533C42DC431BB0E7265FDF10B3D4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F2C982BFABCD472FA9EA9DA6DDBB4431"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -186,6 +222,126 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_020ACBD765054604B76E7372CD6D6319"
+            {
+            "SourcePath" = "8:..\\Data\\pms_db_log.ldf"
+            "TargetName" = "8:pms_db_log.ldf"
+            "Tag" = "8:"
+            "Folder" = "8:_AC0F7F51304C4CEE8EEC08F80A28CC21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_16565033FFFB4E0AB9BB60891214B125"
+            {
+            "SourcePath" = "8:..\\Data\\pms_db.mdf"
+            "TargetName" = "8:pms_db.mdf"
+            "Tag" = "8:"
+            "Folder" = "8:_AC0F7F51304C4CEE8EEC08F80A28CC21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D77E7B6B4498427EAD982EB82392B3B9"
+            {
+            "SourcePath" = "8:..\\Data\\sas_tbl.mdf"
+            "TargetName" = "8:sas_tbl.mdf"
+            "Tag" = "8:"
+            "Folder" = "8:_AC0F7F51304C4CEE8EEC08F80A28CC21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DEF6ED2A8D2F4D4D95F4D5368F271F36"
+            {
+            "SourcePath" = "8:..\\Data\\sasa_tbl_log.ldf"
+            "TargetName" = "8:sasa_tbl_log.ldf"
+            "Tag" = "8:"
+            "Folder" = "8:_AC0F7F51304C4CEE8EEC08F80A28CC21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E415533C42DC431BB0E7265FDF10B3D4"
+            {
+            "SourcePath" = "8:..\\Data\\sasa_tbl.mdf"
+            "TargetName" = "8:sasa_tbl.mdf"
+            "Tag" = "8:"
+            "Folder" = "8:_AC0F7F51304C4CEE8EEC08F80A28CC21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2C982BFABCD472FA9EA9DA6DDBB4431"
+            {
+            "SourcePath" = "8:..\\Data\\sas_tbl_log.ldf"
+            "TargetName" = "8:sas_tbl_log.ldf"
+            "Tag" = "8:"
+            "Folder" = "8:_AC0F7F51304C4CEE8EEC08F80A28CC21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -232,21 +388,6 @@
         }
         "Locator"
         {
-            "{39E1837C-0DB9-45A2-89C8-438377A77565}:_886BF6BF55B842239A6FF3C8BDBA31EA"
-            {
-            "Name" = "8:Search for File1"
-            "Folder" = "8:[SystemFolder]"
-            "Depth" = "2:0"
-            "FileName" = "8:"
-            "MinVesion" = "8:"
-            "MaxVersion" = "8:"
-            "MinSize" = "8:"
-            "MaxSize" = "8:"
-            "MinDate" = "8:"
-            "MaxDate" = "8:"
-            "Languages" = "8:"
-            "Property" = "8:FILEEXISTS1"
-            }
         }
         "MsiBootstrapper"
         {
@@ -258,7 +399,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PMS DATA 2012"
         "ProductCode" = "8:{159B2AB3-B161-4C5D-9EE3-CB7EE16F3E07}"
-        "PackageCode" = "8:{4CC5C5C2-1000-425B-9B73-B509ECDF80C5}"
+        "PackageCode" = "8:{80D0302F-1742-420D-A471-D26528E17CD2}"
         "UpgradeCode" = "8:{0646A3B4-0220-4C7B-9149-B4A48655307B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

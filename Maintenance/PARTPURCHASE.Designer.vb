@@ -81,6 +81,8 @@ Partial Class PARTPURCHASE
         Me.cmdReceiveAll = New DevExpress.XtraEditors.SimpleButton()
         Me.txtDefaultDate = New DevExpress.XtraEditors.DateEdit()
         Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
+        Me.OnStock = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Minimum = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -485,7 +487,7 @@ Partial Class PARTPURCHASE
         Me.pView.Appearance.ViewCaption.Options.UseForeColor = True
         Me.pView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.pView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
-        Me.pView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.pPartCode, Me.Part, Me.pPartNumber, Me.Selected, Me.UnitList})
+        Me.pView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.pPartCode, Me.Part, Me.pPartNumber, Me.Selected, Me.UnitList, Me.OnStock, Me.Minimum})
         Me.pView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.pView.GridControl = Me.pGrid
         Me.pView.Name = "pView"
@@ -812,6 +814,18 @@ Partial Class PARTPURCHASE
         Me.LabelControl2.TabIndex = 209
         Me.LabelControl2.Text = "Default Date Receive"
         '
+        'OnStock
+        '
+        Me.OnStock.Caption = "OnStock"
+        Me.OnStock.FieldName = "OnStock"
+        Me.OnStock.Name = "OnStock"
+        '
+        'Minimum
+        '
+        Me.Minimum.Caption = "Minimum"
+        Me.Minimum.FieldName = "Minimum"
+        Me.Minimum.Name = "Minimum"
+        '
         'PARTPURCHASE
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -911,5 +925,7 @@ Partial Class PARTPURCHASE
     Friend WithEvents MakerCode As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents MakerEdit As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
     Friend WithEvents Price As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents OnStock As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Minimum As DevExpress.XtraGrid.Columns.GridColumn
 
 End Class
