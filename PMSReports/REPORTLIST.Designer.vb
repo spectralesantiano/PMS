@@ -59,7 +59,6 @@ Partial Class REPORTLIST
         Me.MainView.OptionsCustomization.AllowFilter = False
         Me.MainView.OptionsCustomization.AllowGroup = False
         Me.MainView.OptionsCustomization.AllowQuickHideColumns = False
-        Me.MainView.OptionsFind.AlwaysVisible = True
         Me.MainView.OptionsFind.FindDelay = 100
         Me.MainView.OptionsSelection.EnableAppearanceFocusedCell = False
         Me.MainView.OptionsSelection.EnableAppearanceFocusedRow = False
@@ -69,7 +68,6 @@ Partial Class REPORTLIST
         Me.MainView.OptionsView.ShowBands = False
         Me.MainView.OptionsView.ShowFilterPanelMode = DevExpress.XtraGrid.Views.Base.ShowFilterPanelMode.Never
         Me.MainView.OptionsView.ShowGroupPanel = False
-        Me.MainView.RowSeparatorHeight = GRID_ROW_SEP
         '
         'gridBand4
         '

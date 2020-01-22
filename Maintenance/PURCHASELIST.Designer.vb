@@ -26,7 +26,7 @@ Partial Class PURCHASELIST
         Me.PurchaseDate = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.Status = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.PartPurchaseCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
-        Me.VendorCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.PortCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -53,7 +53,7 @@ Partial Class PURCHASELIST
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
         Me.MainView.Bands.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.GridBand() {Me.gridBand4})
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.PartPurchaseCode, Me.PurchaseDate, Me.Status, Me.VendorCode})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.PartPurchaseCode, Me.PurchaseDate, Me.Status, Me.PortCode})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -107,11 +107,11 @@ Partial Class PURCHASELIST
         Me.PartPurchaseCode.FieldName = "PartPurchaseCode"
         Me.PartPurchaseCode.Name = "PartPurchaseCode"
         '
-        'VendorCode
+        'PortCode
         '
-        Me.VendorCode.Caption = "VendorCode"
-        Me.VendorCode.FieldName = "VendorCode"
-        Me.VendorCode.Name = "VendorCode"
+        Me.PortCode.Caption = "PortCode"
+        Me.PortCode.FieldName = "PortCode"
+        Me.PortCode.Name = "PortCode"
         '
         'PURCHASELIST
         '
@@ -131,6 +131,6 @@ Partial Class PURCHASELIST
     Friend WithEvents PurchaseDate As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents Status As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents PartPurchaseCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
-    Friend WithEvents VendorCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents PortCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
 
 End Class

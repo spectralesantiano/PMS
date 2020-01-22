@@ -22,7 +22,7 @@ Partial Class frmIMOWarning
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmIMOWarning))
         Me.cmdOk = New DevExpress.XtraEditors.SimpleButton()
         Me.cmdCancel = New DevExpress.XtraEditors.SimpleButton()
-        Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
+        Me.lblInfo = New DevExpress.XtraEditors.LabelControl()
         Me.lblIMO = New DevExpress.XtraEditors.LabelControl()
         Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
         Me.SuspendLayout()
@@ -44,14 +44,14 @@ Partial Class frmIMOWarning
         Me.cmdCancel.TabIndex = 3
         Me.cmdCancel.Text = "Cancel"
         '
-        'LabelControl2
+        'lblInfo
         '
-        Me.LabelControl2.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical
-        Me.LabelControl2.Location = New System.Drawing.Point(12, 23)
-        Me.LabelControl2.Name = "LabelControl2"
-        Me.LabelControl2.Size = New System.Drawing.Size(366, 26)
-        Me.LabelControl2.TabIndex = 46
-        Me.LabelControl2.Text = "The IMO number is an important feature of WRH's functionality and it's very impor" & _
+        Me.lblInfo.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical
+        Me.lblInfo.Location = New System.Drawing.Point(12, 23)
+        Me.lblInfo.Name = "lblInfo"
+        Me.lblInfo.Size = New System.Drawing.Size(366, 26)
+        Me.lblInfo.TabIndex = 46
+        Me.lblInfo.Text = "The IMO number is an important feature of WRH's functionality and it's very impor" & _
     "tant that the vessel's correct IMO number is added in WRH"
         '
         'lblIMO
@@ -81,7 +81,7 @@ Partial Class frmIMOWarning
         Me.ClientSize = New System.Drawing.Size(390, 190)
         Me.Controls.Add(Me.LabelControl3)
         Me.Controls.Add(Me.lblIMO)
-        Me.Controls.Add(Me.LabelControl2)
+        Me.Controls.Add(Me.lblInfo)
         Me.Controls.Add(Me.cmdCancel)
         Me.Controls.Add(Me.cmdOk)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -99,7 +99,7 @@ Partial Class frmIMOWarning
     End Sub
     Friend WithEvents cmdOk As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents cmdCancel As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents LabelControl2 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents lblInfo As DevExpress.XtraEditors.LabelControl
     Friend WithEvents lblIMO As DevExpress.XtraEditors.LabelControl
     Friend WithEvents LabelControl3 As DevExpress.XtraEditors.LabelControl
 End Class
