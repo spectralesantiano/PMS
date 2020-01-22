@@ -93,15 +93,15 @@ Public Class PMSInstaller
                         "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\pms_db_log.ldf' ) " & _
                         "FOR ATTACH;")
 
-                    ExecuteSql("master", "CREATE DATABASE [sas_tbl] ON " & _
-                        "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sas_tbl.mdf' )," & _
-                        "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sas_tbl_log.ldf' ) " & _
-                        "FOR ATTACH;")
+                    'ExecuteSql("master", "CREATE DATABASE [sas_tbl] ON " & _
+                    '    "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sas_tbl.mdf' )," & _
+                    '    "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sas_tbl_log.ldf' ) " & _
+                    '    "FOR ATTACH;")
 
-                    ExecuteSql("master", "CREATE DATABASE [sasa_tbl] ON " & _
-                        "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sasa_tbl.mdf' )," & _
-                        "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sasa_tbl_log.ldf' ) " & _
-                        "FOR ATTACH;")
+                    'ExecuteSql("master", "CREATE DATABASE [sasa_tbl] ON " & _
+                    '    "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sasa_tbl.mdf' )," & _
+                    '    "( FILENAME = N'C:\Spectral\Microsoft SQL Server\MSSQL11.STISQLSERVER\MSSQL\Data\sasa_tbl_log.ldf' ) " & _
+                    '    "FOR ATTACH;")
 
                 Case "2014"
 
@@ -136,10 +136,10 @@ Public Class PMSInstaller
         'run these scripts and force continue
         ExecuteSql("master", "ALTER DATABASE pms_db SET SINGLE_USER with rollback immediate", True)
         ExecuteSql("master", "DROP DATABASE [pms_db]", True)
-        ExecuteSql("master", "ALTER DATABASE sas_tbl SET SINGLE_USER with rollback immediate", True)
-        ExecuteSql("master", "DROP DATABASE [sas_tbl]", True)
-        ExecuteSql("master", "ALTER DATABASE sasa_tbl SET SINGLE_USER with rollback immediate", True)
-        ExecuteSql("master", "DROP DATABASE [sasa_tbl]", True)
+        'ExecuteSql("master", "ALTER DATABASE sas_tbl SET SINGLE_USER with rollback immediate", True)
+        'ExecuteSql("master", "DROP DATABASE [sas_tbl]", True)
+        'ExecuteSql("master", "ALTER DATABASE sasa_tbl SET SINGLE_USER with rollback immediate", True)
+        'ExecuteSql("master", "DROP DATABASE [sasa_tbl]", True)
         ExecuteSql("master", "DROP TABLE [sti_sys].[dbo].[tblPMSConfig]", True)
         ExecuteSql("master", "DROP TABLE [sti_sys].[dbo].[tblPMSVersion]", True)
     End Sub

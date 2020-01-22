@@ -60,7 +60,7 @@ Public Class WORKDUE
     End Sub
 
     Private Sub EditData()
-        If Not MainView.IsGroupRow(MainView.FocusedRowHandle) Then
+        If Not MainView.IsGroupRow(MainView.FocusedRowHandle) And (bPermission And 4) > 0 Then
             Dim frm As New frmWork, sqls As New ArrayList
             frm.db = DB
             frm.IGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='WORKDONE' AND [RefID]='-xxax'")
@@ -118,7 +118,7 @@ Public Class WORKDUE
                 If frm.strAddedImages <> "" Then
                     Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                     For Each strImg In strImages
-                        sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                        sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "')")
                     Next
                 End If
 

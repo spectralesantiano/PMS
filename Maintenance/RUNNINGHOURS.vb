@@ -29,11 +29,18 @@ Public Class RUNNINGHOURS
             frm.txtDate.Properties.MaxValue = Now.Date
             frm.ShowDialog()
             If frm.IS_SAVED Then
-                Dim i As Integer
+                Dim i As Integer, bHasLaterDate As Boolean = False
                 For i = 0 To MainView.RowCount - 1
-                    MainView.SetRowCellValue(i, "NewDate", frm.txtDate.EditValue)
-                    MainView.SetRowCellValue(i, "Edited", False)
+                    If Date.Compare(MainView.GetRowCellValue(i, "CurrDate"), frm.txtDate.EditValue) >= 0 Then
+                        bHasLaterDate = True
+                    Else
+                        MainView.SetRowCellValue(i, "NewDate", frm.txtDate.EditValue)
+                        MainView.SetRowCellValue(i, "Edited", False)
+                    End If
                 Next
+                If bHasLaterDate Then
+                    MsgBox("Some rows are not set to default date. Default Reading Date should be later than the previous reading date.", MsgBoxStyle.Information, GetAppName)
+                End If
                 AllowSaving(Name, False) 'Disable save button
                 bAddMode = True
                 NewBand.Visible = True
@@ -180,7 +187,12 @@ Public Class RUNNINGHOURS
 
     Private Sub MainView_ValidatingEditor(sender As Object, e As DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs) Handles MainView.ValidatingEditor
         If bAddMode Then
-            If MainView.FocusedColumn.Name = "NewReading" Then
+            If MainView.FocusedColumn.Name = "NewDate" Then
+                If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate"), e.Value) >= 0 Then
+                    e.ErrorText = "Current Reading Date should be later than the previous reading date."
+                    e.Valid = False
+                End If
+            ElseIf MainView.FocusedColumn.Name = "NewReading" Then
                 If e.Value < IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrReading"), 0) Then
                     e.ErrorText = "Current Reading should not be less than the previous reading."
                     e.Valid = False
@@ -191,7 +203,12 @@ Public Class RUNNINGHOURS
                 End If
             End If
         Else
-            If MainView.FocusedColumn.Name = "CurrReading" Then
+            If MainView.FocusedColumn.Name = "CurrDate" Then
+                If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate"), e.Value) >= 0 Then
+                    e.ErrorText = "Current Reading Date should be later than the previous reading date."
+                    e.Valid = False
+                End If
+            ElseIf MainView.FocusedColumn.Name = "CurrReading" Then
                 If e.Value < IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevReading"), 0) And IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrCounter"), "") = IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevCounter"), "") Then
                     e.ErrorText = "Current Reading should not be less than the previous reading."
                     e.Valid = False

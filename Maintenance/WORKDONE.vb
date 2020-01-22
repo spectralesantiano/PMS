@@ -1,7 +1,7 @@
 Imports System.Drawing
 
 Public Class WORKDONE
-    Dim strNCSql As String = "", ncSQLs As New ArrayList, bActiveUnit As Boolean
+    Dim strNCSql As String = "", ncSQLs As New ArrayList, bActiveUnit As Boolean, bCritical As Boolean
 
     Public Overrides Sub SetLayout(strLayout As String)
         MainView.RestoreLayoutFromStream(StringToStream(strLayout))
@@ -120,7 +120,7 @@ Public Class WORKDONE
             If frm.strAddedImages <> "" Then
                 Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                 For Each strImg In strImages
-                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES('" & frm.nMaintenanceID.ToString.Trim & "','WORKDONE', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES('" & frm.nMaintenanceID.ToString.Trim & "','WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "')")
                 Next
             End If
 
@@ -190,7 +190,7 @@ Public Class WORKDONE
             If frm.strAddedImages <> "" Then
                 Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                 For Each strImg In strImages
-                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "')")
                 Next
             End If
 
@@ -223,6 +223,7 @@ Public Class WORKDONE
         MyBase.RefreshData()
         SetSaveVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         If Not CURRENT_FLATVIEW_CHECKED Then bActiveUnit = IfNull(blList.GetFocusedRowData("Active"), True)
+        bCritical = IfNull(blList.GetFocusedRowData("Critical"), True)
         Me.MainView.ActiveFilterString = ""
         MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "',@bFlatView=" & CURRENT_FLATVIEW_CHECKED & ",@bCritical=" & CURRENT_CRITICAL_CHECKED)
 
@@ -316,6 +317,15 @@ Public Class WORKDONE
             End If
         ElseIf Not bActive Then
             e.Appearance.BackColor = DISABLED_COLOR
+        End If
+        If e.Column.Name = "CriticalDisplay" Then
+            Dim bIsCritical As Boolean = bCritical
+            If CURRENT_FLATVIEW_CHECKED Then
+                bIsCritical = MainView.GetRowCellValue(e.RowHandle, "Critical")
+            End If
+            If bIsCritical Then
+                e.Appearance.BackColor = Color.Yellow
+            End If
         End If
     End Sub
 
@@ -439,7 +449,9 @@ Public Class WORKDONE
         Dim pt As Drawing.Point = view.GridControl.PointToClient(System.Windows.Forms.Control.MousePosition)
         Dim info As DevExpress.XtraGrid.Views.Grid.ViewInfo.GridHitInfo = view.CalcHitInfo(pt)
         If (info.HitTest = DevExpress.XtraGrid.Views.Grid.ViewInfo.GridHitTest.RowIndicator) Then
-            ExecCustomFunction(New String() {"ViewImage"})
+            If IfNull(MainView.GetFocusedRowCellValue("HasImage"), False) Then
+                ExecCustomFunction(New String() {"ViewImage"})
+            End If
         End If
     End Sub
 

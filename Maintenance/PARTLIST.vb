@@ -1,5 +1,15 @@
 Public Class PARTLIST
 
+    Public Overrides Sub SetLayout(strLayout As String)
+        MainView.RestoreLayoutFromStream(StringToStream(strLayout))
+    End Sub
+
+    Public Overrides Function GetLayout() As String
+        Dim str As New System.IO.MemoryStream
+        MainView.SaveLayoutToStream(str)
+        Return StreamToString(str)
+    End Function
+
     Public Overrides Sub HideSelection()
         bAddMode = True
         MainView.RefreshRow(MainView.FocusedRowHandle)

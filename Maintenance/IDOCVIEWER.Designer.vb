@@ -38,20 +38,20 @@ Partial Class IDOCVIEWER
         '
         'imgLogo
         '
-        Me.imgLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.imgLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.imgLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.imgLogo.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.imgLogo.Location = New System.Drawing.Point(2, 23)
+        Me.imgLogo.Location = New System.Drawing.Point(2, 20)
         Me.imgLogo.Name = "imgLogo"
-        Me.imgLogo.Size = New System.Drawing.Size(527, 219)
+        Me.imgLogo.Size = New System.Drawing.Size(527, 222)
         Me.imgLogo.TabIndex = 209
         Me.imgLogo.TabStop = False
         '
-        'MDOCVIEWER
+        'IDOCVIEWER
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.header)
-        Me.Name = "MDOCVIEWER"
+        Me.Name = "IDOCVIEWER"
         Me.Size = New System.Drawing.Size(531, 244)
         CType(Me.header, System.ComponentModel.ISupportInitialize).EndInit()
         Me.header.ResumeLayout(False)

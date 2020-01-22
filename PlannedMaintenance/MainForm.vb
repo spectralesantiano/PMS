@@ -17,11 +17,13 @@ Public Class MainForm
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SHORE_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SHORE_ID','SAMPLE_')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_DAYS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_DAYS','30')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'IMAGE_MAX_RES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('IMAGE_MAX_RES','800')")
 
         '*********Settings for Versioning,License And Program Distribution************
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
@@ -31,7 +33,7 @@ Public Class MainForm
         'Add Trial
         sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI])" & _
                 "INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) " & _
-                "VALUES('" & sysMpsUserPassword("ENCRYPT", "PMS") & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
+                "VALUES('" & sysMpsUserPassword("ENCRYPT", APP_SHORT_NAME) & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
 
         'tblSTIService_profile
         sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
@@ -121,10 +123,12 @@ Public Class MainForm
         PMSDB.BeginReader("EXEC dbo.GETSETTINGS")
         If PMSDB.Read Then
             DATE_LAST_EXPORT = PMSDB.ReaderItem("DATE_LAST_EXPORT", "")
+            DATE_LAST_EXPORT_IMG = PMSDB.ReaderItem("DATE_LAST_EXPORT_IMG", "")
             EXPORT_DIR = PMSDB.ReaderItem("EXPORT_DIR", "")
             SHORE_ID = PMSDB.ReaderItem("SHORE_ID", "")
             txtDateDue.EditValue = PMSDB.ReaderItem("DUE_DAYS", 30)
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
+            IMAGE_MAX_RES = PMSDB.ReaderItem("IMAGE_MAX_RES", 800)
         End If
         PMSDB.CloseReader()
         'DateDueEdit.MinValue = Now.Date.AddDays(1)
@@ -419,6 +423,7 @@ Public Class MainForm
                 maincontent.bPermission = xrow(0)("Permission")
                 maincontent.strCaption = xrow(0)("Caption")
                 If IfNull(xrow(0)("ContentLayout"), "") <> "" Then maincontent.SetLayout(xrow(0)("ContentLayout"))
+                SetCustomMenuVisibility(cContent, xrow(0)("Permission"))
                 maincontent.RefreshData()
                 Me.Text = GetAppName() & " - << " & Trim(xrow(0)("Caption")) & " - " & GetUserName() & GetServerName() & " >>"
                 bbPreview.Visibility = IIf(xrow(0)("PrintOption") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
@@ -432,45 +437,47 @@ Public Class MainForm
             End Try
             bbSaveLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             bbResetLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbResetPassword.Visibility = IIf(cContent = "SECUSERS" And USER_ID = 1, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbBackUp.Visibility = IIf((cContent = "BACKUPRESTORE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbCopyMaintenance.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbEdit.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbRestore.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "VERSIONUPDATE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbUpdate.Visibility = IIf((cContent = "VERSIONUPDATE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledRank.Visibility = IIf((cContent = "WORKDONE" Or cContent = "WORKDUE" Or cContent = "NCMEASURES") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledDepartment.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "COUNTER" Or cContent = "RANK" Or cContent = "RUNNINGHOURS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledCategory.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledMainUnits.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbShowComponents.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 5) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.rpgAdminFilterOptions.Visible = (cContent = "UNITS" Or cContent = "COUNTER" Or cContent = "RANK") And (xrow(0)("Permission") And 1) > 0
-            Me.txtDateDue.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.txtDueHours.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbNC.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
-            Me.bbAddPlannedDate.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledPeriod.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbUpdateNC.Visibility = IIf((cContent = "NONCONFORM") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbViewImage.Visibility = IIf((cContent = "WORKDUE" Or cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbWOMaintenance.Visibility = IIf((cContent = "COMPONENT") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.rpgMaintenanceEditingOptions.Visible = (cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "NCMEASURES" Or cContent = "RUNNINGHOURS")
-            Me.rpgToolSelectionOption.Visible = (cContent = "RECOVERARCHIVE")
-            Me.rpgToolsFilterOptions.Visible = (cContent = "INITWORK")
-            Me.rpgInventoryPrintingOptions.Visible = (cContent = "PARTPURCHASE")
-            Me.bbCondition.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbShowAllMaintenance.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.rpgToolsOptions.Visible = xrow(0)("Permission") > 1
-            Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbCritical.Visibility = IIf((cContent = "PARTPURCHASE" Or cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
-            Me.rpgInventoryViewingOptions.Visible = (cContent = "PARTPURCHASE" Or cContent = "PART")
             Me.Cursor = Cursors.Default
         End If
         IsLoaded = True
     End Sub
 
+    Sub SetCustomMenuVisibility(cContent As String, nPermission As Integer)
+        Me.bbResetPassword.Visibility = IIf(cContent = "SECUSERS" And USER_ID = 1, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbBackUp.Visibility = IIf((cContent = "BACKUPRESTORE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbCopyMaintenance.Visibility = IIf((cContent = "UNITS") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbEdit.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbRestore.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "VERSIONUPDATE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbUpdate.Visibility = IIf((cContent = "VERSIONUPDATE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledRank.Visibility = IIf((cContent = "WORKDONE" Or cContent = "WORKDUE" Or cContent = "NCMEASURES") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledDepartment.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "COUNTER" Or cContent = "RANK" Or cContent = "RUNNINGHOURS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledCategory.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledMainUnits.Visibility = IIf((cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbShowComponents.Visibility = IIf((cContent = "UNITS") And (nPermission And 5) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.rpgAdminFilterOptions.Visible = (cContent = "UNITS" Or cContent = "COUNTER" Or cContent = "RANK") And (nPermission And 1) > 0
+        Me.txtDateDue.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.txtDueHours.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbNC.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
+        Me.bbAddPlannedDate.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledPeriod.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbUpdateNC.Visibility = IIf((cContent = "NONCONFORM") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbViewImage.Visibility = IIf((cContent = "WORKDUE" Or cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbWOMaintenance.Visibility = IIf((cContent = "COMPONENT") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.rpgMaintenanceEditingOptions.Visible = (cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "NCMEASURES" Or cContent = "RUNNINGHOURS")
+        Me.rpgToolSelectionOption.Visible = (cContent = "RECOVERARCHIVE")
+        Me.rpgToolsFilterOptions.Visible = (cContent = "INITWORK")
+        Me.rpgInventoryPrintingOptions.Visible = (cContent = "PARTPURCHASE")
+        Me.bbCondition.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbShowAllMaintenance.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.rpgToolsOptions.Visible = nPermission > 1
+        Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbCritical.Visibility = IIf((cContent = "PARTPURCHASE" Or cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
+        Me.rpgInventoryViewingOptions.Visible = (cContent = "PARTPURCHASE" Or cContent = "PART")
+    End Sub
     Private Sub RibbonControl_SelectedPageChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles RibbonControl.SelectedPageChanged
         Dim container As DevExpress.XtraBars.Ribbon.RibbonPageGroup, nButton As DevExpress.XtraBars.BarButtonItem, i As Integer
         For Each container In RibbonControl.SelectedPage.Groups
@@ -579,12 +586,8 @@ Public Class MainForm
         ResetRibbon()
     End Sub
 
-
-
     Private Sub cmdSaveLayout_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbSaveLayout.ItemClick
-        'If maincontent.Name = "WORKDUE" Then
-        '    maincontent.ExecCustomFunction(New String() {"SaveLayout", GetAppPath() & "\Users\WORKDUE_" & USER_ID & "layout.xml"})
-        If maincontent.Name = "WORKDONE" Or maincontent.Name = "WORKDUE" Then 'new Implementation experiment
+        If maincontent.Name = "WORKDONE" Or maincontent.Name = "WORKDUE" Or maincontent.Name = "PART" Then 'new Implementation experiment
             Dim ListLayout As String = IIf(mainlist.Name = "   ", "", mainlist.GetLayout), ListWidth As Integer = IIf(mainlist.Name = "   ", 0, MainPanel.SplitterPosition), ContentLayout As String = maincontent.GetLayout, i As Integer
             PMSDB.InitSqlWithParametersSP("UPDATEUSERSETTINGS")
             PMSDB.AddSqlParameter("@UserID", SqlDbType.Int, USER_ID)
@@ -1085,7 +1088,7 @@ Public Class MainForm
         frm.ShowDialog()
         If frm.bExported Then
             EXPORT_DIR = frm.txtExportDir.EditValue
-            ExportPMSData(PMSDB, 3, frm.txtExportDir.EditValue & "\PMS_Maintenance.xxx", frm.deFrom.EditValue, frm.deTo.EditValue, False)
+            ExportPMSData(PMSDB, 3, frm.txtExportDir.EditValue & "\PMS_Maintenance_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.deFrom.EditValue, frm.deTo.EditValue, False)
             PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
             PMSDB.SaveConfig("DATE_LAST_EXPORT", DATE_LAST_EXPORT, APP_SHORT_NAME)
         End If
@@ -1478,5 +1481,19 @@ Public Class MainForm
         DevExpress.XtraEditors.WindowsFormsSettings.DefaultFont = GetDefaultFont()
         DevExpress.XtraEditors.WindowsFormsSettings.DefaultMenuFont = GetDefaultFont()
         dbdController.Controller.AppearancesBar.ItemsFont = GetDefaultFont()
+    End Sub
+
+    Private Sub EXPDOCUMENTS_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles EXPDOCUMENTS.ItemClick
+        Dim nExpType As Integer = 4, frm As New frmExportDocuments
+        frm.txtExportDir.EditValue = EXPORT_DIR
+        frm.lblLastExp.Text = ChangeSQLDateStrToDate(DATE_LAST_EXPORT_IMG).ToShortDateString
+        frm.MainGrid.DataSource = PMSDB.CreateTable("SELECT *, CAST(0 AS BIT) Selected FROM dbo.DOCUMENTLIST")
+        frm.ShowDialog()
+        If frm.bExported Then
+            EXPORT_DIR = frm.txtExportDir.EditValue
+            ExportPMSDocuments(PMSDB, frm.txtExportDir.EditValue & "\PMS_Documents_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.strDocs)
+            PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
+            PMSDB.SaveConfig("DATE_LAST_EXPORT_IMG", DATE_LAST_EXPORT_IMG, APP_SHORT_NAME)
+        End If
     End Sub
 End Class

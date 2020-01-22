@@ -18,8 +18,8 @@ Public Module Util
     Public REQUIRED_SELECTED_COLOR As System.Drawing.Color = System.Drawing.Color.FromArgb(226, 248, 217)
     Public USER_NAME As String = "ADMIN", USER_ID As Integer = 0, GROUP_ID As Integer = 0, DEFAULT_PASSWORD As String = "12345", USER_PASSWORD As String
     Public IMO_NUMBER As String = "", VESSEL As String, FLAG_DESC As String, TYPE_DESC As String
-    Public APP_PATH As String, DATE_LAST_EXPORT As String = "2000-01-01", SHORE_ID As String, EXPORT_DIR
-    Public GRID_ROW_SEP As Byte = 0, LOGO As Bitmap, FONT_INCREASE As Double = 0
+    Public APP_PATH As String, DATE_LAST_EXPORT As String = "2000-01-01", DATE_LAST_EXPORT_IMG As String = "2000-01-01", SHORE_ID As String, EXPORT_DIR
+    Public GRID_ROW_SEP As Byte = 0, LOGO As Bitmap, FONT_INCREASE As Double = 0, IMAGE_MAX_RES As Single
     Public CURRENT_DEPARTMENT As String, CURRENT_RANK As String, CURRENT_MAINUNIT As String, CURRENT_CATEGORY As String, CURRENT_UNIT As String = "", CURRENT_WORK As Integer, CURRENT_DUEDAYS As String = "30", CURRENT_DUEHOURS As Integer = "100", CURRENT_PERIOD As Integer, CURRENT_WOMAINTENANCE As Boolean = False, CURRENT_CONDITION_CHECKED As Boolean = False, CURRENT_CRITICAL_CHECKED As Boolean = False, CURRENT_FLATVIEW_CHECKED As Boolean = False, CURRENT_SHOW_WARNING As Boolean = False, CURRENT_SHOW_ALL_CHECKED As Boolean = False
     Public AdmRank As DataTable, AdmDept As DataTable
 
@@ -817,6 +817,40 @@ Public Module Util
 
 #End Region
 
+    Public Sub ExportPMSDocuments(db As SQLDB, strFile As String, strDocs As String)
+        Dim sqls As New ArrayList, tbl As DataTable, drRow As DataRow ', strAdminFilter As String = ""
+        DATE_LAST_EXPORT_IMG = ChangeToSQLDate(Now.Date).Replace("'", "")
+        sqls.Add(IMO_NUMBER & "|4|" & DATE_LAST_EXPORT & "|" & "PMS Documents.")
+        strFile = GetFileDir(strFile) & GetFileNameWithoutExtension(strFile)
+
+        tbl = db.CreateTable("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
+        sqls.Add("tblAdmVsl")
+        For Each drRow In tbl.Rows
+            sqls.Add("'" & drRow("VslCode") & "','" & drRow("Vessel").ToString.Replace("'", "''") & "','" & drRow("IMONo") & "','" & drRow("Email") & "','" & drRow("VslTypeCode") & "','" & drRow("Flag") & "','" & VERSION_NUMBER & "'")
+        Next
+        sqls.Add("END")
+
+        tbl = db.CreateTable("SELECT [DocID],[RefID],[DocType],[FileName],[Doc],[LastUpdatedBy] FROM [pms_db].[dbo].[tblDocuments] WHERE CHARINDEX('|' + RTRIM([DocID]) + '|','" & strDocs & "') > 0")
+        sqls.Add("tblDocuments")
+        For Each drRow In tbl.Rows
+            sqls.Add("'" & drRow("DocID").ToString.Trim & "','" & drRow("RefID").ToString.Trim & "','" & drRow("DocType") & "','" & drRow("FileName") & "','" & drRow("Doc") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+        Next
+        sqls.Add("END")
+
+        Using sw As New System.IO.StreamWriter(strFile & ".txt", False, System.Text.Encoding.Unicode)
+            Dim strTemp As String
+            For Each strTemp In sqls
+                sw.Write(Shuffle(strTemp, True) & "Ç")
+                'sw.WriteLine(strTemp)
+            Next
+        End Using
+
+        If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
+            MsgBox("The data has been successfully exported.", MsgBoxStyle.Information, GetAppName)
+            System.Windows.Forms.Application.DoEvents()
+            Kill(strFile & ".txt")
+        End If
+    End Sub
     Public Sub ExportPMSData(db As SQLDB, nExpType As Integer, strFile As String, dStartDate As Object, dEndDate As Object, bAuto As Boolean)
         Dim sqls As New ArrayList, tbl As DataTable, drRow As DataRow ', strAdminFilter As String = ""
         DATE_LAST_EXPORT = ChangeToSQLDate(Now.Date).Replace("'", "")
@@ -954,6 +988,9 @@ Public Module Util
         End Using
 
         If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
+            If Not bAuto Then
+                MsgBox("The data has been successfully exported.", MsgBoxStyle.Information, GetAppName)
+            End If
             System.Windows.Forms.Application.DoEvents()
             Kill(strFile & ".txt")
         End If
@@ -1146,9 +1183,35 @@ Public Module Util
     '    db.RunSqls(sqls)
     'End Sub
 
+    ' Visual Basic
+    Public Function ResizeImage(ByVal image As Image, ByVal nMaxWidth As Single, nMaxHeight As Single) As Image
+        Dim originalWidth As Integer = image.Width, originalHeight As Integer = image.Height
+        If originalHeight <= nMaxHeight And originalWidth <= nMaxWidth Then
+            Return image
+        Else
+            Dim newWidth As Integer, newHeight As Integer
+            Dim percentWidth As Single = nMaxWidth / originalWidth, percentHeight As Single = nMaxHeight / originalHeight
+            Dim percent As Single = IIf(percentHeight < percentWidth, percentHeight, percentWidth)
+            newWidth = CInt(originalWidth * percent)
+            newHeight = CInt(originalHeight * percent)
+            Dim newImage As Image = New Bitmap(newWidth, newHeight)
+            Using graphicsHandle As Graphics = Graphics.FromImage(newImage)
+                graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic
+                graphicsHandle.DrawImage(image, 0, 0, newWidth, newHeight)
+            End Using
+            Return newImage
+        End If
+    End Function
+
     Public Function ImageToString(img As Bitmap) As String
         Dim objstream As New System.IO.MemoryStream
         img.Save(objstream, Imaging.ImageFormat.Jpeg)
+        Return Convert.ToBase64String(objstream.ToArray)
+    End Function
+
+    Public Function SetDefaultImageSizeToString(img As Bitmap) As String
+        Dim objstream As New System.IO.MemoryStream
+        ResizeImage(img, IMAGE_MAX_RES, IMAGE_MAX_RES).Save(objstream, Imaging.ImageFormat.Jpeg)
         Return Convert.ToBase64String(objstream.ToArray)
     End Function
 

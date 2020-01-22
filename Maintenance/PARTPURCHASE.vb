@@ -112,7 +112,7 @@ Public Class PARTPURCHASE
             IView.UpdateCurrentRow()
             For i = 0 To IView.RowCount - 1
                 If IfNull(IView.GetRowCellValue(i, "DocID"), 0) = 0 Then
-                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES('" & strID & "','PURCHASE', '" & IView.GetRowCellValue(i, "FileName") & "','" & ImageToString(New Bitmap(IView.GetRowCellValue(i, "FileName").ToString)) & "')")
+                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES('" & strID & "','PURCHASE', '" & IView.GetRowCellValue(i, "FileName") & "','" & SetDefaultImageSizeToString(New Bitmap(IView.GetRowCellValue(i, "FileName").ToString)) & "')")
                 End If
             Next
 

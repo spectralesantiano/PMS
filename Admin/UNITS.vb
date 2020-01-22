@@ -50,7 +50,15 @@ Public Class UNITS
             frm.txtComponent.EditValue = MainView.GetFocusedRowCellValue("Component")
             frm.ShowDialog()
             If frm.bSaved Then
-                DB.RunSql("UPDATE dbo.tblAdmComponent SET Name='" & frm.txtComponent.EditValue.ToString.Replace("'", "''") & "' WHERE ComponentCode='" & MainView.GetFocusedRowCellValue("ComponentCode") & "'")
+                Dim strComponent As String = frm.txtComponent.EditValue.ToString.Replace("'", "''")
+                Dim strComponentCode As String = IfNull(MainView.GetFocusedRowCellValue("ComponentCode"), "")
+                If strComponentCode <> "" Then
+                    If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "' AND ComponentCode<>'" & strComponentCode & "'") <> "" Then
+                        MsgBox(strComponent & " already exists.", vbCritical, GetAppName)
+                        Exit Sub
+                    End If
+                End If
+                DB.RunSql("UPDATE dbo.tblAdmComponent SET Name='" & strComponent & "' WHERE ComponentCode='" & strComponentCode & "'")
                 MainView.SetRowCellValue(MainView.FocusedRowHandle, "Component", frm.txtComponent.EditValue)
                 MainView.RefreshRow(MainView.FocusedRowHandle)
             End If
@@ -491,7 +499,9 @@ Public Class UNITS
         If Not IfNull(e.Node.GetValue("Active"), True) And Not e.Node.Selected Then
             e.Appearance.BackColor = DISABLED_COLOR
         ElseIf IfNull(e.Node.GetValue("HasInactive"), False) Then
-            e.Appearance.ForeColor = Color.Orange
+            'e.Appearance.ForeColor = Color.Orange
+            'e.Appearance.BackColor = DISABLED_COLOR
+            'e.Appearance.BackColor2 = DISABLED_COLOR
         End If
     End Sub
 
@@ -553,14 +563,17 @@ Public Class UNITS
     Private Sub MainView_CellValueChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles MainView.CellValueChanged
         If e.Column.Name = "Component" Then
             Dim strComponent As String = MainView.GetFocusedRowCellValue("Component").ToString.Replace("'", "''")
-            Dim strComponentCode = GenerateID(DB, "ComponentCode", "tblAdmComponent")
-            If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "'") <> "" Then
-                MsgBox(strComponent & " already exists.", vbCritical, GetAppName)
-                MainView.DeleteRow(MainView.FocusedRowHandle)
-                Exit Sub
+            Dim strComponentCode As String = IfNull(MainView.GetFocusedRowCellValue("ComponentCode"), "") '= GenerateID(DB, "ComponentCode", "tblAdmComponent")
+            If strComponentCode = "" Then
+                strComponentCode = GenerateID(DB, "ComponentCode", "tblAdmComponent")
+                If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "'") <> "" Then
+                    MsgBox(strComponent & " already exists.", vbCritical, GetAppName)
+                    MainView.DeleteRow(MainView.FocusedRowHandle)
+                    Exit Sub
+                End If
+                DB.RunSql("INSERT INTO dbo.tblAdmComponent(ComponentCode, Name, LastUpdatedBy) VALUES('" & strComponentCode & "', '" & strComponent & "','" & GetUserName() & "')")
+                MainView.SetRowCellValue(MainView.FocusedRowHandle, "ComponentCode", strComponentCode)
             End If
-            DB.RunSql("INSERT INTO dbo.tblAdmComponent(ComponentCode, Name, LastUpdatedBy) VALUES('" & strComponentCode & "', '" & strComponent & "','" & GetUserName() & "')")
-            MainView.SetRowCellValue(MainView.FocusedRowHandle, "ComponentCode", strComponentCode)
         End If
     End Sub
 
@@ -731,9 +744,13 @@ Public Class UNITS
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtUnitDesc}) Then
             Dim i As Integer, strPartID As String
             Dim nNode As TreeListNode = tlUnits.FindNodeByFieldValue("UnitCode", strID)
-
+            Dim strParentID As String = IfNull(nNode.GetValue("ParentCode"), "")
             If chkActive.Tag = 1 AndAlso chkActive.Checked Then bHasInactive = False
             sqls.Clear()
+            If DB.DLookUp("UnitDesc", "dbo.tblAdmUnit", "", "UnitDesc='" & txtUnitDesc.EditValue & "' AND UnitCode<>'" & strID & "' AND (ParentCode IS NULL OR ParentCode='" & strParentID & "')") <> "" Then
+                MsgBox(txtUnitDesc.EditValue & " already exists.", vbCritical, GetAppName)
+                Exit Sub
+            End If
             sqls.Add(GenerateUpdateScript(Me.gUnitInfo, 3, "tblAdmUnit", "LastUpdatedBy='" & GetUserName() & "', HasInactive=" & IIf(bHasInactive, 1, 0) & ", HasCritical=" & IIf(bHasCritical, 1, 0), "UnitCode='" & strID & "'"))
 
             RemoveHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
@@ -784,7 +801,7 @@ Public Class UNITS
                     If IfNull(mView.GetRowCellValue(i, "AddedImages"), "") <> "" Then
                         Dim strImages() As String = mView.GetRowCellValue(i, "AddedImages").ToString.Split(";"c), strImg As String
                         For Each strImg In strImages
-                            sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCECODE]('" & mView.GetRowCellValue(i, "WorkCode") & "','" & strID & "'),'ADMWORK', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                            sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCECODE]('" & mView.GetRowCellValue(i, "WorkCode") & "','" & strID & "'),'ADMWORK', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "')")
                         Next
                     End If
                 End If
