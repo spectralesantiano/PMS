@@ -277,13 +277,17 @@ Public Module Util
         Select Case UCase(cMode)
             Case "ENCRYPT"
                 'do railfence encryption
+                'nCtr = 1
                 nCtr = 1
                 Do
                     If (nCtr Mod 2) = 1 Then
                         'odd positions on top
                         cTopSum = cTopSum & Mid$(cDocument, ((nCtr - 1) * nInterval) + 1, nInterval)
+                        cBottomSum = cBottomSum & cDocument.Substring(nCtr, 1)
                     Else
                         cBottomSum = cBottomSum & Mid$(cDocument, ((nCtr - 1) * nInterval) + 1, nInterval)
+
+                        'cTopSum = cTopSum & cDocument.Substring(nCtr, 1)
                     End If
 
                     If (nCtr * nInterval) > Len(cDocument) Then

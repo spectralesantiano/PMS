@@ -19,7 +19,6 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.RibbonControl = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.bbAdd = New DevExpress.XtraBars.BarButtonItem()
@@ -138,10 +137,13 @@ Partial Class MainForm
         Me.DateDueEdit = New DevExpress.XtraEditors.Repository.RepositoryItemDateEdit()
         Me.RibbonStatusBar = New DevExpress.XtraBars.Ribbon.RibbonStatusBar()
         Me.MainPanel = New DevExpress.XtraEditors.SplitContainerControl()
-        Me.pmMainMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
-        Me.pmListMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
+        Me.pmMainMenu = New DevExpress.XtraBars.PopupMenu()
+        Me.pmListMenu = New DevExpress.XtraBars.PopupMenu()
         Me.rpgVslAccount = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController(Me.components)
+        Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController()
+        Me.PopupMenu1 = New DevExpress.XtraBars.PopupMenu()
+        Me.PopupMenu2 = New DevExpress.XtraBars.PopupMenu()
+        Me.PopupMenu3 = New DevExpress.XtraBars.PopupMenu()
         CType(Me.RibbonControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledDepartmentRep, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledRankRep, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -157,6 +159,9 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl
@@ -168,7 +173,7 @@ Partial Class MainForm
         Me.RibbonControl.ExpandCollapseItem.Id = 0
         Me.RibbonControl.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl.ExpandCollapseItem, Me.bbAdd, Me.bbSave, Me.bbDelete, Me.RANK, Me.DEPARTMENT, Me.bbSaveLayout, Me.cmdHelp, Me.SECUSERS, Me.SECGROUPS, Me.cmdChangePassword, Me.bbResetPassword, Me.cmdChangeUser, Me.SWITCHBOARD, Me.COMPANYINFO, Me.LICENSEINFO, Me.bbPreview, Me.bbResetLayout, Me.BACKUPRESTORE, Me.bbBackUp, Me.bbRestore, Me.VERSIONUPDATE, Me.bbUpdate, Me.cmdNotification, Me.bbExport, Me.bbEdit, Me.bbSelectAll, Me.bbDeselect, Me.SETTINGS, Me.PMSREP, Me.ARCHIVEDATA, Me.RECOVERARCHIVE, Me.UNITS, Me.PART, Me.CATEGORY, Me.COUNTER, Me.VLOCATION, Me.ledDepartment, Me.WORKDONE, Me.ledRank, Me.ledCategory, Me.INTERVAL, Me.WORKDUE, Me.MAINTENANCE, Me.COMPONENT, Me.NONCONFORM, Me.bbNC, Me.bbUpdateNC, Me.NCMEASURES, Me.EXPORTADMIN, Me.IMPORTDATA, Me.bbWOMaintenance, Me.RUNNINGHOURS, Me.txtDueHours, Me.EXPMAINTENANCE, Me.VESSELINFO, Me.bbCopy, Me.ledMainUnits, Me.bbCopyMaintenance, Me.bbShowComponents, Me.txtDateDue, Me.bbAddPlannedDate, Me.ledPeriod, Me.bbCondition, Me.PARTPURCHASE, Me.bbViewImage, Me.STORAGE, Me.MDOCVIEWER, Me.WDOCVIEWER, Me.bbPaste, Me.bbImportFromFile, Me.VENDOR, Me.MAKER, Me.bbCritical, Me.bbFlatView, Me.bbUserPreferences, Me.bbShowAllMaintenance})
         Me.RibbonControl.Location = New System.Drawing.Point(0, 0)
-        Me.RibbonControl.MaxItemId = 260
+        Me.RibbonControl.MaxItemId = 269
         Me.RibbonControl.Name = "RibbonControl"
         Me.RibbonControl.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.rpMaintenance, Me.rpInventory, Me.rpDocViewer, Me.rpAdmin, Me.rpTools, Me.rpSecurity, Me.rpReports, Me.rpHome})
         Me.RibbonControl.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.ledDepartmentRep, Me.ledRankRep, Me.ledCategoryRep, Me.ledDueDays, Me.ledDueHours, Me.ledUnitRep, Me.DateDueEdit, Me.ledPeriodRep})
@@ -1300,6 +1305,21 @@ Partial Class MainForm
         Me.dbdController.Controller.PropertiesBar.DefaultGlyphSize = New System.Drawing.Size(16, 16)
         Me.dbdController.Controller.PropertiesBar.DefaultLargeGlyphSize = New System.Drawing.Size(32, 32)
         '
+        'PopupMenu1
+        '
+        Me.PopupMenu1.Name = "PopupMenu1"
+        Me.PopupMenu1.Ribbon = Me.RibbonControl
+        '
+        'PopupMenu2
+        '
+        Me.PopupMenu2.Name = "PopupMenu2"
+        Me.PopupMenu2.Ribbon = Me.RibbonControl
+        '
+        'PopupMenu3
+        '
+        Me.PopupMenu3.Name = "PopupMenu3"
+        Me.PopupMenu3.Ribbon = Me.RibbonControl
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1329,6 +1349,9 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1455,6 +1478,9 @@ Partial Class MainForm
     Friend WithEvents dbdController As DevExpress.XtraBars.DefaultBarAndDockingController
     Friend WithEvents rpgInventoryPrintingOptions As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents bbShowAllMaintenance As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents PopupMenu1 As DevExpress.XtraBars.PopupMenu
+    Friend WithEvents PopupMenu2 As DevExpress.XtraBars.PopupMenu
+    Friend WithEvents PopupMenu3 As DevExpress.XtraBars.PopupMenu
 
 
 End Class

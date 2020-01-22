@@ -21,17 +21,22 @@ Partial Class RUNNINGHOURS
     Private Sub InitializeComponent()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.BandedGrid.AdvBandedGridView()
+        Me.gridBand6 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         Me.UnitDesc = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.PrevBand = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         Me.PrevCounter = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.PrevDate = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.PrevReading = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.CurrBand = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         Me.CurrCounter = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.CurrDate = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.CurrDateEdit = New DevExpress.XtraEditors.Repository.RepositoryItemDateEdit()
         Me.CurrReading = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.NewBand = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         Me.NewDate = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.NewDateEdit = New DevExpress.XtraEditors.Repository.RepositoryItemDateEdit()
         Me.NewReading = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.gSummary = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         Me.HoursRun = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.HoursPerDay = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.AvgHoursPerDay = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
@@ -42,11 +47,6 @@ Partial Class RUNNINGHOURS
         Me.CatCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.DeptCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.header = New DevExpress.XtraEditors.GroupControl()
-        Me.gridBand6 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
-        Me.PrevBand = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
-        Me.CurrBand = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
-        Me.NewBand = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
-        Me.gSummary = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.CurrDateEdit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -60,12 +60,12 @@ Partial Class RUNNINGHOURS
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 30)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 20)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.NewDateEdit, Me.CurrDateEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(1194, 322)
+        Me.MainGrid.Size = New System.Drawing.Size(1426, 332)
         Me.MainGrid.TabIndex = 0
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -98,6 +98,14 @@ Partial Class RUNNINGHOURS
         Me.MainView.OptionsSelection.UseIndicatorForSelection = False
         Me.MainView.OptionsView.ShowGroupPanel = False
         '
+        'gridBand6
+        '
+        Me.gridBand6.Caption = "Machines & Equipments"
+        Me.gridBand6.Columns.Add(Me.UnitDesc)
+        Me.gridBand6.Name = "gridBand6"
+        Me.gridBand6.VisibleIndex = 0
+        Me.gridBand6.Width = 249
+        '
         'UnitDesc
         '
         Me.UnitDesc.Caption = "Description"
@@ -107,6 +115,16 @@ Partial Class RUNNINGHOURS
         Me.UnitDesc.OptionsColumn.ReadOnly = True
         Me.UnitDesc.Visible = True
         Me.UnitDesc.Width = 249
+        '
+        'PrevBand
+        '
+        Me.PrevBand.Caption = "Previous Readings"
+        Me.PrevBand.Columns.Add(Me.PrevCounter)
+        Me.PrevBand.Columns.Add(Me.PrevDate)
+        Me.PrevBand.Columns.Add(Me.PrevReading)
+        Me.PrevBand.Name = "PrevBand"
+        Me.PrevBand.VisibleIndex = 1
+        Me.PrevBand.Width = 255
         '
         'PrevCounter
         '
@@ -144,6 +162,16 @@ Partial Class RUNNINGHOURS
         Me.PrevReading.UnboundType = DevExpress.Data.UnboundColumnType.[Integer]
         Me.PrevReading.Visible = True
         Me.PrevReading.Width = 86
+        '
+        'CurrBand
+        '
+        Me.CurrBand.Caption = "Current Readings"
+        Me.CurrBand.Columns.Add(Me.CurrCounter)
+        Me.CurrBand.Columns.Add(Me.CurrDate)
+        Me.CurrBand.Columns.Add(Me.CurrReading)
+        Me.CurrBand.Name = "CurrBand"
+        Me.CurrBand.VisibleIndex = 2
+        Me.CurrBand.Width = 242
         '
         'CurrCounter
         '
@@ -188,6 +216,15 @@ Partial Class RUNNINGHOURS
         Me.CurrReading.Visible = True
         Me.CurrReading.Width = 81
         '
+        'NewBand
+        '
+        Me.NewBand.Caption = "New Reading"
+        Me.NewBand.Columns.Add(Me.NewDate)
+        Me.NewBand.Columns.Add(Me.NewReading)
+        Me.NewBand.Name = "NewBand"
+        Me.NewBand.VisibleIndex = 3
+        Me.NewBand.Width = 230
+        '
         'NewDate
         '
         Me.NewDate.Caption = "Date"
@@ -219,6 +256,16 @@ Partial Class RUNNINGHOURS
         Me.NewReading.UnboundType = DevExpress.Data.UnboundColumnType.DateTime
         Me.NewReading.Visible = True
         Me.NewReading.Width = 97
+        '
+        'gSummary
+        '
+        Me.gSummary.Caption = "Summary"
+        Me.gSummary.Columns.Add(Me.HoursRun)
+        Me.gSummary.Columns.Add(Me.HoursPerDay)
+        Me.gSummary.Columns.Add(Me.AvgHoursPerDay)
+        Me.gSummary.Name = "gSummary"
+        Me.gSummary.VisibleIndex = 4
+        Me.gSummary.Width = 406
         '
         'HoursRun
         '
@@ -297,55 +344,8 @@ Partial Class RUNNINGHOURS
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
         Me.header.Location = New System.Drawing.Point(0, 0)
         Me.header.Name = "header"
-        Me.header.Size = New System.Drawing.Size(1198, 354)
+        Me.header.Size = New System.Drawing.Size(1430, 354)
         Me.header.TabIndex = 37
-        '
-        'gridBand6
-        '
-        Me.gridBand6.Caption = "Machines & Equipments"
-        Me.gridBand6.Columns.Add(Me.UnitDesc)
-        Me.gridBand6.Name = "gridBand6"
-        Me.gridBand6.VisibleIndex = 0
-        Me.gridBand6.Width = 249
-        '
-        'PrevBand
-        '
-        Me.PrevBand.Caption = "Previous Readings"
-        Me.PrevBand.Columns.Add(Me.PrevCounter)
-        Me.PrevBand.Columns.Add(Me.PrevDate)
-        Me.PrevBand.Columns.Add(Me.PrevReading)
-        Me.PrevBand.Name = "PrevBand"
-        Me.PrevBand.VisibleIndex = 1
-        Me.PrevBand.Width = 255
-        '
-        'CurrBand
-        '
-        Me.CurrBand.Caption = "Current Readings"
-        Me.CurrBand.Columns.Add(Me.CurrCounter)
-        Me.CurrBand.Columns.Add(Me.CurrDate)
-        Me.CurrBand.Columns.Add(Me.CurrReading)
-        Me.CurrBand.Name = "CurrBand"
-        Me.CurrBand.VisibleIndex = 2
-        Me.CurrBand.Width = 242
-        '
-        'NewBand
-        '
-        Me.NewBand.Caption = "New Reading"
-        Me.NewBand.Columns.Add(Me.NewDate)
-        Me.NewBand.Columns.Add(Me.NewReading)
-        Me.NewBand.Name = "NewBand"
-        Me.NewBand.VisibleIndex = 3
-        Me.NewBand.Width = 230
-        '
-        'gSummary
-        '
-        Me.gSummary.Caption = "Summary"
-        Me.gSummary.Columns.Add(Me.HoursRun)
-        Me.gSummary.Columns.Add(Me.HoursPerDay)
-        Me.gSummary.Columns.Add(Me.AvgHoursPerDay)
-        Me.gSummary.Name = "gSummary"
-        Me.gSummary.VisibleIndex = 4
-        Me.gSummary.Width = 406
         '
         'RUNNINGHOURS
         '
@@ -353,7 +353,7 @@ Partial Class RUNNINGHOURS
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.header)
         Me.Name = "RUNNINGHOURS"
-        Me.Size = New System.Drawing.Size(1198, 354)
+        Me.Size = New System.Drawing.Size(1430, 354)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.CurrDateEdit.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()

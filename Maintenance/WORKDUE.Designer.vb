@@ -65,19 +65,19 @@ Partial Class WORKDUE
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
         Me.header.Location = New System.Drawing.Point(0, 0)
         Me.header.Name = "header"
-        Me.header.Size = New System.Drawing.Size(1153, 510)
+        Me.header.Size = New System.Drawing.Size(1550, 510)
         Me.header.TabIndex = 36
         Me.header.Text = "DUE MAINTENANCE"
         '
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 30)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 20)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RemarksEdit, Me.NumberEdit, Me.RankEdit, Me.MaintenanceEdit, Me.UnitEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(1149, 478)
+        Me.MainGrid.Size = New System.Drawing.Size(1546, 488)
         Me.MainGrid.TabIndex = 8
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -355,7 +355,7 @@ Partial Class WORKDUE
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.header)
         Me.Name = "WORKDUE"
-        Me.Size = New System.Drawing.Size(1153, 510)
+        Me.Size = New System.Drawing.Size(1550, 510)
         CType(Me.header, System.ComponentModel.ISupportInitialize).EndInit()
         Me.header.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
