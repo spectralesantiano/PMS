@@ -15,12 +15,12 @@ Public Class CHECKLIST
         report.DataSource = db.CreateTable("SELECT RankCode, RankDesc FROM dbo.RANKLIST WHERE CHARINDEX('|' + [RankCode] + '|','" & args & "') > 0 ORDER BY SortCode")
 
         reportSub.Interval.DataBindings.Add(New DevExpress.XtraReports.UI.XRBinding("Text", Nothing, "Interval"))
-        reportSub.Equipment.DataBindings.Add(New DevExpress.XtraReports.UI.XRBinding("Text", Nothing, "Equipment"))
+        reportSub.UnitDesc.DataBindings.Add(New DevExpress.XtraReports.UI.XRBinding("Text", Nothing, "UnitDesc"))
         reportSub.WorkDescription.DataBindings.Add(New DevExpress.XtraReports.UI.XRBinding("Text", Nothing, "WorkDescription"))
         Dim groupField As New DevExpress.XtraReports.UI.GroupField("RankCode")
-        Dim groupFieldSub As New DevExpress.XtraReports.UI.GroupField("Interval")
+        'Dim groupFieldSub As New DevExpress.XtraReports.UI.GroupField("Interval")
         report.GroupHeader.GroupFields.Add(groupField)
-        reportSub.GroupHeader.GroupFields.Add(groupFieldSub)
+        'reportSub.GroupHeader.GroupFields.Add(groupFieldSub)
         report.subMaintenance.ReportSource = reportSub
 
         report.ShowPreviewDialog()

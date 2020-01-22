@@ -61,9 +61,9 @@ Partial Class VERSIONUPDATE
         Me.XtraScrollableControl1.Controls.Add(Me.MainGrid)
         Me.XtraScrollableControl1.Controls.Add(Me.lblDir)
         Me.XtraScrollableControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.XtraScrollableControl1.Location = New System.Drawing.Point(2, 30)
+        Me.XtraScrollableControl1.Location = New System.Drawing.Point(2, 20)
         Me.XtraScrollableControl1.Name = "XtraScrollableControl1"
-        Me.XtraScrollableControl1.Size = New System.Drawing.Size(855, 335)
+        Me.XtraScrollableControl1.Size = New System.Drawing.Size(855, 345)
         Me.XtraScrollableControl1.TabIndex = 47
         '
         'LabelControl2
@@ -124,7 +124,7 @@ Partial Class VERSIONUPDATE
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.memoDesc})
-        Me.MainGrid.Size = New System.Drawing.Size(812, 225)
+        Me.MainGrid.Size = New System.Drawing.Size(812, 235)
         Me.MainGrid.TabIndex = 78
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '

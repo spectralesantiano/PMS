@@ -9,4 +9,7 @@
         Me.Close()
     End Sub
 
+    Private Sub frmIMOWarning_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+        lblInfo.Text = "The IMO number is an important feature of " & APP_SHORT_NAME & "'s functionality and it's very important that the vessel's correct IMO number is added in " & APP_SHORT_NAME & "."
+    End Sub
 End Class

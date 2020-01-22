@@ -118,6 +118,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CHECKLIST.vb" />
+    <Compile Include="DELIVERCON.vb" />
+    <Compile Include="rptDeliverCon.Designer.vb">
+      <DependentUpon>rptDeliverCon.vb</DependentUpon>
+    </Compile>
+    <Compile Include="rptDeliverCon.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="COUNTERREP.vb" />
+    <Compile Include="rptRunningHours.Designer.vb">
+      <DependentUpon>rptRunningHours.vb</DependentUpon>
+    </Compile>
+    <Compile Include="rptRunningHours.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="rptWorkRecords.Designer.vb">
       <DependentUpon>rptWorkRecords.vb</DependentUpon>
     </Compile>
@@ -149,11 +163,11 @@
     <Compile Include="rptDueWork.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PURCHASEREP.vb" />
-    <Compile Include="rptPurchase.Designer.vb">
-      <DependentUpon>rptPurchase.vb</DependentUpon>
+    <Compile Include="SPAREPARTREQ.vb" />
+    <Compile Include="rptSparePartReq.Designer.vb">
+      <DependentUpon>rptSparePartReq.vb</DependentUpon>
     </Compile>
-    <Compile Include="rptPurchase.vb">
+    <Compile Include="rptSparePartReq.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NCREP.vb" />
@@ -222,6 +236,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="rptDeliverCon.resx">
+      <DependentUpon>rptDeliverCon.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rptRunningHours.resx">
+      <DependentUpon>rptRunningHours.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="rptWorkRecords.resx">
       <DependentUpon>rptWorkRecords.vb</DependentUpon>
     </EmbeddedResource>
@@ -237,8 +257,8 @@
     <EmbeddedResource Include="rptDueWork.resx">
       <DependentUpon>rptDueWork.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="rptPurchase.resx">
-      <DependentUpon>rptPurchase.vb</DependentUpon>
+    <EmbeddedResource Include="rptSparePartReq.resx">
+      <DependentUpon>rptSparePartReq.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="rptNonConform.resx">
       <DependentUpon>rptNonConform.vb</DependentUpon>

@@ -16,9 +16,6 @@ Public Class INSTRUCTIONREP
         report.InsEditor.Text = tmp(5)
         report.InsDateIssue.Text = tmp(6)
         report.InsDesc.Text = tmp(7)
-        If tmp(8) <> "" Then
-            report.ImgDoc.Image = StringToImage(tmp(8))
-        End If
         'report.DataSource = db.CreateTable("SELECT [WorkDescription],[RankDesc],[Interval],[InsEditor],[InsDateIssue],[InsDesc],[InsCrossRef] FROM [dbo].[PLANNINGREP] WHERE MaintenanceCode='" & tmp(0) & "'")
         report.ShowPreviewDialog()
     End Sub

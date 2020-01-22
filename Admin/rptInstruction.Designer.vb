@@ -53,7 +53,6 @@ Partial Public Class rptInstruction
         Me.PageFooter = New DevExpress.XtraReports.UI.PageFooterBand()
         Me.XrLabel9 = New DevExpress.XtraReports.UI.XRLabel()
         Me.lblDate = New DevExpress.XtraReports.UI.XRLabel()
-        Me.ImgDoc = New DevExpress.XtraReports.UI.XRPictureBox()
         CType(Me, System.ComponentModel.ISupportInitialize).BeginInit()
         '
         'Detail
@@ -163,7 +162,7 @@ Partial Public Class rptInstruction
         '
         'GroupHeader
         '
-        Me.GroupHeader.Controls.AddRange(New DevExpress.XtraReports.UI.XRControl() {Me.ImgDoc, Me.InsDesc, Me.XrLabel7, Me.InsEditor, Me.XrLabel8, Me.XrLabel14, Me.XrLabel12, Me.Work, Me.XrLabel10, Me.InsCrossRef, Me.InsDateIssue, Me.XrLabel13, Me.XrLabel6, Me.RankDesc, Me.Interval, Me.XrLabel5, Me.Equipment, Me.imgLogo, Me.XrLabel1, Me.XrLabel3, Me.Vessel, Me.XrLine1, Me.XrLine2, Me.XrLine3, Me.IMO, Me.Flag, Me.XrLabel4, Me.XrLabel2})
+        Me.GroupHeader.Controls.AddRange(New DevExpress.XtraReports.UI.XRControl() {Me.InsDesc, Me.XrLabel7, Me.InsEditor, Me.XrLabel8, Me.XrLabel14, Me.XrLabel12, Me.Work, Me.XrLabel10, Me.InsCrossRef, Me.InsDateIssue, Me.XrLabel13, Me.XrLabel6, Me.RankDesc, Me.Interval, Me.XrLabel5, Me.Equipment, Me.imgLogo, Me.XrLabel1, Me.XrLabel3, Me.Vessel, Me.XrLine1, Me.XrLine2, Me.XrLine3, Me.IMO, Me.Flag, Me.XrLabel4, Me.XrLabel2})
         Me.GroupHeader.HeightF = 879.375!
         Me.GroupHeader.Name = "GroupHeader"
         Me.GroupHeader.PageBreak = DevExpress.XtraReports.UI.PageBreak.BeforeBand
@@ -174,7 +173,7 @@ Partial Public Class rptInstruction
         Me.InsDesc.Multiline = True
         Me.InsDesc.Name = "InsDesc"
         Me.InsDesc.Padding = New DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100.0!)
-        Me.InsDesc.SizeF = New System.Drawing.SizeF(628.5833!, 63.0546!)
+        Me.InsDesc.SizeF = New System.Drawing.SizeF(628.5833!, 144.3046!)
         '
         'XrLabel7
         '
@@ -331,13 +330,6 @@ Partial Public Class rptInstruction
         Me.lblDate.StylePriority.UseTextAlignment = False
         Me.lblDate.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight
         '
-        'ImgDoc
-        '
-        Me.ImgDoc.LocationFloat = New DevExpress.Utils.PointFloat(114.8824!, 377.625!)
-        Me.ImgDoc.Name = "ImgDoc"
-        Me.ImgDoc.SizeF = New System.Drawing.SizeF(500.0!, 500.0!)
-        Me.ImgDoc.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage
-        '
         'rptInstruction
         '
         Me.Bands.AddRange(New DevExpress.XtraReports.UI.Band() {Me.Detail, Me.TopMargin, Me.BottomMargin, Me.GroupHeader, Me.PageFooter})
@@ -385,5 +377,4 @@ Partial Public Class rptInstruction
     Friend WithEvents XrLabel8 As DevExpress.XtraReports.UI.XRLabel
     Friend WithEvents InsDesc As DevExpress.XtraReports.UI.XRLabel
     Friend WithEvents XrLabel7 As DevExpress.XtraReports.UI.XRLabel
-    Friend WithEvents ImgDoc As DevExpress.XtraReports.UI.XRPictureBox
 End Class
