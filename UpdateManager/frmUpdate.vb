@@ -56,31 +56,7 @@ Public Class frmUpdate
 
         'Dim args() As String = {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam"} 'test update
         'Dim args() As String = {"APP.exe", "LOAD", "5.01.00", "C:\Spectral\UpdateSM5.obx", "Administrator", "Data Source=.\STISQLSERVER;Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"} 'test load
-
-        'MsgBox(args.Count.ToString)
-        'Dim d As String
-        'For Each d In args
-        '    MsgBox(d.ToString)
-        'Next
-        'LOAD  "C:\Users\DeveloperOne\Documents\The Desktop\TEST_UPDFOLDER\object_update\object_update.obx" "Admin" "localhost\sqlexpress" "sa" "admin1234" "False" "False"
-
-        'For i As Integer = 0 To args.Count - 1
-        '    System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", i + " - " + args(i) & Environment.NewLine)
-        'Next
-
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Length of Params = " & args.Length & Environment.NewLine)
-
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Action Type = " & args(1) & Environment.NewLine)
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Current Version = " & args(2) & Environment.NewLine)
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Server Name = " & args(3) & Environment.NewLine)
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Server User = " & args(4) & Environment.NewLine)
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " Server Password = " & args(5) & Environment.NewLine)
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " bUSE_SPECTRAL_CON = " & args(6) & Environment.NewLine)
-        'System.IO.File.AppendAllText(Application.StartupPath & "\\test_obxupdate.txt", " bUSE_TRUSTED_CON = " & args(7) & Environment.NewLine)
-
-        'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Users\DeveloperOne\Documents\The Desktop\TEST_UPDFOLDER\object_update\object_update.obx", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
-        'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.01", "Admin", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
-        'Dim args() As String = {"APP.exe", "UPDATE", "1.00.00", "localhost\sqlexpress", "sa", "admin1234", "False", "False"}
+   
         If args.Count = 8 Then
             'Update Version
             'sample: {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam", "False", "False"}
@@ -115,7 +91,7 @@ Public Class frmUpdate
     Sub UpdateProgram()
         '******** Shared Parameters *******
         Dim bSuccess As Boolean = False
-
+        Dim dStart As DateTime
         Dim cVersion As String
         Dim cVersionDate As String = ""
         Dim cDesc As String = ""
@@ -124,256 +100,256 @@ Public Class frmUpdate
         Dim cFullBak_folder As String = ""
         Dim cBak_folder As String = ""
 
-        Dim dStart As DateTime
-        dStart = oDb.MSSql_GetServerTime()
+        Try
+            dStart = oDb.MSSql_GetServerTime()
 
-        '******** End Parameters **********
+            '******** End Parameters **********
 
-        Select Case UCase(cActionType)
+            Select Case UCase(cActionType)
 
-            Case "UPDATE" ' check latest version and try to update
+                Case "UPDATE" ' check latest version and try to update
 
-                Init("UPDATE", bSuccess)
+                    Init("UPDATE", bSuccess)
 
-                If bSuccess Then
-                    Log_Append(StrDup(100, "-"))
-                    Log_Append("Getting update versions")
-                    Log_Append(StrDup(100, "-"))
+                    If bSuccess Then
+                        Log_Append(StrDup(100, "-"))
+                        Log_Append("Getting update versions")
+                        Log_Append(StrDup(100, "-"))
 
-                    'get latest versions
-                    Dim dtVersions As DataTable = Nothing
-                    Try
-                        dtVersions = oDb.oGetLatestVersions(cCurVersion)
-                    Catch ex As Exception
-                        MessageBox.Show("Getting version " & ex.Message)
-                    End Try
+                        'get latest versions
+                        Dim dtVersions As DataTable = Nothing
+                        Try
+                            dtVersions = oDb.oGetLatestVersions(cCurVersion)
+                        Catch ex As Exception
+                            MessageBox.Show("Getting version " & ex.Message)
+                        End Try
 
-                    If dtVersions.Rows.Count > 0 Then
-                        Dim dr As DataRow
-                        For Each dr In dtVersions.Rows
-                            cVersion = IfNull(dr("AppVersion").ToString, "")
-                            cVersionDate = IfNull(CType(dr("VersionDate"), DateTime).ToString("yyyy-MM-dd"), "")
-                            cDesc = IfNull(dr("VersionDesc").ToString, "")
-                            cFolder = IfNull(dr("ObjectPath").ToString, "")
+                        If dtVersions.Rows.Count > 0 Then
+                            Dim dr As DataRow
+                            For Each dr In dtVersions.Rows
+                                cVersion = IfNull(dr("AppVersion").ToString, "")
+                                cVersionDate = IfNull(CType(dr("VersionDate"), DateTime).ToString("yyyy-MM-dd"), "")
+                                cDesc = IfNull(dr("VersionDesc").ToString, "")
+                                cFolder = IfNull(dr("ObjectPath").ToString, "")
 
-                            If cVersion <> "" And UCase(cDesc) <> "BASE VERSION" Then
+                                If cVersion <> "" And UCase(cDesc) <> "BASE VERSION" Then
 
-                                If Not bSuccess Then Exit For
+                                    If Not bSuccess Then Exit For
 
-                                'reset files var
-                                nFilesUpdated = 0
-                                nFilesError = 0
-                                nFilesInvalid = 0
+                                    'reset files var
+                                    nFilesUpdated = 0
+                                    nFilesError = 0
+                                    nFilesInvalid = 0
 
-                                sbVersionLog.Clear()
-                                Log_Append(sbVersionLog, "")
-                                Log_Append(sbVersionLog, "Update Version to : ".PadRight(nColStandard) & cVersion)
+                                    sbVersionLog.Clear()
+                                    Log_Append(sbVersionLog, "")
+                                    Log_Append(sbVersionLog, "Update Version to : ".PadRight(nColStandard) & cVersion)
 
-                                'create temp folder
-                                SetStatus("Creating temp_update folder ..")
-                                cTemp_Folder = CleanPath(GetAppFolder) & "temp_update"
-                                bSuccess = CreateUpdateFolder(cTemp_Folder)
+                                    'create temp folder
+                                    SetStatus("Creating temp_update folder ..")
+                                    cTemp_Folder = CleanPath(GetAppFolder) & "temp_update"
+                                    bSuccess = CreateUpdateFolder(cTemp_Folder)
 
-                                Log_Append(sbVersionLog, "Create temp_folder :".PadRight(nColStandard) & GetResult(bSuccess, ""))
+                                    Log_Append(sbVersionLog, "Create temp_folder :".PadRight(nColStandard) & GetResult(bSuccess, ""))
 
-                                'collect updates
-                                If bSuccess Then
-                                    Log_Append(sbVersionLog, "Collecting required files from version: ".PadRight(nColStandard) & cVersion)
-                                    SetStatus("Collecting required files from version: " & cVersion)
-                                    Dim cFullUpdatesFolder As String = CleanPath(cUpdatesFolder) & cFolder
-                                    If IsPathExist(cFullUpdatesFolder, True) Then
-                                        If HasFolderPermission(cFullUpdatesFolder) Then
-                                            Try
-                                                Application.DoEvents()
-                                                My.Computer.FileSystem.CopyDirectory(cFullUpdatesFolder, cTemp_Folder, True)
-                                                Application.DoEvents()
-                                                bSuccess = True
-                                            Catch ex As Exception
-                                                cErr = "Error occurred copying files."
+                                    'collect updates
+                                    If bSuccess Then
+                                        Log_Append(sbVersionLog, "Collecting required files from version: ".PadRight(nColStandard) & cVersion)
+                                        SetStatus("Collecting required files from version: " & cVersion)
+                                        Dim cFullUpdatesFolder As String = CleanPath(cUpdatesFolder) & cFolder
+                                        If IsPathExist(cFullUpdatesFolder, True) Then
+                                            If HasFolderPermission(cFullUpdatesFolder) Then
+                                                Try
+                                                    Application.DoEvents()
+                                                    My.Computer.FileSystem.CopyDirectory(cFullUpdatesFolder, cTemp_Folder, True)
+                                                    Application.DoEvents()
+                                                    bSuccess = True
+                                                Catch ex As Exception
+                                                    cErr = "Error occurred copying files."
+                                                    bSuccess = False
+                                                End Try
+                                            Else
+                                                cErr = "No permission on Update folder :" & cFullUpdatesFolder
                                                 bSuccess = False
-                                            End Try
+                                            End If
                                         Else
-                                            cErr = "No permission on Update folder :" & cFullUpdatesFolder
+                                            cErr = "Cannot locate Update folder :" & cFullUpdatesFolder
                                             bSuccess = False
                                         End If
-                                    Else
-                                        cErr = "Cannot locate Update folder :" & cFullUpdatesFolder
-                                        bSuccess = False
                                     End If
-                                End If
-                                Log_Append(sbVersionLog, "Collection Status :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
+                                    Log_Append(sbVersionLog, "Collection Status :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
 
 
-                                'clean temp_update folder
-                                SetStatus("Cleaning temp update folder..")
-                                CleanFolder(cTemp_Folder, "*.obx", IO.SearchOption.TopDirectoryOnly)
+                                    'clean temp_update folder
+                                    SetStatus("Cleaning temp update folder..")
+                                    CleanFolder(cTemp_Folder, "*.obx", IO.SearchOption.TopDirectoryOnly)
 
-                                Log_Append(StrDup(100, "="))
+                                    Log_Append(StrDup(100, "="))
 
-                                'perform updates
-                                cBak_folder = "Update_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cCurVersion & " - " & cVersion
-                                cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
+                                    'perform updates
+                                    cBak_folder = "Update_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cCurVersion & " - " & cVersion
+                                    cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
 
-                                If bSuccess Then
-                                    'PerformObjectUpdates(cBak_folder, dStart)
-                                    PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cFolder)
-                                End If
-
-                                Log_Write(cFullBak_folder & cBak_folder & ".txt", sbVersionLog)
-
-                                If nFilesUpdated > 0 Then
-                                    'zip files
-                                    'zip all files
-                                    Dim bTmpSuccess As Boolean
-                                    Dim cZipFiles As String
-                                    Dim cObjectsBakFile As String = cFullBak_folder & cBak_folder & ".obxbak"
-                                    cZipFiles = cFullBak_folder & "*.*"
-                                    bTmpSuccess = ZipFiles(cObjectsBakFile, cZipFiles, cErr)
-                                    bSuccess = bSuccess And bTmpSuccess
-
-                                    'deletes files
-                                    If bTmpSuccess Then
-                                        CleanFolder(cFullBak_folder, "*.dll|*.DLL|*.exe|*.EXE|*.txt", IO.SearchOption.TopDirectoryOnly)
+                                    If bSuccess Then
+                                        'PerformObjectUpdates(cBak_folder, dStart)
+                                        PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cFolder)
                                     End If
 
-                                    Log_Append(sbVersionLog, "Compressing backup")
-                                    Log_Append(sbVersionLog, StrDup(100, "-"))
-                                    Log_Append(sbVersionLog, "File: " & cObjectsBakFile & " ... " & GetResult(bTmpSuccess, cErr))
-                                    Log_Append(sbVersionLog, StrDup(100, "-"))
+                                    Log_Write(cFullBak_folder & cBak_folder & ".txt", sbVersionLog)
+
+                                    If nFilesUpdated > 0 Then
+                                        'zip files
+                                        'zip all files
+                                        Dim bTmpSuccess As Boolean
+                                        Dim cZipFiles As String
+                                        Dim cObjectsBakFile As String = cFullBak_folder & cBak_folder & ".obxbak"
+                                        cZipFiles = cFullBak_folder & "*.*"
+                                        bTmpSuccess = ZipFiles(cObjectsBakFile, cZipFiles, cErr)
+                                        bSuccess = bSuccess And bTmpSuccess
+
+                                        'deletes files
+                                        If bTmpSuccess Then
+                                            CleanFolder(cFullBak_folder, "*.dll|*.DLL|*.exe|*.EXE|*.txt", IO.SearchOption.TopDirectoryOnly)
+                                            CleanFolder(cTemp_Folder, "*.dll|*.DLL|*.exe|*.EXE|*.txt|*.sql", IO.SearchOption.TopDirectoryOnly)
+                                        End If
+
+                                        Log_Append(sbVersionLog, "Compressing backup")
+                                        Log_Append(sbVersionLog, StrDup(100, "-"))
+                                        Log_Append(sbVersionLog, "File: " & cObjectsBakFile & " ... " & GetResult(bTmpSuccess, cErr))
+                                        Log_Append(sbVersionLog, StrDup(100, "-"))
+                                    End If
+
+                                    If bSuccess Then
+                                        bSuccess = WriteSettingsIni("VERSION", cVersion, cErr)
+                                        bSuccess = bSuccess And WriteSettingsIni("VERSIONDATE", cVersionDate, cErr)
+                                        Log_Append(sbVersionLog, StrDup(100, "-"))
+                                        Log_Append(sbVersionLog, "Update Version INI File :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
+
+                                        If bSuccess Then cCurVersion = cVersion 'update current version
+
+                                    End If
+                                    Log_Append(sbLog, sbVersionLog)
+
                                 End If
+                            Next
+                        Else
+                            Log_Append(StrDup(100, "-"))
+                            Log_Append("No Valid Version Available")
+                            Log_Append(StrDup(100, "-"))
+                            Log_Append()
+                        End If
 
-                                If bSuccess Then
-                                    bSuccess = WriteSettingsIni("VERSION", cVersion, cErr)
-                                    bSuccess = bSuccess And WriteSettingsIni("VERSIONDATE", cVersionDate, cErr)
-                                    Log_Append(sbVersionLog, StrDup(100, "-"))
-                                    Log_Append(sbVersionLog, "Update Version INI File :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
-
-                                    If bSuccess Then cCurVersion = cVersion 'update current version
-
-                                End If
-                                Log_Append(sbLog, sbVersionLog)
-
-                            End If
-                        Next
-                    Else
-                        Log_Append(StrDup(100, "-"))
-                        Log_Append("No Valid Version Available")
-                        Log_Append(StrDup(100, "-"))
-                        Log_Append()
                     End If
 
-                End If
+                Case "LOAD" 'load update from obx file
 
-            Case "LOAD" 'load update from obx file
+                    Init("LOAD", bSuccess)
 
-                Init("LOAD", bSuccess)
+                    If Not bSuccess Then Exit Select
 
-                If Not bSuccess Then Exit Select
+                    sbVersionLog.Clear()
+                    Dim nServerVersion As String = oDb.oGetServerVersion()
+                    Log_Append(StrDup(100, "-"))
+                    Log_Append("Getting latest version :".PadRight(nColStandard) & nServerVersion)
+                    Log_Append(StrDup(100, "-"))
 
-                sbVersionLog.Clear()
-                Dim nServerVersion As String = oDb.oGetServerVersion()
-                Log_Append(StrDup(100, "-"))
-                Log_Append("Getting latest version :".PadRight(nColStandard) & nServerVersion)
-                Log_Append(StrDup(100, "-"))
+                    SetStatus("Reading extracted files..")
 
-                SetStatus("Reading extracted files..")
+                    Log_Append(sbVersionLog, "Reading files :".PadRight(nColStandard) & GetResult(bSuccess, ""))
 
-                Log_Append(sbVersionLog, "Reading files :".PadRight(nColStandard) & GetResult(bSuccess, ""))
+                    If Not bSuccess Then Exit Select
 
-                If Not bSuccess Then Exit Select
+                    cCurVersion = GetVersionValueForDB(GetVersionInfo(cObxPath & "\Update.txt")(1)).ToString() '-> Get version number.
+                    cTemp_Folder = cObxPath
+                    cVersion = ""
 
-                cCurVersion = GetVersionValueForDB(GetVersionInfo(cObxPath & "\Update.txt")(1)).ToString() '-> Get version number.
-                cTemp_Folder = cObxPath
-                cVersion = ""
-
-                'Revised using the update process from ERB - 20190715 *****************************************
-                Try
+                    'Revised using the update process for PMS - 20190715 *****************************************
                     Try
-                        'If oDb.IsNewVersion(cCurVersion, nServerVersion) Then
-                        Log_Append(sbVersionLog, "Object Update Version :".PadRight(nColStandard) & cCurVersion)
-                        cVersion = cCurVersion
-                        cBak_folder = "Load_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cCurVersion
-                        cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
-                        PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cCurVersion)
-                        bSuccess = True
-                        'Else
-                        '    Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Cannot proceed. Trying to load older version.")
-                        '    bSuccess = False
-                        'End If
-                    Catch ex As Exception
-                        Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Error occured validating object update version.")
-                        bSuccess = False
-                    End Try
-                Catch ex As Exception
-                    cErr = ex.Message
-                    bSuccess = False
-                End Try
-                'End Revise *****************************************
-
-                If Not bSuccess Then Exit Select
-                If cVersion <> "" Then
-                    'put files in updates folder
-                    Try
-                        My.Computer.FileSystem.CopyDirectory(cTemp_Folder, CleanPath(cUpdatesFolder) & cVersion, True)
-                        bSuccess = True
-                        cErr = ""
+                        Try
+                            'If oDb.IsNewVersion(cCurVersion, nServerVersion) Then
+                            Log_Append(sbVersionLog, "Object Update Version :".PadRight(nColStandard) & cCurVersion)
+                            cVersion = cCurVersion
+                            cBak_folder = "Load_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & "_Version_" & cCurVersion
+                            cFullBak_folder = CleanPath(GetAppFolder() & "\obj_bak\" & cBak_folder)
+                            PerformObjectUpdates(cTemp_Folder, cBak_folder, dStart, cCurVersion)
+                            bSuccess = True
+                        Catch ex As Exception
+                            Log_Append(sbVersionLog, "Status :".PadRight(nColStandard) & "Error occured validating object update version.")
+                            bSuccess = False
+                        End Try
                     Catch ex As Exception
                         cErr = ex.Message
                         bSuccess = False
                     End Try
-                    Log_Append(sbVersionLog, "Put Files in Updates Folder :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
+                    'End Revise *****************************************
 
                     If Not bSuccess Then Exit Select
+                    If cVersion <> "" Then
+                        'put files in updates folder
+                        Try
+                            My.Computer.FileSystem.CopyDirectory(cTemp_Folder, CleanPath(cUpdatesFolder) & cVersion, True)
+                            bSuccess = True
+                            cErr = ""
+                        Catch ex As Exception
+                            cErr = ex.Message
+                            bSuccess = False
+                        End Try
+                        Log_Append(sbVersionLog, "Put Files in Updates Folder :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
 
-                    'insert to update table
-                    cUsername = cUsername & " - ( " & My.Computer.Name & " )"
-                    cUsername = cUsername.Replace("'", "''")
-                    bSuccess = oDb.UpdateServerVersion(versionNumber, versionDate, versionDesc.Replace("'", "''"), cUsername, cErr)
-                    Log_Append(sbVersionLog, "Update Server Version :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
-                    Log_Write(cFullBak_folder & cBak_folder & ".txt", sbVersionLog)
-                    'bakup files in local
-                    If nFilesUpdated > 0 Then
-                        'zip files
-                        'zip all files
-                        Dim bTmpSuccess As Boolean
-                        Dim cZipFiles As String
-                        Dim cObjectsBakFile As String = cFullBak_folder & cBak_folder & ".obxbak"
-                        cZipFiles = cFullBak_folder & "*.*"
+                        If Not bSuccess Then Exit Select
 
-                        bTmpSuccess = ZipFiles(cObjectsBakFile, cZipFiles, cErr)
-                        bSuccess = bSuccess And bTmpSuccess
+                        'insert to update table
+                        cUsername = cUsername & " - ( " & My.Computer.Name & " )"
+                        cUsername = cUsername.Replace("'", "''")
+                        bSuccess = oDb.UpdateServerVersion(versionNumber, versionDate, versionDesc.Replace("'", "''"), cUsername, cErr)
+                        Log_Append(sbVersionLog, "Update Server Version :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
+                        Log_Write(cFullBak_folder & cBak_folder & ".txt", sbVersionLog)
+                        'bakup files in local
+                        If nFilesUpdated > 0 Then
+                            'zip files
+                            'zip all files
+                            Dim bTmpSuccess As Boolean
+                            Dim cZipFiles As String
+                            Dim cObjectsBakFile As String = cFullBak_folder & cBak_folder & ".obxbak"
+                            cZipFiles = cFullBak_folder & "*.*"
 
-                        'deletes files
-                        If bTmpSuccess Then
-                            CleanFolder(cFullBak_folder, "*.dll|*.DLL|*.exe|*.EXE|*.txt", IO.SearchOption.TopDirectoryOnly)
+                            bTmpSuccess = ZipFiles(cObjectsBakFile, cZipFiles, cErr)
+                            bSuccess = bSuccess And bTmpSuccess
+
+                            'deletes files
+                            If bTmpSuccess Then
+                                CleanFolder(cFullBak_folder, "*.dll|*.DLL|*.exe|*.EXE|*.txt", IO.SearchOption.TopDirectoryOnly)
+                            End If
+
+                            Log_Append(sbVersionLog, "Compressing backup")
+                            Log_Append(sbVersionLog, StrDup(100, "-"))
+                            Log_Append(sbVersionLog, "File: " & cObjectsBakFile & " ... " & GetResult(bTmpSuccess, cErr))
+                            Log_Append(sbVersionLog, StrDup(100, "-"))
                         End If
 
-                        Log_Append(sbVersionLog, "Compressing backup")
-                        Log_Append(sbVersionLog, StrDup(100, "-"))
-                        Log_Append(sbVersionLog, "File: " & cObjectsBakFile & " ... " & GetResult(bTmpSuccess, cErr))
-                        Log_Append(sbVersionLog, StrDup(100, "-"))
-                    End If
-
-                    'evaluate process
-                    If bSuccess Then
-                        If cVersion <> "" Then
-                            bSuccess = WriteSettingsIni("VERSION", versionNumber, cErr)
-                            bSuccess = bSuccess And WriteSettingsIni("VERSIONDATE", versionDate, cErr)
-                            Log_Append(sbVersionLog, "Update Version INI File :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
+                        'evaluate process
+                        If bSuccess Then
+                            If cVersion <> "" Then
+                                bSuccess = WriteSettingsIni("VERSION", versionNumber, cErr)
+                                bSuccess = bSuccess And WriteSettingsIni("VERSIONDATE", versionDate, cErr)
+                                Log_Append(sbVersionLog, "Update Version INI File :".PadRight(nColStandard) & GetResult(bSuccess, cErr))
+                            End If
                         End If
                     End If
+            End Select
 
-                End If
+            Select Case UCase(cActionType)
+                Case "UPDATE"
+                    Finish("UPDATE", "Version Update_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & ".txt") ' finish process
+                Case "LOAD"
+                    Log_Append(sbLog, sbVersionLog)
+                    Finish("LOAD", "Load Version_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & ".txt") 'finish process
+            End Select
+        Catch ex As Exception
+            Log_Append("There is a problem on update : " & ex.Message)
+            Finish(IIf(cActionType.Equals("UPDATE"), "UPDATE", "LOAD"), "Version Update_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & ".txt") ' finish process
+        End Try
 
-        End Select
-
-        Select Case UCase(cActionType)
-            Case "UPDATE"
-                Finish("UPDATE", "Version Update_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & ".txt") ' finish process
-            Case "LOAD"
-                Log_Append(sbLog, sbVersionLog)
-                Finish("LOAD", "Load Version_" & dStart.ToString("yyyy-MM-dd.HH.mm.ss") & ".txt") 'finish process
-        End Select
     End Sub
 
 #Region "Updated Object Update Feature"
