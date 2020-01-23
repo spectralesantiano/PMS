@@ -2,16 +2,49 @@ Imports System.Drawing
 Imports DevExpress.XtraGrid.Columns
 
 Public Class PARTPURCHASE
-    Dim strPartCodes As String = "", sqls As New ArrayList
+    Dim strPartCodes As String = "", sqls As New ArrayList, strDeletedImages As String = ""
 
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
+            Case "FilterCriticalParts"
+                Me.pView.ActiveFilterString = IIf(CURRENT_CRITICAL_CHECKED, "OnStock<Minimum", "")
             Case "Preview"
-                If MainView.RowCount = 0 Then
-                    MsgBox("Please select at least one record to preview.", MsgBoxStyle.Information, GetAppName)
-                Else
-                    RaiseCustomEvent(Name, New Object() {"Preview", "PURCHASEREP", "PMSReports", "|" & strID & "|"})
+                Dim frm As New frmInventoryPrintSelection
+                frm.cboVendorCode.Properties.DataSource = VendorEdit.DataSource
+                DB.BeginReader("EXEC dbo.GETSETTINGS")
+                If DB.Read Then
+                    frm.chkAddressToVendor.Checked = CBool(DB.ReaderItem("SPARE_VENDOR_SELECTED", "True"))
+                    frm.chkOffice.Checked = Not frm.chkAddressToVendor.Checked
+                    If frm.chkAddressToVendor.Checked Then
+                        frm.cboVendorCode.EditValue = DB.ReaderItem("SPARE_ADDRESS_VALUE", "")
+                    Else
+                        frm.txtOfficeAddress.EditValue = DB.ReaderItem("SPARE_ADDRESS_VALUE", "")
+                    End If
                 End If
+                DB.CloseReader()
+                frm.ShowDialog()
+                If frm.bPreview_Clicked Then
+                    If frm.chkSpare.Checked Then
+                        Dim strSent As String
+                        DB.SaveConfig("SPARE_VENDOR_SELECTED", frm.chkAddressToVendor.Checked, APP_SHORT_NAME)
+                        If frm.chkAddressToVendor.Checked Then
+                            Dim nrow As DataRowView = frm.cboVendorCode.Properties.GetDataSourceRowByKeyValue(frm.cboVendorCode.EditValue)
+                            DB.SaveConfig("SPARE_ADDRESS_VALUE", frm.cboVendorCode.EditValue, APP_SHORT_NAME)
+                            strSent = IfNull(nrow("Address"), "")
+                        Else
+                            strSent = frm.txtOfficeAddress.EditValue
+                            DB.SaveConfig("SPARE_ADDRESS_VALUE", frm.txtOfficeAddress.EditValue, APP_SHORT_NAME)
+                        End If
+                        RaiseCustomEvent(Name, New Object() {"Preview", "SPAREPARTREQ", "PMSReports", strID & "|" & strSent})
+                    Else
+                        RaiseCustomEvent(Name, New Object() {"Preview", "DELIVERCON", "PMSReports", strID & "|" & cboPortCode.Text})
+                    End If
+                End If
+                'If MainView.RowCount = 0 Then
+                '    MsgBox("Please select at least one record to preview.", MsgBoxStyle.Information, GetAppName)
+                'Else
+                '    RaiseCustomEvent(Name, New Object() {"Preview", "PURCHASEREP", "PMSReports", "|" & strID & "|"})
+                'End If
         End Select
     End Sub
 
@@ -26,9 +59,9 @@ Public Class PARTPURCHASE
             sqls.Clear()
             If bAddMode Then
                 strID = GenerateID(DB, "PartPurchaseCode", "tblPartPurchase")
-                sqls.Add("INSERT INTO dbo.tblPartPurchase(PartPurchaseCode,PurchaseDate, VendorCode,Status,LastUpdatedBy) VALUES('" & strID & "', " & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",'" & IfNull(cboVendorCode.EditValue, "") & "', 'Pending', '" & GetUserName() & "')")
+                sqls.Add("INSERT INTO dbo.tblPartPurchase(PartPurchaseCode,PurchaseDate, PortCode,Status,LastUpdatedBy) VALUES('" & strID & "', " & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",'" & IfNull(cboPortCode.EditValue, "") & "', 'Pending', '" & GetUserName() & "')")
             Else
-                sqls.Add("UPDATE dbo.tblPartPurchase SET PurchaseDate=" & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",VendorCode='" & IfNull(cboVendorCode.EditValue, "") & "', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
+                sqls.Add("UPDATE dbo.tblPartPurchase SET PurchaseDate=" & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",PortCode='" & IfNull(cboPortCode.EditValue, "") & "', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             End If
             MainView.CloseEditor()
             MainView.UpdateCurrentRow()
@@ -52,9 +85,9 @@ Public Class PARTPURCHASE
                     End If
 
                     If IfNull(MainView.GetRowCellValue(i, "PartPurchaseDetailID"), 0) = 0 Then
-                        sqls.Add("INSERT Into dbo.tblPartPurchaseDetail([PartPurchaseCode],[PartCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[LastUpdatedBy]) Values('" & strID & "','" & MainView.GetRowCellValue(i, "PartCode") & "','" & MainView.GetRowCellValue(i, "VendorCode") & "'," & MainView.GetRowCellValue(i, "Quantity") & "," & strDateReceived & "," & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & ",'" & GetUserName() & "')")
+                        sqls.Add("INSERT Into dbo.tblPartPurchaseDetail([PartPurchaseCode],[PartCode],[MakerCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[Price],[LastUpdatedBy]) Values('" & strID & "','" & MainView.GetRowCellValue(i, "PartCode") & "','" & MainView.GetRowCellValue(i, "MakerCode") & "','" & MainView.GetRowCellValue(i, "VendorCode") & "'," & MainView.GetRowCellValue(i, "Quantity") & "," & strDateReceived & "," & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & "," & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",'" & GetUserName() & "')")
                     Else
-                        sqls.Add("UPDATE dbo.tblPartPurchaseDetail SET [VendorCode]='" & MainView.GetRowCellValue(i, "VendorCode") & "',[Quantity]=" & MainView.GetRowCellValue(i, "Quantity") & ",[DateReceived]=" & strDateReceived & ",[ReceivedQuantity]=" & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & ",[LastUpdatedBy]='" & GetUserName() & "' WHERE PartPurchaseDetailID=" & MainView.GetRowCellValue(i, "PartPurchaseDetailID"))
+                        sqls.Add("UPDATE dbo.tblPartPurchaseDetail SET [MakerCode]='" & MainView.GetRowCellValue(i, "MakerCode") & "',[VendorCode]='" & MainView.GetRowCellValue(i, "VendorCode") & "',[Quantity]=" & MainView.GetRowCellValue(i, "Quantity") & ",[DateReceived]=" & strDateReceived & ",[ReceivedQuantity]=" & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & ",[Price]=" & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",[LastUpdatedBy]='" & GetUserName() & "' WHERE PartPurchaseDetailID=" & MainView.GetRowCellValue(i, "PartPurchaseDetailID"))
                     End If
                 End If
                 If MainView.GetRowCellValue(i, "Received") Then bHasReceived = True
@@ -67,6 +100,22 @@ Public Class PARTPURCHASE
             Else
                 sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Pending', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             End If
+
+            If strDeletedImages <> "" Then
+                Dim strDeletedID() As String = strDeletedImages.ToString.Split(";"c), strDocID As String
+                For Each strDocID In strDeletedID
+                    sqls.Add("DELETE FROM dbo.tblDocuments WHERE DocID=" & strDocID)
+                Next
+            End If
+
+            IView.CloseEditor()
+            IView.UpdateCurrentRow()
+            For i = 0 To IView.RowCount - 1
+                If IfNull(IView.GetRowCellValue(i, "DocID"), 0) = 0 Then
+                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES('" & strID & "','PURCHASE', '" & IView.GetRowCellValue(i, "FileName") & "','" & SetDefaultImageSizeToString(New Bitmap(IView.GetRowCellValue(i, "FileName").ToString)) & "')")
+                End If
+            Next
+
             DB.RunSqls(sqls)
             bRecordUpdated = False
             blList.RefreshData()
@@ -88,9 +137,9 @@ Public Class PARTPURCHASE
             Me.txtPurchaseDate.EditValue = DBNull.Value
             Me.txtPurchaseDate.Focus()
             Me.txtPurchaseDate.Tag = 0
-            Me.cboVendorCode.EditValue = DBNull.Value
-            Me.cboVendorCode.Tag = 0
-            Me.cboVendorCode.BackColor = Color.White
+            Me.cboPortCode.EditValue = DBNull.Value
+            Me.cboPortCode.Tag = 0
+            Me.cboPortCode.BackColor = Color.White
             Me.txtPurchaseDate.BackColor = REQUIRED_SELECTED_COLOR
             Me.txtStatus.Text = "Pending"
             MainGrid.DataSource = DB.CreateTable("SELECT *, CAST(CASE WHEN DateReceived IS NULL THEN 0 ELSE 1 END AS BIT) Received, CAST(0 AS BIT) Edited FROM dbo.tblPartPurchaseDetail WHERE PartPurchaseCode='xyz'")
@@ -114,16 +163,17 @@ Public Class PARTPURCHASE
             AllowSaving(Name, False)
             AllowDeletion(Name, (bPermission And 8) > 0)
             AddEditListener(Me.txtPurchaseDate)
-            AddEditListener(Me.cboVendorCode)
+            AddEditListener(Me.cboPortCode)
             SetAddVisibility(Name, IIf((bPermission And 2) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             SetSaveVisibility(Name, IIf((bPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
             SetDeleteVisibility(Name, IIf((bPermission And 8) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never))
-            VendorEdit.DataSource = DB.CreateTable("SELECT VendorCode, Name Vendor FROM dbo.tblAdmVendor")
-            cboVendorCode.Properties.DataSource = VendorEdit.DataSource
+            VendorEdit.DataSource = DB.CreateTable("SELECT VendorCode, Name Vendor,[Address] FROM dbo.tblAdmVendor")
+            MakerEdit.DataSource = DB.CreateTable("SELECT * FROM dbo.MAKERLIST")
+            cboPortCode.Properties.DataSource = DB.CreateTable("SELECT * FROM dbo.PORTLIST")
             cboUnit.Properties.DataSource = DB.CreateTable("EXEC dbo.GETCOMPONENT @strUnitCode=''")
             bLoaded = True
         End If
-        pGrid.DataSource = DB.CreateTable("SELECT PartCode, PartCode pPartCode, p.Name Part, PartNumber, ISNULL(l.Name,'') + ' ' + ISNULL(s.Name,'') Storage, CAST(0 AS BIT) Selected, STUFF((SELECT '|' + up.UnitCode FROM dbo.tblUnitPart up WHERE up.PartCode=p.PartCode FOR XML PATH('')),1,1,'') UnitList FROM dbo.tblAdmPart p LEFT JOIN dbo.tblAdmLocation l ON p.LocCode=l.LocCode LEFT JOIN dbo.tblAdmStorage s ON p.StorageCode=s.StorageCode")
+        pGrid.DataSource = DB.CreateTable("SELECT PartCode, PartCode pPartCode, p.Name Part, PartNumber, OnStock, Minimum, ISNULL(l.Name,'') + ' ' + ISNULL(s.Name,'') Storage, CAST(0 AS BIT) Selected, STUFF((SELECT '|' + up.UnitCode FROM dbo.tblUnitPart up WHERE up.PartCode=p.PartCode FOR XML PATH('')),1,1,'') UnitList FROM dbo.tblAdmPart p LEFT JOIN dbo.tblAdmLocation l ON p.LocCode=l.LocCode LEFT JOIN dbo.tblAdmStorage s ON p.StorageCode=s.StorageCode")
         PartEdit.DataSource = pGrid.DataSource
         If (bPermission And 4) = 0 Then
             RemoveEditListener(txtPurchaseDate)
@@ -133,15 +183,16 @@ Public Class PARTPURCHASE
         Else
             Me.txtPurchaseDate.EditValue = blList.GetFocusedRowData("PurchaseDate")
             Me.txtStatus.Text = blList.GetFocusedRowData("Status")
-            Me.cboVendorCode.EditValue = blList.GetFocusedRowData("VendorCode")
+            Me.cboPortCode.EditValue = blList.GetFocusedRowData("PortCode")
         End If
         Me.txtPurchaseDate.Tag = 0
         Me.txtPurchaseDate.BackColor = REQUIRED_SELECTED_COLOR
-        Me.cboVendorCode.Tag = 0
-        Me.cboVendorCode.BackColor = Color.White
+        Me.cboPortCode.Tag = 0
+        Me.cboPortCode.BackColor = Color.White
         MyBase.RefreshData()
         RemoveEditListener(txtStatus)
         MainGrid.DataSource = DB.CreateTable("SELECT *, CAST(CASE WHEN DateReceived IS NULL THEN 0 ELSE 1 END AS BIT) Received, CAST(0 AS BIT) Edited FROM dbo.tblPartPurchaseDetail WHERE PartPurchaseCode='" & strID & "'")
+        IGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='PURCHASE' AND [RefID]='" & strID & "'")
         strPartCodes = ""
         For i = 0 To MainView.RowCount - 1
             strPartCodes = strPartCodes & ",'" & MainView.GetRowCellValue(i, "PartCode") & "'"
@@ -154,6 +205,9 @@ Public Class PARTPURCHASE
         If e.RowHandle = pView.FocusedRowHandle Then
             e.Appearance.BackColor = SEL_COLOR
         End If
+        If IfNull(pView.GetRowCellValue(e.RowHandle, "Minimum"), 0) > IfNull(pView.GetRowCellValue(e.RowHandle, "OnStock"), 0) Then
+            e.Appearance.ForeColor = Drawing.Color.Red
+        End If
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp
@@ -163,13 +217,17 @@ Public Class PARTPURCHASE
     End Sub
 
     Public Overrides Sub DeleteData()
-        If MsgBox("Are you sure want to remove this Purchase?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+        If txtStatus.Text = "Delivered" Then
+            MsgBox("Deleting delivered purchases is not allowed.", MsgBoxStyle.Information)
+        ElseIf MsgBox("Are you sure want to remove this Purchase?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             DB.RunSql("DELETE FROM dbo.tblPartPurchase  WHERE PartPurchaseCode='" & strID & "'")
             bRecordUpdated = False
             blList.RefreshData()
             RefreshData()
         End If
     End Sub
+
+   
 
     Private Sub MainView_CellValueChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles MainView.CellValueChanged
         If e.Column.Name <> "Edited" Then
@@ -281,6 +339,20 @@ Public Class PARTPURCHASE
         bRecordUpdated = True
     End Sub
 
+    Private Sub MakerEdit_ProcessNewValue(sender As Object, e As DevExpress.XtraEditors.Controls.ProcessNewValueEventArgs) Handles MakerEdit.ProcessNewValue
+        Dim row As DataRow, tbl As DataTable, strMakerCode As String = GenerateID(DB, "MakerCode", "tblAdmMaker")
+        tbl = MakerEdit.DataSource
+        If IfNull(e.DisplayValue, "") = "" Then Exit Sub
+        row = tbl.NewRow
+        DB.RunSql("INSERT INTO dbo.tblAdmMaker(MakerCode, Name, LastUpdatedBy) VALUES('" & strMakerCode & "', '" & e.DisplayValue & "','" & GetUserName() & "')")
+        row("MakerCode") = strMakerCode
+        row("Maker") = e.DisplayValue
+        tbl.Rows.Add(row)
+        e.Handled = True
+        AllowSaving(Name, (bPermission And 4) > 0)
+        bRecordUpdated = True
+    End Sub
+
     Private Sub cmdReceiveAll_Click(sender As System.Object, e As System.EventArgs) Handles cmdReceiveAll.Click
         If txtDefaultDate.EditValue Is Nothing Then
             MsgBox("Please enter the default received date.", MsgBoxStyle.Critical)
@@ -315,5 +387,34 @@ Public Class PARTPURCHASE
         End If
     End Sub
 
+    Private Sub cmdBrowse_Click(sender As System.Object, e As System.EventArgs) Handles cmdBrowse.Click
+        Dim odMain As New System.Windows.Forms.OpenFileDialog, strFile As String
+        'odMain.Filter = "Files (*.jpg, *.jpeg, *.pdf) | *.jpg; *.jpeg; *.pdf"
+        odMain.Filter = "Image Files (*.jpg, *.jpeg) | *.jpg; *.jpeg"
+        odMain.Multiselect = True
+        If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            For Each strFile In odMain.FileNames
+                IView.AddNewRow()
+                IView.SetRowCellValue(IView.FocusedRowHandle, "FileDesc", GetFileName(strFile))
+                IView.SetRowCellValue(IView.FocusedRowHandle, "FileName", strFile)
+                IView.SetRowCellValue(IView.FocusedRowHandle, "Edited", True)
+                IView.SetRowCellValue(IView.FocusedRowHandle, "Doc", FileStreamToString(strFile))
+                IView.UpdateCurrentRow()
+                IView.CloseEditor()
+            Next
+            AllowSaving(Name, (bPermission And 4) > 0)
+            bRecordUpdated = True
+        End If
+    End Sub
 
+    Private Sub IDeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles iDeleteEdit.ButtonClick
+        'If MsgBox("Are you sure want to delete this attachment?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+        If IfNull(IView.GetFocusedRowCellValue("DocID"), 0) > 0 Then 'Existing Image.
+            strDeletedImages = strDeletedImages & IView.GetFocusedRowCellValue("DocID") & ";"
+            AllowSaving(Name, (bPermission And 4) > 0)
+            bRecordUpdated = True
+        End If
+        IView.DeleteRow(IView.FocusedRowHandle)
+        'End If
+    End Sub
 End Class

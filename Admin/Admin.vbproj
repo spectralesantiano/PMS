@@ -369,6 +369,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UNITS.resx">
       <DependentUpon>UNITS.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="VLOCATION.resx">
       <DependentUpon>VLOCATION.vb</DependentUpon>

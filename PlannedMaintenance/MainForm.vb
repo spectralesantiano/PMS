@@ -10,65 +10,80 @@ Public Class MainForm
 
     'Load default configurations.
     Sub SetDefaultSettings()
-        Dim sqls As New ArrayList
-        sqls.Add("IF NOT EXISTS (SELECT Name FROM master.dbo.sysdatabases WHERE name ='sti_sys') CREATE DATABASE sti_sys")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblPMSConfig') CREATE TABLE [sti_sys].[dbo].[tblPMSConfig]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tblPMSConfig] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
-        'Default Settings
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SHORE_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SHORE_ID','SAMPLE_')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
+        Try
+            Dim sqls As New ArrayList
+            sqls.Add("IF NOT EXISTS (SELECT Name FROM master.dbo.sysdatabases WHERE name ='sti_sys') CREATE DATABASE sti_sys")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblPMSConfig') CREATE TABLE [sti_sys].[dbo].[tblPMSConfig]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tblPMSConfig] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
+            'Default Settings
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SHORE_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SHORE_ID','SAMPLE_')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_DAYS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_DAYS','30')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'IMAGE_MAX_RES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('IMAGE_MAX_RES','800')")
 
-        '*********Settings for Versioning,License And Program Distribution************
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LTYPE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
+            '*********Settings for Versioning,License And Program Distribution************
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LTYPE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
 
-        'tblSTIService_profile
-        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
-                 "CREATE TABLE [sti_sys].[dbo].[tblSTIService_profile](" & _
-                 "[PROF_Code] [varchar](15) NOT NULL," & _
-                 "[PROF_Name] [varchar](50) NULL," & _
-                 "[PROF_Comment] [text] NULL," & _
-                 "[PROF_ExpFolder] [varchar](100) NULL," & _
-                 "[DateUpdated] [datetime] NULL," & _
-                 "CONSTRAINT [PK_tblSTIService_profile] PRIMARY KEY CLUSTERED" & _
-                 "(" & _
-                        "[PROF_Code] Asc " & _
-                 ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
-                 ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
-        'tblSTIService_internet_settings
+            'Add Trial
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI])" & _
+                    "INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) " & _
+                    "VALUES('" & sysMpsUserPassword("ENCRYPT", APP_SHORT_NAME) & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
 
-        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_internet_settings') " & _
-                 "CREATE TABLE [sti_sys].[dbo].[tblSTIService_internet_settings](" & _
-                 "[INET_Code] [varchar](15) NOT NULL," & _
-                 "[INET_ProfileName] [varchar](50) NULL," & _
-                 "[INET_User] [text] NULL," & _
-                 "[INET_Pwd] [text] NULL," & _
-                 "[INET_AutoRemoveFiles] [int] NULL," & _
-                 "[FTP_ConnectionTimeout] [int] NULL," & _
-                 "[INET_Host] [text] NULL," & _
-                 "[FTP_UsePassive] [int] NULL," & _
-                 "[FTP_AutoFeat] [int] NULL," & _
-                 "[INET_Port] [int] NULL," & _
-                 "[INET_UseSSL] [int] NULL," & _
-                 "[INET_TLS] [int] NULL," & _
-                 "[INET_SPA] [int] NULL," & _
-                 "[INET_Type] [int] NULL," & _
-                 "[SMTP_SenderEmail] [text] NULL," & _
-                 "[EMAIL_TYPE] [int] NULL," & _
-                 "[DateUpdated] [datetime] NULL," & _
-                 "CONSTRAINT [PK_tblSTIService_internet_settings] PRIMARY KEY CLUSTERED " & _
-                 "(" & _
-                        "[INET_Code] Asc " & _
-                 ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
-                 ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
-        '*********************** Add Default WRH 5 Backup Profile *********************
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblSTIService_profile] WHERE [PROF_Code] = '" & BACKUP_CODE & "') INSERT INTO [sti_sys].[dbo].[tblSTIService_profile]([PROF_Code],[PROF_Name],[PROF_Comment],[PROF_ExpFolder]) VALUES('" & BACKUP_CODE & "','" & BACKUP_NAME & "','Default PMS Backup Profile','" & BACKUP_DIR & "')")
-        'Lock PMS Records
-        sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE DATEADD(D,8,DateAdded )>=GETDATE()")
-        PMSDB.RunSqls(sqls)
+            'tblSTIService_profile
+            sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
+                     "CREATE TABLE [sti_sys].[dbo].[tblSTIService_profile](" & _
+                     "[PROF_Code] [varchar](15) NOT NULL," & _
+                     "[PROF_Name] [varchar](50) NULL," & _
+                     "[PROF_Comment] [text] NULL," & _
+                     "[PROF_ExpFolder] [varchar](100) NULL," & _
+                     "[DateUpdated] [datetime] NULL," & _
+                     "CONSTRAINT [PK_tblSTIService_profile] PRIMARY KEY CLUSTERED" & _
+                     "(" & _
+                            "[PROF_Code] Asc " & _
+                     ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
+                     ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
+
+            'tblSTIService_internet_settings
+            sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_internet_settings') " & _
+                     "CREATE TABLE [sti_sys].[dbo].[tblSTIService_internet_settings](" & _
+                     "[INET_Code] [varchar](15) NOT NULL," & _
+                     "[INET_ProfileName] [varchar](50) NULL," & _
+                     "[INET_User] [text] NULL," & _
+                     "[INET_Pwd] [text] NULL," & _
+                     "[INET_AutoRemoveFiles] [int] NULL," & _
+                     "[FTP_ConnectionTimeout] [int] NULL," & _
+                     "[INET_Host] [text] NULL," & _
+                     "[FTP_UsePassive] [int] NULL," & _
+                     "[FTP_AutoFeat] [int] NULL," & _
+                     "[INET_Port] [int] NULL," & _
+                     "[INET_UseSSL] [int] NULL," & _
+                     "[INET_TLS] [int] NULL," & _
+                     "[INET_SPA] [int] NULL," & _
+                     "[INET_Type] [int] NULL," & _
+                     "[SMTP_SenderEmail] [text] NULL," & _
+                     "[EMAIL_TYPE] [int] NULL," & _
+                     "[DateUpdated] [datetime] NULL," & _
+                     "CONSTRAINT [PK_tblSTIService_internet_settings] PRIMARY KEY CLUSTERED " & _
+                     "(" & _
+                            "[INET_Code] Asc " & _
+                     ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
+                     ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
+            '*********************** Add Default WRH 5 Backup Profile *********************
+            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblSTIService_profile] WHERE [PROF_Code] = '" & BACKUP_CODE & "') INSERT INTO [sti_sys].[dbo].[tblSTIService_profile]([PROF_Code],[PROF_Name],[PROF_Comment],[PROF_ExpFolder]) VALUES('" & BACKUP_CODE & "','" & BACKUP_NAME & "','Default PMS Backup Profile','" & BACKUP_DIR & "')")
+            'Lock PMS Records
+            sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
+            PMSDB.RunSqls(sqls)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
     End Sub
 
     Private Sub BypassLogonForDebugging(Optional ByVal bloggedon As Boolean = False)
@@ -113,9 +128,12 @@ Public Class MainForm
         PMSDB.BeginReader("EXEC dbo.GETSETTINGS")
         If PMSDB.Read Then
             DATE_LAST_EXPORT = PMSDB.ReaderItem("DATE_LAST_EXPORT", "")
+            DATE_LAST_EXPORT_IMG = PMSDB.ReaderItem("DATE_LAST_EXPORT_IMG", "")
             EXPORT_DIR = PMSDB.ReaderItem("EXPORT_DIR", "")
             SHORE_ID = PMSDB.ReaderItem("SHORE_ID", "")
+            txtDateDue.EditValue = PMSDB.ReaderItem("DUE_DAYS", 30)
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
+            IMAGE_MAX_RES = PMSDB.ReaderItem("IMAGE_MAX_RES", 800)
         End If
         PMSDB.CloseReader()
         'DateDueEdit.MinValue = Now.Date.AddDays(1)
@@ -193,7 +211,7 @@ Public Class MainForm
         LoadSettings()
         If Debugger.IsAttached Then
             BypassLogonForDebugging()
-            LoadContent("UNITS", True)
+            LoadContent("WORKDONE", True)
         Else
             Logon()
         End If
@@ -234,6 +252,10 @@ Public Class MainForm
     Private Sub CustomEvent(ByVal sender As String, ByVal param() As Object) Handles maincontent.OnCustomEvent
         'Unique commands
         Select Case param(0)
+            Case "RANKDEPCAT"
+                ledRank.Visibility = IIf(CBool(param(1)), DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+                ledDepartment.Visibility = IIf(CBool(param(1)), DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+                ledCategory.Visibility = IIf(CBool(param(1)), DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             Case "EnableImport"
                 bbPaste.Enabled = CBool(param(1))
                 bbImportFromFile.Enabled = CBool(param(1))
@@ -247,7 +269,6 @@ Public Class MainForm
                     bbShowComponents.Caption = "Show" & Environment.NewLine & "Components"
                     bbShowComponents.Down = False
                 End If
-
             Case "RefreshMainUnits"
                 RefreshMainUnits()
                 Application.DoEvents()
@@ -375,12 +396,12 @@ Public Class MainForm
                     MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
                     mainlist.Name = "   "
                 Else
-                    Dim PanelWidth As String = GetIni(USER_ID & "SplitterPosition" & cContent)
                     MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Both
-                    If PanelWidth = "" Then
+                    If IfNull(xrow(0)("ListLayout"), "") <> "" Then mainlist.SetLayout(xrow(0)("ListLayout"))
+                    If IfNull(xrow(0)("ListWidth"), 0) = 0 Then
                         MainPanel.SplitterPosition = xrow(0)("ObjectListDefaultWidth")
                     Else
-                        MainPanel.SplitterPosition = CType(PanelWidth, Integer)
+                        MainPanel.SplitterPosition = CType(xrow(0)("ListWidth"), Integer)
                     End If
                     If mainlist.Name <> strDLL & "_" & blList Or ForceRefresh Then
                         mainlist.Dispose()
@@ -406,10 +427,9 @@ Public Class MainForm
                 maincontent.Name = cContent
                 maincontent.bPermission = xrow(0)("Permission")
                 maincontent.strCaption = xrow(0)("Caption")
+                If IfNull(xrow(0)("ContentLayout"), "") <> "" Then maincontent.SetLayout(xrow(0)("ContentLayout"))
+                SetCustomMenuVisibility(cContent, xrow(0)("Permission"))
                 maincontent.RefreshData()
-                If maincontent.Name = "WORKDUE" Then
-                    maincontent.ExecCustomFunction(New String() {"RestoreLayout", GetAppPath() & "\Users\WORKDUE_" & USER_ID & "layout.xml"})
-                End If
                 Me.Text = GetAppName() & " - << " & Trim(xrow(0)("Caption")) & " - " & GetUserName() & GetServerName() & " >>"
                 bbPreview.Visibility = IIf(xrow(0)("PrintOption") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
                 For Each gGroup In RibbonControl.SelectedPage.Groups
@@ -422,45 +442,47 @@ Public Class MainForm
             End Try
             bbSaveLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
             bbResetLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbResetPassword.Visibility = IIf(cContent = "SECUSERS" And USER_ID = 1, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbBackUp.Visibility = IIf((cContent = "BACKUPRESTORE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbCopyMaintenance.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbEdit.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbRestore.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "VERSIONUPDATE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbUpdate.Visibility = IIf((cContent = "VERSIONUPDATE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledRank.Visibility = IIf((cContent = "WORKDUE" Or cContent = "NCMEASURES") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledCategory.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledMainUnits.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbShowComponents.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 5) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledDepartment.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "COUNTER" Or cContent = "RANK" Or cContent = "RUNNINGHOURS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.rpgAdminFilterOptions.Visible = (cContent = "UNITS" Or cContent = "COUNTER" Or cContent = "RANK") And (xrow(0)("Permission") And 1) > 0
-            Me.txtDateDue.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.txtDueHours.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            'Me.bbNC.Visibility = IIf((cContent = "WORKDONE" Or cContent = "NONCONFORM") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbNC.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
-            Me.bbAddPlannedDate.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.ledPeriod.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbUpdateNC.Visibility = IIf((cContent = "NONCONFORM") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbViewImage.Visibility = IIf((cContent = "WORKDUE" Or cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbWOMaintenance.Visibility = IIf((cContent = "COMPONENT") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.rpgMaintenanceEditingOptions.Visible = (cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "NCMEASURES" Or cContent = "RUNNINGHOURS")
-            Me.rpgToolSelectionOption.Visible = (cContent = "RECOVERARCHIVE")
-            Me.rpgToolsFilterOptions.Visible = (cContent = "INITWORK")
-            Me.rpgInventoryPrintingOptions.Visible = (cContent = "PARTPURCHASE")
-            Me.bbCondition.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbShowAllMaintenance.Visibility = IIf((cContent = "WORKDUE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.rpgToolsOptions.Visible = xrow(0)("Permission") > 1
-            Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (xrow(0)("Permission") And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbCritical.Visibility = IIf((cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (xrow(0)("Permission") And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
             Me.Cursor = Cursors.Default
         End If
         IsLoaded = True
     End Sub
 
+    Sub SetCustomMenuVisibility(cContent As String, nPermission As Integer)
+        Me.bbResetPassword.Visibility = IIf(cContent = "SECUSERS" And USER_ID = 1, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbBackUp.Visibility = IIf((cContent = "BACKUPRESTORE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbCopyMaintenance.Visibility = IIf((cContent = "UNITS") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbEdit.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbRestore.Visibility = IIf((cContent = "BACKUPRESTORE" Or cContent = "VERSIONUPDATE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbUpdate.Visibility = IIf((cContent = "VERSIONUPDATE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledRank.Visibility = IIf((cContent = "WORKDONE" Or cContent = "WORKDUE" Or cContent = "NCMEASURES") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledDepartment.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "COUNTER" Or cContent = "RANK" Or cContent = "RUNNINGHOURS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledCategory.Visibility = IIf((cContent = "UNITS" Or cContent = "WORKDUE" Or cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledMainUnits.Visibility = IIf((cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbShowComponents.Visibility = IIf((cContent = "UNITS") And (nPermission And 5) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.rpgAdminFilterOptions.Visible = (cContent = "UNITS" Or cContent = "COUNTER" Or cContent = "RANK") And (nPermission And 1) > 0
+        Me.txtDateDue.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.txtDueHours.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbNC.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
+        Me.bbAddPlannedDate.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.ledPeriod.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbUpdateNC.Visibility = IIf((cContent = "NONCONFORM") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbViewImage.Visibility = IIf((cContent = "WORKDUE" Or cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbWOMaintenance.Visibility = IIf((cContent = "COMPONENT") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.rpgMaintenanceEditingOptions.Visible = (cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "NONCONFORM" Or cContent = "NCMEASURES" Or cContent = "RUNNINGHOURS")
+        Me.rpgToolSelectionOption.Visible = (cContent = "RECOVERARCHIVE")
+        Me.rpgToolsFilterOptions.Visible = (cContent = "INITWORK")
+        Me.rpgInventoryPrintingOptions.Visible = (cContent = "PARTPURCHASE")
+        Me.bbCondition.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbShowAllMaintenance.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.rpgToolsOptions.Visible = nPermission > 1
+        Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbCritical.Visibility = IIf((cContent = "PARTPURCHASE" Or cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
+        Me.rpgInventoryViewingOptions.Visible = (cContent = "PARTPURCHASE" Or cContent = "PART")
+    End Sub
     Private Sub RibbonControl_SelectedPageChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles RibbonControl.SelectedPageChanged
         Dim container As DevExpress.XtraBars.Ribbon.RibbonPageGroup, nButton As DevExpress.XtraBars.BarButtonItem, i As Integer
         For Each container In RibbonControl.SelectedPage.Groups
@@ -569,16 +591,29 @@ Public Class MainForm
         ResetRibbon()
     End Sub
 
-
-
     Private Sub cmdSaveLayout_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbSaveLayout.ItemClick
-        If maincontent.Name = "WORKDUE" Then
-            maincontent.ExecCustomFunction(New String() {"SaveLayout", GetAppPath() & "\Users\WORKDUE_" & USER_ID & "layout.xml"})
+        If maincontent.Name = "WORKDONE" Or maincontent.Name = "WORKDUE" Or maincontent.Name = "PART" Then 'new Implementation experiment
+            Dim ListLayout As String = IIf(mainlist.Name = "   ", "", mainlist.GetLayout), ListWidth As Integer = IIf(mainlist.Name = "   ", 0, MainPanel.SplitterPosition), ContentLayout As String = maincontent.GetLayout, i As Integer
+            PMSDB.InitSqlWithParametersSP("UPDATEUSERSETTINGS")
+            PMSDB.AddSqlParameter("@UserID", SqlDbType.Int, USER_ID)
+            PMSDB.AddSqlParameter("@ObjectID", SqlDbType.Text, maincontent.Name)
+            PMSDB.AddSqlParameter("@ListLayout", SqlDbType.VarChar, ListLayout)
+            PMSDB.AddSqlParameter("@ListWidth", SqlDbType.Int, ListWidth)
+            PMSDB.AddSqlParameter("@ContentLayout", SqlDbType.VarChar, ContentLayout)
+            PMSDB.RunSqlWithParameters()
+            For i = 0 To ContentsObject.Count - 1
+                If Trim(ContentsObject(i)("ObjectID")) = maincontent.Name Then
+                    ContentsObject(i)("ListLayout") = ListLayout
+                    ContentsObject(i)("ListWidth") = ListWidth
+                    ContentsObject(i)("ContentLayout") = ContentLayout
+                    Exit For
+                End If
+            Next
         Else
             mainlist.SaveLayout(GetAppPath() & "\Users\" & maincontent.Name & "_" & USER_ID & "layout.xml")
             WriteIni(USER_ID & "SplitterPosition" & maincontent.Name, MainPanel.SplitterPosition)
         End If
-
+        'maincontent.SaveLayout()
     End Sub
 
     Private Sub cmdChangePassword_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles cmdChangePassword.ItemClick
@@ -957,10 +992,17 @@ Public Class MainForm
     Private Sub ledRank_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledRank.EditValueChanged
         If IsLoaded Then
             CURRENT_RANK = IfNull(ledRank.EditValue, "")
-            mainlist.SetFilter("")
-            maincontent.RefreshData()
+            If maincontent.Name = "PMSREP" Then
+                maincontent.ExecCustomFunction(New String() {"Filter"})
+            Else
+                mainlist.SetFilter("")
+                If maincontent.Name = "WORKDONE" Then
+                    maincontent.SetFilter("")
+                Else
+                    maincontent.RefreshData()
+                End If
+            End If
         End If
-
     End Sub
 
     Private Sub ledMainUnits_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledMainUnits.EditValueChanged
@@ -971,17 +1013,29 @@ Public Class MainForm
 
     Private Sub ledCategory_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledCategory.EditValueChanged
         CURRENT_CATEGORY = IfNull(ledCategory.EditValue, "")
-        mainlist.SetFilter("")
-        maincontent.RefreshData()
+        If maincontent.Name = "PMSREP" Then
+            maincontent.ExecCustomFunction(New String() {"Filter"})
+        Else
+            mainlist.SetFilter("")
+            If (maincontent.Name = "WORKDONE" AndAlso CURRENT_FLATVIEW_CHECKED) Then
+                maincontent.SetFilter("")
+            Else
+                maincontent.RefreshData()
+            End If
+        End If
     End Sub
 
     Private Sub ledDepartment_EditValueChanged(sender As Object, e As System.EventArgs) Handles ledDepartment.EditValueChanged
         CURRENT_DEPARTMENT = IfNull(ledDepartment.EditValue, "")
-        If maincontent.Name = "RUNNINGHOURS" Then
+        If maincontent.Name = "RUNNINGHOURS" Or maincontent.Name = "PMSREP" Then
             maincontent.ExecCustomFunction(New String() {"Filter"})
         Else
             mainlist.SetFilter("")
-            maincontent.RefreshData()
+            If maincontent.Name = "WORKDONE" AndAlso CURRENT_FLATVIEW_CHECKED Then
+                maincontent.SetFilter("")
+            Else
+                maincontent.RefreshData()
+            End If
         End If
     End Sub
 
@@ -1039,7 +1093,7 @@ Public Class MainForm
         frm.ShowDialog()
         If frm.bExported Then
             EXPORT_DIR = frm.txtExportDir.EditValue
-            ExportPMSData(PMSDB, 3, frm.txtExportDir.EditValue & "\PMS_Maintenance.xxx", frm.deFrom.EditValue, frm.deTo.EditValue, False)
+            ExportPMSData(PMSDB, 3, frm.txtExportDir.EditValue & "\PMS_Maintenance_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.deFrom.EditValue, frm.deTo.EditValue, False)
             PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
             PMSDB.SaveConfig("DATE_LAST_EXPORT", DATE_LAST_EXPORT, APP_SHORT_NAME)
         End If
@@ -1354,9 +1408,12 @@ Public Class MainForm
     Private Sub bbShowAllMaintenance_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbShowAllMaintenance.ItemClick
         CURRENT_SHOW_ALL_CHECKED = bbShowAllMaintenance.Down
         If CURRENT_SHOW_ALL_CHECKED Then
+            bbShowAllMaintenance.Caption = "Show Due" & Environment.NewLine & "Maintenance"
             CURRENT_CONDITION_CHECKED = False
             bbCondition.Down = False
             bbCondition.Caption = "Condition Based"
+        Else
+            bbShowAllMaintenance.Caption = "Show All" & Environment.NewLine & "Maintenance"
         End If
         maincontent.RefreshData()
     End Sub
@@ -1389,8 +1446,14 @@ Public Class MainForm
 
     Private Sub bbCritical_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbCritical.ItemClick
         CURRENT_CRITICAL_CHECKED = bbCritical.Down
-        If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
-        maincontent.RefreshData()
+        If maincontent.Name = "PART" Then
+            mainlist.SetFilter("")
+        ElseIf maincontent.Name = "PARTPURCHASE" Then
+            maincontent.ExecCustomFunction(New Object() {"FilterCriticalParts"})
+        Else
+            If maincontent.Name = "WORKDONE" Then mainlist.SetFilter("")
+            maincontent.RefreshData()
+        End If
     End Sub
 
     Private Sub bbFlatView_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbFlatView.ItemClick
@@ -1423,5 +1486,19 @@ Public Class MainForm
         DevExpress.XtraEditors.WindowsFormsSettings.DefaultFont = GetDefaultFont()
         DevExpress.XtraEditors.WindowsFormsSettings.DefaultMenuFont = GetDefaultFont()
         dbdController.Controller.AppearancesBar.ItemsFont = GetDefaultFont()
+    End Sub
+
+    Private Sub EXPDOCUMENTS_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles EXPDOCUMENTS.ItemClick
+        Dim nExpType As Integer = 4, frm As New frmExportDocuments
+        frm.txtExportDir.EditValue = EXPORT_DIR
+        frm.lblLastExp.Text = ChangeSQLDateStrToDate(DATE_LAST_EXPORT_IMG).ToShortDateString
+        frm.MainGrid.DataSource = PMSDB.CreateTable("SELECT *, CAST(0 AS BIT) Selected FROM dbo.DOCUMENTLIST")
+        frm.ShowDialog()
+        If frm.bExported Then
+            EXPORT_DIR = frm.txtExportDir.EditValue
+            ExportPMSDocuments(PMSDB, frm.txtExportDir.EditValue & "\PMS_Documents_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.strDocs)
+            PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
+            PMSDB.SaveConfig("DATE_LAST_EXPORT_IMG", DATE_LAST_EXPORT_IMG, APP_SHORT_NAME)
+        End If
     End Sub
 End Class

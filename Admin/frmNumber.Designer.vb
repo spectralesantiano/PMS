@@ -30,7 +30,7 @@ Partial Class frmNumber
         'cmdCancel
         '
         Me.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.cmdCancel.Location = New System.Drawing.Point(149, 66)
+        Me.cmdCancel.Location = New System.Drawing.Point(256, 66)
         Me.cmdCancel.Name = "cmdCancel"
         Me.cmdCancel.Size = New System.Drawing.Size(78, 23)
         Me.cmdCancel.TabIndex = 2
@@ -38,7 +38,7 @@ Partial Class frmNumber
         '
         'cmdOk
         '
-        Me.cmdOk.Location = New System.Drawing.Point(65, 66)
+        Me.cmdOk.Location = New System.Drawing.Point(170, 66)
         Me.cmdOk.Name = "cmdOk"
         Me.cmdOk.Size = New System.Drawing.Size(78, 23)
         Me.cmdOk.TabIndex = 1
@@ -48,21 +48,21 @@ Partial Class frmNumber
         '
         Me.LabelControl1.Location = New System.Drawing.Point(20, 20)
         Me.LabelControl1.Name = "LabelControl1"
-        Me.LabelControl1.Size = New System.Drawing.Size(144, 13)
+        Me.LabelControl1.Size = New System.Drawing.Size(228, 13)
         Me.LabelControl1.TabIndex = 190
-        Me.LabelControl1.Text = "Total Number of Components:"
+        Me.LabelControl1.Text = "Additional Number of Components to be added:"
         '
         'txtNumber
         '
-        Me.txtNumber.EditValue = New Decimal(New Integer() {2, 0, 0, 0})
-        Me.txtNumber.Location = New System.Drawing.Point(179, 17)
+        Me.txtNumber.EditValue = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.txtNumber.Location = New System.Drawing.Point(256, 17)
         Me.txtNumber.Name = "txtNumber"
         Me.txtNumber.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.txtNumber.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.[Default]
         Me.txtNumber.Properties.Mask.EditMask = "f0"
         Me.txtNumber.Properties.MaxValue = New Decimal(New Integer() {50, 0, 0, 0})
         Me.txtNumber.Properties.MinValue = New Decimal(New Integer() {2, 0, 0, 0})
-        Me.txtNumber.Size = New System.Drawing.Size(48, 20)
+        Me.txtNumber.Size = New System.Drawing.Size(78, 20)
         Me.txtNumber.TabIndex = 0
         '
         'frmNumber
@@ -71,7 +71,7 @@ Partial Class frmNumber
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.cmdCancel
-        Me.ClientSize = New System.Drawing.Size(246, 113)
+        Me.ClientSize = New System.Drawing.Size(361, 111)
         Me.ControlBox = False
         Me.Controls.Add(Me.LabelControl1)
         Me.Controls.Add(Me.cmdOk)

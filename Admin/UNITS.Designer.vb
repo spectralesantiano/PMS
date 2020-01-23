@@ -19,6 +19,7 @@ Partial Class UNITS
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UNITS))
         Dim SerializableAppearanceObject1 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Dim SerializableAppearanceObject2 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
@@ -31,7 +32,7 @@ Partial Class UNITS
         Me.cDeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.MainPanel = New DevExpress.XtraEditors.SplitContainerControl()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
-        Me.prEditors = New DevExpress.XtraEditors.Repository.PersistentRepository()
+        Me.prEditors = New DevExpress.XtraEditors.Repository.PersistentRepository(Me.components)
         Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.WorkEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.RankEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
@@ -51,7 +52,6 @@ Partial Class UNITS
         Me.colComponent = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colUnitDesc = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colComponentCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
-        Me.colUnitNum = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colCounter = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colLocCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
         Me.colDeptCode = New DevExpress.XtraTreeList.Columns.TreeListColumn()
@@ -140,10 +140,10 @@ Partial Class UNITS
         Me.DeletedImages = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.HasImage = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.TreeListColumn1 = New DevExpress.XtraTreeList.Columns.TreeListColumn()
-        Me.pmCustomMenu = New DevExpress.XtraBars.PopupMenu()
+        Me.pmCustomMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
         Me.bbiPaste = New DevExpress.XtraBars.BarButtonItem()
         Me.bbiImport = New DevExpress.XtraBars.BarButtonItem()
-        Me.BarManager1 = New DevExpress.XtraBars.BarManager()
+        Me.BarManager1 = New DevExpress.XtraBars.BarManager(Me.components)
         Me.barDockControlTop = New DevExpress.XtraBars.BarDockControl()
         Me.barDockControlBottom = New DevExpress.XtraBars.BarDockControl()
         Me.barDockControlLeft = New DevExpress.XtraBars.BarDockControl()
@@ -425,7 +425,7 @@ Partial Class UNITS
         'tlUnits
         '
         Me.tlUnits.Bands.AddRange(New DevExpress.XtraTreeList.Columns.TreeListBand() {Me.treeListBand1})
-        Me.tlUnits.Columns.AddRange(New DevExpress.XtraTreeList.Columns.TreeListColumn() {Me.colComponentCode, Me.colComponent, Me.colUnitNum, Me.colUnitDesc, Me.colCounter, Me.colLocCode, Me.colDeptCode, Me.colCatCode, Me.colType, Me.colRefNo, Me.colSerialNumber, Me.colMakerCode, Me.colCounterCode, Me.colRunningHours, Me.colCritical, Me.colModel, Me.colVendorCode, Me.colActive, Me.colPLocCode, Me.colHasCritical, Me.colHasInactive})
+        Me.tlUnits.Columns.AddRange(New DevExpress.XtraTreeList.Columns.TreeListColumn() {Me.colComponentCode, Me.colComponent, Me.colUnitDesc, Me.colCounter, Me.colLocCode, Me.colDeptCode, Me.colCatCode, Me.colType, Me.colRefNo, Me.colSerialNumber, Me.colMakerCode, Me.colCounterCode, Me.colRunningHours, Me.colCritical, Me.colModel, Me.colVendorCode, Me.colActive, Me.colPLocCode, Me.colHasCritical, Me.colHasInactive})
         Me.tlUnits.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tlUnits.KeyFieldName = "UnitCode"
         Me.tlUnits.Location = New System.Drawing.Point(0, 0)
@@ -494,13 +494,6 @@ Partial Class UNITS
         Me.colComponentCode.Visible = True
         Me.colComponentCode.VisibleIndex = 1
         Me.colComponentCode.Width = 160
-        '
-        'colUnitNum
-        '
-        Me.colUnitNum.Caption = "No."
-        Me.colUnitNum.FieldName = "UnitNumber"
-        Me.colUnitNum.Name = "colUnitNum"
-        Me.colUnitNum.Width = 40
         '
         'colCounter
         '
@@ -1557,7 +1550,6 @@ Partial Class UNITS
     Friend WithEvents colSerialNumber As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents colMakerCode As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents TreeListColumn1 As DevExpress.XtraTreeList.Columns.TreeListColumn
-    Friend WithEvents colUnitNum As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents colUnitDesc As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents colCounter As DevExpress.XtraTreeList.Columns.TreeListColumn
     Friend WithEvents colCounterCode As DevExpress.XtraTreeList.Columns.TreeListColumn

@@ -33,8 +33,8 @@ Partial Class WORKDONE
         Me.ExecutedBy = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Abbrv = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Remarks = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.DueDate = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.DueCounter = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.PrevDueDate = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.PrevDueCounter = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.bNC = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Edited = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.bLatest = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -43,6 +43,11 @@ Partial Class WORKDONE
         Me.AddedImages = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DeletedImages = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Locked = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.DueDate = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.DueCounter = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Active = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.Critical = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.CriticalDisplay = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -88,7 +93,7 @@ Partial Class WORKDONE
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
         Me.MainView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.DueDate, Me.DueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.AddedImages, Me.DeletedImages, Me.Locked})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.PrevDueDate, Me.PrevDueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.AddedImages, Me.DeletedImages, Me.Locked, Me.DueDate, Me.DueCounter, Me.Active, Me.Critical, Me.CriticalDisplay})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.GroupFormat = "{1} {2}"
@@ -105,7 +110,6 @@ Partial Class WORKDONE
         Me.MainView.OptionsCustomization.AllowFilter = False
         Me.MainView.OptionsCustomization.AllowGroup = False
         Me.MainView.OptionsCustomization.AllowQuickHideColumns = False
-        Me.MainView.OptionsFilter.AllowFilterEditor = False
         Me.MainView.OptionsFind.AllowFindPanel = False
         Me.MainView.OptionsSelection.EnableAppearanceFocusedCell = False
         Me.MainView.OptionsSelection.EnableAppearanceFocusedRow = False
@@ -113,6 +117,7 @@ Partial Class WORKDONE
         Me.MainView.OptionsSelection.UseIndicatorForSelection = False
         Me.MainView.OptionsView.HeaderFilterButtonShowMode = DevExpress.XtraEditors.Controls.FilterButtonShowMode.Button
         Me.MainView.OptionsView.RowAutoHeight = True
+        Me.MainView.OptionsView.ShowFilterPanelMode = DevExpress.XtraGrid.Views.Base.ShowFilterPanelMode.Never
         Me.MainView.OptionsView.ShowGroupPanel = False
         Me.MainView.RowHeight = 0
         Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.Description, DevExpress.Data.ColumnSortOrder.Ascending)})
@@ -138,7 +143,7 @@ Partial Class WORKDONE
         Me.Description.SortMode = DevExpress.XtraGrid.ColumnSortMode.DisplayText
         Me.Description.Visible = True
         Me.Description.VisibleIndex = 0
-        Me.Description.Width = 206
+        Me.Description.Width = 105
         '
         'RemarksEdit
         '
@@ -152,8 +157,8 @@ Partial Class WORKDONE
         Me.Maintenance.FieldName = "Maintenance"
         Me.Maintenance.Name = "Maintenance"
         Me.Maintenance.Visible = True
-        Me.Maintenance.VisibleIndex = 1
-        Me.Maintenance.Width = 155
+        Me.Maintenance.VisibleIndex = 2
+        Me.Maintenance.Width = 80
         '
         'WorkDate
         '
@@ -161,11 +166,11 @@ Partial Class WORKDONE
         Me.WorkDate.DisplayFormat.FormatString = "d"
         Me.WorkDate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime
         Me.WorkDate.FieldName = "WorkDate"
-        Me.WorkDate.MinWidth = 100
+        Me.WorkDate.MinWidth = 80
         Me.WorkDate.Name = "WorkDate"
         Me.WorkDate.Visible = True
-        Me.WorkDate.VisibleIndex = 4
-        Me.WorkDate.Width = 100
+        Me.WorkDate.VisibleIndex = 5
+        Me.WorkDate.Width = 81
         '
         'WorkCounter
         '
@@ -177,8 +182,8 @@ Partial Class WORKDONE
         Me.WorkCounter.MinWidth = 90
         Me.WorkCounter.Name = "WorkCounter"
         Me.WorkCounter.Visible = True
-        Me.WorkCounter.VisibleIndex = 5
-        Me.WorkCounter.Width = 99
+        Me.WorkCounter.VisibleIndex = 6
+        Me.WorkCounter.Width = 91
         '
         'NumberEdit
         '
@@ -193,8 +198,8 @@ Partial Class WORKDONE
         Me.ExecutedBy.FieldName = "ExecutedBy"
         Me.ExecutedBy.Name = "ExecutedBy"
         Me.ExecutedBy.Visible = True
-        Me.ExecutedBy.VisibleIndex = 6
-        Me.ExecutedBy.Width = 134
+        Me.ExecutedBy.VisibleIndex = 7
+        Me.ExecutedBy.Width = 85
         '
         'Abbrv
         '
@@ -203,8 +208,8 @@ Partial Class WORKDONE
         Me.Abbrv.MinWidth = 70
         Me.Abbrv.Name = "Abbrv"
         Me.Abbrv.Visible = True
-        Me.Abbrv.VisibleIndex = 7
-        Me.Abbrv.Width = 70
+        Me.Abbrv.VisibleIndex = 8
+        Me.Abbrv.Width = 71
         '
         'Remarks
         '
@@ -213,34 +218,34 @@ Partial Class WORKDONE
         Me.Remarks.FieldName = "Remarks"
         Me.Remarks.Name = "Remarks"
         Me.Remarks.Visible = True
-        Me.Remarks.VisibleIndex = 8
-        Me.Remarks.Width = 164
+        Me.Remarks.VisibleIndex = 9
+        Me.Remarks.Width = 327
         '
-        'DueDate
+        'PrevDueDate
         '
-        Me.DueDate.AppearanceCell.Options.UseFont = True
-        Me.DueDate.Caption = "Date Due"
-        Me.DueDate.DisplayFormat.FormatString = "d"
-        Me.DueDate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime
-        Me.DueDate.FieldName = "DueDate"
-        Me.DueDate.MinWidth = 100
-        Me.DueDate.Name = "DueDate"
-        Me.DueDate.Visible = True
-        Me.DueDate.VisibleIndex = 2
-        Me.DueDate.Width = 100
+        Me.PrevDueDate.AppearanceCell.Options.UseFont = True
+        Me.PrevDueDate.Caption = "Was due @date"
+        Me.PrevDueDate.DisplayFormat.FormatString = "d"
+        Me.PrevDueDate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime
+        Me.PrevDueDate.FieldName = "PrevDueDate"
+        Me.PrevDueDate.MinWidth = 100
+        Me.PrevDueDate.Name = "PrevDueDate"
+        Me.PrevDueDate.Visible = True
+        Me.PrevDueDate.VisibleIndex = 3
+        Me.PrevDueDate.Width = 101
         '
-        'DueCounter
+        'PrevDueCounter
         '
-        Me.DueCounter.Caption = "Working Hours Due"
-        Me.DueCounter.ColumnEdit = Me.NumberEdit
-        Me.DueCounter.FieldName = "DueCounter"
-        Me.DueCounter.MinWidth = 105
-        Me.DueCounter.Name = "DueCounter"
-        Me.DueCounter.OptionsColumn.AllowEdit = False
-        Me.DueCounter.OptionsColumn.ReadOnly = True
-        Me.DueCounter.Visible = True
-        Me.DueCounter.VisibleIndex = 3
-        Me.DueCounter.Width = 105
+        Me.PrevDueCounter.Caption = "Was due @running hours"
+        Me.PrevDueCounter.ColumnEdit = Me.NumberEdit
+        Me.PrevDueCounter.FieldName = "PrevDueCounter"
+        Me.PrevDueCounter.MinWidth = 133
+        Me.PrevDueCounter.Name = "PrevDueCounter"
+        Me.PrevDueCounter.OptionsColumn.AllowEdit = False
+        Me.PrevDueCounter.OptionsColumn.ReadOnly = True
+        Me.PrevDueCounter.Visible = True
+        Me.PrevDueCounter.VisibleIndex = 4
+        Me.PrevDueCounter.Width = 135
         '
         'bNC
         '
@@ -290,6 +295,39 @@ Partial Class WORKDONE
         Me.Locked.FieldName = "Locked"
         Me.Locked.Name = "Locked"
         '
+        'DueDate
+        '
+        Me.DueDate.Caption = "DueDate"
+        Me.DueDate.FieldName = "DueDate"
+        Me.DueDate.Name = "DueDate"
+        Me.DueDate.Width = 61
+        '
+        'DueCounter
+        '
+        Me.DueCounter.Caption = "DueCounter"
+        Me.DueCounter.FieldName = "DueCounter"
+        Me.DueCounter.Name = "DueCounter"
+        '
+        'Active
+        '
+        Me.Active.Caption = "Active"
+        Me.Active.FieldName = "Active"
+        Me.Active.Name = "Active"
+        '
+        'Critical
+        '
+        Me.Critical.Caption = "Critical"
+        Me.Critical.FieldName = "Critical"
+        Me.Critical.Name = "Critical"
+        '
+        'CriticalDisplay
+        '
+        Me.CriticalDisplay.Caption = "Critical"
+        Me.CriticalDisplay.Name = "CriticalDisplay"
+        Me.CriticalDisplay.Visible = True
+        Me.CriticalDisplay.VisibleIndex = 1
+        Me.CriticalDisplay.Width = 57
+        '
         'WORKDONE
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -315,8 +353,8 @@ Partial Class WORKDONE
     Friend WithEvents WorkCounter As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Edited As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Remarks As DevExpress.XtraGrid.Columns.GridColumn
-    Friend WithEvents DueDate As DevExpress.XtraGrid.Columns.GridColumn
-    Friend WithEvents DueCounter As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents PrevDueDate As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents PrevDueCounter As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents bLatest As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Abbrv As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents ExecutedBy As DevExpress.XtraGrid.Columns.GridColumn
@@ -329,5 +367,10 @@ Partial Class WORKDONE
     Friend WithEvents Description As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Locked As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DeletedImages As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents DueDate As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents DueCounter As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Active As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Critical As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents CriticalDisplay As DevExpress.XtraGrid.Columns.GridColumn
 
 End Class

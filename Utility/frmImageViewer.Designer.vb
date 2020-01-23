@@ -20,32 +20,32 @@ Partial Class frmImageViewer
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmImageViewer))
-        Dim SerializableAppearanceObject2 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
+        Dim SerializableAppearanceObject1 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Me.imgLogo = New System.Windows.Forms.PictureBox()
         Me.SplitContainerControl1 = New DevExpress.XtraEditors.SplitContainerControl()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.FileDesc = New DevExpress.XtraGrid.Columns.GridColumn()
-        Me.iDeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.Doc = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.RepositoryItemLookUpEdit2 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.iDeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         CType(Me.imgLogo, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SplitContainerControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainerControl1.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'imgLogo
         '
-        Me.imgLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.imgLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.imgLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.imgLogo.Dock = System.Windows.Forms.DockStyle.Fill
         Me.imgLogo.Location = New System.Drawing.Point(0, 0)
         Me.imgLogo.Name = "imgLogo"
-        Me.imgLogo.Size = New System.Drawing.Size(729, 646)
+        Me.imgLogo.Size = New System.Drawing.Size(794, 535)
         Me.imgLogo.TabIndex = 209
         Me.imgLogo.TabStop = False
         '
@@ -58,7 +58,7 @@ Partial Class frmImageViewer
         Me.SplitContainerControl1.Panel1.Text = "Panel1"
         Me.SplitContainerControl1.Panel2.Controls.Add(Me.imgLogo)
         Me.SplitContainerControl1.Panel2.Text = "Panel2"
-        Me.SplitContainerControl1.Size = New System.Drawing.Size(931, 646)
+        Me.SplitContainerControl1.Size = New System.Drawing.Size(996, 535)
         Me.SplitContainerControl1.SplitterPosition = 197
         Me.SplitContainerControl1.TabIndex = 210
         Me.SplitContainerControl1.Text = "SplitContainerControl1"
@@ -71,7 +71,7 @@ Partial Class frmImageViewer
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit2, Me.iDeleteEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(197, 646)
+        Me.MainGrid.Size = New System.Drawing.Size(197, 535)
         Me.MainGrid.TabIndex = 247
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -121,13 +121,6 @@ Partial Class frmImageViewer
         Me.FileDesc.VisibleIndex = 0
         Me.FileDesc.Width = 169
         '
-        'iDeleteEdit
-        '
-        Me.iDeleteEdit.AutoHeight = False
-        Me.iDeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("iDeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject2, "", Nothing, Nothing, True)})
-        Me.iDeleteEdit.Name = "iDeleteEdit"
-        Me.iDeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
-        '
         'Doc
         '
         Me.Doc.Caption = "Doc"
@@ -147,11 +140,18 @@ Partial Class frmImageViewer
         Me.RepositoryItemLookUpEdit2.ShowHeader = False
         Me.RepositoryItemLookUpEdit2.ValueMember = "CounterCode"
         '
+        'iDeleteEdit
+        '
+        Me.iDeleteEdit.AutoHeight = False
+        Me.iDeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("iDeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject1, "", Nothing, Nothing, True)})
+        Me.iDeleteEdit.Name = "iDeleteEdit"
+        Me.iDeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
+        '
         'frmImageViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(931, 646)
+        Me.ClientSize = New System.Drawing.Size(996, 535)
         Me.Controls.Add(Me.SplitContainerControl1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -166,8 +166,8 @@ Partial Class frmImageViewer
         Me.SplitContainerControl1.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RepositoryItemLookUpEdit2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.iDeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

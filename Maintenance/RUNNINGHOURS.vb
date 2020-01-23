@@ -5,11 +5,14 @@ Imports DevExpress.XtraGrid.Views.BandedGrid
 
 Public Class RUNNINGHOURS
 
-
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
             Case "Filter"
                 FilterData()
+            Case "Preview"
+                If MainView.RowCount > 0 Then
+                    RaiseCustomEvent(Name, New Object() {"Preview", "COUNTERREP", "PMSReports", MainGrid.DataSource})
+                End If
         End Select
     End Sub
 
@@ -26,14 +29,22 @@ Public Class RUNNINGHOURS
             frm.txtDate.Properties.MaxValue = Now.Date
             frm.ShowDialog()
             If frm.IS_SAVED Then
-                Dim i As Integer
+                Dim i As Integer, bHasLaterDate As Boolean = False
                 For i = 0 To MainView.RowCount - 1
-                    MainView.SetRowCellValue(i, "NewDate", frm.txtDate.EditValue)
-                    MainView.SetRowCellValue(i, "Edited", False)
+                    If Date.Compare(MainView.GetRowCellValue(i, "CurrDate"), frm.txtDate.EditValue) >= 0 Then
+                        bHasLaterDate = True
+                    Else
+                        MainView.SetRowCellValue(i, "NewDate", frm.txtDate.EditValue)
+                        MainView.SetRowCellValue(i, "Edited", False)
+                    End If
                 Next
+                If bHasLaterDate Then
+                    MsgBox("Some rows are not set to default date. Default Reading Date should be later than the previous reading date.", MsgBoxStyle.Information, GetAppName)
+                End If
                 AllowSaving(Name, False) 'Disable save button
                 bAddMode = True
                 NewBand.Visible = True
+                PrevBand.Visible = False
                 bRecordUpdated = False
             End If
         End If
@@ -81,6 +92,7 @@ Public Class RUNNINGHOURS
             NewDateEdit.MaxValue = Now.Date
         End If
         MainGrid.DataSource = DB.CreateTable("EXEC [dbo].[RUNNINGHOURS]")
+        SplitContainerControl1.SplitterPosition = MEBand.Width + CurrBand.Width + PrevBand.Width + gSummary.Width + 100
         CurrBand.Visible = False
         If MainView.RowCount > 0 Then
             Dim i As Integer
@@ -92,6 +104,7 @@ Public Class RUNNINGHOURS
             Next
         End If
         NewBand.Visible = False
+        PrevBand.Visible = True
         bLoaded = True
     End Sub
 
@@ -175,7 +188,12 @@ Public Class RUNNINGHOURS
 
     Private Sub MainView_ValidatingEditor(sender As Object, e As DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs) Handles MainView.ValidatingEditor
         If bAddMode Then
-            If MainView.FocusedColumn.Name = "NewReading" Then
+            If MainView.FocusedColumn.Name = "NewDate" Then
+                If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate"), e.Value) >= 0 Then
+                    e.ErrorText = "Current Reading Date should be later than the previous reading date."
+                    e.Valid = False
+                End If
+            ElseIf MainView.FocusedColumn.Name = "NewReading" Then
                 If e.Value < IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrReading"), 0) Then
                     e.ErrorText = "Current Reading should not be less than the previous reading."
                     e.Valid = False
@@ -186,7 +204,12 @@ Public Class RUNNINGHOURS
                 End If
             End If
         Else
-            If MainView.FocusedColumn.Name = "CurrReading" Then
+            If MainView.FocusedColumn.Name = "CurrDate" Then
+                If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate"), e.Value) >= 0 Then
+                    e.ErrorText = "Current Reading Date should be later than the previous reading date."
+                    e.Valid = False
+                End If
+            ElseIf MainView.FocusedColumn.Name = "CurrReading" Then
                 If e.Value < IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevReading"), 0) And IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrCounter"), "") = IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevCounter"), "") Then
                     e.ErrorText = "Current Reading should not be less than the previous reading."
                     e.Valid = False
@@ -201,11 +224,10 @@ Public Class RUNNINGHOURS
         End If
     End Sub
 
-    Private Sub MainGrid_Click(sender As System.Object, e As System.EventArgs) Handles MainGrid.Click
-
-    End Sub
-
-    Private Sub MainView_RowUpdated(sender As Object, e As DevExpress.XtraGrid.Views.Base.RowObjectEventArgs) Handles MainView.RowUpdated
-
+    Private Sub MainView_FocusedRowChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs) Handles MainView.FocusedRowChanged
+        If MainView.RowCount > 0 Then
+            hGrid.DataSource = DB.CreateTable("SELECT [Counter],[ReadingDate] hDate,[Reading] hReading FROM [dbo].[COUNTERHISTORY] WHERE UnitCode='" & MainView.GetFocusedRowCellValue("UnitCode") & "'")
+            hBand.Caption = MainView.GetFocusedRowCellValue("UnitDesc")
+        End If
     End Sub
 End Class

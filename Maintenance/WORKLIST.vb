@@ -6,6 +6,16 @@ Imports DevExpress.Data.Filtering
 
 Public Class WORKLIST
 
+    Public Overrides Sub SetLayout(strLayout As String)
+        tlMain.RestoreLayoutFromStream(StringToStream(strLayout))
+    End Sub
+
+    Public Overrides Function GetLayout() As String
+        Dim str As New System.IO.MemoryStream
+        tlMain.SaveLayoutToStream(str)
+        Return StreamToString(str)
+    End Function
+
     Private Sub tlMain_BeforeCollapse(sender As Object, e As DevExpress.XtraTreeList.BeforeCollapseEventArgs) Handles tlMain.BeforeCollapse
         'e.CanCollapse = False
     End Sub
@@ -24,7 +34,13 @@ Public Class WORKLIST
 
     Private Sub tlMain_NodeCellStyle(sender As Object, e As DevExpress.XtraTreeList.GetCustomNodeCellStyleEventArgs) Handles tlMain.NodeCellStyle
         If e.Node.Focused Then
-            e.Appearance.BackColor = SEL_COLOR
+            If IfNull(e.Node.GetValue("Active"), True) Then
+                e.Appearance.BackColor = SEL_COLOR
+            Else
+                e.Appearance.BackColor = DISABLED_SELECTED_COLOR
+            End If
+        ElseIf Not IfNull(e.Node.GetValue("Active"), True) Then
+            e.Appearance.BackColor = DISABLED_COLOR
         End If
     End Sub
 
@@ -52,7 +68,7 @@ Public Class WORKLIST
     End Sub
 
     Public Overrides Function GetID() As String
-        If tlMain.AllNodesCount > 0 Then
+        If tlMain.VisibleNodesCount > 0 Then
             Return tlMain.FocusedNode.GetValue("UnitCode")
         Else
             Return ""
@@ -60,7 +76,7 @@ Public Class WORKLIST
     End Function
 
     Public Overrides Function GetDesc() As String
-        If tlMain.AllNodesCount > 0 Then
+        If tlMain.VisibleNodesCount > 0 Then
             Return tlMain.FocusedNode.GetValue("Description")
         Else
             Return ""

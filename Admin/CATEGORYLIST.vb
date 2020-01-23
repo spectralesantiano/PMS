@@ -32,17 +32,17 @@ Public Class CATEGORYLIST
         End If
     End Sub
 
-    Public Overrides Sub SetFilter(ByVal _criteria As String)
-        If CURRENT_DEPARTMENT = "" Then
-            Me.MainView.ActiveFilterString = ""
-        Else
-            Me.MainView.ActiveFilterString = "DeptCode='" & CURRENT_DEPARTMENT & "'"
-        End If
-        If MainView.RowCount > 0 Then
-            MainView.SelectRow(0)
-            MainView.RefreshData()
-        End If
-    End Sub
+    'Public Overrides Sub SetFilter(ByVal _criteria As String)
+    '    If CURRENT_DEPARTMENT = "" Then
+    '        Me.MainView.ActiveFilterString = ""
+    '    Else
+    '        Me.MainView.ActiveFilterString = "DeptCode='" & CURRENT_DEPARTMENT & "'"
+    '    End If
+    '    If MainView.RowCount > 0 Then
+    '        MainView.SelectRow(0)
+    '        MainView.RefreshData()
+    '    End If
+    'End Sub
 
     Public Overrides Sub RefreshData()
         Dim nRow As Integer = -1

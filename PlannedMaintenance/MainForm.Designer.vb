@@ -104,6 +104,8 @@ Partial Class MainForm
         Me.bbFlatView = New DevExpress.XtraBars.BarButtonItem()
         Me.bbUserPreferences = New DevExpress.XtraBars.BarButtonItem()
         Me.bbShowAllMaintenance = New DevExpress.XtraBars.BarButtonItem()
+        Me.IDOCVIEWER = New DevExpress.XtraBars.BarButtonItem()
+        Me.EXPDOCUMENTS = New DevExpress.XtraBars.BarButtonItem()
         Me.rpMaintenance = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.rpgMaintenance = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpgMaintenanceEditingOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
@@ -112,6 +114,7 @@ Partial Class MainForm
         Me.rpInventory = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.rpgInventory = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpgInventoryOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpgInventoryViewingOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpgInventoryPrintingOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpDocViewer = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.rpgDocViewer = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
@@ -141,9 +144,9 @@ Partial Class MainForm
         Me.pmListMenu = New DevExpress.XtraBars.PopupMenu()
         Me.rpgVslAccount = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController()
-        Me.PopupMenu1 = New DevExpress.XtraBars.PopupMenu()
-        Me.PopupMenu2 = New DevExpress.XtraBars.PopupMenu()
-        Me.PopupMenu3 = New DevExpress.XtraBars.PopupMenu()
+        'Me.PopupMenu1 = New DevExpress.XtraBars.PopupMenu()
+        'Me.PopupMenu2 = New DevExpress.XtraBars.PopupMenu()
+        'Me.PopupMenu3 = New DevExpress.XtraBars.PopupMenu()
         CType(Me.RibbonControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledDepartmentRep, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledRankRep, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -159,9 +162,9 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).BeginInit()
+        'CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).BeginInit()
+        'CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).BeginInit()
+        'CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl
@@ -171,9 +174,9 @@ Partial Class MainForm
         Me.RibbonControl.ApplicationIcon = CType(resources.GetObject("RibbonControl.ApplicationIcon"), System.Drawing.Bitmap)
         Me.RibbonControl.AutoSizeItems = True
         Me.RibbonControl.ExpandCollapseItem.Id = 0
-        Me.RibbonControl.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl.ExpandCollapseItem, Me.bbAdd, Me.bbSave, Me.bbDelete, Me.RANK, Me.DEPARTMENT, Me.bbSaveLayout, Me.cmdHelp, Me.SECUSERS, Me.SECGROUPS, Me.cmdChangePassword, Me.bbResetPassword, Me.cmdChangeUser, Me.SWITCHBOARD, Me.COMPANYINFO, Me.LICENSEINFO, Me.bbPreview, Me.bbResetLayout, Me.BACKUPRESTORE, Me.bbBackUp, Me.bbRestore, Me.VERSIONUPDATE, Me.bbUpdate, Me.cmdNotification, Me.bbExport, Me.bbEdit, Me.bbSelectAll, Me.bbDeselect, Me.SETTINGS, Me.PMSREP, Me.ARCHIVEDATA, Me.RECOVERARCHIVE, Me.UNITS, Me.PART, Me.CATEGORY, Me.COUNTER, Me.VLOCATION, Me.ledDepartment, Me.WORKDONE, Me.ledRank, Me.ledCategory, Me.INTERVAL, Me.WORKDUE, Me.MAINTENANCE, Me.COMPONENT, Me.NONCONFORM, Me.bbNC, Me.bbUpdateNC, Me.NCMEASURES, Me.EXPORTADMIN, Me.IMPORTDATA, Me.bbWOMaintenance, Me.RUNNINGHOURS, Me.txtDueHours, Me.EXPMAINTENANCE, Me.VESSELINFO, Me.bbCopy, Me.ledMainUnits, Me.bbCopyMaintenance, Me.bbShowComponents, Me.txtDateDue, Me.bbAddPlannedDate, Me.ledPeriod, Me.bbCondition, Me.PARTPURCHASE, Me.bbViewImage, Me.STORAGE, Me.MDOCVIEWER, Me.WDOCVIEWER, Me.bbPaste, Me.bbImportFromFile, Me.VENDOR, Me.MAKER, Me.bbCritical, Me.bbFlatView, Me.bbUserPreferences, Me.bbShowAllMaintenance})
+        Me.RibbonControl.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl.ExpandCollapseItem, Me.bbAdd, Me.bbSave, Me.bbDelete, Me.RANK, Me.DEPARTMENT, Me.bbSaveLayout, Me.cmdHelp, Me.SECUSERS, Me.SECGROUPS, Me.cmdChangePassword, Me.bbResetPassword, Me.cmdChangeUser, Me.SWITCHBOARD, Me.COMPANYINFO, Me.LICENSEINFO, Me.bbPreview, Me.bbResetLayout, Me.BACKUPRESTORE, Me.bbBackUp, Me.bbRestore, Me.VERSIONUPDATE, Me.bbUpdate, Me.cmdNotification, Me.bbExport, Me.bbEdit, Me.bbSelectAll, Me.bbDeselect, Me.SETTINGS, Me.PMSREP, Me.ARCHIVEDATA, Me.RECOVERARCHIVE, Me.UNITS, Me.PART, Me.CATEGORY, Me.COUNTER, Me.VLOCATION, Me.ledDepartment, Me.WORKDONE, Me.ledRank, Me.ledCategory, Me.INTERVAL, Me.WORKDUE, Me.MAINTENANCE, Me.COMPONENT, Me.NONCONFORM, Me.bbNC, Me.bbUpdateNC, Me.NCMEASURES, Me.EXPORTADMIN, Me.IMPORTDATA, Me.bbWOMaintenance, Me.RUNNINGHOURS, Me.txtDueHours, Me.EXPMAINTENANCE, Me.VESSELINFO, Me.bbCopy, Me.ledMainUnits, Me.bbCopyMaintenance, Me.bbShowComponents, Me.txtDateDue, Me.bbAddPlannedDate, Me.ledPeriod, Me.bbCondition, Me.PARTPURCHASE, Me.bbViewImage, Me.STORAGE, Me.MDOCVIEWER, Me.WDOCVIEWER, Me.bbPaste, Me.bbImportFromFile, Me.VENDOR, Me.MAKER, Me.bbCritical, Me.bbFlatView, Me.bbUserPreferences, Me.bbShowAllMaintenance, Me.IDOCVIEWER, Me.EXPDOCUMENTS})
         Me.RibbonControl.Location = New System.Drawing.Point(0, 0)
-        Me.RibbonControl.MaxItemId = 269
+        Me.RibbonControl.MaxItemId = 272
         Me.RibbonControl.Name = "RibbonControl"
         Me.RibbonControl.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.rpMaintenance, Me.rpInventory, Me.rpDocViewer, Me.rpAdmin, Me.rpTools, Me.rpSecurity, Me.rpReports, Me.rpHome})
         Me.RibbonControl.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.ledDepartmentRep, Me.ledRankRep, Me.ledCategoryRep, Me.ledDueDays, Me.ledDueHours, Me.ledUnitRep, Me.DateDueEdit, Me.ledPeriodRep})
@@ -927,6 +930,7 @@ Partial Class MainForm
         '
         Me.bbCritical.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check
         Me.bbCritical.Caption = "Critical"
+        Me.bbCritical.Glyph = CType(resources.GetObject("bbCritical.Glyph"), System.Drawing.Image)
         Me.bbCritical.Id = 246
         Me.bbCritical.LargeGlyph = CType(resources.GetObject("bbCritical.LargeGlyph"), System.Drawing.Image)
         Me.bbCritical.Name = "bbCritical"
@@ -954,6 +958,22 @@ Partial Class MainForm
         Me.bbShowAllMaintenance.Id = 257
         Me.bbShowAllMaintenance.LargeGlyph = CType(resources.GetObject("bbShowAllMaintenance.LargeGlyph"), System.Drawing.Image)
         Me.bbShowAllMaintenance.Name = "bbShowAllMaintenance"
+        '
+        'IDOCVIEWER
+        '
+        Me.IDOCVIEWER.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check
+        Me.IDOCVIEWER.Caption = "Inventory"
+        Me.IDOCVIEWER.GroupIndex = 3
+        Me.IDOCVIEWER.Id = 260
+        Me.IDOCVIEWER.LargeGlyph = CType(resources.GetObject("IDOCVIEWER.LargeGlyph"), System.Drawing.Image)
+        Me.IDOCVIEWER.Name = "IDOCVIEWER"
+        '
+        'EXPDOCUMENTS
+        '
+        Me.EXPDOCUMENTS.Caption = "Export Documents"
+        Me.EXPDOCUMENTS.Id = 271
+        Me.EXPDOCUMENTS.LargeGlyph = CType(resources.GetObject("EXPDOCUMENTS.LargeGlyph"), System.Drawing.Image)
+        Me.EXPDOCUMENTS.Name = "EXPDOCUMENTS"
         '
         'rpMaintenance
         '
@@ -1015,7 +1035,7 @@ Partial Class MainForm
         '
         'rpInventory
         '
-        Me.rpInventory.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.rpgInventory, Me.rpgInventoryOptions, Me.rpgInventoryPrintingOptions})
+        Me.rpInventory.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.rpgInventory, Me.rpgInventoryOptions, Me.rpgInventoryViewingOptions, Me.rpgInventoryPrintingOptions})
         Me.rpInventory.Name = "rpInventory"
         Me.rpInventory.Text = "Inventory"
         '
@@ -1035,7 +1055,15 @@ Partial Class MainForm
         Me.rpgInventoryOptions.ItemLinks.Add(Me.bbDelete)
         Me.rpgInventoryOptions.Name = "rpgInventoryOptions"
         Me.rpgInventoryOptions.ShowCaptionButton = False
+        Me.rpgInventoryOptions.Tag = "2"
         Me.rpgInventoryOptions.Text = "Editing Options"
+        '
+        'rpgInventoryViewingOptions
+        '
+        Me.rpgInventoryViewingOptions.ItemLinks.Add(Me.bbCritical)
+        Me.rpgInventoryViewingOptions.Name = "rpgInventoryViewingOptions"
+        Me.rpgInventoryViewingOptions.ShowCaptionButton = False
+        Me.rpgInventoryViewingOptions.Text = "Inventory Viewing Options"
         '
         'rpgInventoryPrintingOptions
         '
@@ -1054,6 +1082,7 @@ Partial Class MainForm
         '
         Me.rpgDocViewer.ItemLinks.Add(Me.MDOCVIEWER)
         Me.rpgDocViewer.ItemLinks.Add(Me.WDOCVIEWER)
+        Me.rpgDocViewer.ItemLinks.Add(Me.IDOCVIEWER)
         Me.rpgDocViewer.Name = "rpgDocViewer"
         Me.rpgDocViewer.Tag = "1"
         Me.rpgDocViewer.Text = "Document Viewer Options"
@@ -1131,6 +1160,7 @@ Partial Class MainForm
         Me.rpgTools.ItemLinks.Add(Me.ARCHIVEDATA)
         Me.rpgTools.ItemLinks.Add(Me.RECOVERARCHIVE)
         Me.rpgTools.ItemLinks.Add(Me.EXPMAINTENANCE)
+        Me.rpgTools.ItemLinks.Add(Me.EXPDOCUMENTS)
         Me.rpgTools.ItemLinks.Add(Me.EXPORTADMIN)
         Me.rpgTools.ItemLinks.Add(Me.IMPORTDATA)
         Me.rpgTools.Name = "rpgTools"
@@ -1211,6 +1241,9 @@ Partial Class MainForm
         '
         'rpgReportsSelectionOptions
         '
+        Me.rpgReportsSelectionOptions.ItemLinks.Add(Me.ledRank)
+        Me.rpgReportsSelectionOptions.ItemLinks.Add(Me.ledDepartment)
+        Me.rpgReportsSelectionOptions.ItemLinks.Add(Me.ledCategory)
         Me.rpgReportsSelectionOptions.ItemLinks.Add(Me.bbSelectAll, True)
         Me.rpgReportsSelectionOptions.ItemLinks.Add(Me.bbDeselect)
         Me.rpgReportsSelectionOptions.Name = "rpgReportsSelectionOptions"
@@ -1307,18 +1340,18 @@ Partial Class MainForm
         '
         'PopupMenu1
         '
-        Me.PopupMenu1.Name = "PopupMenu1"
-        Me.PopupMenu1.Ribbon = Me.RibbonControl
+        'Me.PopupMenu1.Name = "PopupMenu1"
+        'Me.PopupMenu1.Ribbon = Me.RibbonControl
         '
         'PopupMenu2
         '
-        Me.PopupMenu2.Name = "PopupMenu2"
-        Me.PopupMenu2.Ribbon = Me.RibbonControl
+        'Me.PopupMenu2.Name = "PopupMenu2"
+        'Me.PopupMenu2.Ribbon = Me.RibbonControl
         '
         'PopupMenu3
         '
-        Me.PopupMenu3.Name = "PopupMenu3"
-        Me.PopupMenu3.Ribbon = Me.RibbonControl
+        'Me.PopupMenu3.Name = "PopupMenu3"
+        'Me.PopupMenu3.Ribbon = Me.RibbonControl
         '
         'MainForm
         '
@@ -1349,9 +1382,9 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).EndInit()
+        'CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).EndInit()
+        'CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).EndInit()
+        'CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1478,9 +1511,9 @@ Partial Class MainForm
     Friend WithEvents dbdController As DevExpress.XtraBars.DefaultBarAndDockingController
     Friend WithEvents rpgInventoryPrintingOptions As DevExpress.XtraBars.Ribbon.RibbonPageGroup
     Friend WithEvents bbShowAllMaintenance As DevExpress.XtraBars.BarButtonItem
-    Friend WithEvents PopupMenu1 As DevExpress.XtraBars.PopupMenu
-    Friend WithEvents PopupMenu2 As DevExpress.XtraBars.PopupMenu
-    Friend WithEvents PopupMenu3 As DevExpress.XtraBars.PopupMenu
+    Friend WithEvents IDOCVIEWER As DevExpress.XtraBars.BarButtonItem
+    Friend WithEvents rpgInventoryViewingOptions As DevExpress.XtraBars.Ribbon.RibbonPageGroup
+    Friend WithEvents EXPDOCUMENTS As DevExpress.XtraBars.BarButtonItem
 
 
 End Class

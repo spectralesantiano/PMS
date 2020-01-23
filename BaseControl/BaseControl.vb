@@ -25,6 +25,21 @@
     Public Event OnSwitchContent(ByVal sender As String, ByVal value As String, ByVal cmd() As String) 'Event that will let to sub class to switch to another class.
     Public Event OnCustomEvent(ByVal sender As String, ByVal param() As Object) 'Event that will fire  when the user edit sub class data. This will enable the save button on main form.
 
+    'Custom layout saving.
+    Public Overridable Sub SetLayout(strLayout As String)
+
+    End Sub
+
+    'Custom layout saving.
+    Public Overridable Function GetLayout() As String
+        Return ""
+    End Function
+
+    'Delete custom layout.
+    Public Overridable Sub ResetLayout()
+
+    End Sub
+
     'This function will be called from sub classes to trigger the event.
     'params
     'sender - Name of the sub class trigger the event
@@ -110,6 +125,11 @@
     'value - boolen that set the .enabled properties of the main forms add button.
     Protected Sub AllowDeletion(ByVal sender As String, ByVal value As Boolean)
         RaiseEvent AllowDelete(sender, value)
+    End Sub
+
+    'Set the filter on the datagrid
+    Public Overridable Sub SetFilter(ByVal _criteria As String)
+
     End Sub
 
     'This function will be called when the user clicks the Save button on Main form. This is blank for the actual content of this function is defined on Sub classes

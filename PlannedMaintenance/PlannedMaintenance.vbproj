@@ -136,6 +136,12 @@
     <Compile Include="CompanyInfo.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmExportDocuments.Designer.vb">
+      <DependentUpon>frmExportDocuments.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmExportDocuments.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmUserPref.Designer.vb">
       <DependentUpon>frmUserPref.vb</DependentUpon>
     </Compile>
@@ -236,6 +242,10 @@
       <DependentUpon>CompanyInfo.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmExportDocuments.resx">
+      <DependentUpon>frmExportDocuments.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmUserPref.resx">
       <DependentUpon>frmUserPref.vb</DependentUpon>
     </EmbeddedResource>
@@ -244,6 +254,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmExportToSM.resx">
       <DependentUpon>frmExportToSM.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmIMOWarning.resx">
       <DependentUpon>frmIMOWarning.vb</DependentUpon>

@@ -20,8 +20,8 @@ Partial Class frmWork
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmWork))
-        Dim SerializableAppearanceObject3 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
-        Dim SerializableAppearanceObject4 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
+        Dim SerializableAppearanceObject1 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
+        Dim SerializableAppearanceObject2 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Me.cmdOK = New DevExpress.XtraEditors.SimpleButton()
         Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
         Me.cboMaintenance = New DevExpress.XtraEditors.LookUpEdit()
@@ -66,6 +66,7 @@ Partial Class frmWork
         Me.Part = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.OnStock = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Number = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.NumberEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
         Me.Delete = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.Edited = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -105,6 +106,7 @@ Partial Class frmWork
         Me.GroupControl3.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemLookUpEdit1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -361,8 +363,8 @@ Partial Class frmWork
         Me.txtWorkCounter.Properties.Appearance.Options.UseTextOptions = True
         Me.txtWorkCounter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far
         Me.txtWorkCounter.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
-        Me.txtWorkCounter.Properties.Mask.EditMask = "f0"
-        Me.txtWorkCounter.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
+        Me.txtWorkCounter.Properties.Mask.EditMask = "\d+"
+        Me.txtWorkCounter.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
         Me.txtWorkCounter.Size = New System.Drawing.Size(129, 20)
         Me.txtWorkCounter.TabIndex = 3
         '
@@ -461,6 +463,7 @@ Partial Class frmWork
         Me.cmdCopy.Name = "cmdCopy"
         Me.cmdCopy.Size = New System.Drawing.Size(129, 18)
         Me.cmdCopy.TabIndex = 243
+        Me.cmdCopy.TabStop = False
         Me.cmdCopy.Text = "Copy Instructions"
         '
         'GroupControl3
@@ -479,9 +482,10 @@ Partial Class frmWork
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1, Me.DeleteEdit, Me.PartEdit})
+        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1, Me.DeleteEdit, Me.PartEdit, Me.NumberEdit})
         Me.MainGrid.Size = New System.Drawing.Size(334, 335)
         Me.MainGrid.TabIndex = 11
+        Me.MainGrid.TabStop = False
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
         'MainView
@@ -552,6 +556,7 @@ Partial Class frmWork
         'Number
         '
         Me.Number.Caption = "Consumed"
+        Me.Number.ColumnEdit = Me.NumberEdit
         Me.Number.DisplayFormat.FormatString = "f0"
         Me.Number.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric
         Me.Number.FieldName = "Number"
@@ -559,6 +564,14 @@ Partial Class frmWork
         Me.Number.Visible = True
         Me.Number.VisibleIndex = 2
         Me.Number.Width = 149
+        '
+        'NumberEdit
+        '
+        Me.NumberEdit.AutoHeight = False
+        Me.NumberEdit.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric
+        Me.NumberEdit.Mask.EditMask = "\d+"
+        Me.NumberEdit.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
+        Me.NumberEdit.Name = "NumberEdit"
         '
         'Delete
         '
@@ -572,7 +585,7 @@ Partial Class frmWork
         'DeleteEdit
         '
         Me.DeleteEdit.AutoHeight = False
-        Me.DeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("DeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject3, "", Nothing, Nothing, True)})
+        Me.DeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("DeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject1, "", Nothing, Nothing, True)})
         Me.DeleteEdit.Name = "DeleteEdit"
         Me.DeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
         '
@@ -641,6 +654,7 @@ Partial Class frmWork
         Me.IGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit2, Me.iDeleteEdit})
         Me.IGrid.Size = New System.Drawing.Size(334, 150)
         Me.IGrid.TabIndex = 246
+        Me.IGrid.TabStop = False
         Me.IGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.IView})
         '
         'IView
@@ -720,7 +734,7 @@ Partial Class frmWork
         'iDeleteEdit
         '
         Me.iDeleteEdit.AutoHeight = False
-        Me.iDeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("iDeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject4, "", Nothing, Nothing, True)})
+        Me.iDeleteEdit.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("iDeleteEdit.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject2, "", Nothing, Nothing, True)})
         Me.iDeleteEdit.Name = "iDeleteEdit"
         Me.iDeleteEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor
         '
@@ -749,6 +763,7 @@ Partial Class frmWork
         Me.cmdBrowse.Name = "cmdBrowse"
         Me.cmdBrowse.Size = New System.Drawing.Size(95, 23)
         Me.cmdBrowse.TabIndex = 245
+        Me.cmdBrowse.TabStop = False
         Me.cmdBrowse.Text = "Attach"
         '
         'LabelControl5
@@ -815,6 +830,7 @@ Partial Class frmWork
         Me.GroupControl3.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RepositoryItemLookUpEdit1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PartEdit, System.ComponentModel.ISupportInitialize).EndInit()
@@ -891,4 +907,5 @@ Partial Class frmWork
     Friend WithEvents cmdBrowse As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents LabelControl5 As DevExpress.XtraEditors.LabelControl
     Friend WithEvents LabelControl11 As DevExpress.XtraEditors.LabelControl
+    Friend WithEvents NumberEdit As DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
 End Class

@@ -55,8 +55,8 @@ Public Class SECGROUPS
                 Else
                     Dim sql As String = ""
                     If Me.txtName.Tag = 1 Then
-                        Dim xID As String = DB.DLookUp("[Group ID]", "dbo.tblSec_Groups", "", "[Group Name]='" & Me.txtName.EditValue.ToString.Replace("'", "''") & "'")
-                        If xID <> strID Then
+                        Dim xID As String = DB.DLookUp("[Group ID]", "dbo.tblSec_Groups", "", "[Group ID]<>" & strID & " AND [Group Name]='" & Me.txtName.EditValue.ToString.Replace("'", "''") & "'")
+                        If xID <> "" Then
                             MsgBox("The " & Me.txtName.EditValue & " Group already exists.", MsgBoxStyle.Critical, GetAppName)
                             Exit Sub
                         End If
