@@ -980,7 +980,7 @@ ReturnL:
         Log_Append(cApp, "********************* Start *********************" & vbNewLine, StrLogFile)
 
         Log_Append(cApp, "ACTION: TRYING TO RESTORE LICENSE FILE", StrLogFile)
-        bSuccess = BackupLicenseReg("GET", cApp.App_Name, "sys_wrhsm5", MyLicenseFromRegistry)
+        bSuccess = BackupLicenseReg("GET", cApp.App_Name, "sys_pms", MyLicenseFromRegistry)
         Log_Append(cApp, "GETTING BACKUP LICENSE -- " & IIf(bSuccess, "OK", "ERROR").ToString.PadLeft(2), StrLogFile)
 
         If bSuccess Then

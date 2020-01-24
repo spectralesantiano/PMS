@@ -39,12 +39,12 @@ Partial Class PMSREP
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 23)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 20)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.LicCertEdit, Me.CntryEdit, Me.RankEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(362, 308)
+        Me.MainGrid.Size = New System.Drawing.Size(362, 311)
         Me.MainGrid.TabIndex = 2
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -65,11 +65,13 @@ Partial Class PMSREP
         Me.MainView.OptionsCustomization.AllowFilter = False
         Me.MainView.OptionsCustomization.AllowGroup = False
         Me.MainView.OptionsCustomization.AllowQuickHideColumns = False
+        Me.MainView.OptionsFilter.AllowFilterEditor = False
         Me.MainView.OptionsSelection.EnableAppearanceFocusedCell = False
         Me.MainView.OptionsSelection.EnableAppearanceFocusedRow = False
         Me.MainView.OptionsSelection.EnableAppearanceHideSelection = False
         Me.MainView.OptionsSelection.MultiSelect = True
         Me.MainView.OptionsSelection.UseIndicatorForSelection = False
+        Me.MainView.OptionsView.ShowFilterPanelMode = DevExpress.XtraGrid.Views.Base.ShowFilterPanelMode.Never
         Me.MainView.OptionsView.ShowGroupPanel = False
         '
         'RecID
@@ -135,11 +137,11 @@ Partial Class PMSREP
         Me.header.Size = New System.Drawing.Size(366, 333)
         Me.header.TabIndex = 3
         '
-        'CREWWRHREP
+        'PMSREP
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.header)
-        Me.Name = "CREWWRHREP"
+        Me.Name = "PMSREP"
         Me.Size = New System.Drawing.Size(366, 333)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()

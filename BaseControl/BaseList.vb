@@ -16,6 +16,17 @@ Public Class BaseList
     'Filter of the list.
     Protected strFilter As String = ""
 
+
+    'Custom layout saving.
+    Public Overridable Sub SetLayout(strLayout As String)
+
+    End Sub
+
+    'Custom layout saving.
+    Public Overridable Function GetLayout() As String
+        Return ""
+    End Function
+
     'Raise custom event.
     Public Overridable Sub RaiseCustomEvent(ByVal sender As String, ByVal param() As Object)
         RaiseEvent OnCustomEvent(sender, param)

@@ -106,6 +106,16 @@ Public Class SQLDB
     End Sub
 
     ''' <summary>
+    ''' Initialize SQL scripts with parameters
+    ''' </summary>
+    ''' <param name="sql">SQL Statement</param>
+    ''' <remarks></remarks>
+    Public Sub InitSqlWithParametersSP(ByVal sql As String)
+        sqlcmd = New SqlClient.SqlCommand(InsertSQLSymetricKeys(sql), sqlcon)
+        sqlcmd.CommandType = CommandType.StoredProcedure
+    End Sub
+
+    ''' <summary>
     ''' Add parameters in the SQL statement
     ''' </summary>
     ''' <param name="param">Name of Parameter</param>

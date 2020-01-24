@@ -29,6 +29,7 @@ Partial Class WORKDUE
         Me.WorkDate = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.RunningHours = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.NumberEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
+        Me.Critical = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.RankCode = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.RankEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.DueCounter = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -48,6 +49,7 @@ Partial Class WORKDUE
         Me.HasImage = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.RemarksEdit = New DevExpress.XtraEditors.Repository.RepositoryItemMemoEdit()
         Me.MaintenanceEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.CriticalEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -57,6 +59,7 @@ Partial Class WORKDUE
         CType(Me.RankEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RemarksEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MaintenanceEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.CriticalEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'header
@@ -65,19 +68,19 @@ Partial Class WORKDUE
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
         Me.header.Location = New System.Drawing.Point(0, 0)
         Me.header.Name = "header"
-        Me.header.Size = New System.Drawing.Size(1153, 510)
+        Me.header.Size = New System.Drawing.Size(1550, 510)
         Me.header.TabIndex = 36
         Me.header.Text = "DUE MAINTENANCE"
         '
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 30)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 20)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RemarksEdit, Me.NumberEdit, Me.RankEdit, Me.MaintenanceEdit, Me.UnitEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(1149, 478)
+        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RemarksEdit, Me.NumberEdit, Me.RankEdit, Me.MaintenanceEdit, Me.UnitEdit, Me.CriticalEdit})
+        Me.MainGrid.Size = New System.Drawing.Size(1149, 488)
         Me.MainGrid.TabIndex = 8
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -96,7 +99,7 @@ Partial Class WORKDUE
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
         Me.MainView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GroupID, Me.UnitDesc, Me.Maintenance, Me.WorkDate, Me.RunningHours, Me.RankCode, Me.DueCounter, Me.MaintenanceCode, Me.UnitCode, Me.DueDate, Me.ComponentCode, Me.Interval, Me.ExecutedBy, Me.Remarks, Me.ReadingDate, Me.WorkCounter, Me.MaintenanceWorkID, Me.PlannedDate, Me.Reason, Me.ApprovedBy, Me.HasImage})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GroupID, Me.UnitDesc, Me.Maintenance, Me.WorkDate, Me.RunningHours, Me.Critical, Me.RankCode, Me.DueCounter, Me.MaintenanceCode, Me.UnitCode, Me.DueDate, Me.ComponentCode, Me.Interval, Me.ExecutedBy, Me.Remarks, Me.ReadingDate, Me.WorkCounter, Me.MaintenanceWorkID, Me.PlannedDate, Me.Reason, Me.ApprovedBy, Me.HasImage})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.GroupFormat = "{1} {2}"
@@ -157,7 +160,7 @@ Partial Class WORKDUE
         Me.Maintenance.FieldName = "Maintenance"
         Me.Maintenance.Name = "Maintenance"
         Me.Maintenance.Visible = True
-        Me.Maintenance.VisibleIndex = 5
+        Me.Maintenance.VisibleIndex = 6
         Me.Maintenance.Width = 228
         '
         'WorkDate
@@ -168,7 +171,7 @@ Partial Class WORKDUE
         Me.WorkDate.MinWidth = 120
         Me.WorkDate.Name = "WorkDate"
         Me.WorkDate.Visible = True
-        Me.WorkDate.VisibleIndex = 6
+        Me.WorkDate.VisibleIndex = 7
         Me.WorkDate.Width = 120
         '
         'RunningHours
@@ -190,6 +193,17 @@ Partial Class WORKDUE
         Me.NumberEdit.Mask.EditMask = "n0"
         Me.NumberEdit.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric
         Me.NumberEdit.Name = "NumberEdit"
+        '
+        'Critical
+        '
+        Me.Critical.Caption = "Critical"
+        Me.Critical.ColumnEdit = Me.CriticalEdit
+        Me.Critical.FieldName = "Critical"
+        Me.Critical.MaxWidth = 50
+        Me.Critical.Name = "Critical"
+        Me.Critical.Visible = True
+        Me.Critical.VisibleIndex = 5
+        Me.Critical.Width = 50
         '
         'RankCode
         '
@@ -217,14 +231,14 @@ Partial Class WORKDUE
         '
         'DueCounter
         '
-        Me.DueCounter.Caption = "Working Hours Due"
+        Me.DueCounter.Caption = "Running Hours Due"
         Me.DueCounter.ColumnEdit = Me.NumberEdit
         Me.DueCounter.FieldName = "DueCounter"
         Me.DueCounter.MaxWidth = 105
         Me.DueCounter.MinWidth = 105
         Me.DueCounter.Name = "DueCounter"
         Me.DueCounter.Visible = True
-        Me.DueCounter.VisibleIndex = 8
+        Me.DueCounter.VisibleIndex = 9
         Me.DueCounter.Width = 105
         '
         'MaintenanceCode
@@ -247,7 +261,7 @@ Partial Class WORKDUE
         Me.DueDate.Name = "DueDate"
         Me.DueDate.SortMode = DevExpress.XtraGrid.ColumnSortMode.Value
         Me.DueDate.Visible = True
-        Me.DueDate.VisibleIndex = 9
+        Me.DueDate.VisibleIndex = 10
         Me.DueDate.Width = 70
         '
         'ComponentCode
@@ -262,7 +276,7 @@ Partial Class WORKDUE
         Me.Interval.FieldName = "Interval"
         Me.Interval.Name = "Interval"
         Me.Interval.Visible = True
-        Me.Interval.VisibleIndex = 7
+        Me.Interval.VisibleIndex = 8
         Me.Interval.Width = 117
         '
         'ExecutedBy
@@ -305,7 +319,7 @@ Partial Class WORKDUE
         Me.PlannedDate.MinWidth = 60
         Me.PlannedDate.Name = "PlannedDate"
         Me.PlannedDate.Visible = True
-        Me.PlannedDate.VisibleIndex = 10
+        Me.PlannedDate.VisibleIndex = 11
         Me.PlannedDate.Width = 79
         '
         'Reason
@@ -314,7 +328,7 @@ Partial Class WORKDUE
         Me.Reason.FieldName = "Reason"
         Me.Reason.Name = "Reason"
         Me.Reason.Visible = True
-        Me.Reason.VisibleIndex = 11
+        Me.Reason.VisibleIndex = 12
         '
         'ApprovedBy
         '
@@ -322,7 +336,7 @@ Partial Class WORKDUE
         Me.ApprovedBy.FieldName = "ApprovedBy"
         Me.ApprovedBy.Name = "ApprovedBy"
         Me.ApprovedBy.Visible = True
-        Me.ApprovedBy.VisibleIndex = 12
+        Me.ApprovedBy.VisibleIndex = 13
         '
         'HasImage
         '
@@ -350,12 +364,17 @@ Partial Class WORKDUE
         Me.MaintenanceEdit.ShowLines = False
         Me.MaintenanceEdit.ValueMember = "MaintenanceCode"
         '
+        'CriticalEdit
+        '
+        Me.CriticalEdit.AutoHeight = False
+        Me.CriticalEdit.Name = "CriticalEdit"
+        '
         'WORKDUE
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.header)
         Me.Name = "WORKDUE"
-        Me.Size = New System.Drawing.Size(1153, 510)
+        Me.Size = New System.Drawing.Size(1550, 510)
         CType(Me.header, System.ComponentModel.ISupportInitialize).EndInit()
         Me.header.ResumeLayout(False)
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).EndInit()
@@ -365,6 +384,7 @@ Partial Class WORKDUE
         CType(Me.RankEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RemarksEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.MaintenanceEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.CriticalEdit, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -397,5 +417,7 @@ Partial Class WORKDUE
     Friend WithEvents Reason As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents ApprovedBy As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents HasImage As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents Critical As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents CriticalEdit As DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
 
 End Class

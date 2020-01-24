@@ -12,7 +12,7 @@ Public Class UNITS
     Dim downHitInfo As GridHitInfo = Nothing, tblUnitSource As DataTable, tblUnitCopy As DataTable, sqls As New ArrayList, strCurrView As String
     Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False
     Dim strCounterCode As String, strCounter As String, nReading As Integer, strActiveCounter As String, nRunningHours As Integer, nCurrNode As TreeListNode
-    Dim dDateIssue As Object = DBNull.Value, strEditor As String, bUpdating As Boolean
+    Dim dDateIssue As Object = DBNull.Value, strEditor As String, bUpdating As Boolean, bHasCritical As Boolean, bHasInactive As Boolean
 
     Private Sub cboLocCode_ProcessNewValue(sender As Object, e As DevExpress.XtraEditors.Controls.ProcessNewValueEventArgs) Handles cboLocCode.ProcessNewValue
         Dim row As DataRow, tbl As DataTable, strLocCode As String = GenerateID(DB, "LocCode", "tblAdmLocation")
@@ -50,7 +50,15 @@ Public Class UNITS
             frm.txtComponent.EditValue = MainView.GetFocusedRowCellValue("Component")
             frm.ShowDialog()
             If frm.bSaved Then
-                DB.RunSql("UPDATE dbo.tblAdmComponent SET Name='" & frm.txtComponent.EditValue.ToString.Replace("'", "''") & "' WHERE ComponentCode='" & MainView.GetFocusedRowCellValue("ComponentCode") & "'")
+                Dim strComponent As String = frm.txtComponent.EditValue.ToString.Replace("'", "''")
+                Dim strComponentCode As String = IfNull(MainView.GetFocusedRowCellValue("ComponentCode"), "")
+                If strComponentCode <> "" Then
+                    If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "' AND ComponentCode<>'" & strComponentCode & "'") <> "" Then
+                        MsgBox(strComponent & " already exists.", vbCritical, GetAppName)
+                        Exit Sub
+                    End If
+                End If
+                DB.RunSql("UPDATE dbo.tblAdmComponent SET Name='" & strComponent & "' WHERE ComponentCode='" & strComponentCode & "'")
                 MainView.SetRowCellValue(MainView.FocusedRowHandle, "Component", frm.txtComponent.EditValue)
                 MainView.RefreshRow(MainView.FocusedRowHandle)
             End If
@@ -254,7 +262,7 @@ Public Class UNITS
                 If Not mView.GetRowCellValue(mView.FocusedRowHandle, "InsDateIssue") Is System.DBNull.Value Then
                     strDateIssue = CDate(mView.GetRowCellValue(mView.FocusedRowHandle, "InsDateIssue")).ToShortDateString
                 End If
-                RaiseCustomEvent(Name, New Object() {"Preview", "INSTRUCTIONREP", "Admin", strDesc & "|" & mView.GetRowCellDisplayText(mView.FocusedRowHandle, "WorkCode") & "|" & mView.GetRowCellValue(mView.FocusedRowHandle, "mNumber") & " " & mView.GetRowCellDisplayText(mView.FocusedRowHandle, "IntCode") & "|" & mView.GetRowCellDisplayText(mView.FocusedRowHandle, "RankCode") & "|" & IfNull(mView.GetRowCellDisplayText(mView.FocusedRowHandle, "InsCrossRef"), "").ToString & "|" & IfNull(mView.GetRowCellDisplayText(mView.FocusedRowHandle, "InsEditor"), "").ToString & "|" & strDateIssue & "|" & IfNull(mView.GetRowCellDisplayText(mView.FocusedRowHandle, "InsDesc"), "").ToString & "|" & mView.GetRowCellDisplayText(mView.FocusedRowHandle, "ImageDoc")})
+                RaiseCustomEvent(Name, New Object() {"Preview", "INSTRUCTIONREP", "Admin", strDesc & "|" & mView.GetRowCellDisplayText(mView.FocusedRowHandle, "WorkCode") & "|" & mView.GetRowCellValue(mView.FocusedRowHandle, "mNumber") & " " & mView.GetRowCellDisplayText(mView.FocusedRowHandle, "IntCode") & "|" & mView.GetRowCellDisplayText(mView.FocusedRowHandle, "RankCode") & "|" & IfNull(mView.GetRowCellDisplayText(mView.FocusedRowHandle, "InsCrossRef"), "").ToString & "|" & IfNull(mView.GetRowCellDisplayText(mView.FocusedRowHandle, "InsEditor"), "").ToString & "|" & strDateIssue & "|" & IfNull(mView.GetRowCellDisplayText(mView.FocusedRowHandle, "InsDesc"), "").ToString})
             Else
                 Dim frm As New frmMaintenance
                 frm.DB = DB
@@ -429,18 +437,17 @@ Public Class UNITS
                 Dim xrow() As DataRow = tblUnitSource.Select("UnitCode='" & tree.GetValue("UnitCode") & "'")
                 If info.Node Is Nothing Then
                     If CURRENT_MAINUNIT = "" Then
-                        nCompNum = GetMaxNumber(tlUnits.Nodes.GetEnumerator, tree.GetValue("ComponentCode"))
+                        nCompNum = GetMaxNumber(tlUnits.Nodes.GetEnumerator, RemovePostNumbers(tree.GetValue("UnitDesc")))
                     Else
-                        nCompNum = DB.DLookUp("ISNULL(MAX(UnitNumber),0)", "dbo.tblAdmUnit", "0", "ParentCode IS NULL AND ComponentCode='" & tree.GetValue("ComponentCode") & "'") + 1
+                        nCompNum = DB.DLookUp("REPLACE([UnitDesc],'" & tree.GetValue("Component") & "','')", "dbo.tblAdmUnit", "0", "ParentCode IS NULL AND ComponentCode='" & tree.GetValue("ComponentCode") & "' AND ISNUMERIC(REPLACE([UnitDesc],'" & tree.GetValue("Component") & "',''))=1 ORDER BY REPLACE([UnitDesc],'" & tree.GetValue("Component") & "','') DESC") + 1
                     End If
                 Else
-                    nCompNum = GetMaxNumber(info.Node.Nodes.GetEnumerator, tree.GetValue("ComponentCode"))
+                    nCompNum = GetMaxNumber(info.Node.Nodes.GetEnumerator, RemovePostNumbers(tree.GetValue("UnitDesc")))
                 End If
                 xrow(0)("ParentCode") = parent
-                xrow(0)("UnitNumber") = nCompNum
                 xrow(0)("UnitDesc") = tree.GetValue("Component") & " " & nCompNum
                 If IfNull(parent, "") = xrow(0)("UnitCode") Then Exit Sub
-                sqls.Add("UPDATE dbo.tblAdmUnit SET ParentCode=" & strParent & ", UnitNumber=" & nCompNum & ", UnitDesc='" & xrow(0)("UnitDesc") & "', LastUpdatedBy='" & GetUserName() & "' WHERE UnitCode='" & xrow(0)("UnitCode") & "'")
+                sqls.Add("UPDATE dbo.tblAdmUnit SET ParentCode=" & strParent & ", UnitDesc='" & xrow(0)("UnitDesc") & "', LastUpdatedBy='" & GetUserName() & "' WHERE UnitCode='" & xrow(0)("UnitCode") & "'")
             End If
         Else 'Dragged from the Data Grid
             If strParent <> "NULL" And CURRENT_SHOW_WARNING Then
@@ -451,12 +458,12 @@ Public Class UNITS
             For Each row In tbl.Rows
                 If info.Node Is Nothing Then
                     If CURRENT_MAINUNIT = "" Then
-                        nCompNum = GetMaxNumber(tlUnits.Nodes.GetEnumerator, row("ComponentCode"))
+                        nCompNum = GetMaxNumber(tlUnits.Nodes.GetEnumerator, row("Component"))
                     Else
-                        nCompNum = DB.DLookUp("ISNULL(MAX(UnitNumber),0)", "dbo.tblAdmUnit", "0", "ParentCode IS NULL AND ComponentCode='" & row("ComponentCode") & "'") + 1
+                        nCompNum = DB.DLookUp("REPLACE([UnitDesc],'" & row("Component") & "','')", "dbo.tblAdmUnit", "0", "ParentCode IS NULL AND ComponentCode='" & row("ComponentCode") & "' AND ISNUMERIC(REPLACE([UnitDesc],'" & row("Component") & "',''))=1 ORDER BY REPLACE([UnitDesc],'" & row("Component") & "','') DESC") + 1
                     End If
                 Else
-                    nCompNum = GetMaxNumber(info.Node.Nodes.GetEnumerator, row("ComponentCode"))
+                    nCompNum = GetMaxNumber(info.Node.Nodes.GetEnumerator, row("Component"))
                 End If
                 rowNew = tblUnitSource.NewRow
                 rowNew("UnitCode") = IMO_NUMBER & (nMaxUnitID + 1).ToString("00000000")
@@ -464,13 +471,12 @@ Public Class UNITS
                 rowNew("ComponentCode") = row("ComponentCode")
                 rowNew("Component") = row("Component")
                 rowNew("UnitDesc") = row("Component") & " " & nCompNum
-                rowNew("UnitNumber") = nCompNum
                 rowNew("Critical") = False
                 rowNew("HasCritical") = False
                 rowNew("HasInactive") = False
                 rowNew("Active") = True
                 tblUnitSource.Rows.Add(rowNew)
-                sqls.Add("INSERT INTO dbo.tblAdmUnit(UnitCode, ParentCode, ComponentCode, UnitDesc, UnitNumber, LastUpdatedBy) VALUES('" & rowNew("UnitCode") & "'," & strParent & ",'" & rowNew("ComponentCode") & "','" & rowNew("UnitDesc") & "'," & rowNew("UnitNumber") & ",'" & GetUserName() & "')")
+                sqls.Add("INSERT INTO dbo.tblAdmUnit(UnitCode, ParentCode, ComponentCode, UnitDesc, LastUpdatedBy) VALUES('" & rowNew("UnitCode") & "'," & strParent & ",'" & rowNew("ComponentCode") & "','" & rowNew("UnitDesc") & "','" & GetUserName() & "')")
                 nMaxUnitID += 1
             Next
         End If
@@ -488,12 +494,14 @@ Public Class UNITS
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub tlUnits_NodeCellStyle(sender As Object, e As DevExpress.XtraTreeList.GetCustomNodeCellStyleEventArgs) Handles tlUnits.NodeCellStyle
         If e.Node.Selected Then
-            e.Appearance.BackColor = SEL_COLOR
+            e.Appearance.BackColor = IIf(IfNull(e.Node.GetValue("Active"), True), SEL_COLOR, DISABLED_SELECTED_COLOR)
         End If
-        If Not IfNull(e.Node.GetValue("Active"), True) Then
-            e.Appearance.ForeColor = Color.Red
+        If Not IfNull(e.Node.GetValue("Active"), True) And Not e.Node.Selected Then
+            e.Appearance.BackColor = DISABLED_COLOR
         ElseIf IfNull(e.Node.GetValue("HasInactive"), False) Then
-            e.Appearance.ForeColor = Color.Orange
+            'e.Appearance.ForeColor = Color.Orange
+            'e.Appearance.BackColor = DISABLED_COLOR
+            'e.Appearance.BackColor2 = DISABLED_COLOR
         End If
     End Sub
 
@@ -555,14 +563,17 @@ Public Class UNITS
     Private Sub MainView_CellValueChanged(sender As Object, e As DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs) Handles MainView.CellValueChanged
         If e.Column.Name = "Component" Then
             Dim strComponent As String = MainView.GetFocusedRowCellValue("Component").ToString.Replace("'", "''")
-            Dim strComponentCode = GenerateID(DB, "ComponentCode", "tblAdmComponent")
-            If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "'") <> "" Then
-                MsgBox(strComponent & " already exists.", vbCritical, GetAppName)
-                MainView.DeleteRow(MainView.FocusedRowHandle)
-                Exit Sub
+            Dim strComponentCode As String = IfNull(MainView.GetFocusedRowCellValue("ComponentCode"), "") '= GenerateID(DB, "ComponentCode", "tblAdmComponent")
+            If strComponentCode = "" Then
+                strComponentCode = GenerateID(DB, "ComponentCode", "tblAdmComponent")
+                If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "'") <> "" Then
+                    MsgBox(strComponent & " already exists.", vbCritical, GetAppName)
+                    MainView.DeleteRow(MainView.FocusedRowHandle)
+                    Exit Sub
+                End If
+                DB.RunSql("INSERT INTO dbo.tblAdmComponent(ComponentCode, Name, LastUpdatedBy) VALUES('" & strComponentCode & "', '" & strComponent & "','" & GetUserName() & "')")
+                MainView.SetRowCellValue(MainView.FocusedRowHandle, "ComponentCode", strComponentCode)
             End If
-            DB.RunSql("INSERT INTO dbo.tblAdmComponent(ComponentCode, Name, LastUpdatedBy) VALUES('" & strComponentCode & "', '" & strComponent & "','" & GetUserName() & "')")
-            MainView.SetRowCellValue(MainView.FocusedRowHandle, "ComponentCode", strComponentCode)
         End If
     End Sub
 
@@ -670,6 +681,11 @@ Public Class UNITS
                 strCounterCode = ""
                 strCounter = 0
             End If
+            DB.BeginReader("SELECT ISNULL(SUM(CASE WHEN [Critical]=1 OR HasCritical=1 THEN 1 ELSE 0 END),0) HasCritical, ISNULL(SUM(CASE WHEN [Active]=0 OR [HasInactive]=1 THEN 1 ELSE 0 END),0) HasInactive FROM [dbo].[tblAdmUnit] where (Critical=1 or HasCritical=1 OR [HasInactive]=1 OR Active=0) AND ParentCode='" & strID & "'")
+            DB.Read()
+            bHasCritical = DB.ReaderItem("HasCritical") > 0
+            bHasInactive = DB.ReaderItem("HasInactive") > 0
+            DB.CloseReader()
             If Not bHasListeners Then AddEditListener(Me.gUnitInfo)
             bHasListeners = True
             If Not nNode.ParentNode Is Nothing Then
@@ -699,20 +715,28 @@ Public Class UNITS
     End Function
 
     Public Overrides Sub DeleteData()
-        Dim xNode As TreeListNode = tlUnits.FocusedNode, bRootUpdated As Boolean = xNode.Level = 0, strUnitCode As String = xNode.GetValue("UnitCode")
-        If MsgBox("Are you sure want to delete the " & xNode.GetValue("UnitDesc") & " Component?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            Dim crow() As DataRow = tblUnitSource.Select("ParentCode='" & strUnitCode & "'")
-            sqls.Clear()
-            sqls.Add("DELETE FROM dbo.tblAdmUnit WHERE UnitCode='" & strUnitCode & "'")
-            If crow.Length > 0 Then
-                CreateDeleteSQLs(crow)
+        Dim xNode As TreeListNode = tlUnits.FocusedNode, bRootUpdated As Boolean = xNode.Level = 0, strUnitCode As String = xNode.GetValue("UnitCode"), bHasMaintenance As Boolean = False
+        DB.BeginReader("[dbo].[CHECKEXISTINGMAINTENANCE] @strUnitCode='" & strUnitCode & "'")
+        DB.Read()
+        bHasMaintenance = DB.ReaderItem(0) > 0
+        DB.CloseReader()
+        If bHasMaintenance Then
+            MsgBox("Maintenance for this component/sub component has been recorded in the work done section and the component can therefore not be deleted. Please instead set it to inactive status.", vbInformation)
+        Else
+            If MsgBox("Are you sure want to delete the " & xNode.GetValue("UnitDesc") & " Component?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                Dim crow() As DataRow = tblUnitSource.Select("ParentCode='" & strUnitCode & "'")
+                sqls.Clear()
+                sqls.Add("DELETE FROM dbo.tblAdmUnit WHERE UnitCode='" & strUnitCode & "'")
+                If crow.Length > 0 Then
+                    CreateDeleteSQLs(crow)
+                End If
+                DB.RunSqls(sqls)
+                tlUnits.DeleteSelectedNodes()
+                If bRootUpdated Then
+                    RaiseCustomEvent(Name, New Object() {"RefreshMainUnits", IIf(strUnitCode = CURRENT_MAINUNIT, "DELETE", "")})
+                End If
+                Editable()
             End If
-            DB.RunSqls(sqls)
-            tlUnits.DeleteSelectedNodes()
-            If bRootUpdated Then
-                RaiseCustomEvent(Name, New Object() {"RefreshMainUnits", IIf(strUnitCode = CURRENT_MAINUNIT, "DELETE", "")})
-            End If
-            Editable()
         End If
     End Sub
 
@@ -720,9 +744,14 @@ Public Class UNITS
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtUnitDesc}) Then
             Dim i As Integer, strPartID As String
             Dim nNode As TreeListNode = tlUnits.FindNodeByFieldValue("UnitCode", strID)
-
+            Dim strParentID As String = IfNull(nNode.GetValue("ParentCode"), "")
+            If chkActive.Tag = 1 AndAlso chkActive.Checked Then bHasInactive = False
             sqls.Clear()
-            sqls.Add(GenerateUpdateScript(Me.gUnitInfo, 3, "tblAdmUnit", "LastUpdatedBy='" & GetUserName() & "', HasInactive=" & IIf(chkActive.Checked, 0, 1) & ", HasCritical=" & IIf(chkCritical.Checked, 0, 1), "UnitCode='" & strID & "'"))
+            If DB.DLookUp("UnitDesc", "dbo.tblAdmUnit", "", "UnitDesc='" & txtUnitDesc.EditValue & "' AND UnitCode<>'" & strID & "' AND (ParentCode IS NULL OR ParentCode='" & strParentID & "')") <> "" Then
+                MsgBox(txtUnitDesc.EditValue & " already exists.", vbCritical, GetAppName)
+                Exit Sub
+            End If
+            sqls.Add(GenerateUpdateScript(Me.gUnitInfo, 3, "tblAdmUnit", "LastUpdatedBy='" & GetUserName() & "', HasInactive=" & IIf(bHasInactive, 1, 0) & ", HasCritical=" & IIf(bHasCritical, 1, 0), "UnitCode='" & strID & "'"))
 
             RemoveHandler tlUnits.FocusedNodeChanged, AddressOf tlUnits_FocusedNodeChanged
 
@@ -772,7 +801,7 @@ Public Class UNITS
                     If IfNull(mView.GetRowCellValue(i, "AddedImages"), "") <> "" Then
                         Dim strImages() As String = mView.GetRowCellValue(i, "AddedImages").ToString.Split(";"c), strImg As String
                         For Each strImg In strImages
-                            sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCECODE]('" & mView.GetRowCellValue(i, "WorkCode") & "','" & strID & "'),'ADMWORK', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                            sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCECODE]('" & mView.GetRowCellValue(i, "WorkCode") & "','" & strID & "'),'ADMWORK', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "')")
                         Next
                     End If
                 End If
@@ -891,7 +920,9 @@ Public Class UNITS
 
     Sub getUnitsData(Optional bHideComponents As Boolean = True)
         Dim strFocusedNode As String = "", strRootNode As String = ""
-        If Not tlUnits.FocusedNode Is Nothing Then
+        If tlUnits.FocusedNode Is Nothing Then
+            AllowDeletion(Name, (bPermission And 8) > 0)
+        Else
             strFocusedNode = tlUnits.FocusedNode.GetValue("UnitCode")
         End If
 
@@ -949,15 +980,22 @@ Public Class UNITS
         End Select
     End Sub
 
-    Function GetMaxNumber(en As IEnumerator, strCompCode As String) As Integer
-        Dim nRetVal As Integer = 0, nNode As TreeListNode
+    Function GetMaxNumber(en As IEnumerator, strComponent As String) As Integer
+        Dim nRetVal As Integer = 0, nNode As TreeListNode, strNum As String, nComponentCount As Integer = 0, strUnitDesc As String
+        strComponent = RemovePostNumbers(strComponent)
         While en.MoveNext
             nNode = CType(en.Current, TreeListNode)
-            If strCompCode = nNode.GetValue("ComponentCode") Then
-                If nRetVal < IfNull(nNode.GetValue("UnitNumber"), 0) Then nRetVal = nNode.GetValue("UnitNumber")
+            strUnitDesc = RemovePostNumbers(nNode.GetValue("UnitDesc"))
+            If strUnitDesc = strComponent Then
+                nComponentCount += 1
+                strNum = nNode.GetValue("UnitDesc").ToString.Replace(strUnitDesc, "")
+                If IsNumeric(strNum) Then
+                    Dim nNum As Integer = CInt(strNum)
+                    If nRetVal < nNum Then nRetVal = nNum
+                End If
             End If
         End While
-        Return nRetVal + 1
+        Return IIf(nRetVal > nComponentCount, nRetVal, nComponentCount) + 1
     End Function
 
     Sub CopyMaintenance()
@@ -1015,49 +1053,50 @@ Public Class UNITS
     End Sub
 
     Sub Copy()
-        Dim frm As New frmNumber, nStartNumber As Integer, nMaxUnitID As Integer = DB.DLookUp("ISNULL(MAX(CAST(right(UnitCode,8) AS INT)),0)", "dbo.tblAdmUnit", "0"), bRootUpdated As Boolean = False
-        If tlUnits.FocusedNode.ParentNode Is Nothing Then
-            nStartNumber = GetMaxNumber(tlUnits.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("ComponentCode"))
-            bRootUpdated = True
-        Else
-            nStartNumber = GetMaxNumber(tlUnits.FocusedNode.ParentNode.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("ComponentCode"))
-        End If
-        frm.txtNumber.Properties.MinValue = nStartNumber
-        frm.ShowDialog()
-        If frm.bCopied Then
-            Dim nRow As DataRow, i As Integer
-            sqls.Clear()
-            tblUnitCopy = tblUnitSource.Clone
-            For i = nStartNumber To frm.txtNumber.EditValue
-                tblUnitCopy.Rows.Clear()
-                CopyNodes(tlUnits.FocusedNode, tlUnits.FocusedNode.GetValue("ParentCode"), i, nMaxUnitID)
-                For Each nRow In tblUnitCopy.Rows
-                    tblUnitSource.ImportRow(nRow)
+        If Not tlUnits.FocusedNode Is Nothing Then
+            Dim frm As New frmNumber, nStartNumber As Integer, bRootUpdated As Boolean = False
+            nMaxUnitID = DB.DLookUp("ISNULL(MAX(CAST(right(UnitCode,8) AS INT)),0)", "dbo.tblAdmUnit", "0")
+            If tlUnits.FocusedNode.ParentNode Is Nothing Then
+                nStartNumber = GetMaxNumber(tlUnits.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("UnitDesc"))
+                bRootUpdated = True
+            Else
+                nStartNumber = GetMaxNumber(tlUnits.FocusedNode.ParentNode.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("UnitDesc"))
+            End If
+            frm.txtNumber.Properties.MinValue = 1
+            'If nStartNumber = 1 Then nStartNumber += 1
+            frm.ShowDialog()
+            If frm.bCopied Then
+                Dim nRow As DataRow, i As Integer
+                sqls.Clear()
+                tblUnitCopy = tblUnitSource.Clone
+                For i = 0 To frm.txtNumber.EditValue - 1
+                    tblUnitCopy.Rows.Clear()
+                    CopyNodes(tlUnits.FocusedNode, tlUnits.FocusedNode.GetValue("ParentCode"), i + nStartNumber, nMaxUnitID, 1)
+                    For Each nRow In tblUnitCopy.Rows
+                        tblUnitSource.ImportRow(nRow)
+                    Next
                 Next
-            Next
+            End If
+            DB.RunSqls(sqls)
+            nMaxUnitID += 1
+            If bRootUpdated Then RaiseCustomEvent(Name, New Object() {"RefreshMainUnits", ""})
         End If
-        DB.RunSqls(sqls)
-        If bRootUpdated Then RaiseCustomEvent(Name, New Object() {"RefreshMainUnits", ""})
     End Sub
 
-    Sub CopyNodes(pNode As TreeListNode, Parent As Object, nNumber As Integer, ByRef nMaxUnitID As Integer)
+    Sub CopyNodes(pNode As TreeListNode, Parent As Object, nNumber As Integer, ByRef nMaxUnitID As Integer, nLevel As Integer)
         Dim rowNew As DataRow, en As IEnumerator = pNode.Nodes.GetEnumerator(), strParent As String, strLoc As String = "NULL", strDept As String = "NULL", strCat As String = "NULL", strMaker As String = "NULL", strVendor As String = "NULL"
         nMaxUnitID += 1
         rowNew = tblUnitCopy.NewRow
         rowNew("UnitCode") = IMO_NUMBER & nMaxUnitID.ToString("00000000")
         rowNew("ParentCode") = Parent
-        If nNumber > 0 Then
-            rowNew("UnitNumber") = nNumber
-        Else
-            rowNew("UnitNumber") = pNode.GetValue("UnitNumber")
-        End If
         rowNew("ComponentCode") = pNode.GetValue("ComponentCode")
         rowNew("Component") = pNode.GetValue("Component")
-        rowNew("UnitDesc") = pNode.GetValue("Component") & " " & rowNew("UnitNumber")
+        rowNew("UnitDesc") = IIf(nLevel = 1, RemovePostNumbers(pNode.GetValue("UnitDesc")) & " " & nNumber, pNode.GetValue("UnitDesc"))
         rowNew("Type") = IfNull(pNode.GetValue("Type"), "")
         rowNew("Model") = IfNull(pNode.GetValue("Model"), "")
         rowNew("RefNo") = IfNull(pNode.GetValue("RefNo"), "")
         rowNew("Critical") = IfNull(pNode.GetValue("Critical"), False)
+        rowNew("Active") = True
 
         If Parent Is System.DBNull.Value Then
             strParent = "NULL"
@@ -1094,10 +1133,10 @@ Public Class UNITS
             strVendor = "'" & pNode.GetValue("VendorCode") & "'"
             rowNew("VendorCode") = pNode.GetValue("VendorCode")
         End If
-        sqls.Add("[dbo].[COPYUNIT] @OldUnitCode='" & pNode.GetValue("UnitCode") & "', @NewUnitCode='" & rowNew("UnitCode") & "', @ParentCode=" & strParent & ", @ComponentCode='" & rowNew("ComponentCode") & "', @UnitNumber=" & rowNew("UnitNumber") & ", @UnitDesc='" & rowNew("UnitDesc") & "', @LastUpdatedBy='" & GetUserName() & "', @LocCode=" & strLoc & ", @CatCode=" & strCat & ", @DeptCode=" & strDept & ", @MakerCode=" & strMaker & ", @Type='" & rowNew("Type") & "', @Model='" & rowNew("Model") & "', @RefNo='" & rowNew("RefNo") & "', @VendorCode=" & strVendor & ", @Critical=" & IIf(rowNew("Critical"), 1, 0))
+        sqls.Add("[dbo].[COPYUNIT] @OldUnitCode='" & pNode.GetValue("UnitCode") & "', @NewUnitCode='" & rowNew("UnitCode") & "', @ParentCode=" & strParent & ", @ComponentCode='" & rowNew("ComponentCode") & "', @UnitDesc='" & rowNew("UnitDesc") & "', @LastUpdatedBy='" & GetUserName() & "', @LocCode=" & strLoc & ", @CatCode=" & strCat & ", @DeptCode=" & strDept & ", @MakerCode=" & strMaker & ", @Type='" & rowNew("Type") & "', @Model='" & rowNew("Model") & "', @RefNo='" & rowNew("RefNo") & "', @VendorCode=" & strVendor & ", @Critical=" & IIf(rowNew("Critical"), 1, 0))
         tblUnitCopy.Rows.Add(rowNew)
         While en.MoveNext
-            CopyNodes(CType(en.Current, TreeListNode), rowNew("UnitCode"), -1, nMaxUnitID)
+            CopyNodes(CType(en.Current, TreeListNode), rowNew("UnitCode"), -1, nMaxUnitID, nLevel + 1)
         End While
     End Sub
 
@@ -1271,6 +1310,7 @@ Public Class UNITS
             End If
         End If
     End Sub
+
 
 
 End Class

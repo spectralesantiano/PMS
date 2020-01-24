@@ -59,8 +59,6 @@ Partial Class frmDefaultDate
         Me.txtDate.Name = "txtDate"
         Me.txtDate.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.txtDate.Properties.CalendarTimeProperties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
-        Me.txtDate.Properties.DisplayFormat.FormatString = ""
-        Me.txtDate.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime
         Me.txtDate.Properties.EditFormat.FormatString = ""
         Me.txtDate.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.DateTime
         Me.txtDate.Size = New System.Drawing.Size(224, 20)

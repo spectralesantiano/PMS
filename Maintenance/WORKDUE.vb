@@ -2,6 +2,16 @@ Imports System.Drawing
 
 Public Class WORKDUE
 
+    Public Overrides Sub SetLayout(strLayout As String)
+        MainView.RestoreLayoutFromStream(StringToStream(strLayout))
+    End Sub
+
+    Public Overrides Function GetLayout() As String
+        Dim str As New System.IO.MemoryStream
+        MainView.SaveLayoutToStream(str)
+        Return StreamToString(str)
+    End Function
+
     Public Sub SaveLayout(ByVal fileName As String)
         MainView.SaveLayoutToXml(fileName)
     End Sub
@@ -10,7 +20,7 @@ Public Class WORKDUE
         Select Case param(0)
             Case "ViewImage"
                 Dim frm As New frmImageViewer
-                frm.imgLogo.BackgroundImage = StringToImage(DB.DLookUp("ImageDoc", "tblAdmMaintenance", "", "MaintenanceCode='" & MainView.GetFocusedRowCellValue("MaintenanceCode") & "'"))
+                frm.MainGrid.DataSource = DB.CreateTable("SELECT FileDesc, Doc FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='ADMWORK' AND [RefID]='" & MainView.GetFocusedRowCellValue("MaintenanceCode").ToString.Trim & "'")
                 frm.ShowDialog()
             Case "SaveLayout"
                 MainView.SaveLayoutToXml(param(1))
@@ -50,7 +60,7 @@ Public Class WORKDUE
     End Sub
 
     Private Sub EditData()
-        If Not MainView.IsGroupRow(MainView.FocusedRowHandle) Then
+        If Not MainView.IsGroupRow(MainView.FocusedRowHandle) And (bPermission And 4) > 0 Then
             Dim frm As New frmWork, sqls As New ArrayList
             frm.db = DB
             frm.IGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='WORKDONE' AND [RefID]='-xxax'")
@@ -63,15 +73,12 @@ Public Class WORKDUE
             frm.cboMaintenance.EditValue = MainView.GetFocusedRowCellValue("MaintenanceCode")
             frm.cboMaintenance.ReadOnly = True
             frm.cboRankCode.EditValue = MainView.GetFocusedRowCellValue("RankCode")
-            'frm.txtExecutedBy.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
+            frm.txtExecutedBy.EditValue = DB.DLookUp("ExecutedBy", "dbo.tblMaintenanceWork", "", "RankCode='" & MainView.GetFocusedRowCellValue("RankCode") & "' ORDER BY WorkDate Desc")
             frm.txtPDate.EditValue = MainView.GetFocusedRowCellValue("WorkDate")
             frm.txtPRunningHours.EditValue = MainView.GetFocusedRowCellValue("WorkCounter")
-            'frm.txtPExec.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
+            frm.txtPExec.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
             frm.txtPRemarks.EditValue = MainView.GetFocusedRowCellValue("Remarks")
-            If IfNull(MainView.GetFocusedRowCellValue("RunningHours"), 0) > 0 Then
-                frm.lblRunningHours.Text = "Running Hours: " & MainView.GetFocusedRowCellValue("RunningHours")
-                frm.lblReadingDate.Text = "Latest Reading: " & CDate(MainView.GetFocusedRowCellValue("ReadingDate")).ToShortDateString
-            End If
+            frm.bInitialMaintenance = MainView.GetFocusedRowCellValue("GroupID") = "INITIAL MAINTENANCE"
             frm.ShowDialog()
             If frm.IS_SAVED Then
                 Dim strDueCounter As String = "null", strDateDue As String = "null", strCounter As String = "null", i As Integer
@@ -89,7 +96,8 @@ Public Class WORKDUE
                         strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
                 End Select
                 sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0 WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
-                sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & MainView.GetFocusedRowCellValue("UnitCode") & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0)")
+                'sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & MainView.GetFocusedRowCellValue("UnitCode") & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0)")
+                sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
 
                 frm.MainView.CloseEditor()
                 frm.MainView.UpdateCurrentRow()
@@ -110,7 +118,7 @@ Public Class WORKDUE
                 If frm.strAddedImages <> "" Then
                     Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                     For Each strImg In strImages
-                        sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & ImageToString(New Bitmap(strImg)) & "')")
+                        sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "')")
                     Next
                 End If
 
@@ -165,6 +173,7 @@ Public Class WORKDUE
             RankEdit.DataSource = AdmRank
         End If
         SetSaveVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
+
         SetAddVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         SetDeleteVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.header.Text = "DUE MAINTENANCE"
@@ -228,6 +237,11 @@ Public Class WORKDUE
                 End If
             End If
         End If
+        If e.Column.Name = "Critical" Then
+            If MainView.GetRowCellValue(e.RowHandle, "Critical") Then
+                e.Appearance.BackColor = Color.Yellow
+            End If
+        End If
     End Sub
 
     Public Overrides Sub DeleteData()
@@ -264,4 +278,9 @@ Public Class WORKDUE
         End If
     End Sub
 
+    Private Sub MainView_CustomColumnDisplayText(sender As Object, e As DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventArgs) Handles MainView.CustomColumnDisplayText
+        If e.Column.Name = "Critical" Then
+            e.DisplayText = ""
+        End If
+    End Sub
 End Class
