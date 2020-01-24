@@ -355,7 +355,6 @@ Public Class frmUpdate
 #Region "Updated Object Update Feature"
 
     Private Sub RunScripts(path As String, ByVal scripts As String(), Optional ByRef cErr As String = "")
-
         Try
             Dim queries As New List(Of String)
             Dim result As Boolean = oDb.oVersionRunSql("IF NOT EXISTS (SELECT * FROM pms_db.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='MSysScripts_Loaded')" & _
