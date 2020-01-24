@@ -15,7 +15,7 @@ Public Class MainForm
         sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblPMSConfig') CREATE TABLE [sti_sys].[dbo].[tblPMSConfig]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tblPMSConfig] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
         'Default Settings
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SHORE_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SHORE_ID','SAMPLE_')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'KPITHRESHOLD') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('KPITHRESHOLD','4.0')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
         sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
@@ -125,7 +125,7 @@ Public Class MainForm
             DATE_LAST_EXPORT = PMSDB.ReaderItem("DATE_LAST_EXPORT", "")
             DATE_LAST_EXPORT_IMG = PMSDB.ReaderItem("DATE_LAST_EXPORT_IMG", "")
             EXPORT_DIR = PMSDB.ReaderItem("EXPORT_DIR", "")
-            SHORE_ID = PMSDB.ReaderItem("SHORE_ID", "")
+            LOCATION_ID = PMSDB.ReaderItem("LOCATION_ID", "")
             txtDateDue.EditValue = PMSDB.ReaderItem("DUE_DAYS", 30)
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
             IMAGE_MAX_RES = PMSDB.ReaderItem("IMAGE_MAX_RES", 800)
@@ -210,6 +210,9 @@ Public Class MainForm
         Else
             Logon()
         End If
+        EXPDOCUMENTS.Enabled = LOCATION_ID <> ""
+        EXPMAINTENANCE.Enabled = LOCATION_ID <> ""
+        EXPORTADMIN.Enabled = LOCATION_ID <> ""
         'rpTools.Visible = False
         IsLoaded = True
         Me.Visible = True
@@ -1254,7 +1257,7 @@ Public Class MainForm
                     If nTmp = 199 Then
                         If strVslCode = "" Then
                             Dim xtmp As String() = Shuffle(strLineBuilder.ToString, False).Split("|"c)
-                            If xtmp(0).Contains(IMO_NUMBER) And Not (SHORE_ID = "" Or SHORE_ID = xtmp(1)) Then 'Check if the receiver of this export file is this vessel.
+                            If xtmp(0).Contains(IMO_NUMBER) And Not (LOCATION_ID = "" Or LOCATION_ID = xtmp(1)) Then 'Check if the receiver of this export file is this vessel.
                                 MsgBox("Incompatible export file.", vbCritical, GetAppName)
                                 sr.Close()
                                 sr.Dispose()

@@ -18,7 +18,7 @@ Public Module Util
     Public REQUIRED_SELECTED_COLOR As System.Drawing.Color = System.Drawing.Color.FromArgb(226, 248, 217)
     Public USER_NAME As String = "ADMIN", USER_ID As Integer = 0, GROUP_ID As Integer = 0, DEFAULT_PASSWORD As String = "12345", USER_PASSWORD As String
     Public IMO_NUMBER As String = "", VESSEL As String, FLAG_DESC As String, TYPE_DESC As String
-    Public APP_PATH As String, DATE_LAST_EXPORT As String = "2000-01-01", DATE_LAST_EXPORT_IMG As String = "2000-01-01", SHORE_ID As String, EXPORT_DIR
+    Public APP_PATH As String, DATE_LAST_EXPORT As String = "2000-01-01", DATE_LAST_EXPORT_IMG As String = "2000-01-01", LOCATION_ID As String, EXPORT_DIR
     Public GRID_ROW_SEP As Byte = 0, LOGO As Bitmap, FONT_INCREASE As Double = 0, IMAGE_MAX_RES As Single
     Public CURRENT_DEPARTMENT As String, CURRENT_RANK As String, CURRENT_MAINUNIT As String, CURRENT_CATEGORY As String, CURRENT_UNIT As String = "", CURRENT_WORK As Integer, CURRENT_DUEDAYS As String = "30", CURRENT_DUEHOURS As Integer = "100", CURRENT_PERIOD As Integer, CURRENT_WOMAINTENANCE As Boolean = False, CURRENT_CONDITION_CHECKED As Boolean = False, CURRENT_CRITICAL_CHECKED As Boolean = False, CURRENT_FLATVIEW_CHECKED As Boolean = False, CURRENT_SHOW_WARNING As Boolean = False, CURRENT_SHOW_ALL_CHECKED As Boolean = False
     Public AdmRank As DataTable, AdmDept As DataTable
@@ -820,7 +820,7 @@ Public Module Util
     Public Sub ExportPMSDocuments(db As SQLDB, strFile As String, strDocs As String)
         Dim sqls As New ArrayList, tbl As DataTable, drRow As DataRow ', strAdminFilter As String = ""
         DATE_LAST_EXPORT_IMG = ChangeToSQLDate(Now.Date).Replace("'", "")
-        sqls.Add(IMO_NUMBER & "|4|" & DATE_LAST_EXPORT & "|" & "PMS Documents.")
+        sqls.Add(IMO_NUMBER & "|4|" & LOCATION_ID & "|" & DATE_LAST_EXPORT & "|" & "PMS Documents.")
         strFile = GetFileDir(strFile) & GetFileNameWithoutExtension(strFile)
 
         tbl = db.CreateTable("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
@@ -854,7 +854,7 @@ Public Module Util
     Public Sub ExportPMSData(db As SQLDB, nExpType As Integer, strFile As String, dStartDate As Object, dEndDate As Object, bAuto As Boolean)
         Dim sqls As New ArrayList, tbl As DataTable, drRow As DataRow ', strAdminFilter As String = ""
         DATE_LAST_EXPORT = ChangeToSQLDate(Now.Date).Replace("'", "")
-        sqls.Add(IMO_NUMBER & "|" & nExpType & "|" & DATE_LAST_EXPORT & "|" & "PMS Data.")
+        sqls.Add(IMO_NUMBER & "|" & nExpType & "|" & LOCATION_ID & "|" & DATE_LAST_EXPORT & "|" & "PMS Data.")
         strFile = GetFileDir(strFile) & GetFileNameWithoutExtension(strFile)
         If (nExpType And 1) > 0 Then
             tbl = db.CreateTable("SELECT TOP 1 * FROM [dbo].[VESSELINFO]")
