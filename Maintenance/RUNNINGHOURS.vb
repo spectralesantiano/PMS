@@ -126,7 +126,8 @@ Public Class RUNNINGHOURS
                 If MainView.GetRowCellValue(nRowHandle, "CurrReading") Is System.DBNull.Value Or MainView.GetRowCellValue(nRowHandle, "NewReading") Is System.DBNull.Value Or MainView.GetRowCellValue(nRowHandle, "CurrDate") Is System.DBNull.Value Or MainView.GetRowCellValue(nRowHandle, "NewDate") Is System.DBNull.Value Then
                     e.Value = 0
                 Else
-                    Dim dDiff As Integer = DateDiff(DateInterval.Day, MainView.GetRowCellValue(nRowHandle, "CurrDate"), MainView.GetRowCellValue(nRowHandle, "NewDate")) + 1, nDiff As Double = MainView.GetRowCellValue(nRowHandle, "NewReading") - MainView.GetRowCellValue(nRowHandle, "CurrReading")
+                    Dim dDiff As Integer = DateDiff(DateInterval.Day, MainView.GetRowCellValue(nRowHandle, "CurrDate"), MainView.GetRowCellValue(nRowHandle, "NewDate")) + 1
+                    Dim nDiff As Double = MainView.GetRowCellValue(nRowHandle, "NewReading") - MainView.GetRowCellValue(nRowHandle, "CurrReading")
                     e.Value = nDiff / dDiff
                 End If
             End If
