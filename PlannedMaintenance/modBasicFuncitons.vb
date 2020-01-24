@@ -5,10 +5,20 @@ Module modBasicFuncitons
     Private Declare Ansi Function WritePrivateProfileString Lib "kernel32.dll" Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, ByVal lpKeyName As String, ByVal lpString As String, ByVal lpFileName As String) As Integer
     Private Declare Ansi Function GetPrivateProfileString Lib "kernel32.dll" Alias "GetPrivateProfileStringA" (ByVal lpApplicationName As String, ByVal lpKeyName As String, ByVal lpDefault As String, ByVal lpReturnedString As System.Text.StringBuilder, ByVal nSize As Integer, ByVal lpFileName As String) As Integer
 
+    Public Enum StatusUpdateCode
+        SUCCESS                 'Success! (SUCCESS)
+        UPD_DIR_NOT_SET         'UpdatesFolder is not set (UPD_DIR_NOT_SET)
+        UPD_MNG_NOT_FOUND       'No UpdateManager.exe found (UPD_MNG_NOT_FOUND)
+        UPD_DIR_VER_NOT_FOUND   'The UpdatesFolder + VersionNo does not exists (UPD_DIR_VER_NOT_FOUND)
+        ERR_UPD_MNG             'Generic problem loading the UpdateManager.exe (ERR_UPD_MNG)
+        UPD_DIR_NO_CONTENT      'Update folder does not have any contents (UPD_DIR_NO_CONTENT)
+    End Enum
+
     Public Function GetConnectionString(Optional ByVal hasUseDB As Boolean = True)
         If USE_SPECTRAL_CON Then
             SQL_SERVER = SQL_SERVER.Replace("\STISQLSERVER", "")
-            Return "Data Source=" & SQL_SERVER & "\STISQLSERVER;" & IIf(hasUseDB, "Database=pms_db;", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"
+            'Return "Data Source=" & SQL_SERVER & "\STISQLSERVER;" & IIf(hasUseDB, "Database=pms_db;", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"
+            Return "Data Source=" & SQL_SERVER & "\STISQLSERVER;" & IIf(hasUseDB, "Database=pms_db;", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
         ElseIf USE_TRUSTED_CON Then
             Return "Server=" & SQL_SERVER & ";" & IIf(hasUseDB, "Database=pms_db;", "") & "Trusted_Connection=True;"
         Else
@@ -97,8 +107,35 @@ Module modBasicFuncitons
                             Dim strArgs As String = "UPDATE " & cCurVersion & " " & """" & SQL_SERVER & """ """ & SQL_USER_NAME & """ """ & SQL_PASSWORD & """ """ & USE_SPECTRAL_CON.ToString & """ """ & USE_TRUSTED_CON.ToString & """"
                             Dim result As Integer = ReviseUpdateManager(nCurDBVersion, "UPDATE")
 
-                            If (result = -1) Then
-                                MessageBox.Show("There is a problem revising the UpdateManager.exe", "Spectral Service", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            Dim errMessage As String = ""
+                            Dim title As String = "Spectral Service"
+                            Dim msgButtons As MessageBoxButtons = Nothing
+                            Dim msgIcon As MessageBoxIcon = Nothing
+
+                            If (result = StatusUpdateCode.UPD_DIR_NOT_SET) Then
+                                errMessage = "The update folder is currently not set. Proceed opening " & APP_SHORT_NAME & " instead?"
+                                msgButtons = MessageBoxButtons.YesNo
+                                msgIcon = MessageBoxIcon.Exclamation
+                            ElseIf (result = StatusUpdateCode.UPD_MNG_NOT_FOUND) Then
+                                errMessage = "There is no UpdateManager.exe found. Proceed opening " & APP_SHORT_NAME & " instead?"
+                                msgButtons = MessageBoxButtons.YesNo
+                                msgIcon = MessageBoxIcon.Exclamation
+                            ElseIf (result = StatusUpdateCode.UPD_DIR_VER_NOT_FOUND) Then
+                                errMessage = "The update folder for version " & nCurDBVersion & " does not exists. Please contact Spectral Support."
+                                msgButtons = MessageBoxButtons.OK
+                                msgIcon = MessageBoxIcon.Error
+                            ElseIf (result = StatusUpdateCode.ERR_UPD_MNG) Then
+                                errMessage = "There is a problem revising the UpdateManager.exe. Please contact Spectral Support"
+                                msgButtons = MessageBoxButtons.OK
+                                msgIcon = MessageBoxIcon.Error
+                            ElseIf (result = StatusUpdateCode.UPD_DIR_NO_CONTENT) Then
+                                errMessage = "The object update does not have any contents. Please contact Spectral Support"
+                                msgButtons = MessageBoxButtons.OK
+                                msgIcon = MessageBoxIcon.Error
+                            End If
+
+                            If (result <> 1) Then
+                                MessageBox.Show(errMessage, GetAppName, msgButtons, msgIcon)
                                 Process.GetCurrentProcess.Kill()
                             End If
 
@@ -168,34 +205,45 @@ Module modBasicFuncitons
     End Sub
 
     Public Function ReviseUpdateManager(Optional ByVal versionNo As String = "", Optional ByVal updateType As String = "") As Integer
-        'If an UpdateManager.exe is present on UpdatesFolder, it will be copied to ERB main dir before calling the UpdateManager.exe
+        'If an UpdateManager.exe is present on UpdatesFolder, it will be copied to PMS main dir before calling the UpdateManager.exe
         Try
-            Dim updatePath As String = PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "CODE='UpdatesFolder'")
-            If updatePath.Equals("") Then Return 0
             Dim updateFilesPath As System.IO.FileInfo() = Nothing
-            Select Case updateType
-                'If the type is UPDATE, look on the share folder (updatePath) where the contents of this version is location, and get all the files. 
-                Case "UPDATE"
-                    updateFilesPath = New System.IO.DirectoryInfo(updatePath & (IIf(versionNo.Equals(""), "", "\" & versionNo))).GetFiles()
-                    'If the type is LOAD, go to temp_update folder, where the obx contents is temporarily extracted when obx is loaded.
-                Case "LOAD"
-                    updateFilesPath = New System.IO.DirectoryInfo(APP_PATH & "\temp_update\" & versionNo).GetFiles()
-            End Select
+            Dim updatePath As String = PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "CODE='UpdatesFolder'")
+
+            If IsNothing(updatePath) Then Return StatusUpdateCode.UPD_DIR_NOT_SET
+            If updatePath.Equals("") Then Return StatusUpdateCode.UPD_DIR_NOT_SET
+
+            Dim sourceDirectoryPath As String = IIf(updateType.ToLower().Equals("UPDATE"),
+                                                   updatePath & (IIf(versionNo.Equals(""), "", "\" & versionNo)),
+                                                   APP_PATH & "\temp_update\" & versionNo)
+
+            If (Not sourceDirectoryPath.Equals("") And Directory.Exists(sourceDirectoryPath)) Then
+                updateFilesPath = New System.IO.DirectoryInfo(sourceDirectoryPath).GetFiles()
+            Else
+                Return StatusUpdateCode.UPD_DIR_VER_NOT_FOUND
+            End If
 
             If (Not IsNothing(updateFilesPath)) Then
                 For Each f As FileInfo In updateFilesPath
                     If (f.Name.Contains("UpdateManager.exe")) Then
-                        File.Copy(APP_PATH & "\UpdateManager.exe", APP_PATH & "\temp_update\" & versionNo & "\UpdateManager_bak_" & DateTime.Now.ToString("MMddyyyy_hhmmss") & ".bakobx") 'Backup original UpdateManager.exe
-                        File.Copy(updatePath & "\UpdateManager.exe", APP_PATH & "\UpdateManager.exe", True) 'Copy new UpdateManager.exe
-                        File.Delete(updatePath & "\UpdateManager.exe") 'Delete UpdateManager.exe from the update source folder.
-                        Return 1 'The UpdateManager.exe is found and successfully updated.
+                        Try
+                            File.Copy(APP_PATH & "\UpdateManager.exe", APP_PATH & "\temp_update\" & versionNo & "\UpdateManager_bak_" & DateTime.Now.ToString("MMddyyyy_hhmmss") & ".bakobx", True) 'Backup original UpdateManager.exe
+                            File.Copy(updatePath & "\UpdateManager.exe", APP_PATH & "\UpdateManager.exe", True) 'Copy new UpdateManager.exe
+                            File.Delete(updatePath & "\UpdateManager.exe") 'Delete UpdateManager.exe from the update source folder.
+                            Return StatusUpdateCode.SUCCESS 'The UpdateManager.exe is found and successfully updated.
+                        Catch ex As Exception
+                            LogErrors("There is a problem revising the UpdateManager.exe - " & ex.Message)
+                            Return StatusUpdateCode.ERR_UPD_MNG
+                        End Try
                     End If
                 Next
+                Return StatusUpdateCode.SUCCESS 'There is no UpdateManager.exe on this obx update. So skip it.
+            Else 'updateFilesPath does not have any contents
+                Return StatusUpdateCode.UPD_DIR_NO_CONTENT
             End If
-            Return 0 'There is no UpdateManager.exe on this obx update. So skip it.
         Catch ex As Exception
-            Return -1 'There is a problem loading the UpdateManager.exe on specified folder (temp_update)
             LogErrors("There is a problem loading the UpdateManager.exe from obx verion no " + versionNo + " : " + ex.Message)
+            Return StatusUpdateCode.ERR_UPD_MNG 'There is a problem loading the UpdateManager.exe on specified folder (temp_update)
         End Try
     End Function
 

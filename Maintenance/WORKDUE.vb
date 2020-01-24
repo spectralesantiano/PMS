@@ -173,6 +173,7 @@ Public Class WORKDUE
             RankEdit.DataSource = AdmRank
         End If
         SetSaveVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
+
         SetAddVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         SetDeleteVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.header.Text = "DUE MAINTENANCE"
