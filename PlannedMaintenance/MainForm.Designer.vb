@@ -19,7 +19,6 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.RibbonControl = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.bbAdd = New DevExpress.XtraBars.BarButtonItem()
@@ -141,10 +140,13 @@ Partial Class MainForm
         Me.DateDueEdit = New DevExpress.XtraEditors.Repository.RepositoryItemDateEdit()
         Me.RibbonStatusBar = New DevExpress.XtraBars.Ribbon.RibbonStatusBar()
         Me.MainPanel = New DevExpress.XtraEditors.SplitContainerControl()
-        Me.pmMainMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
-        Me.pmListMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
+        Me.pmMainMenu = New DevExpress.XtraBars.PopupMenu()
+        Me.pmListMenu = New DevExpress.XtraBars.PopupMenu()
         Me.rpgVslAccount = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController(Me.components)
+        Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController()
+        'Me.PopupMenu1 = New DevExpress.XtraBars.PopupMenu()
+        'Me.PopupMenu2 = New DevExpress.XtraBars.PopupMenu()
+        'Me.PopupMenu3 = New DevExpress.XtraBars.PopupMenu()
         CType(Me.RibbonControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledDepartmentRep, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledRankRep, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -160,6 +162,9 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).BeginInit()
+        'CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).BeginInit()
+        'CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).BeginInit()
+        'CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl
@@ -1333,6 +1338,21 @@ Partial Class MainForm
         Me.dbdController.Controller.PropertiesBar.DefaultGlyphSize = New System.Drawing.Size(16, 16)
         Me.dbdController.Controller.PropertiesBar.DefaultLargeGlyphSize = New System.Drawing.Size(32, 32)
         '
+        'PopupMenu1
+        '
+        'Me.PopupMenu1.Name = "PopupMenu1"
+        'Me.PopupMenu1.Ribbon = Me.RibbonControl
+        '
+        'PopupMenu2
+        '
+        'Me.PopupMenu2.Name = "PopupMenu2"
+        'Me.PopupMenu2.Ribbon = Me.RibbonControl
+        '
+        'PopupMenu3
+        '
+        'Me.PopupMenu3.Name = "PopupMenu3"
+        'Me.PopupMenu3.Ribbon = Me.RibbonControl
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1362,6 +1382,9 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).EndInit()
+        'CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).EndInit()
+        'CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).EndInit()
+        'CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

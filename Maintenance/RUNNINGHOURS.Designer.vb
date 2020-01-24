@@ -192,6 +192,16 @@ Partial Class RUNNINGHOURS
         Me.CurrBand.VisibleIndex = 2
         Me.CurrBand.Width = 210
         '
+        'CurrBand
+        '
+        Me.CurrBand.Caption = "Current Readings"
+        Me.CurrBand.Columns.Add(Me.CurrCounter)
+        Me.CurrBand.Columns.Add(Me.CurrDate)
+        Me.CurrBand.Columns.Add(Me.CurrReading)
+        Me.CurrBand.Name = "CurrBand"
+        Me.CurrBand.VisibleIndex = 2
+        Me.CurrBand.Width = 242
+        '
         'CurrCounter
         '
         Me.CurrCounter.Caption = "Counter"
@@ -245,6 +255,15 @@ Partial Class RUNNINGHOURS
         Me.NewBand.VisibleIndex = 3
         Me.NewBand.Width = 150
         '
+        'NewBand
+        '
+        Me.NewBand.Caption = "New Reading"
+        Me.NewBand.Columns.Add(Me.NewDate)
+        Me.NewBand.Columns.Add(Me.NewReading)
+        Me.NewBand.Name = "NewBand"
+        Me.NewBand.VisibleIndex = 3
+        Me.NewBand.Width = 230
+        '
         'NewDate
         '
         Me.NewDate.Caption = "Date"
@@ -287,6 +306,16 @@ Partial Class RUNNINGHOURS
         Me.gSummary.Name = "gSummary"
         Me.gSummary.VisibleIndex = 4
         Me.gSummary.Width = 341
+        '
+        'gSummary
+        '
+        Me.gSummary.Caption = "Summary"
+        Me.gSummary.Columns.Add(Me.HoursRun)
+        Me.gSummary.Columns.Add(Me.HoursPerDay)
+        Me.gSummary.Columns.Add(Me.AvgHoursPerDay)
+        Me.gSummary.Name = "gSummary"
+        Me.gSummary.VisibleIndex = 4
+        Me.gSummary.Width = 406
         '
         'HoursRun
         '
