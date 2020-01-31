@@ -1,0 +1,9 @@
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblAdmDept')
+BEGIN
+CREATE TABLE [dbo].[tblAdmDept]([DeptCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)),[Name] [varchar](30) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL, CONSTRAINT [tblAdmDept$PrimaryKey] PRIMARY KEY CLUSTERED ([DeptCode] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]
+INSERT INTO [dbo].[tblAdmDept]([DeptCode],SortCode,Name,LastUpdatedBy) VALUES('SYSDD',10,'Deck','<SPECTRAL><TEDDY>')
+INSERT INTO [dbo].[tblAdmDept]([DeptCode],SortCode,Name,LastUpdatedBy) VALUES('SYSDE',20,'Engine','<SPECTRAL><TEDDY>')
+INSERT INTO [dbo].[tblAdmDept]([DeptCode],SortCode,Name,LastUpdatedBy) VALUES('SYSDC',30,'Hotel','<SPECTRAL><TEDDY>')
+INSERT INTO [dbo].[tblAdmDept]([DeptCode],SortCode,Name,LastUpdatedBy) VALUES('SYSDR',40,'Repaircrew','<SPECTRAL><TEDDY>')
+INSERT INTO [dbo].[tblAdmDept]([DeptCode],SortCode,Name,LastUpdatedBy) VALUES('SYSDS',50,'Supernumerary','<SPECTRAL><TEDDY>')
+END

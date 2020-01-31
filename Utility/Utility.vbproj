@@ -115,6 +115,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsVersioning.vb" />
+    <Compile Include="frmHelp.Designer.vb">
+      <DependentUpon>frmHelp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmHelp.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ExcelFile.vb" />
     <Compile Include="frmImageViewer.Designer.vb">
       <DependentUpon>frmImageViewer.vb</DependentUpon>
@@ -156,6 +162,9 @@
     <Compile Include="Util.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="frmHelp.resx">
+      <DependentUpon>frmHelp.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmImageViewer.resx">
       <DependentUpon>frmImageViewer.vb</DependentUpon>
     </EmbeddedResource>

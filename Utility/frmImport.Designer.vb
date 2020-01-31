@@ -33,6 +33,8 @@ Partial Class frmImport
         Me.RankEdit = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.cmdDeselect = New DevExpress.XtraEditors.SimpleButton()
         Me.cmdSelectAll = New DevExpress.XtraEditors.SimpleButton()
+        Me.cmdRemoveEnd = New DevExpress.XtraEditors.SimpleButton()
+        Me.cmdRemoveStart = New DevExpress.XtraEditors.SimpleButton()
         CType(Me.gDetails, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gDetails.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -43,7 +45,7 @@ Partial Class frmImport
         '
         'cmdSave
         '
-        Me.cmdSave.Location = New System.Drawing.Point(338, 467)
+        Me.cmdSave.Location = New System.Drawing.Point(393, 467)
         Me.cmdSave.Name = "cmdSave"
         Me.cmdSave.Size = New System.Drawing.Size(69, 23)
         Me.cmdSave.TabIndex = 4
@@ -52,7 +54,7 @@ Partial Class frmImport
         'cmdCancel
         '
         Me.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.cmdCancel.Location = New System.Drawing.Point(424, 467)
+        Me.cmdCancel.Location = New System.Drawing.Point(468, 467)
         Me.cmdCancel.Name = "cmdCancel"
         Me.cmdCancel.Size = New System.Drawing.Size(69, 23)
         Me.cmdCancel.TabIndex = 5
@@ -61,20 +63,20 @@ Partial Class frmImport
         'gDetails
         '
         Me.gDetails.Controls.Add(Me.MainGrid)
-        Me.gDetails.Location = New System.Drawing.Point(17, 12)
+        Me.gDetails.Location = New System.Drawing.Point(17, 38)
         Me.gDetails.Name = "gDetails"
-        Me.gDetails.Size = New System.Drawing.Size(476, 447)
+        Me.gDetails.Size = New System.Drawing.Size(516, 421)
         Me.gDetails.TabIndex = 0
         '
         'MainGrid
         '
         Me.MainGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainGrid.Location = New System.Drawing.Point(2, 23)
+        Me.MainGrid.Location = New System.Drawing.Point(2, 20)
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
         Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.DeleteEdit, Me.RankEdit})
-        Me.MainGrid.Size = New System.Drawing.Size(472, 422)
+        Me.MainGrid.Size = New System.Drawing.Size(512, 399)
         Me.MainGrid.TabIndex = 38
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
         '
@@ -165,19 +167,35 @@ Partial Class frmImport
         '
         'cmdDeselect
         '
-        Me.cmdDeselect.Location = New System.Drawing.Point(105, 467)
+        Me.cmdDeselect.Location = New System.Drawing.Point(95, 467)
         Me.cmdDeselect.Name = "cmdDeselect"
-        Me.cmdDeselect.Size = New System.Drawing.Size(69, 23)
+        Me.cmdDeselect.Size = New System.Drawing.Size(72, 23)
         Me.cmdDeselect.TabIndex = 15
         Me.cmdDeselect.Text = "Deselect All"
         '
         'cmdSelectAll
         '
-        Me.cmdSelectAll.Location = New System.Drawing.Point(19, 467)
+        Me.cmdSelectAll.Location = New System.Drawing.Point(17, 467)
         Me.cmdSelectAll.Name = "cmdSelectAll"
-        Me.cmdSelectAll.Size = New System.Drawing.Size(69, 23)
+        Me.cmdSelectAll.Size = New System.Drawing.Size(72, 23)
         Me.cmdSelectAll.TabIndex = 14
         Me.cmdSelectAll.Text = "Select All"
+        '
+        'cmdRemoveEnd
+        '
+        Me.cmdRemoveEnd.Location = New System.Drawing.Point(281, 467)
+        Me.cmdRemoveEnd.Name = "cmdRemoveEnd"
+        Me.cmdRemoveEnd.Size = New System.Drawing.Size(72, 23)
+        Me.cmdRemoveEnd.TabIndex = 17
+        Me.cmdRemoveEnd.Text = "Trim Right"
+        '
+        'cmdRemoveStart
+        '
+        Me.cmdRemoveStart.Location = New System.Drawing.Point(203, 467)
+        Me.cmdRemoveStart.Name = "cmdRemoveStart"
+        Me.cmdRemoveStart.Size = New System.Drawing.Size(72, 23)
+        Me.cmdRemoveStart.TabIndex = 16
+        Me.cmdRemoveStart.Text = "Trim Left"
         '
         'frmImport
         '
@@ -185,7 +203,9 @@ Partial Class frmImport
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.cmdCancel
-        Me.ClientSize = New System.Drawing.Size(514, 502)
+        Me.ClientSize = New System.Drawing.Size(549, 502)
+        Me.Controls.Add(Me.cmdRemoveEnd)
+        Me.Controls.Add(Me.cmdRemoveStart)
         Me.Controls.Add(Me.cmdDeselect)
         Me.Controls.Add(Me.cmdSelectAll)
         Me.Controls.Add(Me.gDetails)
@@ -221,4 +241,6 @@ Partial Class frmImport
     Friend WithEvents cmdDeselect As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents cmdSelectAll As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents Field2 As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents cmdRemoveEnd As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents cmdRemoveStart As DevExpress.XtraEditors.SimpleButton
 End Class
