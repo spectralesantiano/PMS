@@ -52,12 +52,12 @@ Public Class frmUpdate
     Public Sub New()
         InitializeComponent()
 
-        'Dim args() As String = Environment.GetCommandLineArgs()
+        Dim args() As String = Environment.GetCommandLineArgs()
 
         'Dim args() As String = {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam"} 'test update
         'Dim args() As String = {"APP.exe", "LOAD", "5.01.00", "C:\Spectral\UpdateSM5.obx", "Administrator", "Data Source=.\STISQLSERVER;Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"} 'test load
 
-        Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.00", "Admin", ".", "", "", "True", "False"}
+        'Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.00", "Admin", ".", "", "", "True", "False"}
         If args.Count = 8 Then
             'Update Version
             'sample: {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam", "False", "False"}
@@ -778,8 +778,8 @@ Public Class frmUpdate
     Public Function ConstructConnString(Optional ByVal DBName As String = "") As String
         If bUSE_SPECTRAL_CON Then
             cServerName = cServerName.Replace("\STISQLSERVER", "")
-            'Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
-            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
+            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
+            'Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
 
         ElseIf bUSE_TRUSTED_CON Then
             Return "Server=" & cServerName & ";" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Trusted_Connection=True;"
