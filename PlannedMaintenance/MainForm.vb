@@ -10,79 +10,76 @@ Public Class MainForm
 
     'Load default configurations.
     Sub SetDefaultSettings()
-        Try
-            Dim sqls As New ArrayList
-            sqls.Add("IF NOT EXISTS (SELECT Name FROM master.dbo.sysdatabases WHERE name ='sti_sys') CREATE DATABASE sti_sys")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblPMSConfig') CREATE TABLE [sti_sys].[dbo].[tblPMSConfig]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tblPMSConfig] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
-            'Default Settings
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SHORE_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SHORE_ID','SAMPLE_')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_DAYS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_DAYS','30')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'IMAGE_MAX_RES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('IMAGE_MAX_RES','800')")
 
-            '*********Settings for Versioning,License And Program Distribution************
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LTYPE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
+        Dim sqls As New ArrayList
+        sqls.Add("IF NOT EXISTS (SELECT Name FROM master.dbo.sysdatabases WHERE name ='sti_sys') CREATE DATABASE sti_sys")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblPMSConfig') CREATE TABLE [sti_sys].[dbo].[tblPMSConfig]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tblPMSConfig] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
+        'Default Settings
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'KPITHRESHOLD') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('KPITHRESHOLD','4.0')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_DAYS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_DAYS','30')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'IMAGE_MAX_RES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('IMAGE_MAX_RES','800')")
 
-            'Add Trial
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI])" & _
-                    "INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) " & _
-                    "VALUES('" & sysMpsUserPassword("ENCRYPT", APP_SHORT_NAME) & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
+        '*********Settings for Versioning,License And Program Distribution************
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LTYPE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
 
-            'tblSTIService_profile
-            sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
-                     "CREATE TABLE [sti_sys].[dbo].[tblSTIService_profile](" & _
-                     "[PROF_Code] [varchar](15) NOT NULL," & _
-                     "[PROF_Name] [varchar](50) NULL," & _
-                     "[PROF_Comment] [text] NULL," & _
-                     "[PROF_ExpFolder] [varchar](100) NULL," & _
-                     "[DateUpdated] [datetime] NULL," & _
-                     "CONSTRAINT [PK_tblSTIService_profile] PRIMARY KEY CLUSTERED" & _
-                     "(" & _
-                            "[PROF_Code] Asc " & _
-                     ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
-                     ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
+        'Add Trial
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI])" & _
+                "INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) " & _
+                "VALUES('" & sysMpsUserPassword("ENCRYPT", APP_SHORT_NAME) & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
 
-            'tblSTIService_internet_settings
-            sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_internet_settings') " & _
-                     "CREATE TABLE [sti_sys].[dbo].[tblSTIService_internet_settings](" & _
-                     "[INET_Code] [varchar](15) NOT NULL," & _
-                     "[INET_ProfileName] [varchar](50) NULL," & _
-                     "[INET_User] [text] NULL," & _
-                     "[INET_Pwd] [text] NULL," & _
-                     "[INET_AutoRemoveFiles] [int] NULL," & _
-                     "[FTP_ConnectionTimeout] [int] NULL," & _
-                     "[INET_Host] [text] NULL," & _
-                     "[FTP_UsePassive] [int] NULL," & _
-                     "[FTP_AutoFeat] [int] NULL," & _
-                     "[INET_Port] [int] NULL," & _
-                     "[INET_UseSSL] [int] NULL," & _
-                     "[INET_TLS] [int] NULL," & _
-                     "[INET_SPA] [int] NULL," & _
-                     "[INET_Type] [int] NULL," & _
-                     "[SMTP_SenderEmail] [text] NULL," & _
-                     "[EMAIL_TYPE] [int] NULL," & _
-                     "[DateUpdated] [datetime] NULL," & _
-                     "CONSTRAINT [PK_tblSTIService_internet_settings] PRIMARY KEY CLUSTERED " & _
-                     "(" & _
-                            "[INET_Code] Asc " & _
-                     ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
-                     ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
-            '*********************** Add Default WRH 5 Backup Profile *********************
-            sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblSTIService_profile] WHERE [PROF_Code] = '" & BACKUP_CODE & "') INSERT INTO [sti_sys].[dbo].[tblSTIService_profile]([PROF_Code],[PROF_Name],[PROF_Comment],[PROF_ExpFolder]) VALUES('" & BACKUP_CODE & "','" & BACKUP_NAME & "','Default PMS Backup Profile','" & BACKUP_DIR & "')")
-            'Lock PMS Records
-            sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
-            PMSDB.RunSqls(sqls)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
+        'tblSTIService_profile
+        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
+                 "CREATE TABLE [sti_sys].[dbo].[tblSTIService_profile](" & _
+                 "[PROF_Code] [varchar](15) NOT NULL," & _
+                 "[PROF_Name] [varchar](50) NULL," & _
+                 "[PROF_Comment] [text] NULL," & _
+                 "[PROF_ExpFolder] [varchar](100) NULL," & _
+                 "[DateUpdated] [datetime] NULL," & _
+                 "CONSTRAINT [PK_tblSTIService_profile] PRIMARY KEY CLUSTERED" & _
+                 "(" & _
+                        "[PROF_Code] Asc " & _
+                 ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
+                 ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
+
+        'tblSTIService_internet_settings
+        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_internet_settings') " & _
+                 "CREATE TABLE [sti_sys].[dbo].[tblSTIService_internet_settings](" & _
+                 "[INET_Code] [varchar](15) NOT NULL," & _
+                 "[INET_ProfileName] [varchar](50) NULL," & _
+                 "[INET_User] [text] NULL," & _
+                 "[INET_Pwd] [text] NULL," & _
+                 "[INET_AutoRemoveFiles] [int] NULL," & _
+                 "[FTP_ConnectionTimeout] [int] NULL," & _
+                 "[INET_Host] [text] NULL," & _
+                 "[FTP_UsePassive] [int] NULL," & _
+                 "[FTP_AutoFeat] [int] NULL," & _
+                 "[INET_Port] [int] NULL," & _
+                 "[INET_UseSSL] [int] NULL," & _
+                 "[INET_TLS] [int] NULL," & _
+                 "[INET_SPA] [int] NULL," & _
+                 "[INET_Type] [int] NULL," & _
+                 "[SMTP_SenderEmail] [text] NULL," & _
+                 "[EMAIL_TYPE] [int] NULL," & _
+                 "[DateUpdated] [datetime] NULL," & _
+                 "CONSTRAINT [PK_tblSTIService_internet_settings] PRIMARY KEY CLUSTERED " & _
+                 "(" & _
+                        "[INET_Code] Asc " & _
+                 ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
+                 ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
+        '*********************** Add Default WRH 5 Backup Profile *********************
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblSTIService_profile] WHERE [PROF_Code] = '" & BACKUP_CODE & "') INSERT INTO [sti_sys].[dbo].[tblSTIService_profile]([PROF_Code],[PROF_Name],[PROF_Comment],[PROF_ExpFolder]) VALUES('" & BACKUP_CODE & "','" & BACKUP_NAME & "','Default PMS Backup Profile','" & BACKUP_DIR & "')")
+        'Lock PMS Records
+        sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
+        PMSDB.RunSqls(sqls)
 
     End Sub
 
@@ -130,7 +127,7 @@ Public Class MainForm
             DATE_LAST_EXPORT = PMSDB.ReaderItem("DATE_LAST_EXPORT", "")
             DATE_LAST_EXPORT_IMG = PMSDB.ReaderItem("DATE_LAST_EXPORT_IMG", "")
             EXPORT_DIR = PMSDB.ReaderItem("EXPORT_DIR", "")
-            SHORE_ID = PMSDB.ReaderItem("SHORE_ID", "")
+            LOCATION_ID = PMSDB.ReaderItem("LOCATION_ID", "")
             txtDateDue.EditValue = PMSDB.ReaderItem("DUE_DAYS", 30)
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
             IMAGE_MAX_RES = PMSDB.ReaderItem("IMAGE_MAX_RES", 800)
@@ -215,6 +212,9 @@ Public Class MainForm
         Else
             Logon()
         End If
+        EXPDOCUMENTS.Enabled = LOCATION_ID <> ""
+        EXPMAINTENANCE.Enabled = LOCATION_ID <> ""
+        EXPORTADMIN.Enabled = LOCATION_ID <> ""
         'rpTools.Visible = False
         IsLoaded = True
         Me.Visible = True
@@ -1251,7 +1251,7 @@ Public Class MainForm
                     If nTmp = 199 Then
                         If strVslCode = "" Then
                             Dim xtmp As String() = Shuffle(strLineBuilder.ToString, False).Split("|"c)
-                            If xtmp(0).Contains(IMO_NUMBER) And Not (SHORE_ID = "" Or SHORE_ID = xtmp(1)) Then 'Check if the receiver of this export file is this vessel.
+                            If xtmp(0).Contains(IMO_NUMBER) And Not (LOCATION_ID = "" Or LOCATION_ID = xtmp(1)) Then 'Check if the receiver of this export file is this vessel.
                                 MsgBox("Incompatible export file.", vbCritical, GetAppName)
                                 sr.Close()
                                 sr.Dispose()

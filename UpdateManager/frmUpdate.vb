@@ -778,8 +778,8 @@ Public Class frmUpdate
     Public Function ConstructConnString(Optional ByVal DBName As String = "") As String
         If bUSE_SPECTRAL_CON Then
             cServerName = cServerName.Replace("\STISQLSERVER", "")
-            'Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
-            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
+            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
+            'Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
         ElseIf bUSE_TRUSTED_CON Then
             Return "Server=" & cServerName & ";" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Trusted_Connection=True;"
         Else
