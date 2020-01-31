@@ -52,11 +52,12 @@ Public Class frmUpdate
     Public Sub New()
         InitializeComponent()
 
-        Dim args() As String = Environment.GetCommandLineArgs()
+        'Dim args() As String = Environment.GetCommandLineArgs()
 
         'Dim args() As String = {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam"} 'test update
         'Dim args() As String = {"APP.exe", "LOAD", "5.01.00", "C:\Spectral\UpdateSM5.obx", "Administrator", "Data Source=.\STISQLSERVER;Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"} 'test load
-   
+
+        Dim args() As String = {"APP.exe", "LOAD", "1.00.00", "C:\Spectral\Developments\Source Codes\PMS\PlannedMaintenance\bin\x86\Debug\temp_update\1.00.00", "Admin", ".", "", "", "True", "False"}
         If args.Count = 8 Then
             'Update Version
             'sample: {"APP.exe", "UPDATE", "1.00", "localhost\SQLEXPRESS", "sa", "stiteam", "False", "False"}
@@ -259,7 +260,14 @@ Public Class frmUpdate
 
                     If Not bSuccess Then Exit Select
 
-                    cCurVersion = GetVersionValueForDB(GetVersionInfo(cObxPath & "\Update.txt")(1)).ToString() '-> Get version number.
+                    Dim tempVersion As ArrayList = GetVersionInfo(cObxPath & "\UPDATE.txt")
+                    If (tempVersion.Count > 0) Then
+                        cCurVersion = tempVersion(1).ToString()
+                    Else
+                        cCurVersion = ""
+                    End If
+
+                    'cCurVersion = GetVersionValueForDB(GetVersionInfo(cObxPath & "\Update.txt")(1)).ToString() '-> Get version number.
                     cTemp_Folder = cObxPath
                     cVersion = ""
 
@@ -458,7 +466,7 @@ Public Class frmUpdate
         Try
             Dim contents = System.IO.File.ReadAllLines(scriptFile)
             For i As Integer = 0 To contents.Length - 1
-                If (contents(i).Equals("[OBJECTS]")) Then
+                If (contents(i).Equals("[OBJECTS]") Or contents(i).Equals("[SQLS]")) Then
                     Return retVal
                 Else
                     retVal.Add(contents(i))
@@ -502,7 +510,7 @@ Public Class frmUpdate
             Dim updateFile = GetUpdateFile(arrUpdateFiles, "Update.txt")
             If (updateFile <> "" And System.IO.File.Exists(updateFile)) Then '-> If the Update.txt exists, read to contents, ignore the version portion. 
                 Dim versionInfo = GetVersionInfo(updateFile)
-                If (Not IsNothing(versionInfo) Or versionInfo.Count > 0) Then
+                If (Not IsNothing(versionInfo) And versionInfo.Count > 0) Then
                     versionNumber = GetVersionValueForDB(versionInfo(1).ToString()) '-> Get version number of Update.txt
                     versionDate = GetVersionValueForDB(versionInfo(2).ToString())   '-> Get version Date number of Update.txt
                     versionDesc = GetVersionValueForDB(versionInfo(3).ToString())   '-> Get version Description of Update.txt
@@ -770,7 +778,9 @@ Public Class frmUpdate
     Public Function ConstructConnString(Optional ByVal DBName As String = "") As String
         If bUSE_SPECTRAL_CON Then
             cServerName = cServerName.Replace("\STISQLSERVER", "")
-            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
+            'Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
+            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
+
         ElseIf bUSE_TRUSTED_CON Then
             Return "Server=" & cServerName & ";" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Trusted_Connection=True;"
         Else
