@@ -64,7 +64,6 @@ Public Class WORKDUE
             Dim frm As New frmWork, sqls As New ArrayList
             frm.db = DB
             frm.IGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[DOCUMENTLIST] WHERE [DocType]='WORKDONE' AND [RefID]='-xxax'")
-            frm.bGetPrevWork = False
             frm.Text = "Edit " & MainView.GetFocusedRowCellValue("UnitDesc") & " maintenance."
             frm.cboUnit.Properties.DataSource = DB.CreateTable("[dbo].[GETCOMPONENT]  @strUnitCode='" & MainView.GetFocusedRowCellValue("UnitCode") & "'")
             frm.cboUnit.ReadOnly = True
@@ -74,10 +73,10 @@ Public Class WORKDUE
             frm.cboMaintenance.ReadOnly = True
             frm.cboRankCode.EditValue = MainView.GetFocusedRowCellValue("RankCode")
             frm.txtExecutedBy.EditValue = DB.DLookUp("ExecutedBy", "dbo.tblMaintenanceWork", "", "RankCode='" & MainView.GetFocusedRowCellValue("RankCode") & "' ORDER BY WorkDate Desc")
-            frm.txtPDate.EditValue = MainView.GetFocusedRowCellValue("WorkDate")
-            frm.txtPRunningHours.EditValue = MainView.GetFocusedRowCellValue("WorkCounter")
-            frm.txtPExec.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
-            frm.txtPRemarks.EditValue = MainView.GetFocusedRowCellValue("Remarks")
+            'frm.txtPDate.EditValue = MainView.GetFocusedRowCellValue("WorkDate")
+            'frm.txtPRunningHours.EditValue = MainView.GetFocusedRowCellValue("WorkCounter")
+            'frm.txtPExec.EditValue = MainView.GetFocusedRowCellValue("ExecutedBy")
+            'frm.txtPRemarks.EditValue = MainView.GetFocusedRowCellValue("Remarks")
             frm.bInitialMaintenance = MainView.GetFocusedRowCellValue("GroupID") = "INITIAL MAINTENANCE"
             frm.ShowDialog()
             If frm.IS_SAVED Then

@@ -2,7 +2,7 @@
 
 Public Class frmWork
 
-    Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, bGetPrevWork As Boolean = True, nMaintenanceID As Integer = 0, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = "", bInitialMaintenance As Boolean = False, pDueDate As String, pDueCounter As String
+    Public IS_SAVED As Boolean = False, strIntCode As String, nInterval As Integer, db As SQLDB, nMaintenanceID As Integer = 0, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = "", bInitialMaintenance As Boolean = False, pDueDate As String, pDueCounter As String
     Dim strRequiredFields = "cboUnit;cboMaintenance;cboRankCode;txtWorkDate;txtExecutedBy", nCurrentRunningHours As Integer, dCurrentReadingDate As Date = Nothing
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOK.Click
@@ -173,22 +173,20 @@ Public Class frmWork
             txtPRunningHours.EditValue = Nothing
             txtPExec.EditValue = Nothing
             txtPRemarks.EditValue = Nothing
-            If bGetPrevWork Then
-                db.BeginReader("SELECT TOP 1 WorkDate, WorkCounter, ExecutedBy, Remarks,DueDate,DueCounter FROM dbo.tblMaintenanceWork WHERE UnitCode='" & cboUnit.EditValue & "' AND MaintenanceCode='" & cboMaintenance.EditValue & "' " & IIf(nMaintenanceID = 0, "", " AND MaintenanceWorkID<" & nMaintenanceID) & " ORDER BY WorkDate DESC")
-                If db.Read Then
-                    txtPDate.EditValue = db.ReaderItem("WorkDate")
-                    txtPRunningHours.EditValue = db.ReaderItem("WorkCounter")
-                    txtPExec.EditValue = db.ReaderItem("ExecutedBy")
-                    txtPRemarks.EditValue = db.ReaderItem("Remarks")
-                    If db.ReaderItem("DueDate") Is System.DBNull.Value Then
-                        pDueDate = "NULL"
-                    Else
-                        pDueDate = ChangeToSQLDate(db.ReaderItem("DueDate"))
-                    End If
-                    pDueCounter = db.ReaderItem("DueCounter", "NULL")
+            db.BeginReader("SELECT TOP 1 WorkDate, WorkCounter, ExecutedBy, Remarks,DueDate,DueCounter FROM dbo.tblMaintenanceWork WHERE UnitCode='" & cboUnit.EditValue & "' AND MaintenanceCode='" & cboMaintenance.EditValue & "' " & IIf(nMaintenanceID = 0, "", " AND MaintenanceWorkID<" & nMaintenanceID) & " ORDER BY WorkDate DESC")
+            If db.Read Then
+                txtPDate.EditValue = db.ReaderItem("WorkDate")
+                txtPRunningHours.EditValue = db.ReaderItem("WorkCounter")
+                txtPExec.EditValue = db.ReaderItem("ExecutedBy")
+                txtPRemarks.EditValue = db.ReaderItem("Remarks")
+                If db.ReaderItem("DueDate") Is System.DBNull.Value Then
+                    pDueDate = "NULL"
+                Else
+                    pDueDate = ChangeToSQLDate(db.ReaderItem("DueDate"))
                 End If
-                db.CloseReader()
+                pDueCounter = db.ReaderItem("DueCounter", "NULL")
             End If
+            db.CloseReader()
         End If
     End Sub
 

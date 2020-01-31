@@ -295,7 +295,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PMS DATA 2012"
         "ProductCode" = "8:{159B2AB3-B161-4C5D-9EE3-CB7EE16F3E07}"
-        "PackageCode" = "8:{4D994DD3-ECF1-4A60-8979-4FF3E880E0BC}"
+        "PackageCode" = "8:{E9D090DA-7BD9-4385-B2DE-6944C6C40111}"
         "UpgradeCode" = "8:{0646A3B4-0220-4C7B-9149-B4A48655307B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

@@ -144,9 +144,6 @@ Partial Class MainForm
         Me.pmListMenu = New DevExpress.XtraBars.PopupMenu()
         Me.rpgVslAccount = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController()
-        'Me.PopupMenu1 = New DevExpress.XtraBars.PopupMenu()
-        'Me.PopupMenu2 = New DevExpress.XtraBars.PopupMenu()
-        'Me.PopupMenu3 = New DevExpress.XtraBars.PopupMenu()
         CType(Me.RibbonControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledDepartmentRep, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledRankRep, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -162,9 +159,6 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).BeginInit()
-        'CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).BeginInit()
-        'CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).BeginInit()
-        'CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'RibbonControl
@@ -260,7 +254,6 @@ Partial Class MainForm
         Me.cmdHelp.Id = 28
         Me.cmdHelp.ItemShortcut = New DevExpress.XtraBars.BarShortcut(System.Windows.Forms.Keys.F1)
         Me.cmdHelp.Name = "cmdHelp"
-        Me.cmdHelp.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
         '
         'SECUSERS
         '
@@ -1338,21 +1331,6 @@ Partial Class MainForm
         Me.dbdController.Controller.PropertiesBar.DefaultGlyphSize = New System.Drawing.Size(16, 16)
         Me.dbdController.Controller.PropertiesBar.DefaultLargeGlyphSize = New System.Drawing.Size(32, 32)
         '
-        'PopupMenu1
-        '
-        'Me.PopupMenu1.Name = "PopupMenu1"
-        'Me.PopupMenu1.Ribbon = Me.RibbonControl
-        '
-        'PopupMenu2
-        '
-        'Me.PopupMenu2.Name = "PopupMenu2"
-        'Me.PopupMenu2.Ribbon = Me.RibbonControl
-        '
-        'PopupMenu3
-        '
-        'Me.PopupMenu3.Name = "PopupMenu3"
-        'Me.PopupMenu3.Ribbon = Me.RibbonControl
-        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1382,9 +1360,6 @@ Partial Class MainForm
         CType(Me.pmMainMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pmListMenu, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dbdController.Controller, System.ComponentModel.ISupportInitialize).EndInit()
-        'CType(Me.PopupMenu1, System.ComponentModel.ISupportInitialize).EndInit()
-        'CType(Me.PopupMenu2, System.ComponentModel.ISupportInitialize).EndInit()
-        'CType(Me.PopupMenu3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

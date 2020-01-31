@@ -4,6 +4,7 @@
     Protected strID As String = "" 'Primary key of each record.
     Protected strDesc As String 'Description of the maincontent
     Public strCaption As String 'Caption of the maincontent
+    Public strHelpUrl As String 'Help link of the maincontent
     Protected bLoaded As Boolean = False 'Utility variable will be set to true on the first call of refreshdata function.
     Public bPermission As Byte = 0 '1 View 2 Add 4 Edit/Save 8 Delete 'Max permission 15
     Public bRecordUpdated As Boolean 'Utility variable will be set to false on RefreshData and True Field_EditValueChanged which trigger in when one of the fields is updated.
