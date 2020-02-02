@@ -775,7 +775,6 @@ Public Class MainForm
             MkDir(path) '-> Recreate the OBJECT_SNAPSHOT
             File.Copy(fileName, zipFile) '-> Copy zip files to OBJECT_SNAPSHOT
             UnzipFile(zipFile, path) '-> Extract contents of zip file.
-
             If (File.Exists(updatePath)) Then '-> If the Update.txt exists.
                 Dim tempVersion As ArrayList = GetVersionInfo(updatePath)
                 If (tempVersion.Count >= 1) Then
