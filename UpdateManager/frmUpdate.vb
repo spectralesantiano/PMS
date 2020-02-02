@@ -261,10 +261,8 @@ Public Class frmUpdate
                     If Not bSuccess Then Exit Select
 
                     Dim tempVersion As ArrayList = GetVersionInfo(cObxPath & "\UPDATE.txt")
-                    If (tempVersion.Count > 0) Then
+                                    If (tempVersion.Count >= 1) Then
                         cCurVersion = tempVersion(1).ToString()
-                    Else
-                        cCurVersion = ""
                     End If
 
                     'cCurVersion = GetVersionValueForDB(GetVersionInfo(cObxPath & "\Update.txt")(1)).ToString() '-> Get version number.
@@ -490,7 +488,7 @@ Public Class frmUpdate
 
     Private Function GetUpdateFile(arr As String(), valToFind As String) As String
         For Each content As String In arr
-            If (content.ToLower().Contains(valToFind.ToLower())) Then
+             If ((GetFileWithoutExtension(content) + GetFileExtension(content)).ToLower().Equals(valToFind.ToLower())) Then
                 Return content
             End If
         Next
@@ -514,6 +512,10 @@ Public Class frmUpdate
                     versionNumber = GetVersionValueForDB(versionInfo(1).ToString()) '-> Get version number of Update.txt
                     versionDate = GetVersionValueForDB(versionInfo(2).ToString())   '-> Get version Date number of Update.txt
                     versionDesc = GetVersionValueForDB(versionInfo(3).ToString())   '-> Get version Description of Update.txt
+                 Else
+                    versionNumber = oDb.oVersionDLookUp("AppVersion", "[sti_sys].[dbo].[tblPMSVersion]", "", "1=1 ORDER BY AppVersion DESC")
+                    versionDate = oDb.oVersionDLookUp("VersionDate", "[sti_sys].[dbo].[tblPMSVersion]", "", "1=1 ORDER BY AppVersion DESC")
+                    versionDesc = oDb.oVersionDLookUp("VersionDesc", "[sti_sys].[dbo].[tblPMSVersion]", "", "1=1 ORDER BY AppVersion DESC")               
                 End If
                 Dim contentsToUpdate As List(Of String) = GetFileContentsToUpdate(System.IO.File.ReadAllLines(updateFile))
 
@@ -528,7 +530,11 @@ Public Class frmUpdate
                 Dim isObjectsUpdated As Boolean = ProcessUpdateFiles(arrProgramFiles, sourceFolder, backupFolder, objects, startDate) 'Execute for Objects, DLLs, and exes.
                 Dim isImagesUpdated As Boolean = ProcessUpdateFiles(arrProgramFiles, sourceFolder, backupFolder, images, startDate)
                 Dim isDocFilesUpdated As Boolean = ProcessUpdateFiles(arrProgramFiles, sourceFolder, backupFolder, docFiles, startDate)
-            End If
+          Else
+                Log_Append(sbVersionLog, StrDup(100, "-"))
+                Log_Append(sbVersionLog, "FILE Update.txt Does not exists on the given obx file.".PadRight(nColStandard))
+                Log_Append(sbVersionLog, StrDup(100, "-"))  
+          End If
             Log_Append(sbVersionLog, StrDup(100, "-"))
             Log_Append(sbVersionLog, "Files Updated :".PadRight(nColStandard) & nFilesUpdated.ToString)
             Log_Append(sbVersionLog, "Files Error :".PadRight(nColStandard) & nFilesError.ToString)
