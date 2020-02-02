@@ -751,7 +751,7 @@ Public Class MainForm
         Try
             Dim contents = System.IO.File.ReadAllLines(scriptFile)
             For i As Integer = 0 To contents.Length - 1
-                If (contents(i).Equals("[OBJECTS]")) Then
+                If (contents(i).Equals("[OBJECTS]") Or contents(i).Equals("[SQLS]")) Then
                     Return retVal
                 Else
                     retVal.Add(contents(i))
@@ -762,7 +762,7 @@ Public Class MainForm
         End Try
         Return retVal
     End Function
-    Private Function PeekVesionNo(fileName As String) As String
+    Private Function PeekVesionNo(fileName As String, currVersionNumber As String) As String
         Dim versionNo As String = ""
         Dim path = APP_PATH & "\temp_update\OBJECT_SNAPSHOT\" '-> temp folder to extract contents of obx file.
         Dim updatePath = path & "\Update.txt" '-> the file that we need to look for.
@@ -776,11 +776,18 @@ Public Class MainForm
             File.Copy(fileName, zipFile) '-> Copy zip files to OBJECT_SNAPSHOT
             UnzipFile(zipFile, path) '-> Extract contents of zip file.
 
-            If (File.Exists(updatePath)) Then '-> If the Update.txt exists.
-                versionNo = GetVersionValueForDB(GetVersionInfo(updatePath)(1)).ToString() '-> Get the version no. 
+           If (File.Exists(updatePath)) Then '-> If the Update.txt exists.
+                Dim tempVersion As ArrayList = GetVersionInfo(updatePath)
+                If (tempVersion.Count >= 1) Then
+                    versionNo = GetVersionValueForDB(tempVersion(1).ToString())
+                Else
+                    versionNo = currVersionNumber
+                End If
+                'versionNo = GetVersionValueForDB(GetVersionInfo(updatePath)(1)).ToString() '-> Get the version no. 
             End If
         Catch ex As Exception
             LogErrors("Error on loading obx file : " & ex.Message)
+            versionNo = "NO_UPDATE_FILE"
         Finally
             Directory.Delete(path, True) '-> After the peak, do the cleanup by deleting the OBJECT_SNAPSHOT folder, whether there is an error or not. 
         End Try
@@ -800,8 +807,8 @@ Public Class MainForm
             End If
 
             If (File.Exists(fileName) And fileName.EndsWith(".obx", StringComparison.CurrentCultureIgnoreCase)) Then
-                Dim updateVersionNo = PeekVesionNo(fileName) '-> Get the version number included in Update.txt of this obx file.
-                If (updateVersionNo.Equals("")) Then
+                Dim updateVersionNo = PeekVesionNo(fileName, currentVersion) '-> Get the version number included in Update.txt of this obx file.
+                If (updateVersionNo.Equals("NO_UPDATE_FILE")) Then
                     MessageBox.Show("The object update does not contain an Update.txt file.", APP_SHORT_NAME & " - Update", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     Return False
                 End If
