@@ -43,4 +43,28 @@
             MainView.SetRowCellValue(i, "Selected", bSelect)
         Next
     End Sub
+
+    Sub TrimAll(bStart As Boolean)
+        Dim i As Integer
+        For i = 0 To MainView.RowCount - 1
+            Dim strValue As String = MainView.GetRowCellValue(i, Field1)
+            'MainView.SetRowCellValue(i, "Selected", bSelect)
+            If strValue.Length > 0 Then
+                If bStart Then
+                    MainView.SetRowCellValue(i, Field1, strValue.Remove(0, 1))
+                Else
+                    MainView.SetRowCellValue(i, Field1, strValue.Remove(strValue.Length - 1, 1))
+                End If
+            End If
+        Next
+    End Sub
+
+    Private Sub cmdRemoveEnd_Click(sender As System.Object, e As System.EventArgs) Handles cmdRemoveEnd.Click
+        TrimAll(False)
+    End Sub
+
+    Private Sub cmdRemoveStart_Click(sender As System.Object, e As System.EventArgs) Handles cmdRemoveStart.Click
+        TrimAll(True)
+    End Sub
+
 End Class

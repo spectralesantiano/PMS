@@ -106,6 +106,21 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\country.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Department.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rank.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\port.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\vesseltype.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

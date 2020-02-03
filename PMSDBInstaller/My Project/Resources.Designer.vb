@@ -11,6 +11,7 @@
 Option Strict On
 Option Explicit On
 
+Imports System
 
 Namespace My.Resources
     
@@ -21,20 +22,20 @@ Namespace My.Resources
     '''<summary>
     '''  A strongly-typed resource class, for looking up localized strings, etc.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0"), _
-     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-     Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(), _
-     Global.Microsoft.VisualBasic.HideModuleNameAttribute()> _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0"),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
+     Global.Microsoft.VisualBasic.HideModuleNameAttribute()>  _
     Friend Module Resources
-
+        
         Private resourceMan As Global.System.Resources.ResourceManager
-
+        
         Private resourceCulture As Global.System.Globalization.CultureInfo
-
+        
         '''<summary>
         '''  Returns the cached ResourceManager instance used by this class.
         '''</summary>
-        <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)> _
+        <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
         Friend ReadOnly Property ResourceManager() As Global.System.Resources.ResourceManager
             Get
                 If Object.ReferenceEquals(resourceMan, Nothing) Then
@@ -44,19 +45,85 @@ Namespace My.Resources
                 Return resourceMan
             End Get
         End Property
-
+        
         '''<summary>
         '''  Overrides the current thread's CurrentUICulture property for all
         '''  resource lookups using this strongly typed resource class.
         '''</summary>
-        <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)> _
+        <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
         Friend Property Culture() As Global.System.Globalization.CultureInfo
             Get
                 Return resourceCulture
             End Get
-            Set(ByVal value As Global.System.Globalization.CultureInfo)
+            Set
                 resourceCulture = value
             End Set
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=&apos;tblAdmCntry&apos;)
+        '''BEGIN
+        '''CREATE TABLE [dbo].[tblAdmCntry](
+        '''	[CntryCode] [varchar](15) NOT NULL,
+        '''	[SortCode] [float] NULL DEFAULT ((0)),
+        '''	[Name] [varchar](50) NOT NULL,
+        '''	[Nat] [varchar](30) NULL,
+        '''	[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),
+        '''	[LastUpdatedBy] [varchar](200) NULL,
+        '''	[NZCntryCode] [varchar](2) NULL,
+        '''	[SSMA_TimeStamp] [timestamp] NOT NULL,
+        ''' CONSTRAINT [tblAdmCntry$PrimaryKey] PRIMARY KEY CLUSTERED 
+        '''(
+        '''	[Cntr [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property country() As String
+            Get
+                Return ResourceManager.GetString("country", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=&apos;tblAdmDept&apos;)
+        '''BEGIN
+        '''CREATE TABLE [dbo].[tblAdmDept]([DeptCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)),[Name] [varchar](30) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL, CONSTRAINT [tblAdmDept$PrimaryKey] PRIMARY KEY CLUSTERED ([DeptCode] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property Department() As String
+            Get
+                Return ResourceManager.GetString("Department", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=&apos;tblAdmPort&apos;)
+        '''BEGIN
+        '''CREATE TABLE [dbo].[tblAdmPort]([PortCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)), [Name] [varchar](50) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[CountryCode] [varchar](15) NULL,[UNCode] [varchar](5) NULL,[NZPortCode] [varchar](3) NULL,[USState] [varchar](50) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL, CONSTRAINT [tblAdmPort$PrimaryKey] PRI [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property port() As String
+            Get
+                Return ResourceManager.GetString("port", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=&apos;tblAdmRank&apos;)
+        '''BEGIN
+        '''CREATE TABLE [dbo].[tblAdmRank]([RankCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)),[Abbrv] [nvarchar](15) NULL,[Name] [varchar](50) NULL,[DeptCode] [varchar](15) NULL,[RankGrpCode] [varchar](15) NULL,[RankTypeCode] [varchar](15) NULL,[RegistryCode] [varchar](15) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL,[ [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property rank() As String
+            Get
+                Return ResourceManager.GetString("rank", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=&apos;tblAdmVslType&apos;)
+        '''BEGIN
+        '''CREATE TABLE [dbo].[tblAdmVslType]([VslTypeCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)),[Name] [varchar](30) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL,CONSTRAINT [tblAdmVslType$PrimaryKey] PRIMARY KEY CLUSTERED ([VslTypeCode] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY =  [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property vesseltype() As String
+            Get
+                Return ResourceManager.GetString("vesseltype", resourceCulture)
+            End Get
         End Property
     End Module
 End Namespace

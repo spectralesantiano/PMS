@@ -8,87 +8,12 @@ Public Class MainForm
 
     Dim IsLoaded As Boolean = False, strFirstContent As String, ContentsObject As DataView
 
-    'Load default configurations.
-    Sub SetDefaultSettings()
-
-        Dim sqls As New ArrayList
-        sqls.Add("IF NOT EXISTS (SELECT Name FROM master.dbo.sysdatabases WHERE name ='sti_sys') CREATE DATABASE sti_sys")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblPMSConfig') CREATE TABLE [sti_sys].[dbo].[tblPMSConfig]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tblPMSConfig] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
-        'Default Settings
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LOCATION_ID') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LOCATION_ID','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'KPITHRESHOLD') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('KPITHRESHOLD','4.0')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('EXPORT_DIR','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_DAYS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_DAYS','30')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'DUE_HOURS') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('DUE_HOURS','100')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'IMAGE_MAX_RES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('IMAGE_MAX_RES','800')")
-
-        '*********Settings for Versioning,License And Program Distribution************
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'UpdatesFolder') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('UpdatesFolder','')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'LTYPE') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblPMSConfig] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [sti_sys].[dbo].[tblPMSConfig]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
-
-        'Add Trial
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI])" & _
-                "INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) " & _
-                "VALUES('" & sysMpsUserPassword("ENCRYPT", APP_SHORT_NAME) & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
-
-        'tblSTIService_profile
-        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
-                 "CREATE TABLE [sti_sys].[dbo].[tblSTIService_profile](" & _
-                 "[PROF_Code] [varchar](15) NOT NULL," & _
-                 "[PROF_Name] [varchar](50) NULL," & _
-                 "[PROF_Comment] [text] NULL," & _
-                 "[PROF_ExpFolder] [varchar](100) NULL," & _
-                 "[DateUpdated] [datetime] NULL," & _
-                 "CONSTRAINT [PK_tblSTIService_profile] PRIMARY KEY CLUSTERED" & _
-                 "(" & _
-                        "[PROF_Code] Asc " & _
-                 ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
-                 ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
-
-        'tblSTIService_internet_settings
-        sqls.Add("IF NOT EXISTS (SELECT * FROM sti_sys.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_internet_settings') " & _
-                 "CREATE TABLE [sti_sys].[dbo].[tblSTIService_internet_settings](" & _
-                 "[INET_Code] [varchar](15) NOT NULL," & _
-                 "[INET_ProfileName] [varchar](50) NULL," & _
-                 "[INET_User] [text] NULL," & _
-                 "[INET_Pwd] [text] NULL," & _
-                 "[INET_AutoRemoveFiles] [int] NULL," & _
-                 "[FTP_ConnectionTimeout] [int] NULL," & _
-                 "[INET_Host] [text] NULL," & _
-                 "[FTP_UsePassive] [int] NULL," & _
-                 "[FTP_AutoFeat] [int] NULL," & _
-                 "[INET_Port] [int] NULL," & _
-                 "[INET_UseSSL] [int] NULL," & _
-                 "[INET_TLS] [int] NULL," & _
-                 "[INET_SPA] [int] NULL," & _
-                 "[INET_Type] [int] NULL," & _
-                 "[SMTP_SenderEmail] [text] NULL," & _
-                 "[EMAIL_TYPE] [int] NULL," & _
-                 "[DateUpdated] [datetime] NULL," & _
-                 "CONSTRAINT [PK_tblSTIService_internet_settings] PRIMARY KEY CLUSTERED " & _
-                 "(" & _
-                        "[INET_Code] Asc " & _
-                 ")WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]" & _
-                 ") ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]")
-        '*********************** Add Default WRH 5 Backup Profile *********************
-        sqls.Add("IF NOT EXISTS (SELECT * FROM [sti_sys].[dbo].[tblSTIService_profile] WHERE [PROF_Code] = '" & BACKUP_CODE & "') INSERT INTO [sti_sys].[dbo].[tblSTIService_profile]([PROF_Code],[PROF_Name],[PROF_Comment],[PROF_ExpFolder]) VALUES('" & BACKUP_CODE & "','" & BACKUP_NAME & "','Default PMS Backup Profile','" & BACKUP_DIR & "')")
-        'Lock PMS Records
-        sqls.Add("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
-        PMSDB.RunSqls(sqls)
-
-    End Sub
-
     Private Sub BypassLogonForDebugging(Optional ByVal bloggedon As Boolean = False)
         IsLoaded = False
         USER_NAME = "Admin"
         USER_ID = 1
         GROUP_ID = 0
-        PMSDB.BeginReader("SELECT Logo FROM .dbo.tblCompanyInfo")
+        PMSDB.BeginReader("SELECT Logo FROM sti_sys.dbo.tblCompanyInfo")
         If PMSDB.Read() Then
             If Not PMSDB.ReaderItem("Logo") Is System.DBNull.Value Then
                 Dim imgByte As Byte() = PMSDB.ReaderItem("Logo")
@@ -106,7 +31,7 @@ Public Class MainForm
     End Sub
 
     Private Sub LoadSettings()
-        PMSDB.BeginReader("SELECT Logo FROM .dbo.tblCompanyInfo")
+        PMSDB.BeginReader("SELECT Logo FROM sti_sys.dbo.tblCompanyInfo")
         If PMSDB.Read() Then
             If Not PMSDB.ReaderItem("Logo") Is System.DBNull.Value Then
                 Dim imgByte As Byte() = PMSDB.ReaderItem("Logo")
@@ -180,8 +105,6 @@ Public Class MainForm
             End If
         End If
 
-        SetDefaultSettings()
-
         If Not Debugger.IsAttached Then
             CheckAppVersion()
             CheckLicense()
@@ -212,9 +135,14 @@ Public Class MainForm
         Else
             Logon()
         End If
+
+        'Lock PMS Records
+        PMSDB.RunSql("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
+
         EXPDOCUMENTS.Enabled = LOCATION_ID <> ""
         EXPMAINTENANCE.Enabled = LOCATION_ID <> ""
         EXPORTADMIN.Enabled = LOCATION_ID <> ""
+        IMPORTDATA.Enabled = LOCATION_ID <> ""
         'rpTools.Visible = False
         IsLoaded = True
         Me.Visible = True
@@ -425,6 +353,7 @@ Public Class MainForm
                 MainPanel.Panel2.Controls.Add(maincontent)
                 maincontent.DB = PMSDB
                 maincontent.Name = cContent
+                maincontent.strHelpUrl = IfNull(xrow(0)("HelpUrl"), "")
                 maincontent.bPermission = xrow(0)("Permission")
                 maincontent.strCaption = xrow(0)("Caption")
                 If IfNull(xrow(0)("ContentLayout"), "") <> "" Then maincontent.SetLayout(xrow(0)("ContentLayout"))
@@ -881,7 +810,7 @@ Public Class MainForm
     Private Sub COMPANYINFO_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles COMPANYINFO.ItemClick
         Dim frmComInfo As New CompanyInfo, bAddMode As Boolean
         COMPANYINFO.Down = True
-        PMSDB.BeginReader("SELECT * FROM dbo.tblCompanyInfo")
+        PMSDB.BeginReader("SELECT * FROM sti_sys.dbo.tblCompanyInfo")
         If PMSDB.Read Then
             bAddMode = False
             frmComInfo.txtName.EditValue = PMSDB.ReaderItem("Name", "")
@@ -900,9 +829,9 @@ Public Class MainForm
         frmComInfo.ShowDialog()
         If frmComInfo.bSaved Then
             If bAddMode Then
-                PMSDB.InitSqlWithParameters("INSERT INTO dbo.tblCompanyInfo VALUES(@Name,@Phone,@Email,@Address,@Logo)")
+                PMSDB.InitSqlWithParameters("INSERT INTO sti_sys.dbo.tblCompanyInfo VALUES(@Name,@Phone,@Email,@Address,@Logo)")
             Else
-                PMSDB.InitSqlWithParameters("UPDATE dbo.tblCompanyInfo SET Name=@Name, Phone=@Phone, Email=@Email, Address=@Address, Logo=@Logo")
+                PMSDB.InitSqlWithParameters("UPDATE sti_sys.dbo.tblCompanyInfo SET Name=@Name, Phone=@Phone, Email=@Email, Address=@Address, Logo=@Logo")
             End If
             PMSDB.AddSqlParameter("@Name", SqlDbType.Text, frmComInfo.txtName.EditValue)
             PMSDB.AddSqlParameter("@Phone", SqlDbType.Text, frmComInfo.txtPhone.EditValue)
@@ -1251,26 +1180,39 @@ Public Class MainForm
             If cFile <> "" Then
                 cFile = GetFileDir(strFile) & cFile
                 Dim sr As New System.IO.StreamReader(cFile)
-                Dim strLineBuilder As New System.Text.StringBuilder, strSQL As String = "", nTmp As Integer, strDesc As String = "", strVslCode As String = ""
+                Dim strTag As String = "header", nExpType As String, strDesc As String, sqls As New ArrayList, strLOCID As String
+                Dim strLineBuilder As New System.Text.StringBuilder, strLine As String, nTmp As Integer, strTableNames As String = "", strTable As String, strVslCode As String = ""
+
                 While Not sr.EndOfStream
                     nTmp = sr.Read
                     If nTmp = 199 Then
-                        If strVslCode = "" Then
-                            Dim xtmp As String() = Shuffle(strLineBuilder.ToString, False).Split("|"c)
-                            If xtmp(0).Contains(IMO_NUMBER) And Not (LOCATION_ID = "" Or LOCATION_ID = xtmp(1)) Then 'Check if the receiver of this export file is this vessel.
-                                MsgBox("Incompatible export file.", vbCritical, GetAppName)
-                                sr.Close()
-                                sr.Dispose()
-                                System.Windows.Forms.Application.DoEvents()
-                                Kill(cFile)
-                                Exit Sub
-                            End If
-                            strVslCode = xtmp(1)
-                            strDesc = xtmp(2)
-                        Else
-                            strSQL = strSQL & Shuffle(strLineBuilder.ToString, False) & Environment.NewLine
-                        End If
-
+                        strLine = Shuffle(strLineBuilder.ToString, False)
+                        Select Case strTag
+                            Case "header"
+                                strTag = "table"
+                                Dim strTemp() As String = strLine.Split("|")
+                                nExpType = strTemp(1)
+                                strLOCID = strTemp(2)
+                                strDesc = strTemp(3)
+                                If Not strLOCID.Contains(LOCATION_ID) Then 'Check if the receiver of this export file is this vessel.
+                                    MsgBox("Incompatible export file.", vbCritical, GetAppName)
+                                    sr.Close()
+                                    sr.Dispose()
+                                    System.Windows.Forms.Application.DoEvents()
+                                    Kill(cFile)
+                                    Exit Sub
+                                End If
+                                sqls.Add("EXEC [dbo].[CLEARIMPDATA] @nExpItem=" & nExpType)
+                            Case "table"
+                                strTag = "data"
+                                strTable = strLine
+                            Case "data"
+                                If strLine = "END" Then
+                                    strTag = "table"
+                                Else
+                                    sqls.Add("INSERT INTO dbo.imp_" & strTable & " VALUES(" & strLine & ")")
+                                End If
+                        End Select
                         strLineBuilder.Clear()
                     Else
                         strLineBuilder.Append(ChrW(nTmp))
@@ -1280,19 +1222,13 @@ Public Class MainForm
                 sr.Dispose()
                 System.Windows.Forms.Application.DoEvents()
                 Kill(cFile)
-                PMSDB.RunSql(strSQL)
-
-                'If PMSSMDB.RunSql(strSQL) Then
-                '    PMSSMDB.RunSql("INSERT INTO [dbo].[tblImportLog] ([ImportDate],[Description],[FileName],[VslCode], IsAuto, Status) VALUES (GETDATE(), '" & strDesc & "', '" & strFile & "', '" & strVslCode & "', 0,1)")
-                'Else
-                '    PMSSMDB.RunSql("INSERT INTO [dbo].[tblImportLog] ([ImportDate],[Description],[FileName],[VslCode], IsAuto, Status) VALUES (GETDATE(), '" & strDesc & "', '" & strFile & "', '" & strVslCode & "', 0,0)")
-                'End If
+                sqls.Add("EXEC [dbo].[IMPORTDATA] @nExpItem =" & nExpType & ", @strVslCode ='" & IMO_NUMBER & "', @strDesc ='" & strDesc & "', @strFileName ='" & strFile & "', @bIsAuto =0")
+                PMSDB.RunSqls(sqls)
 
                 'UNCOMMENT TO DEBUG
                 'Using sw As New System.IO.StreamWriter(GetFileDir(cFile) & GetFileNameWithoutExtension(cFile) & ".sql", False, System.Text.Encoding.Unicode)
                 '    sw.Write(strSQL)
-                'End Using
-
+                'End Using                
             End If
         End If
     End Sub
@@ -1490,7 +1426,7 @@ Public Class MainForm
         Dim nExpType As Integer = 4, frm As New frmExportDocuments
         frm.txtExportDir.EditValue = EXPORT_DIR
         frm.lblLastExp.Text = ChangeSQLDateStrToDate(DATE_LAST_EXPORT_IMG).ToShortDateString
-        frm.MainGrid.DataSource = PMSDB.CreateTable("SELECT *, CAST(0 AS BIT) Selected FROM dbo.DOCUMENTLIST")
+        frm.MainGrid.DataSource = PMSDB.CreateTable("SELECT *, CAST(0 AS BIT) Selected FROM dbo.DOCUMENTLIST WHERE DocType = 'WORKDONE' ORDER BY DateUpdated DESC")
         frm.ShowDialog()
         If frm.bExported Then
             EXPORT_DIR = frm.txtExportDir.EditValue
@@ -1498,5 +1434,20 @@ Public Class MainForm
             PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
             PMSDB.SaveConfig("DATE_LAST_EXPORT_IMG", DATE_LAST_EXPORT_IMG, APP_SHORT_NAME)
         End If
+    End Sub
+
+    Private Sub cmdHelp_ItemClick(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles cmdHelp.ItemClick
+        Dim frm As New frmHelp
+        If maincontent.strHelpUrl = "" Then
+            If System.IO.File.Exists(GetAppPath() & "\Help\1.pdf") Then
+                frm.LoadPDF(GetAppPath() & "\Help\1.pdf", 1)
+            Else
+                MsgBox("Unable to locate default help file.", MsgBoxStyle.Critical, GetAppPath)
+            End If
+        Else
+            Dim strHelp() As String = maincontent.strHelpUrl.Split(";"c)
+            frm.LoadPDF(GetAppPath() & "\Help\" & strHelp(0), strHelp(1))
+        End If
+        frm.ShowDialog()
     End Sub
 End Class
