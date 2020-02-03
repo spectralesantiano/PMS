@@ -13,8 +13,6 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PlannedMaintenance", "Plann
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Maintenance", "Maintenance\Maintenance.vbproj", "{BF2E485F-FF39-4164-87A5-C71038063555}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{3F76B021-C758-4D16-8368-F80ED9FADD18}"
-EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PMSReports", "PMSReports\PMSReports.vbproj", "{96140768-DC39-47A2-98D8-B83E3D21D00C}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "UpdateManager", "UpdateManager\UpdateManager.vbproj", "{875944D3-E336-41CD-AD62-B5678A1703F4}"
@@ -100,12 +98,6 @@ Global
 		{BF2E485F-FF39-4164-87A5-C71038063555}.Release|Mixed Platforms.Build.0 = Release|x86
 		{BF2E485F-FF39-4164-87A5-C71038063555}.Release|x86.ActiveCfg = Release|x86
 		{BF2E485F-FF39-4164-87A5-C71038063555}.Release|x86.Build.0 = Release|x86
-		{3F76B021-C758-4D16-8368-F80ED9FADD18}.Debug|Any CPU.ActiveCfg = Debug
-		{3F76B021-C758-4D16-8368-F80ED9FADD18}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{3F76B021-C758-4D16-8368-F80ED9FADD18}.Debug|x86.ActiveCfg = Debug
-		{3F76B021-C758-4D16-8368-F80ED9FADD18}.Release|Any CPU.ActiveCfg = Release
-		{3F76B021-C758-4D16-8368-F80ED9FADD18}.Release|Mixed Platforms.ActiveCfg = Release
-		{3F76B021-C758-4D16-8368-F80ED9FADD18}.Release|x86.ActiveCfg = Release
 		{96140768-DC39-47A2-98D8-B83E3D21D00C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{96140768-DC39-47A2-98D8-B83E3D21D00C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96140768-DC39-47A2-98D8-B83E3D21D00C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86

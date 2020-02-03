@@ -775,8 +775,7 @@ Public Class MainForm
             MkDir(path) '-> Recreate the OBJECT_SNAPSHOT
             File.Copy(fileName, zipFile) '-> Copy zip files to OBJECT_SNAPSHOT
             UnzipFile(zipFile, path) '-> Extract contents of zip file.
-
-           If (File.Exists(updatePath)) Then '-> If the Update.txt exists.
+            If (File.Exists(updatePath)) Then '-> If the Update.txt exists.
                 Dim tempVersion As ArrayList = GetVersionInfo(updatePath)
                 If (tempVersion.Count >= 1) Then
                     versionNo = GetVersionValueForDB(tempVersion(1).ToString())
@@ -802,7 +801,7 @@ Public Class MainForm
             Dim updatePath As String = PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "Code='UpdatesFolder'")
             Dim currentVersion As String = PMSDB.DLookUp("AppVersion", "[sti_sys].[dbo].[tblPMSVersion]", "", "1=1 ORDER BY AppVersion DESC")
             Dim localPath As String = APP_PATH & "\temp_update\"
-           If (Not Directory.Exists(localPath)) Then 'Create a temporary obx folder locally for Spectral Service
+            If (Not Directory.Exists(localPath)) Then 'Create a temporary obx folder locally for Spectral Service
                 MkDir(localPath)
             End If
 
