@@ -2,6 +2,9 @@ Imports System.Drawing
 
 Public Class WORKDUE
 
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+
     Public Overrides Sub SetLayout(strLayout As String)
         MainView.RestoreLayoutFromStream(StringToStream(strLayout))
     End Sub
@@ -47,10 +50,12 @@ Public Class WORKDUE
         End If
         frm.ShowDialog()
         If frm.IS_SAVED Then
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             If bAdd Then
-                DB.RunSql("INSERT INTO dbo.tblPlannedWork VALUES(" & MainView.GetFocusedRowCellValue("MaintenanceWorkID") & "," & ChangeToSQLDate(frm.txtPlannedDate.EditValue) & ",'" & frm.txtReason.EditValue.ToString.Replace("'", "''") & "', '" & frm.txtApprovedBy.EditValue.ToString.Replace("'", "''") & "')")
+                DB.RunSql("INSERT INTO dbo.tblPlannedWork VALUES(" & MainView.GetFocusedRowCellValue("MaintenanceWorkID") & "," & ChangeToSQLDate(frm.txtPlannedDate.EditValue) & ",'" & frm.txtReason.EditValue.ToString.Replace("'", "''") & "', '" & frm.txtApprovedBy.EditValue.ToString.Replace("'", "''") & "','" & LastUpdatedBy & "')")
             Else
-                DB.RunSql("UPDATE dbo.tblPlannedWork SET PlannedDate=" & ChangeToSQLDate(frm.txtPlannedDate.EditValue) & ", Reason='" & frm.txtReason.EditValue.ToString.Replace("'", "''") & "', ApprovedBy='" & frm.txtApprovedBy.EditValue.ToString.Replace("'", "''") & "' WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
+                DB.RunSql("UPDATE dbo.tblPlannedWork SET PlannedDate=" & ChangeToSQLDate(frm.txtPlannedDate.EditValue) & ", Reason='" & frm.txtReason.EditValue.ToString.Replace("'", "''") & "', ApprovedBy='" & frm.txtApprovedBy.EditValue.ToString.Replace("'", "''") & "',LastUpdatedBy='" & LastUpdatedBy & "' WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
             End If
             MainView.SetRowCellValue(MainView.FocusedRowHandle, "PlannedDate", frm.txtPlannedDate.EditValue)
             MainView.SetRowCellValue(MainView.FocusedRowHandle, "Reason", frm.txtReason.EditValue)
@@ -94,30 +99,38 @@ Public Class WORKDUE
                     Case "SYSYEARS"
                         strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
                 End Select
-                sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0 WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
+
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
+                sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0, LastUpdatedBy='" & LastUpdatedBy & "' WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
                 'sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & MainView.GetFocusedRowCellValue("UnitCode") & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0)")
-                sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
+                sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
 
                 frm.MainView.CloseEditor()
                 frm.MainView.UpdateCurrentRow()
                 For i = 0 To frm.MainView.RowCount - 1
                     If frm.MainView.GetRowCellValue(i, "Edited") Then
-                        sqls.Add("INSERT INTO [dbo].[tblPartConsumption]([PartCode],[MaintenanceWorkID],[DateConsumed],[Number],[Remarks])" & _
-                         "SELECT '" & frm.MainView.GetRowCellValue(i, "PartCode") & "',[MaintenanceWorkID],[WorkDate]," & frm.MainView.GetRowCellValue(i, "Number") & ",'" & strDesc & " - " & frm.cboMaintenance.Text & "' FROM [dbo].[tblMaintenanceWork] WHERE UnitCode='" & frm.cboUnit.EditValue & "' AND MaintenanceCode='" & frm.cboMaintenance.EditValue & "' AND bLatest=1")
+                        sqls.Add("INSERT INTO [dbo].[tblPartConsumption]([PartCode],[MaintenanceWorkID],[DateConsumed],[Number],[Remarks],[LastUpdatedBy])" & _
+                         "SELECT '" & frm.MainView.GetRowCellValue(i, "PartCode") & "',[MaintenanceWorkID],[WorkDate]," & frm.MainView.GetRowCellValue(i, "Number") & ",'" & strDesc & " - " & frm.cboMaintenance.Text & "','" & LastUpdatedBy & "' FROM [dbo].[tblMaintenanceWork] WHERE UnitCode='" & frm.cboUnit.EditValue & "' AND MaintenanceCode='" & frm.cboMaintenance.EditValue & "' AND bLatest=1")
                     End If
                 Next
 
                 If frm.strDeletedImages <> "" Then
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
                     Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
                     For Each strDocID In strDeletedID
+                        clsAudit.saveAuditPreDelDetails("tblDocuments", strDocID, LastUpdatedBy)
                         sqls.Add("DELETE FROM dbo.tblDocuments WHERE DocID=" & strDocID)
                     Next
                 End If
 
                 If frm.strAddedImages <> "" Then
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
                     Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                     For Each strImg In strImages
-                        sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "')")
+                        sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc, LastUpdatedBy) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "','" & LastUpdatedBy & "')")
                     Next
                 End If
 
@@ -151,7 +164,10 @@ Public Class WORKDUE
                 Case "SYSYEARS"
                     strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
             End Select
-            DB.RunSql("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & strID & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0)")
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
+            DB.RunSql("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & strID & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0)")
         End If
         RefreshData()
     End Sub
@@ -185,6 +201,8 @@ Public Class WORKDUE
         MainView.EndSort()
         MainView.ExpandAllGroups()
         MainView.TopRowIndex = 0
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     Private Sub MainView_Click(sender As Object, e As System.EventArgs) Handles MainView.Click

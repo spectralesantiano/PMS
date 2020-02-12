@@ -1,10 +1,13 @@
 Public Class SECUSERS
     Dim _disablecelval As Boolean = False
     Dim strFilter As String
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Private Sub ResetPassword()
         If MsgBox("Continuing will reset " & strDesc & "'s password to " & DEFAULT_PASSWORD & ", would you like to continue?", MsgBoxStyle.Question Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            DB.RunSql("UPDATE tblSec_Users SET [Password]='" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "' WHERE [User ID]=" & strID)
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            DB.RunSql("UPDATE tblSec_Users SET [Password]='" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "',LastUpdatedBy='" & LastUpdatedBy & "' WHERE [User ID]=" & strID)
         End If
     End Sub
 
@@ -18,7 +21,13 @@ Public Class SECUSERS
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete " & strDesc & " as User?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
+
             sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE SecID=" & strID & " AND SecType=0")
+
+            clsAudit.saveAuditPreDelDetails("tblSec_Users", strID, LastUpdatedBy)
             sqls.Add("DELETE FROM dbo.tblSec_Users WHERE [User ID]=" & strID)
             DB.RunTransaction(sqls)
         End If
@@ -106,6 +115,8 @@ Public Class SECUSERS
             AddEditListener(Me.GroupList)
         End If
         'GroupList.Enabled = (USER_ID = 1)
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp

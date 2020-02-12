@@ -1,4 +1,6 @@
 ﻿Public Class ChangePassword
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Public is_saved As Boolean = False
 
@@ -18,7 +20,9 @@
         ElseIf Me.txtNewPass.Text.Length < 4 Then
             MsgBox("The new password should at least 4 characters.", MsgBoxStyle.Critical)
         Else
-            PMSDB.RunSql("Update dbo.tblSec_Users set [Password]='" & sysMpsUserPassword("encrypt", txtNewPass.Text) & "' WHERE [User ID]=" & USER_ID)
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.Text) 'neil
+
+            PMSDB.RunSql("Update dbo.tblSec_Users set [Password]='" & sysMpsUserPassword("encrypt", txtNewPass.Text) & "', LastUpdatedBy='" & LastUpdatedBy & "' WHERE [User ID]=" & USER_ID)
             USER_PASSWORD = txtNewPass.Text
             is_saved = True
             Me.Close()

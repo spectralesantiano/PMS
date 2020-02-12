@@ -2,6 +2,9 @@ Imports System.Drawing
 
 Public Class NONCONFORM
 
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
             Case "Preview"
@@ -60,6 +63,9 @@ Public Class NONCONFORM
         If strFilter.Length > 0 Then strFilter = " WHERE " & strFilter.Remove(0, 4)
         MainGrid.DataSource = DB.CreateTable("SELECT * FROM NCLIST" & strFilter)
         Me.header.Text = "NON-CONFORMANCES"
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     Private Sub MainView_FocusedRowChanged(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs) Handles MainView.FocusedRowChanged
@@ -89,6 +95,9 @@ Public Class NONCONFORM
         If MsgBox("Are you sure want to remove this Non-Conformance?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
             If Not MainView.GetFocusedRowCellValue("NCID") Is System.DBNull.Value Then
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                clsAudit.saveAuditPreDelDetails("tblNC", strID, LastUpdatedBy)
+
                 sqls.Add("DELETE FROM dbo.tblNC WHERE NCID='" & MainView.GetFocusedRowCellValue("NCID") & "'")
                 sqls.Add("Update dbo.tblMaintenanceWork set bNC=0 Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
                 DB.RunSqls(sqls)
@@ -119,14 +128,17 @@ Public Class NONCONFORM
             sqls.Add("UPDATE [dbo].[tblNC] SET [DiscoveredBy]='" & frm.txtDiscoveredBy.EditValue.ToString.Replace("'", "''") & "',[ReportedTo]='" & frm.txtReportedTo.EditValue.ToString.Replace("'", "''") & "',[Description]='" & frm.txtDescription.EditValue.ToString.Replace("'", "''") & "',[ImmediateAction]='" & frm.txtImmediateAction.EditValue.ToString.Replace("'", "''") & "',[Cause]='" & frm.txtCauses.EditValue.ToString.Replace("'", "''") & "',[Objective]='" & frm.txtObjectives.EditValue.ToString.Replace("'", "''") & "' WHERE NCID='" & strNCID & "'")
             frm.MainView.CloseEditor()
             frm.MainView.UpdateCurrentRow()
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             For i = 0 To frm.MainView.RowCount - 1
                 If frm.MainView.GetRowCellValue(i, "Edited") Then
                     If Not frm.MainView.GetRowCellValue(i, "DueDate") Is System.DBNull.Value Then strDueDate = ChangeToSQLDate(frm.MainView.GetRowCellValue(i, "DueDate"))
                     If Not frm.MainView.GetRowCellValue(i, "DoneDate") Is System.DBNull.Value Then strDoneDate = ChangeToSQLDate(frm.MainView.GetRowCellValue(i, "DoneDate"))
                     If IfNull(frm.MainView.GetRowCellValue(i, "NCCorrectiveMeasureID"), 0) = 0 Then
-                        sqls.Add("INSERT INTO [dbo].[tblNCCorrectiveMeasure]([NCID],[Description],[RankCode],[DueDate],[DoneDate],[LastUpdatedBy]) Values('" & strNCID & "', '" & frm.MainView.GetRowCellValue(i, "Description") & "', '" & frm.MainView.GetRowCellValue(i, "RankCode") & "', " & strDueDate & ", " & strDoneDate & ",'" & GetUserName() & "')")
+                        sqls.Add("INSERT INTO [dbo].[tblNCCorrectiveMeasure]([NCID],[Description],[RankCode],[DueDate],[DoneDate],[LastUpdatedBy]) Values('" & strNCID & "', '" & frm.MainView.GetRowCellValue(i, "Description") & "', '" & frm.MainView.GetRowCellValue(i, "RankCode") & "', " & strDueDate & ", " & strDoneDate & ",'" & LastUpdatedBy & "')")
                     Else
-                        sqls.Add("UPDATE [dbo].[tblNCCorrectiveMeasure] SET [Description]='" & frm.MainView.GetRowCellValue(i, "Description") & "',[RankCode]='" & frm.MainView.GetRowCellValue(i, "RankCode") & "',[DueDate]=" & strDueDate & ",[DoneDate]=" & strDoneDate & ",[LastUpdatedBy]='" & GetUserName() & "' WHERE NCCorrectiveMeasureID=" & frm.MainView.GetRowCellValue(i, "NCCorrectiveMeasureID"))
+                        sqls.Add("UPDATE [dbo].[tblNCCorrectiveMeasure] SET [Description]='" & frm.MainView.GetRowCellValue(i, "Description") & "',[RankCode]='" & frm.MainView.GetRowCellValue(i, "RankCode") & "',[DueDate]=" & strDueDate & ",[DoneDate]=" & strDoneDate & ",[LastUpdatedBy]='" & LastUpdatedBy & "' WHERE NCCorrectiveMeasureID=" & frm.MainView.GetRowCellValue(i, "NCCorrectiveMeasureID"))
                     End If
                 End If
             Next

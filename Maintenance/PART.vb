@@ -1,8 +1,13 @@
 Public Class PART
     Dim dDateReported As Date, nNumber As Integer, strRemark As String = ""
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Part?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            clsAudit.saveAuditPreDelDetails("tblAdmPart", strID, LastUpdatedBy)
+
             DB.RunSql("DELETE FROM dbo.tblAdmPart WHERE PartCode='" & strID & "'")
         End If
         blList.RefreshData()
@@ -25,6 +30,9 @@ Public Class PART
 
             mView.CloseEditor()
             mView.UpdateCurrentRow()
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             For i = 0 To mView.RowCount - 1
                 If mView.GetRowCellValue(i, "Edited") Then
                     If mView.GetRowCellValue(i, "DateMissing") Is System.DBNull.Value Or mView.GetRowCellValue(i, "DateMissing") Is Nothing Or IfNull(mView.GetRowCellValue(i, "Number"), 0) = 0 Or IfNull(mView.GetRowCellValue(i, "Remarks"), "") = "" Then
@@ -32,9 +40,9 @@ Public Class PART
                         Exit Sub
                     End If
                     If IfNull(mView.GetFocusedRowCellValue("Part_MissingID"), 0) = 0 Then
-                        sqls.Add("INSERT INTO [dbo].[tblPart_Missing]([PartCode],[DateMissing],[Number],[Remarks])VALUES('" & strID & "'," & ChangeToSQLDate(mView.GetRowCellValue(i, "DateMissing")) & "," & mView.GetRowCellValue(i, "Number") & ",'" & mView.GetRowCellValue(i, "Remarks").ToString.Replace("'", "''") & "')")
+                        sqls.Add("INSERT INTO [dbo].[tblPart_Missing]([PartCode],[DateMissing],[Number],[Remarks],[LastupdatedBy])VALUES('" & strID & "'," & ChangeToSQLDate(mView.GetRowCellValue(i, "DateMissing")) & "," & mView.GetRowCellValue(i, "Number") & ",'" & mView.GetRowCellValue(i, "Remarks").ToString.Replace("'", "''") & "','" & LastUpdatedBy & "')")
                     Else
-                        sqls.Add("UPDATE tblPart_Missing SET [DateMissing]=" & ChangeToSQLDate(mView.GetRowCellValue(i, "DateMissing")) & ",[Number]=" & mView.GetRowCellValue(i, "Number") & ",[Remarks]='" & mView.GetRowCellValue(i, "Remarks").ToString.Replace("'", "''") & "' WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
+                        sqls.Add("UPDATE tblPart_Missing SET [DateMissing]=" & ChangeToSQLDate(mView.GetRowCellValue(i, "DateMissing")) & ",[Number]=" & mView.GetRowCellValue(i, "Number") & ",[Remarks]='" & mView.GetRowCellValue(i, "Remarks").ToString.Replace("'", "''") & "',[LastUpdatedBy]='" & LastUpdatedBy & "' WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
                     End If
                 End If
             Next
@@ -73,7 +81,10 @@ Public Class PART
         tbl = cboLocCode.Properties.DataSource
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
-        DB.RunSql("INSERT INTO dbo.tblAdmLocation(LocCode, Name, LastUpdatedBy) VALUES('" & strLocCode & "', '" & e.DisplayValue & "','" & GetUserName() & "')")
+
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
+        DB.RunSql("INSERT INTO dbo.tblAdmLocation(LocCode, Name, LastUpdatedBy) VALUES('" & strLocCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("LocCode") = strLocCode
         row("LocName") = e.DisplayValue
         tbl.Rows.Add(row)
@@ -87,7 +98,10 @@ Public Class PART
         tbl = cboStorageCode.Properties.DataSource
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
-        DB.RunSql("INSERT INTO dbo.tblAdmStorage(StorageCode, Name, LastUpdatedBy) VALUES('" & strStorageCode & "', '" & e.DisplayValue & "','" & GetUserName() & "')")
+
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
+        DB.RunSql("INSERT INTO dbo.tblAdmStorage(StorageCode, Name, LastUpdatedBy) VALUES('" & strStorageCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("StorageCode") = strStorageCode
         row("Storage") = e.DisplayValue
         tbl.Rows.Add(row)
@@ -135,6 +149,9 @@ Public Class PART
         aGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.PURCHASEDETAILLIST WHERE PartCode='" & strID & "' ORDER BY [DateReceived] DESC")
         txtInitStock.Enabled = aView.RowCount = 0 And cView.RowCount = 0 And mView.RowCount = 0
         Me.header.Text = "EDIT PART DETAILS - " & blList.GetDesc.ToUpper
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     
@@ -163,9 +180,14 @@ Public Class PART
         Dim editor As DevExpress.XtraEditors.ButtonEdit = TryCast(sender, DevExpress.XtraEditors.ButtonEdit)
         Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
         If mView.RowCount > 0 Then
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             If mView.GetFocusedRowCellDisplayText("DateMissing").ToString <> "" Then
                 If MsgBox("Are you sure want to delete the missing parts on " & CDate(mView.GetFocusedRowCellDisplayText("DateMissing")).ToShortDateString & "?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                     If IfNull(mView.GetFocusedRowCellValue("Part_MissingID"), 0) > 0 Then
+                        clsAudit.saveAuditPreDelDetails("tblPart_Missing", mView.GetFocusedRowCellValue("Part_MissingID"), LastUpdatedBy)
+
                         DB.RunSql("DELETE FROM dbo.tblPart_Missing WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
                         RefreshData()
                     Else
@@ -174,6 +196,8 @@ Public Class PART
                 End If
             Else
                 If IfNull(mView.GetFocusedRowCellValue("Part_MissingID"), 0) > 0 Then
+                    clsAudit.saveAuditPreDelDetails("tblPart_Missing", mView.GetFocusedRowCellValue("Part_MissingID"), LastUpdatedBy)
+
                     DB.RunSql("DELETE FROM dbo.tblPart_Missing WHERE Part_MissingID=" & mView.GetFocusedRowCellValue("Part_MissingID"))
                     RefreshData()
                 Else

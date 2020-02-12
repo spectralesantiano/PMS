@@ -1,5 +1,7 @@
 ﻿Public Class frmCopyMaintenance
     Public UpdateSQL As String = "", strUnitCode As String
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSave.Click
         Dim otherparam As String = "|"
@@ -13,9 +15,12 @@
             MsgBox("Please select at least one record.", MsgBoxStyle.Information, GetAppName)
             Exit Sub
         End If
+
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.Text) 'neil
+
         UpdateSQL = "INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy]) " & _
             "SELECT dbo.MAINTENANCEID(), t.* " & _
-            "FROM (SELECT WorkCode, u.UnitCode, RankCode, Number, IntCode, InsCrossRef, InsEditor, InsDocument, InsDateIssue, InsDesc, '' as LastUpdatedBy " & _
+            "FROM (SELECT WorkCode, u.UnitCode, RankCode, Number, IntCode, InsCrossRef, InsEditor, InsDocument, InsDateIssue, InsDesc, '" & LastUpdatedBy & "' as LastUpdatedBy " & _
             "FROM dbo.tblAdmUnit u,(SELECT * FROM dbo.tblAdmMaintenance WHERE (UnitCode = '" & strUnitCode & "')) m " & _
             "WHERE  CHARINDEX('|' + u.UnitCode + '|','" & otherparam & "') > 0) t " & _
             "LEFT JOIN dbo.tblAdmMaintenance am ON t.UnitCode=am.UnitCode AND t.WorkCode=am.WorkCode " & _

@@ -5,6 +5,9 @@ Imports DevExpress.XtraGrid.Views.BandedGrid
 
 Public Class RUNNINGHOURS
 
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
             Case "Filter"
@@ -56,15 +59,18 @@ Public Class RUNNINGHOURS
         Dim strEquipmentComponentCode As String = ""
         MainView.CloseEditor()
         MainView.UpdateCurrentRow()
+
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
         For i = 0 To MainView.RowCount - 1
             If MainView.GetRowCellValue(i, "Edited") Then
                 If bAddMode Then
-                    sqls.Add("INSERT INTO [dbo].[tblCounterReading]([CounterCode],[ReadingDate],[Reading],[HoursPerDay],[LastUpdatedBy]) Values('" & MainView.GetRowCellValue(i, "CounterCode") & "'," & ChangeToSQLDate(MainView.GetRowCellValue(i, "NewDate")) & ", " & MainView.GetRowCellValue(i, "NewReading") & "," & IfNull(MainView.GetRowCellValue(i, "HoursPerDay"), 0) & ",'" & GetUserName() & "')")
+                    sqls.Add("INSERT INTO [dbo].[tblCounterReading]([CounterCode],[ReadingDate],[Reading],[HoursPerDay],[LastUpdatedBy]) Values('" & MainView.GetRowCellValue(i, "CounterCode") & "'," & ChangeToSQLDate(MainView.GetRowCellValue(i, "NewDate")) & ", " & MainView.GetRowCellValue(i, "NewReading") & "," & IfNull(MainView.GetRowCellValue(i, "HoursPerDay"), 0) & ",'" & LastUpdatedBy & "')")
                 Else
                     If MainView.GetRowCellValue(i, "CounterReadingID") Is System.DBNull.Value Then
-                        sqls.Add("INSERT INTO [dbo].[tblCounterReading]([CounterCode],[ReadingDate],[Reading],[HoursPerDay],[LastUpdatedBy]) Values('" & MainView.GetRowCellValue(i, "CounterCode") & "'," & ChangeToSQLDate(MainView.GetRowCellValue(i, "CurrDate")) & ", " & MainView.GetRowCellValue(i, "CurrReading") & "," & IfNull(MainView.GetRowCellValue(i, "HoursPerDay"), 0) & ",'" & GetUserName() & "')")
+                        sqls.Add("INSERT INTO [dbo].[tblCounterReading]([CounterCode],[ReadingDate],[Reading],[HoursPerDay],[LastUpdatedBy]) Values('" & MainView.GetRowCellValue(i, "CounterCode") & "'," & ChangeToSQLDate(MainView.GetRowCellValue(i, "CurrDate")) & ", " & MainView.GetRowCellValue(i, "CurrReading") & "," & IfNull(MainView.GetRowCellValue(i, "HoursPerDay"), 0) & ",'" & LastUpdatedBy & "')")
                     Else
-                        sqls.Add("UPDATE [dbo].[tblCounterReading] SET [ReadingDate]=" & ChangeToSQLDate(MainView.GetRowCellValue(i, "CurrDate")) & ", Reading=" & MainView.GetRowCellValue(i, "CurrReading") & ", HoursPerDay=" & IfNull(MainView.GetRowCellValue(i, "HoursPerDay"), 0) & ", LastUpdatedBy='" & GetUserName() & "' WHERE [CounterReadingID]=" & MainView.GetRowCellValue(i, "CounterReadingID"))
+                        sqls.Add("UPDATE [dbo].[tblCounterReading] SET [ReadingDate]=" & ChangeToSQLDate(MainView.GetRowCellValue(i, "CurrDate")) & ", Reading=" & MainView.GetRowCellValue(i, "CurrReading") & ", HoursPerDay=" & IfNull(MainView.GetRowCellValue(i, "HoursPerDay"), 0) & ", LastUpdatedBy='" & LastUpdatedBy & "' WHERE [CounterReadingID]=" & MainView.GetRowCellValue(i, "CounterReadingID"))
                     End If
                 End If
             End If
@@ -106,6 +112,9 @@ Public Class RUNNINGHOURS
         NewBand.Visible = False
         PrevBand.Visible = True
         bLoaded = True
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     'Overriden From Base Control

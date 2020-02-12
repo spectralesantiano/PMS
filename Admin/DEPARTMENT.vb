@@ -1,7 +1,13 @@
 Public Class DEPARTMENT
 
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Department?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            clsAudit.saveAuditPreDelDetails("tblAdmDept", strID, LastUpdatedBy)
+
             DB.RunSql("DELETE FROM dbo.tblAdmDept WHERE DeptCode='" & strID & "'")
         End If
         blList.RefreshData()
@@ -11,14 +17,17 @@ Public Class DEPARTMENT
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             If bAddMode Then
                 strID = GenerateID(DB, "DeptCode", "tblAdmDept")
-                DB.RunSql(GenerateInsertScript(Me.header, 3, "tblAdmDept", "DeptCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
+                DB.RunSql(GenerateInsertScript(Me.header, 3, "tblAdmDept", "DeptCode, LastUpdatedBy", "'" & strID & "', '" & LastUpdatedBy & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
                 blList.SetSelection(strID)
             Else
-                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmDept", "LastUpdatedBy='" & GetUserName() & "'", "DeptCode='" & strID & "'"))
+                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmDept", "LastUpdatedBy='" & LastUpdatedBy & "'", "DeptCode='" & strID & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
             End If
@@ -70,6 +79,9 @@ Public Class DEPARTMENT
         ClearFields(Me.header, True)
         MyBase.RefreshData()
         Me.header.Text = "EDIT DEPARTMENT DETAILS - " & blList.GetDesc.ToUpper
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp

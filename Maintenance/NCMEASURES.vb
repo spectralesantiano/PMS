@@ -2,6 +2,9 @@ Imports System.Drawing
 
 Public Class NCMEASURES
 
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
             Case "Preview"
@@ -14,11 +17,14 @@ Public Class NCMEASURES
         Dim i As Integer, strDueDate As String, strDoneDate As String, sqls As New ArrayList
         MainView.CloseEditor()
         MainView.UpdateCurrentRow()
+
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
         For i = 0 To MainView.RowCount - 1
             If MainView.GetRowCellValue(i, "Edited") Then
                 If Not MainView.GetRowCellValue(i, "DueDate") Is System.DBNull.Value Then strDueDate = ChangeToSQLDate(MainView.GetRowCellValue(i, "DueDate"))
                 If Not MainView.GetRowCellValue(i, "DoneDate") Is System.DBNull.Value Then strDoneDate = ChangeToSQLDate(MainView.GetRowCellValue(i, "DoneDate"))
-                sqls.Add("UPDATE [dbo].[tblNCCorrectiveMeasure] SET [Description]='" & MainView.GetRowCellValue(i, "Description") & "',[RankCode]='" & MainView.GetRowCellValue(i, "RankCode") & "',[DueDate]=" & strDueDate & ",[DoneDate]=" & strDoneDate & ",[LastUpdatedBy]='" & GetUserName() & "' WHERE NCCorrectiveMeasureID=" & MainView.GetRowCellValue(i, "NCCorrectiveMeasureID"))
+                sqls.Add("UPDATE [dbo].[tblNCCorrectiveMeasure] SET [Description]='" & MainView.GetRowCellValue(i, "Description") & "',[RankCode]='" & MainView.GetRowCellValue(i, "RankCode") & "',[DueDate]=" & strDueDate & ",[DoneDate]=" & strDoneDate & ",[LastUpdatedBy]='" & LastUpdatedBy & "' WHERE NCCorrectiveMeasureID=" & MainView.GetRowCellValue(i, "NCCorrectiveMeasureID"))
             End If
         Next
         DB.RunSqls(sqls)
@@ -41,6 +47,9 @@ Public Class NCMEASURES
         AllowSaving(Name, False)
         bRecordUpdated = False
         Me.header.Text = "PENDING CORRECTIVE MEASURES"
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
 
@@ -57,7 +66,11 @@ Public Class NCMEASURES
         End If
         If MsgBox("Are you sure want to remove this Non-Conformance?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
+
             If Not MainView.GetFocusedRowCellValue("NCID") Is System.DBNull.Value Then
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                clsAudit.saveAuditPreDelDetails("tblNC", MainView.GetFocusedRowCellValue("NCID"), LastUpdatedBy)
+
                 sqls.Add("DELETE FROM dbo.tblNC WHERE NCID='" & MainView.GetFocusedRowCellValue("NCID") & "'")
                 sqls.Add("Update dbo.tblMaintenanceWork set bNC=0 Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
                 DB.RunSqls(sqls)

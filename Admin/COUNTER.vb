@@ -1,8 +1,15 @@
 Public Class COUNTER
 
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Counter?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList, strUnitCode As String = blList.GetFocusedRowData("UnitCode")
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            clsAudit.saveAuditPreDelDetails("tblAdmCounter", strID, LastUpdatedBy)
+
             sqls.Add("DELETE FROM dbo.tblAdmCounter WHERE CounterCode='" & strID & "'")
             DB.RunSqls(sqls)
         End If
@@ -13,14 +20,17 @@ Public Class COUNTER
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             If bAddMode Then
                 strID = GenerateID(DB, "CounterCode", "tblAdmCounter")
-                DB.RunSql(GenerateInsertScript(Me.header, 3, "tblAdmCounter", "CounterCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
+                DB.RunSql(GenerateInsertScript(Me.header, 3, "tblAdmCounter", "CounterCode, LastUpdatedBy", "'" & strID & "', '" & LastUpdatedBy & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
                 blList.SetSelection(strID)
             Else
-                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmCounter", "LastUpdatedBy='" & GetUserName() & "'", "CounterCode='" & strID & "'"))
+                DB.RunSql(GenerateUpdateScript(Me.header, 3, "tblAdmCounter", "LastUpdatedBy='" & LastUpdatedBy & "'", "CounterCode='" & strID & "'"))
                 bRecordUpdated = False
                 blList.RefreshData()
             End If
@@ -73,6 +83,9 @@ Public Class COUNTER
         MyBase.RefreshData()
         Me.lblCounter.Text = "* Counter - " & blList.GetFocusedRowData("UnitDesc")
         Me.header.Text = "EDIT COUNTER DETAILS - " & blList.GetDesc.ToUpper
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp

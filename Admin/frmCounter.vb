@@ -1,10 +1,14 @@
 ﻿Public Class frmCounter
     Public IS_SAVED As Boolean = False, db As SQLDB, strUnitCode As String, strCounter As String, strCounterCode As String, nReading As Integer
     Dim sqls As New ArrayList
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSave.Click
         Dim i As Integer, strActiveCounter As String = ""
         sqls.Clear()
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.Text) 'neil
+
         For i = 0 To MainView.RowCount - 1
             If MainView.GetRowCellValue(i, "Edited") Then
                 If MainView.GetRowCellValue(i, "ReadingDate") Is Nothing Or MainView.GetRowCellValue(i, "ReadingDate") Is System.DBNull.Value Then
@@ -13,24 +17,24 @@
                 End If
                 If MainView.GetRowCellValue(i, "CounterCode") = "" Then
                     strCounterCode = GenerateID(db, "CounterCode", "tblAdmCounter")
-                    sqls.Add("Insert Into dbo.tblAdmCounter([CounterCode],[Name],[UnitCode],[LastUpdatedBy]) Values('" & strCounterCode & "','" & MainView.GetRowCellValue(i, "Counter").ToString.Replace("'", "''") & "','" & strUnitCode & "','" & GetUserName() & "')")
+                    sqls.Add("Insert Into dbo.tblAdmCounter([CounterCode],[Name],[UnitCode],[LastUpdatedBy]) Values('" & strCounterCode & "','" & MainView.GetRowCellValue(i, "Counter").ToString.Replace("'", "''") & "','" & strUnitCode & "','" & LastUpdatedBy & "')")
                 ElseIf MainView.GetRowCellValue(i, "CounterCode") = "NEW" Then
                     strCounterCode = GenerateID(db, "CounterCode", "tblAdmCounter")
                     strActiveCounter = strCounterCode
-                    sqls.Add("Insert Into dbo.tblAdmCounter([CounterCode],[Name],[UnitCode],[LastUpdatedBy]) Values('" & strCounterCode & "','" & MainView.GetRowCellValue(i, "Counter").ToString.Replace("'", "''") & "','" & strUnitCode & "','" & GetUserName() & "')")
+                    sqls.Add("Insert Into dbo.tblAdmCounter([CounterCode],[Name],[UnitCode],[LastUpdatedBy]) Values('" & strCounterCode & "','" & MainView.GetRowCellValue(i, "Counter").ToString.Replace("'", "''") & "','" & strUnitCode & "','" & LastUpdatedBy & "')")
                 Else
                     strCounterCode = MainView.GetRowCellValue(i, "CounterCode")
                 End If
 
                 If MainView.GetRowCellValue(i, "CounterReadingID") Is System.DBNull.Value Then
-                    sqls.Add("INSERT INTO [dbo].[tblCounterReading]([CounterCode],[ReadingDate],[Reading],[LastUpdatedBy]) Values('" & strCounterCode & "'," & ChangeToSQLDate(MainView.GetRowCellValue(i, "ReadingDate")) & ", " & MainView.GetRowCellValue(i, "Reading") & ",'" & GetUserName() & "')")
+                    sqls.Add("INSERT INTO [dbo].[tblCounterReading]([CounterCode],[ReadingDate],[Reading],[LastUpdatedBy]) Values('" & strCounterCode & "'," & ChangeToSQLDate(MainView.GetRowCellValue(i, "ReadingDate")) & ", " & MainView.GetRowCellValue(i, "Reading") & ",'" & LastUpdatedBy & "')")
                 Else
-                    sqls.Add("Update [dbo].[tblCounterReading] set ReadingDate=" & ChangeToSQLDate(MainView.GetRowCellValue(i, "ReadingDate")) & ",Reading=" & MainView.GetRowCellValue(i, "Reading") & ", LastUpdatedBy='" & GetUserName() & "' Where CounterReadingID=" & MainView.GetRowCellValue(i, "CounterReadingID"))
+                    sqls.Add("Update [dbo].[tblCounterReading] set ReadingDate=" & ChangeToSQLDate(MainView.GetRowCellValue(i, "ReadingDate")) & ",Reading=" & MainView.GetRowCellValue(i, "Reading") & ", LastUpdatedBy='" & LastUpdatedBy & "' Where CounterReadingID=" & MainView.GetRowCellValue(i, "CounterReadingID"))
                 End If
             End If
         Next
-        If strActiveCounter <> "" Then sqls.Add("UPDATE dbo.tblAdmCounter SET Active = 0 WHERE UnitCode='" & strUnitCode & "' AND CounterCode<>'" & strActiveCounter & "'")
-        sqls.Add("UPDATE dbo.tblAdmUnit SET RunningHours=" & txtRunningHours.EditValue & " WHERE UnitCode='" & strUnitCode & "'")
+        If strActiveCounter <> "" Then sqls.Add("UPDATE dbo.tblAdmCounter SET Active = 0 ,LastUpdatedBy='" & LastUpdatedBy & "' WHERE UnitCode='" & strUnitCode & "' AND CounterCode<>'" & strActiveCounter & "'")
+        sqls.Add("UPDATE dbo.tblAdmUnit SET RunningHours=" & txtRunningHours.EditValue & ",LastUpdatedBy ='" & LastUpdatedBy & "' WHERE UnitCode='" & strUnitCode & "'")
         db.RunSqls(sqls)
 
         IS_SAVED = True
@@ -117,6 +121,8 @@
     Private Sub frmCounter_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         'CounterEdit.DataSource = db.CreateTable("SELECT * FROM dbo.COUNTERLIST WHERE UnitCode='" & strUnitCode & "'")
         GetTotalHours()
+        clsAudit.propSQLConnStr = db.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
     

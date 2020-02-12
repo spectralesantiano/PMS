@@ -3,6 +3,8 @@ Imports DevExpress.XtraGrid.Columns
 
 Public Class PARTPURCHASE
     Dim strPartCodes As String = "", sqls As New ArrayList, strDeletedImages As String = ""
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
         Select Case param(0)
@@ -51,6 +53,8 @@ Public Class PARTPURCHASE
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtPurchaseDate}) Then
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             If MainView.RowCount = 0 Then
                 MsgBox("Please fill in the Purchase Details section.", MsgBoxStyle.Critical, GetAppName)
                 Exit Sub
@@ -59,7 +63,7 @@ Public Class PARTPURCHASE
             sqls.Clear()
             If bAddMode Then
                 strID = GenerateID(DB, "PartPurchaseCode", "tblPartPurchase")
-                sqls.Add("INSERT INTO dbo.tblPartPurchase(PartPurchaseCode,PurchaseDate, PortCode,Status,LastUpdatedBy) VALUES('" & strID & "', " & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",'" & IfNull(cboPortCode.EditValue, "") & "', 'Pending', '" & GetUserName() & "')")
+                sqls.Add("INSERT INTO dbo.tblPartPurchase(PartPurchaseCode,PurchaseDate, PortCode,Status,LastUpdatedBy) VALUES('" & strID & "', " & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",'" & IfNull(cboPortCode.EditValue, "") & "', 'Pending', '" & LastUpdatedBy & "')")
             Else
                 sqls.Add("UPDATE dbo.tblPartPurchase SET PurchaseDate=" & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",PortCode='" & IfNull(cboPortCode.EditValue, "") & "', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             End If
@@ -85,34 +89,40 @@ Public Class PARTPURCHASE
                     End If
 
                     If IfNull(MainView.GetRowCellValue(i, "PartPurchaseDetailID"), 0) = 0 Then
-                        sqls.Add("INSERT Into dbo.tblPartPurchaseDetail([PartPurchaseCode],[PartCode],[MakerCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[Price],[LastUpdatedBy]) Values('" & strID & "','" & MainView.GetRowCellValue(i, "PartCode") & "','" & MainView.GetRowCellValue(i, "MakerCode") & "','" & MainView.GetRowCellValue(i, "VendorCode") & "'," & MainView.GetRowCellValue(i, "Quantity") & "," & strDateReceived & "," & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & "," & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",'" & GetUserName() & "')")
+                        sqls.Add("INSERT Into dbo.tblPartPurchaseDetail([PartPurchaseCode],[PartCode],[MakerCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[Price],[LastUpdatedBy]) Values('" & strID & "','" & MainView.GetRowCellValue(i, "PartCode") & "','" & MainView.GetRowCellValue(i, "MakerCode") & "','" & MainView.GetRowCellValue(i, "VendorCode") & "'," & MainView.GetRowCellValue(i, "Quantity") & "," & strDateReceived & "," & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & "," & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",'" & LastUpdatedBy & "')")
                     Else
-                        sqls.Add("UPDATE dbo.tblPartPurchaseDetail SET [MakerCode]='" & MainView.GetRowCellValue(i, "MakerCode") & "',[VendorCode]='" & MainView.GetRowCellValue(i, "VendorCode") & "',[Quantity]=" & MainView.GetRowCellValue(i, "Quantity") & ",[DateReceived]=" & strDateReceived & ",[ReceivedQuantity]=" & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & ",[Price]=" & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",[LastUpdatedBy]='" & GetUserName() & "' WHERE PartPurchaseDetailID=" & MainView.GetRowCellValue(i, "PartPurchaseDetailID"))
+                        sqls.Add("UPDATE dbo.tblPartPurchaseDetail SET [MakerCode]='" & MainView.GetRowCellValue(i, "MakerCode") & "',[VendorCode]='" & MainView.GetRowCellValue(i, "VendorCode") & "',[Quantity]=" & MainView.GetRowCellValue(i, "Quantity") & ",[DateReceived]=" & strDateReceived & ",[ReceivedQuantity]=" & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & ",[Price]=" & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",[LastUpdatedBy]='" & LastUpdatedBy & "' WHERE PartPurchaseDetailID=" & MainView.GetRowCellValue(i, "PartPurchaseDetailID"))
                     End If
                 End If
                 If MainView.GetRowCellValue(i, "Received") Then bHasReceived = True
                 If Not MainView.GetRowCellValue(i, "Received") Then bHasUnreceived = True
             Next
             If bHasReceived And bHasUnreceived Then
-                sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Partially Delivered', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
+                sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Partially Delivered', LastUpdatedBy='" & LastUpdatedBy & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             ElseIf Not bHasUnreceived Then
-                sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Delivered', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
+                sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Delivered', LastUpdatedBy='" & LastUpdatedBy & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             Else
-                sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Pending', LastUpdatedBy='" & GetUserName() & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
+                sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Pending', LastUpdatedBy='" & LastUpdatedBy & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             End If
 
             If strDeletedImages <> "" Then
                 Dim strDeletedID() As String = strDeletedImages.ToString.Split(";"c), strDocID As String
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
                 For Each strDocID In strDeletedID
+                    clsAudit.saveAuditPreDelDetails("tblDocuments", strDocID, LastUpdatedBy)
                     sqls.Add("DELETE FROM dbo.tblDocuments WHERE DocID=" & strDocID)
                 Next
             End If
 
             IView.CloseEditor()
             IView.UpdateCurrentRow()
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             For i = 0 To IView.RowCount - 1
                 If IfNull(IView.GetRowCellValue(i, "DocID"), 0) = 0 Then
-                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc) VALUES('" & strID & "','PURCHASE', '" & IView.GetRowCellValue(i, "FileName") & "','" & SetDefaultImageSizeToString(New Bitmap(IView.GetRowCellValue(i, "FileName").ToString)) & "')")
+                    sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc, LastUpdatedBy) VALUES('" & strID & "','PURCHASE', '" & IView.GetRowCellValue(i, "FileName") & "','" & SetDefaultImageSizeToString(New Bitmap(IView.GetRowCellValue(i, "FileName").ToString)) & "','" & LastUpdatedBy & "')")
                 End If
             Next
 
@@ -197,6 +207,9 @@ Public Class PARTPURCHASE
         For i = 0 To MainView.RowCount - 1
             strPartCodes = strPartCodes & ",'" & MainView.GetRowCellValue(i, "PartCode") & "'"
         Next
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
         FilterParts()
         txtPurchaseDate.Focus()
     End Sub
@@ -302,6 +315,8 @@ Public Class PARTPURCHASE
 
     Private Sub DeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles DeleteEdit.ButtonClick
         If IfNull(MainView.GetFocusedRowCellValue("PartPurchaseDetailID"), 0) > 0 Then
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            clsAudit.saveAuditPreDelDetails("tblPartPurchaseDetail", MainView.GetFocusedRowCellValue("PartPurchaseDetailID"), LastUpdatedBy)
             DB.RunSql("DELETE FROM dbo.tblPartPurchaseDetail WHERE PartPurchaseDetailID=" & MainView.GetFocusedRowCellValue("PartPurchaseDetailID"))
         End If
         strPartCodes = strPartCodes.Replace(",'" & MainView.GetFocusedRowCellValue("PartCode") & "'", "")
@@ -330,7 +345,10 @@ Public Class PARTPURCHASE
         tbl = VendorEdit.DataSource
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
-        DB.RunSql("INSERT INTO dbo.tblAdmVendor(VendorCode, Name, LastUpdatedBy) VALUES('" & strVendorCode & "', '" & e.DisplayValue & "','" & GetUserName() & "')")
+
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
+        DB.RunSql("INSERT INTO dbo.tblAdmVendor(VendorCode, Name, LastUpdatedBy) VALUES('" & strVendorCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("VendorCode") = strVendorCode
         row("Vendor") = e.DisplayValue
         tbl.Rows.Add(row)
@@ -344,7 +362,10 @@ Public Class PARTPURCHASE
         tbl = MakerEdit.DataSource
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
-        DB.RunSql("INSERT INTO dbo.tblAdmMaker(MakerCode, Name, LastUpdatedBy) VALUES('" & strMakerCode & "', '" & e.DisplayValue & "','" & GetUserName() & "')")
+
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
+        DB.RunSql("INSERT INTO dbo.tblAdmMaker(MakerCode, Name, LastUpdatedBy) VALUES('" & strMakerCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("MakerCode") = strMakerCode
         row("Maker") = e.DisplayValue
         tbl.Rows.Add(row)
