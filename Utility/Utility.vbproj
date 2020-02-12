@@ -74,7 +74,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ChilkatDotNet4">
-      <HintPath>..\..\ChilkatDotNet4.dll</HintPath>
+      <HintPath>..\PMSDLL\ChilkatDotNet4.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.Data.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Docs.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -104,6 +104,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Import Include="Chilkat" />
     <Import Include="DevExpress.Data.Filtering.Helpers" />
     <Import Include="DevExpress.XtraPrinting.Localization" />
     <Import Include="Microsoft.VisualBasic" />
@@ -114,6 +115,7 @@
     <Import Include="Utility.My.Resources" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="clsAudit.vb" />
     <Compile Include="clsVersioning.vb" />
     <Compile Include="frmHelp.Designer.vb">
       <DependentUpon>frmHelp.vb</DependentUpon>

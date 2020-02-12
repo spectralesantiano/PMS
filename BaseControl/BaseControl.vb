@@ -371,4 +371,7 @@
         RaiseEvent OnCustomEvent(sender, param)
     End Sub
 
+    Public Overridable Sub DataRefresh() 'use in audit.vb
+
+    End Sub
 End Class

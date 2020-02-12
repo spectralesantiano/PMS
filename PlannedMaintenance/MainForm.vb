@@ -1450,4 +1450,12 @@ Public Class MainForm
         End If
         frm.ShowDialog()
     End Sub
+
+    Private Sub REFRESH_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles REFRESH.ItemClick
+        maincontent.DataRefresh()
+    End Sub
+
+    Private Sub cmdReportPreview_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles cmdReportPreview.ItemClick
+        maincontent.ExecCustomFunction(New Object() {"PREVIEWREPORT", Me.chkAuditWithDetails.Checked})
+    End Sub
 End Class

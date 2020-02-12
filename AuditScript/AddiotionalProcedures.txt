@@ -1,0 +1,2 @@
+1. added Audit.dll in tbpmsconfig
+2. Added Audit entry in tblObjects

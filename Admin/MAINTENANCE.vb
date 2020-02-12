@@ -1,7 +1,15 @@
 Public Class MAINTENANCE
 
+    '/// audit
+    'Dim FormName As String = "Admin Cash Advances"
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Maintenance Work?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete Crew", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            clsAudit.saveAuditPreDelDetails("tblAdmWork", strID, LastUpdatedBy)
+
             DB.RunSql("DELETE FROM dbo.tblAdmWork WHERE WorkCode='" & strID & "'")
         End If
         blList.RefreshData()
@@ -12,14 +20,18 @@ Public Class MAINTENANCE
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
             Dim sqls As New ArrayList, bUpdateList As Boolean = False
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+
             If bAddMode Then
                 strID = GenerateID(DB, "WorkCode", "tblAdmWork")
-                sqls.Add(GenerateInsertScript(Me.header, 3, "tblAdmWork", "WorkCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
+                sqls.Add(GenerateInsertScript(Me.header, 3, "tblAdmWork", "WorkCode, LastUpdatedBy", "'" & strID & "', '" & LastUpdatedBy & "'"))
                 bUpdateList = True
             Else
-                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmWork", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "WorkCode='" & strID & "'"))
+                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmWork", "LastUpdatedBy='" & LastUpdatedBy & "', DateUpdated=GETDATE()", "WorkCode='" & strID & "'"))
                 bUpdateList = True
             End If
+
             DB.RunSqls(sqls)
             bRecordUpdated = False
             If bUpdateList Then
@@ -67,6 +79,9 @@ Public Class MAINTENANCE
         ClearFields(Me.header, True)
         MyBase.RefreshData()
         Me.header.Text = "EDIT MAINTENANCE DETAILS - " & blList.GetDesc.ToUpper
+
+        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+
     End Sub
 
 End Class
