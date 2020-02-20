@@ -7,7 +7,7 @@ Public Class COUNTER
         If MsgBox("Are you sure want to delete the " & strDesc & " Counter?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList, strUnitCode As String = blList.GetFocusedRowData("UnitCode")
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmCounter", strID, LastUpdatedBy)
 
             sqls.Add("DELETE FROM dbo.tblAdmCounter WHERE CounterCode='" & strID & "'")

@@ -108,6 +108,8 @@ Partial Class MainForm
         Me.EXPDOCUMENTS = New DevExpress.XtraBars.BarButtonItem()
         Me.AUDIT = New DevExpress.XtraBars.BarButtonItem()
         Me.REFRESH = New DevExpress.XtraBars.BarButtonItem()
+        Me.cmdReportPreview = New DevExpress.XtraBars.BarButtonItem()
+        Me.chkAuditWithDetails = New DevExpress.XtraBars.BarCheckItem()
         Me.rpMaintenance = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.rpgMaintenance = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpgMaintenanceEditingOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
@@ -135,6 +137,7 @@ Partial Class MainForm
         Me.rpgSecEditingOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpAudit = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.rpgAudit = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
+        Me.rpgAuditReport = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpReports = New DevExpress.XtraBars.Ribbon.RibbonPage()
         Me.rpgReportsOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.rpgReportsSelectionOptions = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
@@ -148,9 +151,6 @@ Partial Class MainForm
         Me.pmListMenu = New DevExpress.XtraBars.PopupMenu()
         Me.rpgVslAccount = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
         Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController()
-        Me.rpgAuditReport = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.cmdReportPreview = New DevExpress.XtraBars.BarButtonItem()
-        Me.chkAuditWithDetails = New DevExpress.XtraBars.BarCheckItem()
         CType(Me.RibbonControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledDepartmentRep, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledRankRep, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -177,7 +177,7 @@ Partial Class MainForm
         Me.RibbonControl.ExpandCollapseItem.Id = 0
         Me.RibbonControl.Items.AddRange(New DevExpress.XtraBars.BarItem() {Me.RibbonControl.ExpandCollapseItem, Me.bbAdd, Me.bbSave, Me.bbDelete, Me.RANK, Me.DEPARTMENT, Me.bbSaveLayout, Me.cmdHelp, Me.SECUSERS, Me.SECGROUPS, Me.cmdChangePassword, Me.bbResetPassword, Me.cmdChangeUser, Me.SWITCHBOARD, Me.COMPANYINFO, Me.LICENSEINFO, Me.bbPreview, Me.bbResetLayout, Me.BACKUPRESTORE, Me.bbBackUp, Me.bbRestore, Me.VERSIONUPDATE, Me.bbUpdate, Me.cmdNotification, Me.bbExport, Me.bbEdit, Me.bbSelectAll, Me.bbDeselect, Me.SETTINGS, Me.PMSREP, Me.ARCHIVEDATA, Me.RECOVERARCHIVE, Me.UNITS, Me.PART, Me.CATEGORY, Me.COUNTER, Me.VLOCATION, Me.ledDepartment, Me.WORKDONE, Me.ledRank, Me.ledCategory, Me.INTERVAL, Me.WORKDUE, Me.MAINTENANCE, Me.COMPONENT, Me.NONCONFORM, Me.bbNC, Me.bbUpdateNC, Me.NCMEASURES, Me.EXPORTADMIN, Me.IMPORTDATA, Me.bbWOMaintenance, Me.RUNNINGHOURS, Me.txtDueHours, Me.EXPMAINTENANCE, Me.VESSELINFO, Me.bbCopy, Me.ledMainUnits, Me.bbCopyMaintenance, Me.bbShowComponents, Me.txtDateDue, Me.bbAddPlannedDate, Me.ledPeriod, Me.bbCondition, Me.PARTPURCHASE, Me.bbViewImage, Me.STORAGE, Me.MDOCVIEWER, Me.WDOCVIEWER, Me.bbPaste, Me.bbImportFromFile, Me.VENDOR, Me.MAKER, Me.bbCritical, Me.bbFlatView, Me.bbUserPreferences, Me.bbShowAllMaintenance, Me.IDOCVIEWER, Me.EXPDOCUMENTS, Me.AUDIT, Me.REFRESH, Me.cmdReportPreview, Me.chkAuditWithDetails})
         Me.RibbonControl.Location = New System.Drawing.Point(0, 0)
-        Me.RibbonControl.MaxItemId = 277
+        Me.RibbonControl.MaxItemId = 278
         Me.RibbonControl.Name = "RibbonControl"
         Me.RibbonControl.Pages.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPage() {Me.rpMaintenance, Me.rpInventory, Me.rpDocViewer, Me.rpAdmin, Me.rpTools, Me.rpSecurity, Me.rpAudit, Me.rpReports, Me.rpHome})
         Me.RibbonControl.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.ledDepartmentRep, Me.ledRankRep, Me.ledCategoryRep, Me.ledDueDays, Me.ledDueHours, Me.ledUnitRep, Me.DateDueEdit, Me.ledPeriodRep})
@@ -543,6 +543,7 @@ Partial Class MainForm
         Me.ledDepartmentRep.DisplayMember = "Department"
         Me.ledDepartmentRep.DropDownRows = 10
         Me.ledDepartmentRep.Name = "ledDepartmentRep"
+        Me.ledDepartmentRep.NullText = ""
         Me.ledDepartmentRep.ShowFooter = False
         Me.ledDepartmentRep.ShowHeader = False
         Me.ledDepartmentRep.ValueMember = "DeptCode"
@@ -574,6 +575,7 @@ Partial Class MainForm
         Me.ledRankRep.DisplayMember = "Abbrv"
         Me.ledRankRep.DropDownRows = 10
         Me.ledRankRep.Name = "ledRankRep"
+        Me.ledRankRep.NullText = ""
         Me.ledRankRep.ShowFooter = False
         Me.ledRankRep.ShowHeader = False
         Me.ledRankRep.ValueMember = "RankCode"
@@ -594,6 +596,7 @@ Partial Class MainForm
         Me.ledCategoryRep.DisplayMember = "Category"
         Me.ledCategoryRep.DropDownRows = 10
         Me.ledCategoryRep.Name = "ledCategoryRep"
+        Me.ledCategoryRep.NullText = ""
         Me.ledCategoryRep.ShowFooter = False
         Me.ledCategoryRep.ShowHeader = False
         Me.ledCategoryRep.ValueMember = "CatCode"
@@ -771,6 +774,7 @@ Partial Class MainForm
         Me.ledUnitRep.DisplayMember = "UnitDesc"
         Me.ledUnitRep.DropDownRows = 10
         Me.ledUnitRep.Name = "ledUnitRep"
+        Me.ledUnitRep.NullText = ""
         Me.ledUnitRep.ShowFooter = False
         Me.ledUnitRep.ShowHeader = False
         Me.ledUnitRep.ValueMember = "UnitCode"
@@ -833,6 +837,7 @@ Partial Class MainForm
         Me.ledPeriodRep.DisplayMember = "PeriodDesc"
         Me.ledPeriodRep.DropDownRows = 12
         Me.ledPeriodRep.Name = "ledPeriodRep"
+        Me.ledPeriodRep.NullText = ""
         Me.ledPeriodRep.ShowFooter = False
         Me.ledPeriodRep.ShowHeader = False
         Me.ledPeriodRep.ValueMember = "Period"
@@ -989,6 +994,21 @@ Partial Class MainForm
         Me.REFRESH.Id = 274
         Me.REFRESH.LargeGlyph = CType(resources.GetObject("REFRESH.LargeGlyph"), System.Drawing.Image)
         Me.REFRESH.Name = "REFRESH"
+        '
+        'cmdReportPreview
+        '
+        Me.cmdReportPreview.Caption = "View Report"
+        Me.cmdReportPreview.Glyph = CType(resources.GetObject("cmdReportPreview.Glyph"), System.Drawing.Image)
+        Me.cmdReportPreview.Id = 275
+        Me.cmdReportPreview.LargeGlyph = CType(resources.GetObject("cmdReportPreview.LargeGlyph"), System.Drawing.Image)
+        Me.cmdReportPreview.Name = "cmdReportPreview"
+        '
+        'chkAuditWithDetails
+        '
+        Me.chkAuditWithDetails.Caption = "With Details"
+        Me.chkAuditWithDetails.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.AfterText
+        Me.chkAuditWithDetails.Id = 276
+        Me.chkAuditWithDetails.Name = "chkAuditWithDetails"
         '
         'rpMaintenance
         '
@@ -1255,6 +1275,13 @@ Partial Class MainForm
         Me.rpgAudit.Tag = "1"
         Me.rpgAudit.Text = "Audit Options"
         '
+        'rpgAuditReport
+        '
+        Me.rpgAuditReport.ItemLinks.Add(Me.cmdReportPreview)
+        Me.rpgAuditReport.ItemLinks.Add(Me.chkAuditWithDetails)
+        Me.rpgAuditReport.Name = "rpgAuditReport"
+        Me.rpgAuditReport.Text = "Report Options"
+        '
         'rpReports
         '
         Me.rpReports.Groups.AddRange(New DevExpress.XtraBars.Ribbon.RibbonPageGroup() {Me.rpgReportsOptions, Me.rpgReportsSelectionOptions, Me.rpgReportsPrintOptions})
@@ -1366,28 +1393,6 @@ Partial Class MainForm
         '
         Me.dbdController.Controller.PropertiesBar.DefaultGlyphSize = New System.Drawing.Size(16, 16)
         Me.dbdController.Controller.PropertiesBar.DefaultLargeGlyphSize = New System.Drawing.Size(32, 32)
-        '
-        'rpgAuditReport
-        '
-        Me.rpgAuditReport.ItemLinks.Add(Me.cmdReportPreview)
-        Me.rpgAuditReport.ItemLinks.Add(Me.chkAuditWithDetails)
-        Me.rpgAuditReport.Name = "rpgAuditReport"
-        Me.rpgAuditReport.Text = "Report Options"
-        '
-        'cmdReportPreview
-        '
-        Me.cmdReportPreview.Caption = "View Report"
-        Me.cmdReportPreview.Glyph = CType(resources.GetObject("cmdReportPreview.Glyph"), System.Drawing.Image)
-        Me.cmdReportPreview.Id = 275
-        Me.cmdReportPreview.LargeGlyph = CType(resources.GetObject("cmdReportPreview.LargeGlyph"), System.Drawing.Image)
-        Me.cmdReportPreview.Name = "cmdReportPreview"
-        '
-        'chkAuditWithDetails
-        '
-        Me.chkAuditWithDetails.Caption = "With Details"
-        Me.chkAuditWithDetails.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.AfterText
-        Me.chkAuditWithDetails.Id = 276
-        Me.chkAuditWithDetails.Name = "chkAuditWithDetails"
         '
         'MainForm
         '

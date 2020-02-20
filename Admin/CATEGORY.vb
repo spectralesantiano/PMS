@@ -8,7 +8,7 @@ Public Class CATEGORY
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Category?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmCategory", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmCategory WHERE CatCode='" & strID & "'")

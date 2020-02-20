@@ -5,7 +5,7 @@ Public Class PART
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Part?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmPart", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmPart WHERE PartCode='" & strID & "'")
@@ -155,7 +155,7 @@ Public Class PART
 
     End Sub
 
-    
+
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp
         If e.Button = Windows.Forms.MouseButtons.Right Then
@@ -182,7 +182,7 @@ Public Class PART
         Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
         If mView.RowCount > 0 Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
             If mView.GetFocusedRowCellDisplayText("DateMissing").ToString <> "" Then
                 If MsgBox("Are you sure want to delete the missing parts on " & CDate(mView.GetFocusedRowCellDisplayText("DateMissing")).ToShortDateString & "?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then

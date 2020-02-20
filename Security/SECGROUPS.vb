@@ -9,7 +9,7 @@ Public Class SECGROUPS
         If MsgBox("Are you sure want to delete the " & strDesc & " Group?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
 
             sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE SecID=" & strID & " AND SecType=1")
@@ -100,7 +100,7 @@ Public Class SECGROUPS
                 End If
                 'Add permission to the WRH Report Section.
                 If bHasWRHRep And Not bHasCrewWRH Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
                     clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
 
                     sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE ObjectID='PMSREP' AND SecID=" & strID)

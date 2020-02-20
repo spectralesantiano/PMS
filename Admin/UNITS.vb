@@ -37,7 +37,7 @@ Public Class UNITS
         Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
         If grid.Name = "MainGrid" Then
             If MsgBox("Are you sure want to delete the " & MainView.GetFocusedRowCellDisplayText("Component") & " Component?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.Text) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
                 clsAudit.saveAuditPreDelDetails("tblAdmComponent", MainView.GetFocusedRowCellValue("ComponentCode"), LastUpdatedBy)
                 DB.RunSql("DELETE FROM dbo.tblAdmComponent WHERE ComponentCode='" & MainView.GetFocusedRowCellValue("ComponentCode") & "'")
                 MainView.DeleteRow(MainView.FocusedRowHandle)
@@ -810,7 +810,7 @@ Public Class UNITS
                     If IfNull(mView.GetRowCellValue(i, "DeletedImages"), "") <> "" Then
                         Dim strDeletedID() As String = mView.GetRowCellValue(i, "DeletedImages").ToString.Split(";"c), strDocID As String
 
-                        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.Text) 'neil
+                        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
                         For Each strDocID In strDeletedID
                             clsAudit.saveAuditPreDelDetails("tblDocuments", strDocID, LastUpdatedBy)
                             sqls.Add("DELETE FROM dbo.tblDocuments WHERE DocID=" & strDocID)
@@ -1191,7 +1191,7 @@ Public Class UNITS
     Sub CreateDeleteSQLs(xrow() As DataRow)
         Dim i As Integer
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.Text) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
         For i = 0 To xrow.Length - 1
             Dim crow() As DataRow = tblUnitSource.Select("ParentCode='" & xrow(i)("UnitCode") & "'")
 

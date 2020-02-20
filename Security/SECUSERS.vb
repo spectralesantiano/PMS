@@ -22,7 +22,7 @@ Public Class SECUSERS
         If MsgBox("Are you sure want to delete " & strDesc & " as User?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
 
             sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE SecID=" & strID & " AND SecType=0")
@@ -48,7 +48,9 @@ Public Class SECUSERS
             LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
 
             If bAddMode Then
-                DB.RunSql("INSERT INTO dbo.tblSec_Users([User Name], [Password], [Group ID], LastUpdatedBy) VALUES('" & txtUserName.EditValue & "', '" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "', " & groupid & ", '" & LastUpdatedBy & "')")
+                DB.RunSql("INSERT INTO dbo.tblSec_Users([User Name], [Password], [Group ID], LastUpdatedBy, LName, FName, MName, RankCode, DateSOn, Active) " & _
+                          "VALUES('" & txtUserName.EditValue & "', '" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "', " & groupid & ", '" & LastUpdatedBy & "'" & _
+                          ",'" & txtFamilyName.EditValue & "','" & txtFirstName.EditValue & "','" & txtMiddleName.EditValue & "','" & lkuRank.EditValue & "','" & dteDateSON.EditValue & "'," & chkActive.EditValue & ")")
                 strID = DB.DLookUp("[User ID]", "dbo.tblSec_Users", "", "[User Name]='" & txtUserName.EditValue & "'")
                 bRecordUpdated = False
                 blList.RefreshData()
@@ -86,6 +88,9 @@ Public Class SECUSERS
             Me.txtUserName.Focus()
             Me.txtUserName.BackColor = REQUIRED_COLOR
             Me.GroupList.BackColor = REQUIRED_COLOR
+            Me.txtFamilyName.BackColor = REQUIRED_COLOR
+            Me.txtFirstName.BackColor = REQUIRED_COLOR
+            chkActive.Checked = True
             bRecordUpdated = False
         End If
     End Sub
@@ -96,13 +101,14 @@ Public Class SECUSERS
     End Function
 
     Public Overrides Sub RefreshData()
-        strRequiredFields = "txtUserName;GroupList"
+        strRequiredFields = "txtUserName;GroupList;txtFammilyName;txtFirstName"
         RemoveEditListener(Me.txtUserName)
         RemoveEditListener(Me.GroupList)
         header.Text = "EDIT USERS - " & blList.GetDesc.ToUpper
         If Not bLoaded Then
             AllowAddition(Name, (bPermission And 2) > 0)
             GroupList.Properties.DataSource = DB.CreateTable("SELECT * FROM dbo.GROUPLIST ORDER BY GroupName")
+            lkuRank.Properties.DataSource = AdmRank
             bLoaded = True
         End If
         If blList.GetID = "" Then
@@ -110,6 +116,12 @@ Public Class SECUSERS
         Else
             Me.txtUserName.EditValue = blList.GetFocusedRowData("UserName")
             Me.GroupList.EditValue = blList.GetFocusedRowData("GroupID")
+            Me.txtFamilyName.EditValue = blList.GetFocusedRowData("LName")
+            Me.txtFirstName.EditValue = blList.GetFocusedRowData("FName")
+            Me.txtMiddleName.EditValue = blList.GetFocusedRowData("MName")
+            Me.lkuRank.EditValue = blList.GetFocusedRowData("RankCode")
+            Me.dteDateSON.EditValue = blList.GetFocusedRowData("DateSOn")
+            Me.chkActive.Checked = blList.GetFocusedRowData("Active")
             AllowDeletion(Name, (bPermission And 8) > 0)
         End If
         MyBase.RefreshData()

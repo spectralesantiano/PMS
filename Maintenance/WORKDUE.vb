@@ -116,7 +116,7 @@ Public Class WORKDUE
                 Next
 
                 If frm.strDeletedImages <> "" Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
                     Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
                     For Each strDocID In strDeletedID

@@ -70,7 +70,7 @@ Public Class MainForm
 
     Private Sub MainForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         maincontent.CheckIFDataUpdated()
-        clsAudit.saveAuditLog("User log out", USER_NAME, auditlogid, System.Environment.MachineName, 0, , , , , , "MPS Crewing", Date.Now) 'neil
+        clsAudit.saveAuditLog("User log out", USER_NAME, auditlogid, System.Environment.MachineName, 0, , , , , , "PMS", Date.Now) 'neil
     End Sub
 
     Private Sub Logon(Optional ByVal bloggedon As Boolean = False)
@@ -95,7 +95,7 @@ Public Class MainForm
         End If
 
         clsAudit.saveAuditLog("User log in", USER_NAME, auditlogid, System.Environment.MachineName, 0,
-                               , , , , , "MPS Crewing", Date.Now) 'neil
+                               , , , , , "PMS", Date.Now) 'neil
 
         LoadUserPref()
         InitUserSettings()

@@ -117,7 +117,7 @@ Public Class WORKDONE
             Next
 
             If frm.strDeletedImages <> "" Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
                 Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
                 For Each strDocID In strDeletedID
@@ -196,7 +196,7 @@ Public Class WORKDONE
 
             If frm.strDeletedImages <> "" Then
                 Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
                 For Each strDocID In strDeletedID
                     clsAudit.saveAuditPreDelDetails("tblDocuments", strDocID, LastUpdatedBy)
 
@@ -355,7 +355,7 @@ Public Class WORKDONE
             If MsgBox("Are you sure want to remove the <" & IfNull(MainView.GetFocusedRowCellDisplayText("Maintenance"), "New Record") & "> Work Record?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                 If Not MainView.GetFocusedRowCellValue("MaintenanceWorkID") Is System.DBNull.Value Then
                     Dim sqls As New ArrayList, strMaintenanceCode As String = MainView.GetFocusedRowCellValue("MaintenanceCode"), strUnitCode As String = MainView.GetFocusedRowCellValue("UnitCode")
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
                     clsAudit.saveAuditPreDelDetails("tblMaintenanceWork", MainView.GetFocusedRowCellValue("MaintenanceWorkID"), LastUpdatedBy)
                     sqls.Add("DELETE FROM dbo.tblMaintenanceWork WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 

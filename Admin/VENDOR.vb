@@ -5,7 +5,7 @@ Public Class VENDOR
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Vendor?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "Delete", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmVendor", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmVendor WHERE VendorCode='" & strID & "'")
