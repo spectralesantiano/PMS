@@ -18,7 +18,6 @@ Module modBasicFuncitons
         If USE_SPECTRAL_CON Then
             SQL_SERVER = SQL_SERVER.Replace("\STISQLSERVER", "")
             Return "Data Source=" & SQL_SERVER & "\STISQLSERVER;" & IIf(hasUseDB, "Database=pms_db;", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS"
-            'Return "Data Source=" & SQL_SERVER & "\STISQLSERVER;" & IIf(hasUseDB, "Database=pms_db;", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
         ElseIf USE_TRUSTED_CON Then
             Return "Server=" & SQL_SERVER & ";" & IIf(hasUseDB, "Database=pms_db;", "") & "Trusted_Connection=True;"
         Else

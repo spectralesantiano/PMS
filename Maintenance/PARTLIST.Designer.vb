@@ -21,7 +21,6 @@ Partial Class PARTLIST
     Private Sub InitializeComponent()
         Me.MainGrid = New DevExpress.XtraGrid.GridControl()
         Me.MainView = New DevExpress.XtraGrid.Views.BandedGrid.AdvBandedGridView()
-        Me.gridBand4 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         Me.Part = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.PartNumber = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.OnStock = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
@@ -30,6 +29,9 @@ Partial Class PARTLIST
         Me.PartCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.LocCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
         Me.StorageCode = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.Critical = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.CriticalDisp = New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn()
+        Me.gridBand4 = New DevExpress.XtraGrid.Views.BandedGrid.GridBand()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -50,7 +52,7 @@ Partial Class PARTLIST
         Me.MainView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.MainView.Appearance.RowSeparator.Options.UseBackColor = True
         Me.MainView.Bands.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.GridBand() {Me.gridBand4})
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.PartCode, Me.Part, Me.PartNumber, Me.OnStock, Me.Minimum, Me.InitStock, Me.LocCode, Me.StorageCode})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn() {Me.PartCode, Me.Part, Me.PartNumber, Me.OnStock, Me.Minimum, Me.InitStock, Me.LocCode, Me.StorageCode, Me.Critical, Me.CriticalDisp})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.Name = "MainView"
@@ -72,25 +74,13 @@ Partial Class PARTLIST
         Me.MainView.OptionsView.ShowGroupPanel = False
         Me.MainView.SortInfo.AddRange(New DevExpress.XtraGrid.Columns.GridColumnSortInfo() {New DevExpress.XtraGrid.Columns.GridColumnSortInfo(Me.Part, DevExpress.Data.ColumnSortOrder.Ascending)})
         '
-        'gridBand4
-        '
-        Me.gridBand4.Caption = "gridBand4"
-        Me.gridBand4.Columns.Add(Me.Part)
-        Me.gridBand4.Columns.Add(Me.PartNumber)
-        Me.gridBand4.Columns.Add(Me.OnStock)
-        Me.gridBand4.Columns.Add(Me.Minimum)
-        Me.gridBand4.Columns.Add(Me.InitStock)
-        Me.gridBand4.Name = "gridBand4"
-        Me.gridBand4.VisibleIndex = 0
-        Me.gridBand4.Width = 690
-        '
         'Part
         '
         Me.Part.Caption = "Part"
         Me.Part.FieldName = "Part"
         Me.Part.Name = "Part"
         Me.Part.Visible = True
-        Me.Part.Width = 220
+        Me.Part.Width = 212
         '
         'PartNumber
         '
@@ -98,7 +88,7 @@ Partial Class PARTLIST
         Me.PartNumber.FieldName = "PartNumber"
         Me.PartNumber.Name = "PartNumber"
         Me.PartNumber.Visible = True
-        Me.PartNumber.Width = 390
+        Me.PartNumber.Width = 376
         '
         'OnStock
         '
@@ -107,7 +97,7 @@ Partial Class PARTLIST
         Me.OnStock.MinWidth = 80
         Me.OnStock.Name = "OnStock"
         Me.OnStock.Visible = True
-        Me.OnStock.Width = 80
+        Me.OnStock.Width = 102
         '
         'Minimum
         '
@@ -143,6 +133,33 @@ Partial Class PARTLIST
         Me.StorageCode.FieldName = "StorageCode"
         Me.StorageCode.Name = "StorageCode"
         '
+        'Critical
+        '
+        Me.Critical.Caption = "Criticalx"
+        Me.Critical.FieldName = "Critical"
+        Me.Critical.Name = "Critical"
+        '
+        'CriticalDisp
+        '
+        Me.CriticalDisp.Caption = "Critical"
+        Me.CriticalDisp.MinWidth = 50
+        Me.CriticalDisp.Name = "CriticalDisp"
+        Me.CriticalDisp.Visible = True
+        Me.CriticalDisp.Width = 60
+        '
+        'gridBand4
+        '
+        Me.gridBand4.Caption = "gridBand4"
+        Me.gridBand4.Columns.Add(Me.Part)
+        Me.gridBand4.Columns.Add(Me.PartNumber)
+        Me.gridBand4.Columns.Add(Me.OnStock)
+        Me.gridBand4.Columns.Add(Me.CriticalDisp)
+        Me.gridBand4.Columns.Add(Me.Minimum)
+        Me.gridBand4.Columns.Add(Me.InitStock)
+        Me.gridBand4.Name = "gridBand4"
+        Me.gridBand4.VisibleIndex = 0
+        Me.gridBand4.Width = 750
+        '
         'PARTLIST
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -159,11 +176,13 @@ Partial Class PARTLIST
     Friend WithEvents PartNumber As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents Part As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents PartCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
-    Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
     Friend WithEvents OnStock As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents Minimum As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents InitStock As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents LocCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
     Friend WithEvents StorageCode As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents Critical As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents CriticalDisp As DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn
+    Friend WithEvents gridBand4 As DevExpress.XtraGrid.Views.BandedGrid.GridBand
 
 End Class

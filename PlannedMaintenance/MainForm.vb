@@ -8,6 +8,29 @@ Public Class MainForm
 
     Dim IsLoaded As Boolean = False, strFirstContent As String, ContentsObject As DataView
 
+    Sub SetDefaultSettings()
+        Dim sqls As New ArrayList
+        sqls.Add("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tbl" & APP_SHORT_NAME & "Config') CREATE TABLE [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tbl" & APP_SHORT_NAME & "Config] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblCompanyInfo') CREATE TABLE [dbo].[tblCompanyInfo]([Name] [varchar](50) NOT NULL,[Phone] [varchar](15) NULL,[Email] [varchar](30) NULL,[Address] [varchar](max) NULL,[Logo] [varbinary](max) NULL) ON [PRIMARY]")
+
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'LOCATION_ID') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('LOCATION_ID','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'HIDE_COPY_INSTRUCTION') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('HIDE_COPY_INSTRUCTION','0')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'KPITHRESHOLD') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('KPITHRESHOLD','4.0')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('EXPORT_DIR','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DUE_DAYS') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DUE_DAYS','30')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DUE_HOURS') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DUE_HOURS','100')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'IMAGE_MAX_RES') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('IMAGE_MAX_RES','800')")
+
+        '*********Settings for Versioning,License And Program Distribution************
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'UpdatesFolder') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('UpdatesFolder','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'LTYPE') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
+    End Sub
+
     Private Sub BypassLogonForDebugging(Optional ByVal bloggedon As Boolean = False)
         IsLoaded = False
         USER_NAME = "Admin"
@@ -56,13 +79,14 @@ Public Class MainForm
             txtDateDue.EditValue = PMSDB.ReaderItem("DUE_DAYS", 30)
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
             IMAGE_MAX_RES = PMSDB.ReaderItem("IMAGE_MAX_RES", 800)
+            HIDE_COPY_INSTRUCTION = CType(PMSDB.ReaderItem("HIDE_COPY_INSTRUCTION", "0"), Boolean)
         End If
         PMSDB.CloseReader()
         'DateDueEdit.MinValue = Now.Date.AddDays(1)
         'txtDateDue.EditValue = Now.Date.AddMonths(1)
         bbSaveLayout.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
         bbResetLayout.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
-        Me.Text = "<< " & GetAppName() & " - " & GetUserName() & " - " & Now.ToShortDateString & GetServerName() & ">>"
+        'Me.Text = "<< " & GetAppName() & " - " & GetUserName() & " - " & Now.ToShortDateString & GetServerName() & ">>"
     End Sub
 
     Private Sub MainForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
@@ -405,8 +429,8 @@ Public Class MainForm
         Me.bbShowAllMaintenance.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.rpgToolsOptions.Visible = nPermission > 1
         Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-        Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-        Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE" Or cContent = "VENDOR" Or cContent = "MAKER") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE" Or cContent = "VENDOR" Or cContent = "MAKER") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.bbCritical.Visibility = IIf((cContent = "PARTPURCHASE" Or cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
@@ -680,7 +704,7 @@ Public Class MainForm
         Try
             Dim contents = System.IO.File.ReadAllLines(scriptFile)
             For i As Integer = 0 To contents.Length - 1
-                If (contents(i).Equals("[OBJECTS]")) Then
+                If (contents(i).Equals("[OBJECTS]") Or contents(i).Equals("[SQLS]")) Then
                     Return retVal
                 Else
                     retVal.Add(contents(i))
@@ -691,7 +715,7 @@ Public Class MainForm
         End Try
         Return retVal
     End Function
-    Private Function PeekVesionNo(fileName As String) As String
+    Private Function PeekVesionNo(fileName As String, currVersionNumber As String) As String
         Dim versionNo As String = ""
         Dim path = APP_PATH & "\temp_update\OBJECT_SNAPSHOT\" '-> temp folder to extract contents of obx file.
         Dim updatePath = path & "\Update.txt" '-> the file that we need to look for.
@@ -704,12 +728,18 @@ Public Class MainForm
             MkDir(path) '-> Recreate the OBJECT_SNAPSHOT
             File.Copy(fileName, zipFile) '-> Copy zip files to OBJECT_SNAPSHOT
             UnzipFile(zipFile, path) '-> Extract contents of zip file.
-
             If (File.Exists(updatePath)) Then '-> If the Update.txt exists.
-                versionNo = GetVersionValueForDB(GetVersionInfo(updatePath)(1)).ToString() '-> Get the version no. 
+                Dim tempVersion As ArrayList = GetVersionInfo(updatePath)
+                If (tempVersion.Count >= 1) Then
+                    versionNo = GetVersionValueForDB(tempVersion(1).ToString())
+                Else
+                    versionNo = currVersionNumber
+                End If
+                'versionNo = GetVersionValueForDB(GetVersionInfo(updatePath)(1)).ToString() '-> Get the version no. 
             End If
         Catch ex As Exception
             LogErrors("Error on loading obx file : " & ex.Message)
+            versionNo = "NO_UPDATE_FILE"
         Finally
             Directory.Delete(path, True) '-> After the peak, do the cleanup by deleting the OBJECT_SNAPSHOT folder, whether there is an error or not. 
         End Try
@@ -724,13 +754,13 @@ Public Class MainForm
             Dim updatePath As String = PMSDB.DLookUp("Value", "[sti_sys].[dbo].[tblPMSConfig]", "", "Code='UpdatesFolder'")
             Dim currentVersion As String = PMSDB.DLookUp("AppVersion", "[sti_sys].[dbo].[tblPMSVersion]", "", "1=1 ORDER BY AppVersion DESC")
             Dim localPath As String = APP_PATH & "\temp_update\"
-           If (Not Directory.Exists(localPath)) Then 'Create a temporary obx folder locally for Spectral Service
+            If (Not Directory.Exists(localPath)) Then 'Create a temporary obx folder locally for Spectral Service
                 MkDir(localPath)
             End If
 
             If (File.Exists(fileName) And fileName.EndsWith(".obx", StringComparison.CurrentCultureIgnoreCase)) Then
-                Dim updateVersionNo = PeekVesionNo(fileName) '-> Get the version number included in Update.txt of this obx file.
-                If (updateVersionNo.Equals("")) Then
+                Dim updateVersionNo = PeekVesionNo(fileName, currentVersion) '-> Get the version number included in Update.txt of this obx file.
+                If (updateVersionNo.Equals("NO_UPDATE_FILE")) Then
                     MessageBox.Show("The object update does not contain an Update.txt file.", APP_SHORT_NAME & " - Update", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     Return False
                 End If
@@ -1444,4 +1474,5 @@ Public Class MainForm
         End If
         frm.ShowDialog()
     End Sub
+
 End Class

@@ -116,6 +116,17 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=&apos;tblAdmRankType&apos;) 
+        '''BEGIN
+        '''CREATE TABLE [dbo].[tblAdmRankType]([RankTypeCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)),[Name] [varchar](30) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL,CONSTRAINT [tblAdmRankType$PrimaryKey] PRIMARY KEY CLUSTERED ([RankTypeCode] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_ [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property ranktype() As String
+            Get
+                Return ResourceManager.GetString("ranktype", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=&apos;tblAdmVslType&apos;)
         '''BEGIN
         '''CREATE TABLE [dbo].[tblAdmVslType]([VslTypeCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)),[Name] [varchar](30) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL,CONSTRAINT [tblAdmVslType$PrimaryKey] PRIMARY KEY CLUSTERED ([VslTypeCode] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY =  [rest of string was truncated]&quot;;.
