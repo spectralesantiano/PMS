@@ -31,7 +31,10 @@ Public Class RUNNINGHOURS
             If frm.IS_SAVED Then
                 Dim i As Integer, bHasLaterDate As Boolean = False
                 For i = 0 To MainView.RowCount - 1
-                    If Date.Compare(MainView.GetRowCellValue(i, "CurrDate"), frm.txtDate.EditValue) >= 0 Then
+                    If MainView.GetRowCellValue(i, "CurrDate") Is DBNull.Value Or MainView.GetRowCellValue(i, "CurrDate") Is Nothing Then
+                        MainView.SetRowCellValue(i, "NewDate", frm.txtDate.EditValue)
+                        MainView.SetRowCellValue(i, "Edited", False)
+                    ElseIf Date.Compare(MainView.GetRowCellValue(i, "CurrDate"), frm.txtDate.EditValue) >= 0 Then
                         bHasLaterDate = True
                     Else
                         MainView.SetRowCellValue(i, "NewDate", frm.txtDate.EditValue)
@@ -169,7 +172,7 @@ Public Class RUNNINGHOURS
     End Sub
 
     Private Sub MainView_RowCellStyle(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Grid.RowCellStyleEventArgs) Handles MainView.RowCellStyle
-        If e.Column.Name = "UnitDesc" Or e.Column.Name = "CurrCounter" Or e.Column.Name = "HoursRun" Or e.Column.Name = "HoursPerDay" Or e.Column.Name = "AvgHoursPerDay" Or e.Column.Name.Substring(0, 4) = "Prev" Or (e.Column.Name.Substring(0, 4) = "Curr" And bAddMode) Then
+        If e.Column.Name = "UnitDesc" Or e.Column.Name = "CurrCounter" Or e.Column.Name = "HoursRun" Or e.Column.Name = "HoursPerDay" Or e.Column.Name = "AvgHoursPerDay" Or e.Column.Name = "TotalRunningHours" Or e.Column.Name.Substring(0, 4) = "Prev" Or (e.Column.Name.Substring(0, 4) = "Curr" And bAddMode) Then
             e.Appearance.BackColor = IIf(MainView.FocusedRowHandle = e.RowHandle, DISABLED_SELECTED_COLOR, DISABLED_COLOR)
         Else
             If MainView.FocusedRowHandle = e.RowHandle Then
@@ -189,9 +192,11 @@ Public Class RUNNINGHOURS
     Private Sub MainView_ValidatingEditor(sender As Object, e As DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs) Handles MainView.ValidatingEditor
         If bAddMode Then
             If MainView.FocusedColumn.Name = "NewDate" Then
-                If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate"), e.Value) >= 0 Then
-                    e.ErrorText = "Current Reading Date should be later than the previous reading date."
-                    e.Valid = False
+                If Not (MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate") Is Nothing Or MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate") Is DBNull.Value) Then
+                    If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrDate"), e.Value) >= 0 Then
+                        e.ErrorText = "Current Reading Date should be later than the previous reading date."
+                        e.Valid = False
+                    End If
                 End If
             ElseIf MainView.FocusedColumn.Name = "NewReading" Then
                 If e.Value < IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrReading"), 0) Then
@@ -205,9 +210,11 @@ Public Class RUNNINGHOURS
             End If
         Else
             If MainView.FocusedColumn.Name = "CurrDate" Then
-                If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate"), e.Value) >= 0 Then
-                    e.ErrorText = "Current Reading Date should be later than the previous reading date."
-                    e.Valid = False
+                If Not (MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate") Is Nothing Or MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate") Is DBNull.Value) Then
+                    If Date.Compare(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevDate"), e.Value) >= 0 Then
+                        e.ErrorText = "Current Reading Date should be later than the previous reading date."
+                        e.Valid = False
+                    End If
                 End If
             ElseIf MainView.FocusedColumn.Name = "CurrReading" Then
                 If e.Value < IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevReading"), 0) And IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "CurrCounter"), "") = IfNull(MainView.GetRowCellValue(MainView.FocusedRowHandle, "PrevCounter"), "") Then

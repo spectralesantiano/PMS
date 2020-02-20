@@ -90,6 +90,7 @@ Public Class PMSInstaller
                     ExecuteSql("sas_tbl", My.Resources.rank)
                     ExecuteSql("sas_tbl", My.Resources.port)
                     ExecuteSql("sas_tbl", My.Resources.vesseltype)
+                    ExecuteSql("sas_tbl", My.Resources.ranktype)
 
                     'ADD SAS ADMIN TABLES TO TABLE CONFIG
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM dbo.tblTableConfig WHERE AppShortName ='" & APP_SHORT_NAME & "' AND DBName='sas_tbl' AND TableName='tblAdmVsl') INSERT INTO dbo.tblTableConfig VALUES('" & APP_SHORT_NAME & "','sas_tbl','tblAdmVsl')")
@@ -98,9 +99,11 @@ Public Class PMSInstaller
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM dbo.tblTableConfig WHERE AppShortName ='" & APP_SHORT_NAME & "' AND DBName='sas_tbl' AND TableName='tblAdmRank') INSERT INTO dbo.tblTableConfig VALUES('" & APP_SHORT_NAME & "','sas_tbl','tblAdmRank')")
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM dbo.tblTableConfig WHERE AppShortName ='" & APP_SHORT_NAME & "' AND DBName='sas_tbl' AND TableName='tblAdmPort') INSERT INTO dbo.tblTableConfig VALUES('" & APP_SHORT_NAME & "','sas_tbl','tblAdmPort')")
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM dbo.tblTableConfig WHERE AppShortName ='" & APP_SHORT_NAME & "' AND DBName='sas_tbl' AND TableName='tblAdmVslType') INSERT INTO dbo.tblTableConfig VALUES('" & APP_SHORT_NAME & "','sas_tbl','tblAdmVslType')")
+                    ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM dbo.tblTableConfig WHERE AppShortName ='" & APP_SHORT_NAME & "' AND DBName='sas_tbl' AND TableName='tblAdmVslType') INSERT INTO dbo.tblTableConfig VALUES('" & APP_SHORT_NAME & "','sas_tbl','tblAdmRankType')")
 
                     'Default Settings
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'LOCATION_ID') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('LOCATION_ID','')")
+                    ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'HIDE_COPY_INSTRUCTION') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('HIDE_COPY_INSTRUCTION','0')")
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'KPITHRESHOLD') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('KPITHRESHOLD','4.0')")
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
@@ -117,7 +120,7 @@ Public Class PMSInstaller
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
 
                     'Add Trial Lic
-                    ExecuteSql("" & DB_NAME & "", "IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI]) INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) VALUES('" & sysMpsUserPassword("ENCRYPT", APP_SHORT_NAME) & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
+                    ExecuteSql(DB_NAME, "IF NOT EXISTS (SELECT * FROM [dbo].[tblSTI]) INSERT INTO [dbo].[tblSTI]([LAppName],[LType],[LExp],[LHID],[LImo],[LSKey],[LGPeriod],[LNum],[LValid],[LGen],[LStat],[LMsg],[LRem],[DateUpdated]) VALUES('" & sysMpsUserPassword("ENCRYPT", APP_SHORT_NAME) & "', '" & sysMpsUserPassword("ENCRYPT", "TRIAL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "','" & sysMpsUserPassword("ENCRYPT", "NULL") & "',GETDATE())")
 
                     'tblSTIService_profile
                     ExecuteSql("sti_sys", "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblSTIService_profile')" & _
@@ -198,7 +201,7 @@ Public Class PMSInstaller
         ExecuteSql("master", "DROP TABLE [sti_sys].[dbo].[tbl" & APP_SHORT_NAME & "Version]", True)
 
         'DELETE TABLES FROM TableConfig
-        ExecuteSql("sti_sys", "DELETE FROM dbo.tblTableConfig WHERE AppShortName ='" & APP_SHORT_NAME & "' AND DBName='sas_tbl' AND TableName IN('tblAdmCntry','tblAdmRank','tblAdmPort','tblAdmDept','tblAdmVsl','tblAdmVslType')")
+        ExecuteSql("sti_sys", "DELETE FROM dbo.tblTableConfig WHERE AppShortName ='" & APP_SHORT_NAME & "' AND DBName='sas_tbl' AND TableName IN('tblAdmCntry','tblAdmRank','tblAdmPort','tblAdmDept','tblAdmVsl','tblAdmVslType','tblAdmRankType')")
 
         'DELETE TABLE IF NO APPLICATION USES IT.
         ExecuteSql("master", "IF NOT EXISTS (SELECT * FROM sti_sys.dbo.tblTableConfig WHERE DBName='sas_tbl' AND TableName='tblAdmCntry') DROP TABLE [sas_tbl].[dbo].[tblAdmCntry]")
@@ -207,6 +210,7 @@ Public Class PMSInstaller
         ExecuteSql("master", "IF NOT EXISTS (SELECT * FROM sti_sys.dbo.tblTableConfig WHERE DBName='sas_tbl' AND TableName='tblAdmDept') DROP TABLE [sas_tbl].[dbo].[tblAdmDept]")
         ExecuteSql("master", "IF NOT EXISTS (SELECT * FROM sti_sys.dbo.tblTableConfig WHERE DBName='sas_tbl' AND TableName='tblAdmVsl') DROP TABLE [sas_tbl].[dbo].[tblAdmVsl]")
         ExecuteSql("master", "IF NOT EXISTS (SELECT * FROM sti_sys.dbo.tblTableConfig WHERE DBName='sas_tbl' AND TableName='tblAdmVslType') DROP TABLE [sas_tbl].[dbo].[tblAdmVslType]")
+        ExecuteSql("master", "IF NOT EXISTS (SELECT * FROM sti_sys.dbo.tblTableConfig WHERE DBName='sas_tbl' AND TableName='tblAdmRankType') DROP TABLE [sas_tbl].[dbo].[tblAdmRankType]")
 
         'DELETE DATABASE IF NO APPLISTION USES IT.
         ExecuteSql("master", "IF NOT EXISTS (SELECT * FROM sti_sys.dbo.tblTableConfig WHERE DBName='sas_tbl') DROP DATABASE [sas_tbl]")

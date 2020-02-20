@@ -25,6 +25,18 @@
     End Sub
 
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdOk.Click
+
+        If IfNull(cboWorkCode.EditValue, "") = "" Then
+            MsgBox("Please fill up the * Maintenance field.", MsgBoxStyle.Critical, GetAppName)
+            Exit Sub
+        End If
+
+        If chkPreventive.Checked Then
+            If IfNull(cboIntCode.EditValue, "") = "" Or txtNumber.EditValue.ToString.Trim = "" Or txtNumber.EditValue.ToString.Trim = "0" Then
+                MsgBox("Please fill up the Type and Number fields.", MsgBoxStyle.Critical, GetAppName)
+                Exit Sub
+            End If
+        End If
         If bFieldUpdated Then
             IS_SAVED = True
             Dim i As Integer

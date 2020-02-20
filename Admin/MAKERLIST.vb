@@ -100,4 +100,32 @@ Public Class MAKERLIST
         End If
     End Sub
 
+    Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
+        Select Case param(0)
+            Case "Paste", "PasteFromFile"
+                PasteData(param(0))
+        End Select
+    End Sub
+
+    Sub PasteData(strMode As String)
+        Dim nRow() As DataRow, crow As DataRow
+        If strMode = "Paste" Then
+            nRow = ImportFromClipboard("Maker", "")
+        Else
+            nRow = ImportFromFile("Maker", "")
+        End If
+        If Not nRow Is Nothing Then
+            For Each crow In nRow
+                Dim bExist As Boolean = True, strValue As String = crow("Maker")
+                Dim strCode As String = PasteAdminData(DB, "MakerCode", "tblAdmMaker", strValue, bExist)
+                If Not bExist Then
+                    MainView.AddNewRow()
+                    MainView.SetRowCellValue(MainView.FocusedRowHandle, "MakerCode", strCode)
+                    MainView.SetRowCellValue(MainView.FocusedRowHandle, "Maker", strValue)
+                    MainView.UpdateCurrentRow()
+                    MainView.CloseEditor()
+                End If
+            Next
+        End If
+    End Sub
 End Class

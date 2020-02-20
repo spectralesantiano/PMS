@@ -126,6 +126,7 @@ Public Class PART
             Me.txtMinimum.EditValue = IfNull(blList.GetFocusedRowData("Minimum"), 0)
             Me.txtInitStock.EditValue = IfNull(blList.GetFocusedRowData("InitStock"), 0)
             Me.txtOnStock.EditValue = IfNull(blList.GetFocusedRowData("OnStock"), 0)
+            Me.chkCritical.Checked = IfNull(blList.GetFocusedRowData("Critical"), False)
         End If
         ClearFields(Me.header, True)
         MyBase.RefreshData()
@@ -133,6 +134,7 @@ Public Class PART
         cGrid.DataSource = DB.CreateTable("SELECT * FROM [dbo].[tblPartConsumption] WHERE PartCode='" & strID & "' ORDER BY [DateConsumed] DESC")
         mGrid.DataSource = DB.CreateTable("SELECT *, CAST(0 AS BIT) Edited FROM [dbo].[tblPart_Missing] WHERE PartCode='" & strID & "' ORDER BY [DateMissing] DESC")
         aGrid.DataSource = DB.CreateTable("SELECT * FROM dbo.PURCHASEDETAILLIST WHERE PartCode='" & strID & "' ORDER BY [DateReceived] DESC")
+        uGrid.DataSource = DB.CreateTable("SELECT UnitDesc FROM dbo.UNITCOMPLIST ul INNER JOIN dbo.tblUnitPart up ON ul.UnitCode=up.UnitCode WHERE up.PartCode='" & strID & "'")
         txtInitStock.Enabled = aView.RowCount = 0 And cView.RowCount = 0 And mView.RowCount = 0
         Me.header.Text = "EDIT PART DETAILS - " & blList.GetDesc.ToUpper
     End Sub

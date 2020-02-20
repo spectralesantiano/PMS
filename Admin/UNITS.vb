@@ -10,7 +10,7 @@ Imports DevExpress.XtraTreeList.Columns
 Public Class UNITS
 
     Dim downHitInfo As GridHitInfo = Nothing, tblUnitSource As DataTable, tblUnitCopy As DataTable, sqls As New ArrayList, strCurrView As String
-    Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False
+    Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False, bMainComponentHasCounter As Boolean
     Dim strCounterCode As String, strCounter As String, nReading As Integer, strActiveCounter As String, nRunningHours As Integer, nCurrNode As TreeListNode
     Dim dDateIssue As Object = DBNull.Value, strEditor As String, bUpdating As Boolean, bHasCritical As Boolean, bHasInactive As Boolean
 
@@ -784,6 +784,7 @@ Public Class UNITS
                     End If
                     Dim strDateIssue As String = "NULL"
                     If Not mView.GetRowCellValue(i, "InsDateIssue") Is System.DBNull.Value Then strDateIssue = ChangeToSQLDate(mView.GetRowCellValue(i, "InsDateIssue"))
+
                     If mView.GetRowCellValue(i, "MaintenanceCode") Is System.DBNull.Value Then
                         sqls.Add("INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy],[HasImage]) " & _
                                  "Values(dbo.MAINTENANCEID(),'" & mView.GetRowCellValue(i, "WorkCode") & "', '" & strID & "', '" & mView.GetRowCellValue(i, "RankCode") & "', " & IfNull(mView.GetRowCellValue(i, "Number"), "NULL") & ", '" & mView.GetRowCellValue(i, "IntCode") & "', '" & mView.GetRowCellValue(i, "InsCrossRef").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsEditor").ToString.Replace("'", "''") & "', '" & mView.GetRowCellValue(i, "InsDocument").ToString.Replace("'", "''") & "', " & strDateIssue & ", '" & mView.GetRowCellValue(i, "InsDesc").ToString.Replace("'", "''") & "','" & GetUserName() & "'," & IIf(mView.GetRowCellValue(i, "HasImage"), 1, 0) & ")")
@@ -937,6 +938,12 @@ Public Class UNITS
                 strRootNode = GetRootNode(nNode).GetValue("UnitCode")
                 tlUnits.FindNodeByFieldValue("UnitCode", strRootNode).ExpandAll()
                 tlUnits.SetFocusedNode(nNode)
+            End If
+        End If
+
+        If Not (tlUnits.FocusedNode Is Nothing Or strRootNode = "") Then
+            If tlUnits.FocusedNode.GetValue("UnitCode") <> strRootNode Then
+                bMainComponentHasCounter = DB.DLookUp("COUNT(*)", "dbo.tblAdmCounter", 0, "UnitCode='" & strRootNode & "'") > 0
             End If
         End If
 

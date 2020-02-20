@@ -537,6 +537,7 @@ Public Class frmUpdate
             Log_Append(sbVersionLog, "Files Error :".PadRight(nColStandard) & nFilesError.ToString)
             Log_Append(sbVersionLog, "Invalid Files :".PadRight(nColStandard) & nFilesInvalid.ToString)
             Log_Append(sbVersionLog, StrDup(100, "-"))
+            File.Delete(sourceFolder & "\Update.txt")
         Catch ex As Exception
             Dim str As String = ex.Message
         End Try
@@ -677,7 +678,7 @@ Public Class frmUpdate
                 cErr = "No Read and Write Permission"
             End If
         Else
-            cErr = "Path does not exist"
+            cErr = "Path <" & cUpdatesFolder & "> does not exist"
         End If
         Log_Append("Updates folder Status: ".PadRight(nColStandard) & " " & GetResult(bSuccess, cErr))
 
@@ -781,8 +782,7 @@ Public Class frmUpdate
     Public Function ConstructConnString(Optional ByVal DBName As String = "") As String
         If bUSE_SPECTRAL_CON Then
             cServerName = cServerName.Replace("\STISQLSERVER", "")
-            'Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
-            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=admin1234"
+            Return "Data Source=" & cServerName & "\STISQLSERVER;" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Persist Security Info=True;User ID=sa;Password=sffSDfsdfdfSDFsdffDFSF2164564DFSD2Df2345ABCSTFS;"
         ElseIf bUSE_TRUSTED_CON Then
             Return "Server=" & cServerName & ";" & IIf(DBName.Length > 0, "Database=" & DBName & ";", "") & "Trusted_Connection=True;"
         Else
