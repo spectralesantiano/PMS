@@ -14,7 +14,7 @@ Public Class SECGROUPS
 
             sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE SecID=" & strID & " AND SecType=1")
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
             sqls.Add("UPDATE dbo.tblSec_Users SET [Group ID]=NULL, LastUpdatedBy='" & LastUpdatedBy & "' WHERE [Group ID]=" & strID)
 
             clsAudit.saveAuditPreDelDetails("tblSec_Groups", strID, LastUpdatedBy)
@@ -39,7 +39,7 @@ Public Class SECGROUPS
         If bHasObject Then
             If ValidateFields(New DevExpress.XtraEditors.TextEdit() {Me.txtName}) Then
                 Dim sqls As New ArrayList, bHasWRHRep As Boolean = False, bHasCrewWRH As Boolean = False
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
                 If bAddMode Then
                     If DB.DLookUp("[Group ID]", "dbo.tblSec_Groups", "", "[Group Name]='" & Me.txtName.EditValue.ToString.Replace("'", "''") & "'") <> "" Then
@@ -105,7 +105,7 @@ Public Class SECGROUPS
 
                     sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE ObjectID='PMSREP' AND SecID=" & strID)
 
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
                     sqls.Add("INSERT INTO dbo.tblSec_Objects(ObjectID, SecID, SecType, Permission, LastUpdatedBy) VALUES('PMSREP', " & strID & ", 1, 1, '" & LastUpdatedBy & "')")
                 End If
 
@@ -115,7 +115,7 @@ Public Class SECGROUPS
                 blList.RefreshData()
                 blList.SetSelection(strID)
                 RefreshData()
-                
+
             End If
         Else
             MsgBox("Please assign permission(s) for this group.", MsgBoxStyle.Critical, GetAppName)

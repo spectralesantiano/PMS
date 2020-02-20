@@ -17,21 +17,22 @@ Public Class PART
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName, txtPartNumber}) Then
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+
             Dim sqls As New ArrayList, bUpdateList As Boolean = False, i As Integer
             If bAddMode Then
                 strID = GenerateID(DB, "PartCode", "tblAdmPart")
-                sqls.Add(GenerateInsertScript(Me.header, 3, "tblAdmPart", "PartCode, LastUpdatedBy", "'" & strID & "', '" & GetUserName() & "'"))
+                sqls.Add(GenerateInsertScript(Me.header, 3, "tblAdmPart", "PartCode, LastUpdatedBy", "'" & strID & "', '" & LastUpdatedBy & "'"))
                 bUpdateList = True
             Else
-                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmPart", "LastUpdatedBy='" & GetUserName() & "', DateUpdated=GETDATE()", "PartCode='" & strID & "'"))
+                sqls.Add(GenerateUpdateScript(Me.header, 3, "tblAdmPart", "LastUpdatedBy='" & LastUpdatedBy & "', DateUpdated=GETDATE()", "PartCode='" & strID & "'"))
                 bUpdateList = True
             End If
             'If strRemark <> "" Then sqls.Add("INSERT INTO [dbo].[tblPart_Missing]([PartCode],[DateMissing],[Number],[Remarks])VALUES('" & strID & "'," & ChangeToSQLDate(dDateReported) & "," & nNumber & ",'" & strRemark.Replace("'", "''") & "')")
 
             mView.CloseEditor()
             mView.UpdateCurrentRow()
-
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
 
             For i = 0 To mView.RowCount - 1
                 If mView.GetRowCellValue(i, "Edited") Then
@@ -82,7 +83,7 @@ Public Class PART
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmLocation(LocCode, Name, LastUpdatedBy) VALUES('" & strLocCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("LocCode") = strLocCode
@@ -99,7 +100,7 @@ Public Class PART
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmStorage(StorageCode, Name, LastUpdatedBy) VALUES('" & strStorageCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("StorageCode") = strStorageCode

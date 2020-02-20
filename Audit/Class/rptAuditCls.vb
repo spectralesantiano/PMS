@@ -35,8 +35,8 @@ Public Class rptAuditCls
         MainReport.DataSource = dt
 
         With MainReport
-            basReports.BindData(.celSeamanID, "Text", Nothing, "CrewID")
-            basReports.BindData(.celSeamanName, "Text", Nothing, "crewname")
+            'basReports.BindData(.celSeamanID, "Text", Nothing, "CrewID")
+            'basReports.BindData(.celSeamanName, "Text", Nothing, "crewname")
             basReports.BindData(.celScreenCaption, "Text", Nothing, "ScreenCaption")
             basReports.BindData(.celAction, "Text", Nothing, "ActionDescrip")
             basReports.BindData(.celDescription, "Text", Nothing, "DataDescrip")

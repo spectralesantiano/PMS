@@ -8,6 +8,9 @@ Public Class MainForm
 
     Dim IsLoaded As Boolean = False, strFirstContent As String, ContentsObject As DataView
 
+    Dim clsAudit As New clsAudit 'neil
+    Dim auditlogid As Long 'neil
+
     Private Sub BypassLogonForDebugging(Optional ByVal bloggedon As Boolean = False)
         IsLoaded = False
         USER_NAME = "Admin"
@@ -67,6 +70,7 @@ Public Class MainForm
 
     Private Sub MainForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         maincontent.CheckIFDataUpdated()
+        clsAudit.saveAuditLog("User log out", USER_NAME, auditlogid, System.Environment.MachineName, 0, , , , , , "MPS Crewing", Date.Now) 'neil
     End Sub
 
     Private Sub Logon(Optional ByVal bloggedon As Boolean = False)
@@ -89,6 +93,10 @@ Public Class MainForm
                 End
             End If
         End If
+
+        clsAudit.saveAuditLog("User log in", USER_NAME, auditlogid, System.Environment.MachineName, 0,
+                               , , , , , "MPS Crewing", Date.Now) 'neil
+
         LoadUserPref()
         InitUserSettings()
         LoadContent(strFirstContent, True)
@@ -128,6 +136,8 @@ Public Class MainForm
             End If
         End If
 
+        clsAudit.propSQLConnStr = PMSDB.GetConnectionString & "Password=" & SQL_PASSWORD 'neil
+
         LoadSettings()
         If Debugger.IsAttached Then
             BypassLogonForDebugging()
@@ -146,6 +156,7 @@ Public Class MainForm
         'rpTools.Visible = False
         IsLoaded = True
         Me.Visible = True
+
     End Sub
 
     Private Sub mainlist_OnCellRightClick(ByVal sender As String) Handles mainlist.OnCellRightClick

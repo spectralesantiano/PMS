@@ -708,7 +708,7 @@ Public Class Audit
 
         'add your column here
         Dim array() As String = {"AuditLogID", "CrewID", "crewname", "ScreenCaption", "ActionDescrip", "DataDescrip", "RecordName", "UserName", _
-                                  "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID", "AuditDetailID"}
+                                  "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID"} ', "AuditDetailID"}
         'Dim ctempconnstr As String
 
         'If p_ddateto = Nothing Then
@@ -740,10 +740,11 @@ Public Class Audit
                     dt.Columns.Remove("flddesc")
                     dt.Columns.Remove("OldValue")
                     dt.Columns.Remove("NewValue")
+                    dt.Columns.Remove("AuditDetailID")
 
                     'remove columns not needed for child table
-                    dtChild.Columns.Remove("CrewID")
-                    dtChild.Columns.Remove("crewname")
+                    'dtChild.Columns.Remove("CrewID")
+                    'dtChild.Columns.Remove("crewname")
                     dtChild.Columns.Remove("DataDescrip")
                     dtChild.Columns.Remove("ScreenCaption")
                     dtChild.Columns.Remove("ActionDescrip")
@@ -860,8 +861,8 @@ Public Class Audit
         MainReport.DataSource = parentDt
 
         With MainReport
-            basReports.BindData(.celSeamanID, "Text", Nothing, "CrewID")
-            basReports.BindData(.celSeamanName, "Text", Nothing, "crewname")
+            'basReports.BindData(.celSeamanID, "Text", Nothing, "CrewID")
+            'basReports.BindData(.celSeamanName, "Text", Nothing, "crewname")
             basReports.BindData(.celScreenCaption, "Text", Nothing, "ScreenCaption")
             basReports.BindData(.celAction, "Text", Nothing, "ActionDescrip")
             basReports.BindData(.celDescription, "Text", Nothing, "DataDescrip")
@@ -870,7 +871,7 @@ Public Class Audit
             basReports.BindData(.celUsername, "Text", Nothing, "UserName")
             basReports.BindData(.celComputerName, "Text", Nothing, "ComputerName")
             basReports.BindData(.celAuditLogID, "Text", Nothing, "AuditLogID")
-            basReports.BindData(.celAuditDetailID, "Text", Nothing, "AuditDetailID")
+            'basReports.BindData(.celAuditDetailID, "Text", Nothing, "AuditDetailID")
 
             .lblDates.Text = assemblefltrDates(r_ddatefrom, r_ddateto)
             .lblFilter.Text = assemblefltrString(r_cupdatedby, r_ccrewname, r_smodulecode)
@@ -922,16 +923,16 @@ Public Class Audit
         MainReport_NoSub.txtCoyAdd.Text = DB.DLookUp("Address", "tblCompanyInfo", "") 'DB.GetConfig("ADDR")
 
         With MainReport_NoSub
-            basReports.BindData(.celSeamanID, "Text", Nothing, "CrewID")
-            basReports.BindData(.celSeamanName, "Text", Nothing, "crewname")
-            basReports.BindData(.celScreenCaption, "Text", Nothing, "ScreenCaption")
+            'basReports.BindData(.celSeamanID, "Text", Nothing, "CrewID")
+            'basReports.BindData(.celSeamanName, "Text", Nothing, "crewname")
+            'basReports.BindData(.celScreenCaption, "Text", Nothing, "ScreenCaption")
             basReports.BindData(.celAction, "Text", Nothing, "ActionDescrip")
             basReports.BindData(.celDescription, "Text", Nothing, "DataDescrip")
             basReports.BindData(.celRecordKeyword, "Text", Nothing, "RecordName")
             basReports.BindData(.celDateUpdated, "Text", Nothing, "Dateupdated", "{0:dd-MMM-yyyy}")
             basReports.BindData(.celUsername, "Text", Nothing, "UserName")
             basReports.BindData(.celComputerName, "Text", Nothing, "ComputerName")
-            basReports.BindData(.celAuditLogID, "Text", Nothing, "AuditLogID")
+            'basReports.BindData(.celAuditLogID, "Text", Nothing, "AuditLogID")
 
             .lblDates.Text = assemblefltrDates(r_ddatefrom, r_ddateto)
             .lblFilter.Text = assemblefltrString(r_cupdatedby, r_ccrewname, r_smodulecode)
@@ -948,16 +949,16 @@ Public Class Audit
     End Sub
 
     Private Sub mainDetailBand_BeforePrint(sender As System.Object, e As System.Drawing.Printing.PrintEventArgs)
-        If MainReport.GetCurrentColumnValue("AuditDetailID").ToString = "" Then
-            ' MainReport.tblSubTitle.Visible = False
-            'MainReport.tblSubTitle.CanShrink = True
-            AddHandler MainReport.XrTableRow3.BeforePrint, AddressOf subtitle_BeforePrint
-            AddHandler childReport.BeforePrint, AddressOf subtitle_BeforePrint
-        Else
-            ' MainReport.tblSubTitle.Visible = True
-            AddHandler MainReport.XrTableRow3.BeforePrint, AddressOf subtitle2_BeforePrint
-            AddHandler childReport.BeforePrint, AddressOf SetDetailBand_BeforePrint
-        End If
+        'If MainReport.GetCurrentColumnValue("AuditDetailID").ToString = "" Then
+        '    ' MainReport.tblSubTitle.Visible = False
+        '    'MainReport.tblSubTitle.CanShrink = True
+        '    AddHandler MainReport.XrTableRow3.BeforePrint, AddressOf subtitle_BeforePrint
+        '    AddHandler childReport.BeforePrint, AddressOf subtitle_BeforePrint
+        'Else
+        '    ' MainReport.tblSubTitle.Visible = True
+        '    AddHandler MainReport.XrTableRow3.BeforePrint, AddressOf subtitle2_BeforePrint
+        AddHandler childReport.BeforePrint, AddressOf SetDetailBand_BeforePrint
+        'End If
 
     End Sub
 

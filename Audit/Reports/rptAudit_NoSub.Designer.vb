@@ -23,8 +23,7 @@ Partial Public Class rptAudit_NoSub
         Me.XrLine1 = New DevExpress.XtraReports.UI.XRLine()
         Me.XrTable1 = New DevExpress.XtraReports.UI.XRTable()
         Me.XrTableRow1 = New DevExpress.XtraReports.UI.XRTableRow()
-        Me.celSeamanID = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.celSeamanName = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.celDateUpdated = New DevExpress.XtraReports.UI.XRTableCell()
         Me.celScreenCaption = New DevExpress.XtraReports.UI.XRTableCell()
         Me.celAction = New DevExpress.XtraReports.UI.XRTableCell()
         Me.celDescription = New DevExpress.XtraReports.UI.XRTableCell()
@@ -33,6 +32,15 @@ Partial Public Class rptAudit_NoSub
         Me.celComputerName = New DevExpress.XtraReports.UI.XRTableCell()
         Me.celAuditLogID = New DevExpress.XtraReports.UI.XRTableCell()
         Me.TopMargin = New DevExpress.XtraReports.UI.TopMarginBand()
+        Me.XrTable2 = New DevExpress.XtraReports.UI.XRTable()
+        Me.XrTableRow2 = New DevExpress.XtraReports.UI.XRTableRow()
+        Me.XrTableCell4 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.XrTableCell12 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.XrTableCell13 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.XrTableCell14 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.XrTableCell15 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.XrTableCell17 = New DevExpress.XtraReports.UI.XRTableCell()
+        Me.XrTableCell18 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.txtCompany = New DevExpress.XtraReports.UI.XRLabel()
         Me.txtCoyAdd = New DevExpress.XtraReports.UI.XRLabel()
         Me.lblFilter = New DevExpress.XtraReports.UI.XRLabel()
@@ -41,18 +49,6 @@ Partial Public Class rptAudit_NoSub
         Me.BottomMargin = New DevExpress.XtraReports.UI.BottomMarginBand()
         Me.XrPageInfo3 = New DevExpress.XtraReports.UI.XRPageInfo()
         Me.XrPageInfo2 = New DevExpress.XtraReports.UI.XRPageInfo()
-        Me.XrTable2 = New DevExpress.XtraReports.UI.XRTable()
-        Me.XrTableRow2 = New DevExpress.XtraReports.UI.XRTableRow()
-        Me.XrTableCell4 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell10 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell11 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell12 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell13 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell14 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell15 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell17 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell18 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.celDateUpdated = New DevExpress.XtraReports.UI.XRTableCell()
         CType(Me.XrTable1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.XrTable2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -86,28 +82,21 @@ Partial Public Class rptAudit_NoSub
         '
         'XrTableRow1
         '
-        Me.XrTableRow1.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.celDateUpdated, Me.celSeamanID, Me.celSeamanName, Me.celScreenCaption, Me.celAction, Me.celDescription, Me.celRecordKeyword, Me.celUsername, Me.celComputerName, Me.celAuditLogID})
+        Me.XrTableRow1.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.celDateUpdated, Me.celScreenCaption, Me.celAction, Me.celDescription, Me.celRecordKeyword, Me.celUsername, Me.celComputerName, Me.celAuditLogID})
         Me.XrTableRow1.Name = "XrTableRow1"
         Me.XrTableRow1.Weight = 1.0R
         '
-        'celSeamanID
+        'celDateUpdated
         '
-        Me.celSeamanID.Multiline = True
-        Me.celSeamanID.Name = "celSeamanID"
-        Me.celSeamanID.Text = "Seaman " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "System ID" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
-        Me.celSeamanID.Weight = 1.4475191597686405R
-        '
-        'celSeamanName
-        '
-        Me.celSeamanName.Name = "celSeamanName"
-        Me.celSeamanName.Text = "Seaman Name"
-        Me.celSeamanName.Weight = 1.3542858478400435R
+        Me.celDateUpdated.Name = "celDateUpdated"
+        Me.celDateUpdated.Text = "Date Updated"
+        Me.celDateUpdated.Weight = 1.4475191597686405R
         '
         'celScreenCaption
         '
         Me.celScreenCaption.Name = "celScreenCaption"
         Me.celScreenCaption.Text = "Screen Caption"
-        Me.celScreenCaption.Weight = 1.3625570695900189R
+        Me.celScreenCaption.Weight = 4.1643620771987031R
         '
         'celAction
         '
@@ -153,6 +142,69 @@ Partial Public Class rptAudit_NoSub
         Me.TopMargin.Name = "TopMargin"
         Me.TopMargin.Padding = New DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100.0!)
         Me.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft
+        '
+        'XrTable2
+        '
+        Me.XrTable2.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
+            Or DevExpress.XtraPrinting.BorderSide.Right) _
+            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
+        Me.XrTable2.Font = New System.Drawing.Font("Arial", 7.0!, System.Drawing.FontStyle.Bold)
+        Me.XrTable2.LocationFloat = New DevExpress.Utils.PointFloat(0.0!, 156.7915!)
+        Me.XrTable2.Name = "XrTable2"
+        Me.XrTable2.Rows.AddRange(New DevExpress.XtraReports.UI.XRTableRow() {Me.XrTableRow2})
+        Me.XrTable2.SizeF = New System.Drawing.SizeF(885.184!, 26.45834!)
+        Me.XrTable2.StylePriority.UseBorders = False
+        Me.XrTable2.StylePriority.UseFont = False
+        Me.XrTable2.StylePriority.UseTextAlignment = False
+        Me.XrTable2.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopCenter
+        '
+        'XrTableRow2
+        '
+        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell4, Me.XrTableCell12, Me.XrTableCell13, Me.XrTableCell14, Me.XrTableCell15, Me.XrTableCell17, Me.XrTableCell18})
+        Me.XrTableRow2.Name = "XrTableRow2"
+        Me.XrTableRow2.Weight = 1.0R
+        '
+        'XrTableCell4
+        '
+        Me.XrTableCell4.Name = "XrTableCell4"
+        Me.XrTableCell4.Text = "Date Updated"
+        Me.XrTableCell4.Weight = 1.4475191597686405R
+        '
+        'XrTableCell12
+        '
+        Me.XrTableCell12.Name = "XrTableCell12"
+        Me.XrTableCell12.Text = "Screen Caption"
+        Me.XrTableCell12.Weight = 4.1643622137706711R
+        '
+        'XrTableCell13
+        '
+        Me.XrTableCell13.Name = "XrTableCell13"
+        Me.XrTableCell13.Text = "Action"
+        Me.XrTableCell13.Weight = 1.3584503452857519R
+        '
+        'XrTableCell14
+        '
+        Me.XrTableCell14.Name = "XrTableCell14"
+        Me.XrTableCell14.Text = "Description"
+        Me.XrTableCell14.Weight = 3.1112317748957237R
+        '
+        'XrTableCell15
+        '
+        Me.XrTableCell15.Name = "XrTableCell15"
+        Me.XrTableCell15.Text = "Record Keyword"
+        Me.XrTableCell15.Weight = 1.8246189535082498R
+        '
+        'XrTableCell17
+        '
+        Me.XrTableCell17.Name = "XrTableCell17"
+        Me.XrTableCell17.Text = "Username"
+        Me.XrTableCell17.Weight = 2.3653685571941687R
+        '
+        'XrTableCell18
+        '
+        Me.XrTableCell18.Name = "XrTableCell18"
+        Me.XrTableCell18.Text = "Computer Name"
+        Me.XrTableCell18.Weight = 1.5739159778680634R
         '
         'txtCompany
         '
@@ -241,88 +293,6 @@ Partial Public Class rptAudit_NoSub
         Me.XrPageInfo2.SizeF = New System.Drawing.SizeF(194.0187!, 23.0!)
         Me.XrPageInfo2.StylePriority.UseFont = False
         '
-        'XrTable2
-        '
-        Me.XrTable2.Borders = CType((((DevExpress.XtraPrinting.BorderSide.Left Or DevExpress.XtraPrinting.BorderSide.Top) _
-            Or DevExpress.XtraPrinting.BorderSide.Right) _
-            Or DevExpress.XtraPrinting.BorderSide.Bottom), DevExpress.XtraPrinting.BorderSide)
-        Me.XrTable2.Font = New System.Drawing.Font("Arial", 7.0!, System.Drawing.FontStyle.Bold)
-        Me.XrTable2.LocationFloat = New DevExpress.Utils.PointFloat(0.0!, 156.7915!)
-        Me.XrTable2.Name = "XrTable2"
-        Me.XrTable2.Rows.AddRange(New DevExpress.XtraReports.UI.XRTableRow() {Me.XrTableRow2})
-        Me.XrTable2.SizeF = New System.Drawing.SizeF(885.184!, 26.45834!)
-        Me.XrTable2.StylePriority.UseBorders = False
-        Me.XrTable2.StylePriority.UseFont = False
-        Me.XrTable2.StylePriority.UseTextAlignment = False
-        Me.XrTable2.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopCenter
-        '
-        'XrTableRow2
-        '
-        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell4, Me.XrTableCell10, Me.XrTableCell11, Me.XrTableCell12, Me.XrTableCell13, Me.XrTableCell14, Me.XrTableCell15, Me.XrTableCell17, Me.XrTableCell18})
-        Me.XrTableRow2.Name = "XrTableRow2"
-        Me.XrTableRow2.Weight = 1.0R
-        '
-        'XrTableCell4
-        '
-        Me.XrTableCell4.Name = "XrTableCell4"
-        Me.XrTableCell4.Text = "Date Updated"
-        Me.XrTableCell4.Weight = 1.4475191597686405R
-        '
-        'XrTableCell10
-        '
-        Me.XrTableCell10.Multiline = True
-        Me.XrTableCell10.Name = "XrTableCell10"
-        Me.XrTableCell10.Text = "Seaman " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "System ID" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
-        Me.XrTableCell10.Weight = 1.4475191597686405R
-        '
-        'XrTableCell11
-        '
-        Me.XrTableCell11.Name = "XrTableCell11"
-        Me.XrTableCell11.Text = "Seaman Name"
-        Me.XrTableCell11.Weight = 1.3542858478400435R
-        '
-        'XrTableCell12
-        '
-        Me.XrTableCell12.Name = "XrTableCell12"
-        Me.XrTableCell12.Text = "Screen Caption"
-        Me.XrTableCell12.Weight = 1.3625572061619866R
-        '
-        'XrTableCell13
-        '
-        Me.XrTableCell13.Name = "XrTableCell13"
-        Me.XrTableCell13.Text = "Action"
-        Me.XrTableCell13.Weight = 1.3584503452857519R
-        '
-        'XrTableCell14
-        '
-        Me.XrTableCell14.Name = "XrTableCell14"
-        Me.XrTableCell14.Text = "Description"
-        Me.XrTableCell14.Weight = 3.1112317748957237R
-        '
-        'XrTableCell15
-        '
-        Me.XrTableCell15.Name = "XrTableCell15"
-        Me.XrTableCell15.Text = "Record Keyword"
-        Me.XrTableCell15.Weight = 1.8246189535082498R
-        '
-        'XrTableCell17
-        '
-        Me.XrTableCell17.Name = "XrTableCell17"
-        Me.XrTableCell17.Text = "Username"
-        Me.XrTableCell17.Weight = 2.3653685571941687R
-        '
-        'XrTableCell18
-        '
-        Me.XrTableCell18.Name = "XrTableCell18"
-        Me.XrTableCell18.Text = "Computer Name"
-        Me.XrTableCell18.Weight = 1.5739159778680634R
-        '
-        'celDateUpdated
-        '
-        Me.celDateUpdated.Name = "celDateUpdated"
-        Me.celDateUpdated.Text = "Date Updated"
-        Me.celDateUpdated.Weight = 1.4475191597686405R
-        '
         'rptAudit_NoSub
         '
         Me.Bands.AddRange(New DevExpress.XtraReports.UI.Band() {Me.Detail, Me.TopMargin, Me.BottomMargin})
@@ -331,7 +301,7 @@ Partial Public Class rptAudit_NoSub
         Me.PageHeight = 850
         Me.PageWidth = 1100
         Me.ScriptLanguage = DevExpress.XtraReports.ScriptLanguage.VisualBasic
-        Me.Version = "14.2"
+        Me.Version = "15.2"
         CType(Me.XrTable1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.XrTable2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me, System.ComponentModel.ISupportInitialize).EndInit()
@@ -342,8 +312,6 @@ Partial Public Class rptAudit_NoSub
     Friend WithEvents BottomMargin As DevExpress.XtraReports.UI.BottomMarginBand
     Friend WithEvents XrTable1 As DevExpress.XtraReports.UI.XRTable
     Friend WithEvents XrTableRow1 As DevExpress.XtraReports.UI.XRTableRow
-    Friend WithEvents celSeamanID As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents celSeamanName As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents celScreenCaption As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents celAction As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents celDescription As DevExpress.XtraReports.UI.XRTableCell
@@ -363,8 +331,6 @@ Partial Public Class rptAudit_NoSub
     Friend WithEvents XrTable2 As DevExpress.XtraReports.UI.XRTable
     Friend WithEvents XrTableRow2 As DevExpress.XtraReports.UI.XRTableRow
     Friend WithEvents XrTableCell4 As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents XrTableCell10 As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents XrTableCell11 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell12 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell13 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell14 As DevExpress.XtraReports.UI.XRTableCell

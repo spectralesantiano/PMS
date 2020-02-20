@@ -29,8 +29,6 @@ Partial Public Class rptAudit
         Me.XrTable1 = New DevExpress.XtraReports.UI.XRTable()
         Me.XrTableRow1 = New DevExpress.XtraReports.UI.XRTableRow()
         Me.celDateUpdated = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.celSeamanID = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.celSeamanName = New DevExpress.XtraReports.UI.XRTableCell()
         Me.celScreenCaption = New DevExpress.XtraReports.UI.XRTableCell()
         Me.celAction = New DevExpress.XtraReports.UI.XRTableCell()
         Me.celDescription = New DevExpress.XtraReports.UI.XRTableCell()
@@ -49,8 +47,6 @@ Partial Public Class rptAudit
         Me.XrTable2 = New DevExpress.XtraReports.UI.XRTable()
         Me.XrTableRow2 = New DevExpress.XtraReports.UI.XRTableRow()
         Me.XrTableCell4 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell10 = New DevExpress.XtraReports.UI.XRTableCell()
-        Me.XrTableCell11 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableCell12 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableCell13 = New DevExpress.XtraReports.UI.XRTableCell()
         Me.XrTableCell14 = New DevExpress.XtraReports.UI.XRTableCell()
@@ -134,7 +130,7 @@ Partial Public Class rptAudit
         '
         'XrTableRow1
         '
-        Me.XrTableRow1.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.celDateUpdated, Me.celSeamanID, Me.celSeamanName, Me.celScreenCaption, Me.celAction, Me.celDescription, Me.celRecordKeyword, Me.celUsername, Me.celComputerName, Me.celAuditLogID, Me.celAuditDetailID})
+        Me.XrTableRow1.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.celDateUpdated, Me.celScreenCaption, Me.celAction, Me.celDescription, Me.celRecordKeyword, Me.celUsername, Me.celComputerName, Me.celAuditLogID, Me.celAuditDetailID})
         Me.XrTableRow1.Name = "XrTableRow1"
         Me.XrTableRow1.Weight = 1.0R
         '
@@ -145,23 +141,11 @@ Partial Public Class rptAudit
         Me.celDateUpdated.Text = "Date Updated"
         Me.celDateUpdated.Weight = 1.4475191597686405R
         '
-        'celSeamanID
-        '
-        Me.celSeamanID.Name = "celSeamanID"
-        Me.celSeamanID.Text = "Seaman"
-        Me.celSeamanID.Weight = 1.4475191597686405R
-        '
-        'celSeamanName
-        '
-        Me.celSeamanName.Name = "celSeamanName"
-        Me.celSeamanName.Text = "Seaman Name"
-        Me.celSeamanName.Weight = 1.3542858478400435R
-        '
         'celScreenCaption
         '
         Me.celScreenCaption.Name = "celScreenCaption"
         Me.celScreenCaption.Text = "Screen Caption"
-        Me.celScreenCaption.Weight = 1.3625570695900189R
+        Me.celScreenCaption.Weight = 4.1643620771987031R
         '
         'celAction
         '
@@ -296,7 +280,7 @@ Partial Public Class rptAudit
         '
         'XrTableRow2
         '
-        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell4, Me.XrTableCell10, Me.XrTableCell11, Me.XrTableCell12, Me.XrTableCell13, Me.XrTableCell14, Me.XrTableCell15, Me.XrTableCell17, Me.XrTableCell18})
+        Me.XrTableRow2.Cells.AddRange(New DevExpress.XtraReports.UI.XRTableCell() {Me.XrTableCell4, Me.XrTableCell12, Me.XrTableCell13, Me.XrTableCell14, Me.XrTableCell15, Me.XrTableCell17, Me.XrTableCell18})
         Me.XrTableRow2.Name = "XrTableRow2"
         Me.XrTableRow2.Weight = 1.0R
         '
@@ -306,24 +290,11 @@ Partial Public Class rptAudit
         Me.XrTableCell4.Text = "Date Updated"
         Me.XrTableCell4.Weight = 1.4475191597686405R
         '
-        'XrTableCell10
-        '
-        Me.XrTableCell10.Multiline = True
-        Me.XrTableCell10.Name = "XrTableCell10"
-        Me.XrTableCell10.Text = "Seaman " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "System ID" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
-        Me.XrTableCell10.Weight = 1.4475191597686405R
-        '
-        'XrTableCell11
-        '
-        Me.XrTableCell11.Name = "XrTableCell11"
-        Me.XrTableCell11.Text = "Seaman Name"
-        Me.XrTableCell11.Weight = 1.3542858478400435R
-        '
         'XrTableCell12
         '
         Me.XrTableCell12.Name = "XrTableCell12"
         Me.XrTableCell12.Text = "Screen Caption"
-        Me.XrTableCell12.Weight = 1.3625572061619866R
+        Me.XrTableCell12.Weight = 4.1643622137706711R
         '
         'XrTableCell13
         '
@@ -394,7 +365,7 @@ Partial Public Class rptAudit
         Me.PageHeight = 850
         Me.PageWidth = 1100
         Me.ScriptLanguage = DevExpress.XtraReports.ScriptLanguage.VisualBasic
-        Me.Version = "14.2"
+        Me.Version = "15.2"
         CType(Me.tblSubTitle, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.XrTable1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.XrTable2, System.ComponentModel.ISupportInitialize).EndInit()
@@ -407,7 +378,6 @@ Partial Public Class rptAudit
     Friend WithEvents XrTable1 As DevExpress.XtraReports.UI.XRTable
     Friend WithEvents XrTableRow1 As DevExpress.XtraReports.UI.XRTableRow
     Friend WithEvents celDateUpdated As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents celSeamanName As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents celScreenCaption As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents celAction As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents celDescription As DevExpress.XtraReports.UI.XRTableCell
@@ -416,8 +386,6 @@ Partial Public Class rptAudit
     Friend WithEvents celComputerName As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTable2 As DevExpress.XtraReports.UI.XRTable
     Friend WithEvents XrTableRow2 As DevExpress.XtraReports.UI.XRTableRow
-    Friend WithEvents XrTableCell10 As DevExpress.XtraReports.UI.XRTableCell
-    Friend WithEvents XrTableCell11 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell12 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell13 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell14 As DevExpress.XtraReports.UI.XRTableCell
@@ -439,7 +407,6 @@ Partial Public Class rptAudit
     Friend WithEvents txtCoyAdd As DevExpress.XtraReports.UI.XRLabel
     Friend WithEvents txtCompany As DevExpress.XtraReports.UI.XRLabel
     Friend WithEvents XrPageInfo3 As DevExpress.XtraReports.UI.XRPageInfo
-    Friend WithEvents celSeamanID As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents XrTableCell4 As DevExpress.XtraReports.UI.XRTableCell
     Friend WithEvents celAuditDetailID As DevExpress.XtraReports.UI.XRTableCell
 End Class

@@ -6,7 +6,7 @@ Public Class SECUSERS
 
     Private Sub ResetPassword()
         If MsgBox("Continuing will reset " & strDesc & "'s password to " & DEFAULT_PASSWORD & ", would you like to continue?", MsgBoxStyle.Question Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.header.Text) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
             DB.RunSql("UPDATE tblSec_Users SET [Password]='" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "',LastUpdatedBy='" & LastUpdatedBy & "' WHERE [User ID]=" & strID)
         End If
     End Sub
@@ -44,8 +44,11 @@ Public Class SECUSERS
             Else
                 groupid = Me.GroupList.EditValue.ToString
             End If
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+
             If bAddMode Then
-                DB.RunSql("INSERT INTO dbo.tblSec_Users([User Name], [Password], [Group ID], LastUpdatedBy) VALUES('" & txtUserName.EditValue & "', '" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "', " & groupid & ", '" & GetUserName() & "')")
+                DB.RunSql("INSERT INTO dbo.tblSec_Users([User Name], [Password], [Group ID], LastUpdatedBy) VALUES('" & txtUserName.EditValue & "', '" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "', " & groupid & ", '" & LastUpdatedBy & "')")
                 strID = DB.DLookUp("[User ID]", "dbo.tblSec_Users", "", "[User Name]='" & txtUserName.EditValue & "'")
                 bRecordUpdated = False
                 blList.RefreshData()
@@ -60,7 +63,7 @@ Public Class SECUSERS
                     sql = sql & "[Group ID]=" & groupid & ", "
                 End If
                 If sql <> "" Then
-                    DB.RunSql("UPDATE dbo.tblSec_Users SET " & sql & " LastUpdatedBy = '" & GetUserName() & "' WHERE [User ID]=" & strID)
+                    DB.RunSql("UPDATE dbo.tblSec_Users SET " & sql & " LastUpdatedBy = '" & LastUpdatedBy & "' WHERE [User ID]=" & strID)
                 End If
                 bRecordUpdated = False
                 blList.RefreshData()

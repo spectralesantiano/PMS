@@ -1,5 +1,7 @@
 ﻿Public Class frmMaintenance
     Public IS_SAVED As Boolean = False, DB As SQLDB, bEscaped As Boolean = False, bFieldUpdated As Boolean = False, strDeletedImages As String = "", strAddedImages As String = ""
+    Dim clsAudit As New clsAudit 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Private Sub cboWorkCode_Closed(sender As Object, e As DevExpress.XtraEditors.Controls.ClosedEventArgs) Handles cboWorkCode.Closed
         If e.CloseMode = DevExpress.XtraEditors.PopupCloseMode.Cancel Then
@@ -16,7 +18,9 @@
         Dim row As DataRow, tbl As DataTable, strWorkCode As String = GenerateID(DB, "WorkCode", "tblAdmWork")
         tbl = cboWorkCode.Properties.DataSource
         row = tbl.NewRow
-        DB.RunSql("INSERT INTO dbo.tblAdmWork(WorkCode, Name, LastUpdatedBy) VALUES('" & strWorkCode & "', '" & e.DisplayValue & "','" & GetUserName() & "')")
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.Text) 'neil
+
+        DB.RunSql("INSERT INTO dbo.tblAdmWork(WorkCode, Name, LastUpdatedBy) VALUES('" & strWorkCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("WorkCode") = strWorkCode
         row("Maintenance") = e.DisplayValue
         tbl.Rows.Add(row)
