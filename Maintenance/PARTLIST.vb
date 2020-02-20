@@ -43,6 +43,9 @@ Public Class PARTLIST
         If IfNull(MainView.GetRowCellValue(e.RowHandle, "Minimum"), 0) > IfNull(MainView.GetRowCellValue(e.RowHandle, "OnStock"), 0) Then
             e.Appearance.ForeColor = Drawing.Color.Red
         End If
+        If e.Column.Name = "CriticalDisp" And IfNull(MainView.GetRowCellValue(e.RowHandle, "Critical"), False) Then
+            e.Appearance.BackColor = Drawing.Color.Yellow
+        End If
     End Sub
 
     Public Overrides Sub RefreshData()
@@ -64,7 +67,8 @@ Public Class PARTLIST
 
     Public Overrides Sub SetFilter(ByVal _criteria As String)
         strFilter = ""
-        If CURRENT_CRITICAL_CHECKED Then strFilter = "OnStock<Minimum"
+        If CURRENT_CRITICAL_CHECKED Then strFilter = "Critical=True"
+        'If CURRENT_CRITICAL_CHECKED Then strFilter = "OnStock<Minimum"
         Me.MainView.ActiveFilterString = strFilter
     End Sub
 

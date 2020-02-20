@@ -137,6 +137,7 @@ Public Class frmWork
             cboUnit.Properties.TreeList.FocusedNode = cboUnit.Properties.TreeList.FindNodeByFieldValue("UnitCode", cboUnit.EditValue)
             InitUnit()
         End If
+        Me.cmdCopy.Visible = Not HIDE_COPY_INSTRUCTION
         Me.txtWorkDate.Properties.MaxValue = Now.Date
         InitMaintenance()
     End Sub

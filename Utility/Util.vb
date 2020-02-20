@@ -20,7 +20,7 @@ Public Module Util
     Public IMO_NUMBER As String = "", VESSEL As String, FLAG_DESC As String, TYPE_DESC As String
     Public APP_PATH As String, DATE_LAST_EXPORT As String = "2000-01-01", DATE_LAST_EXPORT_IMG As String = "2000-01-01", LOCATION_ID As String, EXPORT_DIR
     Public GRID_ROW_SEP As Byte = 0, LOGO As Bitmap, FONT_INCREASE As Double = 0, IMAGE_MAX_RES As Single
-    Public CURRENT_DEPARTMENT As String, CURRENT_RANK As String, CURRENT_MAINUNIT As String, CURRENT_CATEGORY As String, CURRENT_UNIT As String = "", CURRENT_WORK As Integer, CURRENT_DUEDAYS As String = "30", CURRENT_DUEHOURS As Integer = "100", CURRENT_PERIOD As Integer, CURRENT_WOMAINTENANCE As Boolean = False, CURRENT_CONDITION_CHECKED As Boolean = False, CURRENT_CRITICAL_CHECKED As Boolean = False, CURRENT_FLATVIEW_CHECKED As Boolean = False, CURRENT_SHOW_WARNING As Boolean = False, CURRENT_SHOW_ALL_CHECKED As Boolean = False
+    Public CURRENT_DEPARTMENT As String, CURRENT_RANK As String, CURRENT_MAINUNIT As String, CURRENT_CATEGORY As String, CURRENT_UNIT As String = "", CURRENT_WORK As Integer, CURRENT_DUEDAYS As String = "30", CURRENT_DUEHOURS As Integer = "100", CURRENT_PERIOD As Integer, CURRENT_WOMAINTENANCE As Boolean = False, CURRENT_CONDITION_CHECKED As Boolean = False, CURRENT_CRITICAL_CHECKED As Boolean = False, CURRENT_FLATVIEW_CHECKED As Boolean = False, CURRENT_SHOW_WARNING As Boolean = False, CURRENT_SHOW_ALL_CHECKED As Boolean = False, HIDE_COPY_INSTRUCTION As Boolean
     Public AdmRank As DataTable, AdmDept As DataTable
 
 #Region "Utility functions"
@@ -146,6 +146,34 @@ Public Module Util
         Dim reader As New System.IO.StreamReader(str)
         str.Seek(0, System.IO.SeekOrigin.Begin)
         Return reader.ReadToEnd()
+    End Function
+
+
+    Public Sub Browse_Sample(db As SQLDB)
+        'Dim odMain As New System.Windows.Forms.OpenFileDialog
+        'odMain.Filter = "Files (*.pdf) | *.pdf"
+        'If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+        '    db.RunSql("insert into sample(doc) values('" & FileToString(odMain.FileName) & "')")
+        'End If
+        db.BeginReader("select * from sample")
+        If db.Read Then
+            Dim frm As New frmHelp, bytes() As Byte = Convert.FromBase64String(db.ReaderItem("doc"))
+
+            frm.LoadPDF(New System.IO.MemoryStream(bytes))
+            frm.ShowDialog()
+        End If
+        db.CloseReader()
+
+    End Sub
+
+    ''' <summary>
+    ''' Converts a memory stream to string.
+    ''' </summary>
+    ''' <param name="str">Stream</param>
+    ''' <returns>Converted string from stream</returns>
+    ''' <remarks></remarks>
+    Public Function FileToString(strFile As String) As String
+        Return Convert.ToBase64String(System.IO.File.ReadAllBytes(strFile))
     End Function
 
     ''' <summary>
@@ -897,10 +925,10 @@ Public Module Util
                 Next
                 sqls.Add("END")
 
-                tbl = db.CreateTable("SELECT [PartCode],[Name],[PartNumber],[OnStock],[Minimum],[InitStock],[LocCode],[StorageCode],[LastUpdatedBy] FROM [dbo].[tblAdmPart]")
+                tbl = db.CreateTable("SELECT [PartCode],[Name],[PartNumber],[OnStock],[Minimum],[InitStock],[LocCode],[StorageCode],[LastUpdatedBy],[Critical] FROM [dbo].[tblAdmPart]")
                 sqls.Add("tblAdmPart")
                 For Each drRow In tbl.Rows
-                    sqls.Add("'" & drRow("PartCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("PartNumber") & "'," & IfNull(drRow("OnStock"), "0") & "," & IfNull(drRow("Minimum"), "0") & "," & IfNull(drRow("InitStock"), 0) & ",'" & drRow("LocCode") & "','" & drRow("StorageCode") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'")
+                    sqls.Add("'" & drRow("PartCode") & "','" & drRow("Name").ToString.Replace("'", "''") & "','" & drRow("PartNumber") & "'," & IfNull(drRow("OnStock"), "0") & "," & IfNull(drRow("Minimum"), "0") & "," & IfNull(drRow("InitStock"), 0) & ",'" & drRow("LocCode") & "','" & drRow("StorageCode") & "','" & drRow("LastUpdatedBy").ToString.Replace("'", "''") & "'," & IIf(IfNull(drRow("Critical"), False), "1", "0"))
                 Next
                 sqls.Add("END")
 

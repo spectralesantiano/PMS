@@ -1,0 +1,8 @@
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblAdmRankType') 
+BEGIN
+CREATE TABLE [dbo].[tblAdmRankType]([RankTypeCode] [varchar](15) NOT NULL,[SortCode] [float] NULL DEFAULT ((0)),[Name] [varchar](30) NULL,[DateUpdated] [datetime2](0) NULL DEFAULT (getdate()),[LastUpdatedBy] [varchar](200) NULL,[SSMA_TimeStamp] [timestamp] NOT NULL,CONSTRAINT [tblAdmRankType$PrimaryKey] PRIMARY KEY CLUSTERED ([RankTypeCode] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY] 
+INSERT INTO dbo.tblAdmRankType([RankTypeCode],[SortCode],[Name],[LastUpdatedBy]) VALUES('SYSRTO',10,'Officer','<SPECTRAL><TEDDY>')
+INSERT INTO dbo.tblAdmRankType([RankTypeCode],[SortCode],[Name],[LastUpdatedBy]) VALUES('SYSRTR',20,'Ratings','<SPECTRAL><TEDDY>')
+INSERT INTO dbo.tblAdmRankType([RankTypeCode],[SortCode],[Name],[LastUpdatedBy]) VALUES('SYSRTRS',30,'Repair Squad','<SPECTRAL><TEDDY>')
+INSERT INTO dbo.tblAdmRankType([RankTypeCode],[SortCode],[Name],[LastUpdatedBy]) VALUES('SYSRTSNY',40,'Supernumerary','<SPECTRAL><TEDDY>')
+END
