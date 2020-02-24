@@ -205,7 +205,7 @@ Public Class Audit
 
         'add your column here
         Dim array() As String = {"AuditLogID", "CrewID", "crewname", "ScreenCaption", "ActionDescrip", "DataDescrip", "RecordName", "UserName", _
-                                  "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID"}
+                                  "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID", "Machine"}
 
 
         If p_ddateto = Nothing Then
@@ -257,6 +257,7 @@ Public Class Audit
                     dtChild.Columns.Remove("RecordName")
                     dtChild.Columns.Remove("PKeyValue")
                     dtChild.Columns.Remove("PKeyField")
+                    dtChild.Columns.Remove("Machine")
 
                     dtChild.Columns("OldValueName").Caption = "Old Value"
                     dtChild.Columns("NewValueName").Caption = "New Value"

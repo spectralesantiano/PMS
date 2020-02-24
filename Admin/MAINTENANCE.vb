@@ -7,7 +7,7 @@ Public Class MAINTENANCE
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Maintenance Work?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance Work", strCaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmWork", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmWork WHERE WorkCode='" & strID & "'")
@@ -21,7 +21,7 @@ Public Class MAINTENANCE
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
             Dim sqls As New ArrayList, bUpdateList As Boolean = False
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance Work", strCaption) 'neil
 
             If bAddMode Then
                 strID = GenerateID(DB, "WorkCode", "tblAdmWork")

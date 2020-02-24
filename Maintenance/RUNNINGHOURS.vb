@@ -60,10 +60,9 @@ Public Class RUNNINGHOURS
         MainView.CloseEditor()
         MainView.UpdateCurrentRow()
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
-
         For i = 0 To MainView.RowCount - 1
             If MainView.GetRowCellValue(i, "Edited") Then
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Running Hours", strCaption, , , MainView.GetRowCellValue(i, "UnitDesc")) 'neil
                 If bAddMode Then
                     sqls.Add("INSERT INTO [dbo].[tblCounterReading]([CounterCode],[ReadingDate],[Reading],[HoursPerDay],[LastUpdatedBy]) Values('" & MainView.GetRowCellValue(i, "CounterCode") & "'," & ChangeToSQLDate(MainView.GetRowCellValue(i, "NewDate")) & ", " & MainView.GetRowCellValue(i, "NewReading") & "," & IfNull(MainView.GetRowCellValue(i, "HoursPerDay"), 0) & ",'" & LastUpdatedBy & "')")
                 Else

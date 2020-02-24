@@ -50,7 +50,7 @@ Public Class WORKDUE
         End If
         frm.ShowDialog()
         If frm.IS_SAVED Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
             If bAdd Then
                 DB.RunSql("INSERT INTO dbo.tblPlannedWork VALUES(" & MainView.GetFocusedRowCellValue("MaintenanceWorkID") & "," & ChangeToSQLDate(frm.txtPlannedDate.EditValue) & ",'" & frm.txtReason.EditValue.ToString.Replace("'", "''") & "', '" & frm.txtApprovedBy.EditValue.ToString.Replace("'", "''") & "','" & LastUpdatedBy & "')")
@@ -100,7 +100,7 @@ Public Class WORKDUE
                         strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
                 End Select
 
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text & " Maintenance", strCaption, , , MainView.GetFocusedRowCellValue("UnitDesc")) 'neil
 
                 sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0, LastUpdatedBy='" & LastUpdatedBy & "' WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
                 'sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & MainView.GetFocusedRowCellValue("UnitCode") & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0)")
@@ -116,7 +116,7 @@ Public Class WORKDUE
                 Next
 
                 If frm.strDeletedImages <> "" Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
                     Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
                     For Each strDocID In strDeletedID
@@ -126,7 +126,7 @@ Public Class WORKDUE
                 End If
 
                 If frm.strAddedImages <> "" Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
                     Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                     For Each strImg In strImages
@@ -165,7 +165,7 @@ Public Class WORKDUE
                     strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
             End Select
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , , ) 'neil
 
             DB.RunSql("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & strID & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0)")
         End If

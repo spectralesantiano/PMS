@@ -5,7 +5,7 @@ Public Class STORAGE
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Storage?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Storage", strCaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmStorage", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmStorage WHERE StorageCode='" & strID & "'")
@@ -18,7 +18,7 @@ Public Class STORAGE
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Storage", strCaption) 'neil
 
             If bAddMode Then
                 strID = GenerateID(DB, "StorageCode", "tblAdmStorage")

@@ -16,7 +16,7 @@
             Exit Sub
         End If
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", Me.Text) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", Me.Text) 'neil
 
         UpdateSQL = "INSERT INTO [dbo].[tblAdmMaintenance]([MaintenanceCode],[WorkCode],[UnitCode],[RankCode],[Number],[IntCode],[InsCrossRef],[InsEditor],[InsDocument],[InsDateIssue],[InsDesc],[LastUpdatedBy]) " & _
             "SELECT dbo.MAINTENANCEID(), t.* " & _

@@ -85,6 +85,7 @@ Partial Class Audit
         Me.Header = New DevExpress.XtraEditors.GroupControl()
         Me.btnViewReport = New DevExpress.XtraEditors.SimpleButton()
         Me.CheckEdit1 = New DevExpress.XtraEditors.CheckEdit()
+        Me.GridColumn19 = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.GridViewDetails, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridAudit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridViewLog, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -191,7 +192,7 @@ Partial Class Audit
         '
         'GridViewLog
         '
-        Me.GridViewLog.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GridColumn1, Me.GridColumn5, Me.GridColumn12, Me.GridColumn6, Me.GridColumn14, Me.GridColumn16, Me.GridColumn17, Me.GridColumn18, Me.GridColumn7, Me.GridColumn15, Me.GridColumn8, Me.GridColumn9, Me.GridColumn10, Me.GridColumn11})
+        Me.GridViewLog.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GridColumn1, Me.GridColumn5, Me.GridColumn12, Me.GridColumn6, Me.GridColumn14, Me.GridColumn16, Me.GridColumn17, Me.GridColumn18, Me.GridColumn7, Me.GridColumn15, Me.GridColumn8, Me.GridColumn9, Me.GridColumn10, Me.GridColumn11, Me.GridColumn19})
         Me.GridViewLog.DetailHeight = 200
         Me.GridViewLog.GridControl = Me.GridAudit
         Me.GridViewLog.HorzScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always
@@ -234,7 +235,7 @@ Partial Class Audit
         '
         Me.GridColumn6.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
         Me.GridColumn6.AppearanceHeader.Options.UseFont = True
-        Me.GridColumn6.Caption = "Screen Caption"
+        Me.GridColumn6.Caption = "Screen"
         Me.GridColumn6.FieldName = "ScreenCaption"
         Me.GridColumn6.Name = "GridColumn6"
         Me.GridColumn6.Visible = True
@@ -277,8 +278,6 @@ Partial Class Audit
         Me.GridColumn18.Caption = "Record ID"
         Me.GridColumn18.FieldName = "PKeyValue"
         Me.GridColumn18.Name = "GridColumn18"
-        Me.GridColumn18.Visible = True
-        Me.GridColumn18.VisibleIndex = 4
         '
         'GridColumn7
         '
@@ -288,7 +287,7 @@ Partial Class Audit
         Me.GridColumn7.FieldName = "UserName"
         Me.GridColumn7.Name = "GridColumn7"
         Me.GridColumn7.Visible = True
-        Me.GridColumn7.VisibleIndex = 5
+        Me.GridColumn7.VisibleIndex = 4
         '
         'GridColumn15
         '
@@ -298,7 +297,7 @@ Partial Class Audit
         Me.GridColumn15.FieldName = "TableName"
         Me.GridColumn15.Name = "GridColumn15"
         Me.GridColumn15.Visible = True
-        Me.GridColumn15.VisibleIndex = 6
+        Me.GridColumn15.VisibleIndex = 5
         '
         'GridColumn8
         '
@@ -308,7 +307,7 @@ Partial Class Audit
         Me.GridColumn8.FieldName = "ComputerName"
         Me.GridColumn8.Name = "GridColumn8"
         Me.GridColumn8.Visible = True
-        Me.GridColumn8.VisibleIndex = 7
+        Me.GridColumn8.VisibleIndex = 6
         '
         'GridColumn9
         '
@@ -328,7 +327,7 @@ Partial Class Audit
         Me.GridColumn10.FieldName = "DateUpdated"
         Me.GridColumn10.Name = "GridColumn10"
         Me.GridColumn10.Visible = True
-        Me.GridColumn10.VisibleIndex = 8
+        Me.GridColumn10.VisibleIndex = 7
         '
         'GridColumn11
         '
@@ -338,7 +337,7 @@ Partial Class Audit
         Me.GridColumn11.FieldName = "SiteID"
         Me.GridColumn11.Name = "GridColumn11"
         Me.GridColumn11.Visible = True
-        Me.GridColumn11.VisibleIndex = 9
+        Me.GridColumn11.VisibleIndex = 8
         '
         'LayoutControl1
         '
@@ -809,6 +808,14 @@ Partial Class Audit
         Me.CheckEdit1.StyleController = Me.LayoutControl2
         Me.CheckEdit1.TabIndex = 6
         '
+        'GridColumn19
+        '
+        Me.GridColumn19.Caption = "Machine"
+        Me.GridColumn19.FieldName = "Machine"
+        Me.GridColumn19.Name = "GridColumn19"
+        Me.GridColumn19.Visible = True
+        Me.GridColumn19.VisibleIndex = 9
+        '
         'Audit
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -928,6 +935,7 @@ Partial Class Audit
     Friend WithEvents LayoutControlItem16 As DevExpress.XtraLayout.LayoutControlItem
     Friend WithEvents btnViewReport As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents CheckEdit1 As DevExpress.XtraEditors.CheckEdit
+    Friend WithEvents GridColumn19 As DevExpress.XtraGrid.Columns.GridColumn
     'Friend WithEvents ToolTipController1 As DevExpress.Utils.ToolTipController
 
 End Class

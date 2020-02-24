@@ -95,7 +95,7 @@ Public Class NONCONFORM
         If MsgBox("Are you sure want to remove this Non-Conformance?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
             If Not MainView.GetFocusedRowCellValue("NCID") Is System.DBNull.Value Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
                 clsAudit.saveAuditPreDelDetails("tblNC", strID, LastUpdatedBy)
 
                 sqls.Add("DELETE FROM dbo.tblNC WHERE NCID='" & MainView.GetFocusedRowCellValue("NCID") & "'")
@@ -129,7 +129,7 @@ Public Class NONCONFORM
             frm.MainView.CloseEditor()
             frm.MainView.UpdateCurrentRow()
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
 
             For i = 0 To frm.MainView.RowCount - 1
                 If frm.MainView.GetRowCellValue(i, "Edited") Then

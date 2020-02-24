@@ -10,6 +10,8 @@ Public Class MainForm
 
     Dim clsAudit As New clsAudit 'neil
     Dim auditlogid As Long 'neil
+    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+    Dim retid As Long
 
     Private Sub BypassLogonForDebugging(Optional ByVal bloggedon As Boolean = False)
         IsLoaded = False
@@ -70,7 +72,7 @@ Public Class MainForm
 
     Private Sub MainForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         maincontent.CheckIFDataUpdated()
-        clsAudit.saveAuditLog("User log out", USER_NAME, auditlogid, System.Environment.MachineName, 0, , , , , , "PMS", Date.Now) 'neil
+        clsAudit.saveAuditLog("User log out", USER_REAL, auditlogid, System.Environment.MachineName, 0, , , , , , "PMS", Date.Now) 'neil
     End Sub
 
     Private Sub Logon(Optional ByVal bloggedon As Boolean = False)
@@ -94,7 +96,7 @@ Public Class MainForm
             End If
         End If
 
-        clsAudit.saveAuditLog("User log in", USER_NAME, auditlogid, System.Environment.MachineName, 0,
+        clsAudit.saveAuditLog("User log in", USER_REAL, auditlogid, System.Environment.MachineName, 0,
                                , , , , , "PMS", Date.Now) 'neil
 
         LoadUserPref()
@@ -840,8 +842,20 @@ Public Class MainForm
         frmComInfo.ShowDialog()
         If frmComInfo.bSaved Then
             If bAddMode Then
+                clsAudit.saveAuditLog("ADD", USER_REAL, retid, System.Environment.MachineName, 10, "sti_sys.dbo.tblCompanyInfo", , , , "Company Name", "Company Information")
+                clsAudit.saveAuditDetails(retid, "Name", frmComInfo.txtName.EditValue)
+                clsAudit.saveAuditDetails(retid, "Phone", frmComInfo.txtPhone.EditValue)
+                clsAudit.saveAuditDetails(retid, "Email", frmComInfo.txtEmail.EditValue)
+                clsAudit.saveAuditDetails(retid, "Address", frmComInfo.txtAddress.EditValue)
+
                 PMSDB.InitSqlWithParameters("INSERT INTO sti_sys.dbo.tblCompanyInfo VALUES(@Name,@Phone,@Email,@Address,@Logo)")
             Else
+                clsAudit.saveAuditLog("Edit", USER_REAL, retid, System.Environment.MachineName, 10, "sti_sys.dbo.tblCompanyInfo", , , , "Company Name", "Company Information")
+                clsAudit.saveAuditDetails(retid, "Name", frmComInfo.txtName.EditValue, PMSDB.ReaderItem("Name", ""))
+                clsAudit.saveAuditDetails(retid, "Phone", frmComInfo.txtPhone.EditValue, PMSDB.ReaderItem("Phone", ""))
+                clsAudit.saveAuditDetails(retid, "Email", frmComInfo.txtEmail.EditValue, PMSDB.ReaderItem("Email", ""))
+                clsAudit.saveAuditDetails(retid, "Address", frmComInfo.txtAddress.EditValue, PMSDB.ReaderItem("Address", ""))
+
                 PMSDB.InitSqlWithParameters("UPDATE sti_sys.dbo.tblCompanyInfo SET Name=@Name, Phone=@Phone, Email=@Email, Address=@Address, Logo=@Logo")
             End If
             PMSDB.AddSqlParameter("@Name", SqlDbType.Text, frmComInfo.txtName.EditValue)
@@ -849,9 +863,13 @@ Public Class MainForm
             PMSDB.AddSqlParameter("@Email", SqlDbType.Text, frmComInfo.txtEmail.EditValue)
             PMSDB.AddSqlParameter("@Address", SqlDbType.Text, frmComInfo.txtAddress.EditValue)
             If frmComInfo.imgLogo.BackgroundImage Is Nothing Then
+                clsAudit.saveAuditDetails(retid, "Logo", SqlDbType.Image, System.DBNull.Value)
+
                 PMSDB.AddSqlParameter("@Logo", SqlDbType.Image, System.DBNull.Value)
                 LOGO = Nothing
             Else
+                clsAudit.saveAuditDetails(retid, "Logo", ImageToByte(frmComInfo.imgLogo.BackgroundImage))
+
                 PMSDB.AddSqlParameter("@Logo", SqlDbType.Image, ImageToByte(frmComInfo.imgLogo.BackgroundImage))
                 LOGO = frmComInfo.imgLogo.BackgroundImage
             End If
@@ -1032,6 +1050,7 @@ Public Class MainForm
         If frm.bExported Then
             EXPORT_DIR = frm.txtExportDir.EditValue
             ExportPMSData(PMSDB, 3, frm.txtExportDir.EditValue & "\PMS_Maintenance_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.deFrom.EditValue, frm.deTo.EditValue, False)
+            clsAudit.saveAuditLog("Export Maintenance", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", Me.Text)
             PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
             PMSDB.SaveConfig("DATE_LAST_EXPORT", DATE_LAST_EXPORT, APP_SHORT_NAME)
         End If
@@ -1046,12 +1065,14 @@ Public Class MainForm
             odMain.FileName = "AdminData"
             If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
                 ExportPMSData(PMSDB, 1, odMain.FileName, System.DBNull.Value, System.DBNull.Value, False)
+                clsAudit.saveAuditLog("Export Documents", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", Me.Text)
             End If
         End If
     End Sub
 
     Private Sub EXPORTADMIN_ItemClick_OLD(sender As System.Object, e As DevExpress.XtraBars.ItemClickEventArgs) 'Handles EXPORTADMIN.ItemClick
         Dim frm As New frmExportAdmin, sqls As New ArrayList, drRow As DataRow, tbl As DataTable, strFile As String, strTempCode As String
+        Dim retid As Long 'audit
         frm.ShowDialog()
         If frm.IS_EXPORTED Then
             If MsgBox("Please specify where you want to save export files.", MsgBoxStyle.Information Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
@@ -1173,6 +1194,7 @@ Public Class MainForm
                     End Using
 
                     If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
+                        clsAudit.saveAuditLog("Export Admin", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", "Export to SM")
                         Application.DoEvents()
                         Kill(strFile & ".txt")
                     End If
@@ -1235,6 +1257,7 @@ Public Class MainForm
                 Kill(cFile)
                 sqls.Add("EXEC [dbo].[IMPORTDATA] @nExpItem =" & nExpType & ", @strVslCode ='" & IMO_NUMBER & "', @strDesc ='" & strDesc & "', @strFileName ='" & strFile & "', @bIsAuto =0")
                 PMSDB.RunSqls(sqls)
+                clsAudit.saveAuditLog("Make Import", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Make Import", Me.Text)
 
                 'UNCOMMENT TO DEBUG
                 'Using sw As New System.IO.StreamWriter(GetFileDir(cFile) & GetFileNameWithoutExtension(cFile) & ".sql", False, System.Text.Encoding.Unicode)
@@ -1442,6 +1465,7 @@ Public Class MainForm
         If frm.bExported Then
             EXPORT_DIR = frm.txtExportDir.EditValue
             ExportPMSDocuments(PMSDB, frm.txtExportDir.EditValue & "\PMS_Documents_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.strDocs)
+            clsAudit.saveAuditLog("Export Documents", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", Me.Text)
             PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
             PMSDB.SaveConfig("DATE_LAST_EXPORT_IMG", DATE_LAST_EXPORT_IMG, APP_SHORT_NAME)
         End If

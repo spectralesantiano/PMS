@@ -89,7 +89,8 @@ Public Class clsAudit
                                  Optional sTablename As String = Nothing, Optional sPKeyVal As String = Nothing,
                                  Optional sAdditionalInfo As String = Nothing, Optional sCrewID As String = "N/A",
                                  Optional sDataDescrip As String = Nothing, Optional sScreenCaption As String = "N/A",
-                                 Optional dDateUpdated As Date = Nothing, Optional sPKeyField As String = "pkey"
+                                 Optional dDateUpdated As Date = Nothing, Optional sPKeyField As String = "pkey",
+                                 Optional sMachine As String = Nothing
                                  ) As String
 
         '/// for inserting data directly to Audit parent table "AuditLog"
@@ -128,6 +129,7 @@ Public Class clsAudit
                 sqlComm.Parameters.AddWithValue("PKeyVal", sPKeyVal)
                 sqlComm.Parameters.AddWithValue("AdditionalInfo", sAdditionalInfo)
                 sqlComm.Parameters.AddWithValue("UserName", sUserName)
+                sqlComm.Parameters.AddWithValue("Machine", sMachine)
 
                 sqlComm.Parameters.Add("insertedID", SqlDbType.BigInt)
                 sqlComm.Parameters("insertedID").Direction = ParameterDirection.Output
@@ -252,14 +254,15 @@ Public Class clsAudit
 
     Public Function AssembleLastUBy(sUserName As String, sActionDescrip As String, iModuleCode As Integer, sComputerName As String,
                                     Optional sDataDescrip As String = "", Optional sScreenCaption As String = "N/A",
-                                    Optional sCrewID As String = "N/A", Optional iAuditBa As Integer = 1) As String
+                                    Optional sCrewID As String = "N/A", Optional iAuditBa As Integer = 1, Optional sMachine As String = "") As String
 
         Dim tempReturn As String
 
         Try
             'Pattern is same as in the Stored proc. Pattern should be followed
             tempReturn = "<" & sUserName & "><" & sCrewID & "><" & sComputerName & "><" & iModuleCode & "><" &
-                            sDataDescrip & "><" & sScreenCaption & "><" & sActionDescrip & "><" & iAuditBa & ">"
+                            sDataDescrip & "><" & sScreenCaption & "><" & sActionDescrip & "><" & iAuditBa & "><" &
+                             sMachine & ">"
 
         Catch ex As Exception
             tempReturn = ""

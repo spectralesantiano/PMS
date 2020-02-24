@@ -17,6 +17,7 @@
             USER_ID = crow("UserID")
             GROUP_ID = IfNull(crow("GroupID"), 0)
             USER_PASSWORD = Me.txtPassword.Text
+            USER_REAL = crow("LNAME") & ", " & crow("FNAME") & " " & crow("MNAME")
             is_loggedon = True
             Me.Close()
         End If

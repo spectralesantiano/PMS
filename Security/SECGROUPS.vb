@@ -9,14 +9,15 @@ Public Class SECGROUPS
         If MsgBox("Are you sure want to delete the " & strDesc & " Group?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group", strCaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
 
             sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE SecID=" & strID & " AND SecType=1")
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group Deleted", strCaption) 'neil
             sqls.Add("UPDATE dbo.tblSec_Users SET [Group ID]=NULL, LastUpdatedBy='" & LastUpdatedBy & "' WHERE [Group ID]=" & strID)
 
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group", strCaption) 'neil
             clsAudit.saveAuditPreDelDetails("tblSec_Groups", strID, LastUpdatedBy)
             sqls.Add("DELETE FROM dbo.tblSec_Groups WHERE [Group ID]=" & strID)
             DB.RunTransaction(sqls)
@@ -39,7 +40,6 @@ Public Class SECGROUPS
         If bHasObject Then
             If ValidateFields(New DevExpress.XtraEditors.TextEdit() {Me.txtName}) Then
                 Dim sqls As New ArrayList, bHasWRHRep As Boolean = False, bHasCrewWRH As Boolean = False
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
 
                 If bAddMode Then
                     If DB.DLookUp("[Group ID]", "dbo.tblSec_Groups", "", "[Group Name]='" & Me.txtName.EditValue.ToString.Replace("'", "''") & "'") <> "" Then
@@ -47,8 +47,12 @@ Public Class SECGROUPS
                         Exit Sub
                     End If
 
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group", strCaption) 'neil
+
                     DB.RunSql("INSERT INTO dbo.tblSec_Groups([Group Name], LastUpdatedBy) VALUES('" & Me.txtName.EditValue.ToString.Replace("'", "''") & "', '" & LastUpdatedBy & "')")
                     strID = DB.DLookUp("[Group ID]", "dbo.tblSec_Groups", "", "[Group Name]='" & Me.txtName.EditValue.ToString.Replace("'", "''") & "'")
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Permissions", strCaption) 'neil
                     For i = 1 To MainView.RowCount - 1
                         Dim xpermission As Int16 = (IIf(MainView.GetRowCellValue(i, "HasOpen"), 1, 0) + IIf(MainView.GetRowCellValue(i, "HasAdd"), 2, 0) + IIf(MainView.GetRowCellValue(i, "HasEdit"), 4, 0) + IIf(MainView.GetRowCellValue(i, "HasDelete"), 8, 0)) + IIf(MainView.GetRowCellValue(i, "HasImport"), 16, 0)
                         If xpermission > 0 Then
@@ -61,6 +65,9 @@ Public Class SECGROUPS
                             If Trim(MainView.GetRowCellValue(i, "ObjectID")) = "PMSREP" Then bHasCrewWRH = True
                         End If
                     Next
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group", strCaption) 'neil
+
                     For i = 0 To UserView.RowCount - 1
                         If UserView.GetRowCellValue(i, "UserEdited") = 1 Then
                             sqls.Add("UPDATE dbo.tblSec_Users SET [Group ID]=" & IIf(UserView.GetRowCellValue(i, "Selected"), strID, "NULL") & ",LastUpdatedBy='" & LastUpdatedBy & "' WHERE [User ID]=" & UserView.GetRowCellValue(i, "UserID"))
@@ -77,8 +84,12 @@ Public Class SECGROUPS
                         sql = sql & "[Group Name]='" & Me.txtName.EditValue.ToString.Replace("'", "''") & "', "
                     End If
                     If sql <> "" Then
+                        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group", strCaption) 'neil
                         sqls.Add("UPDATE dbo.tblSec_Groups SET " & sql & " LastUpdatedBy = '" & LastUpdatedBy & "' WHERE [Group ID]=" & strID & "")
                     End If
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Permissions", strCaption) 'neil
+
                     For i = 1 To MainView.RowCount - 1
                         Dim xpermission As Int16 = (IIf(MainView.GetRowCellValue(i, "HasOpen"), 1, 0) + IIf(MainView.GetRowCellValue(i, "HasAdd"), 2, 0) + IIf(MainView.GetRowCellValue(i, "HasEdit"), 4, 0) + IIf(MainView.GetRowCellValue(i, "HasDelete"), 8, 0)) + IIf(MainView.GetRowCellValue(i, "HasImport"), 16, 0)
                         If MainView.GetRowCellValue(i, "Edited") = 1 Then
@@ -92,6 +103,8 @@ Public Class SECGROUPS
                         If Trim(MainView.GetRowCellValue(i, "ObjectID")) = "PMSREP" And xpermission > 0 Then bHasCrewWRH = True
                     Next
                     UserView.CloseEditor()
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group", strCaption) 'neil
                     For i = 0 To UserView.RowCount - 1
                         If UserView.GetRowCellValue(i, "UserEdited") = 1 Then
                             sqls.Add("UPDATE dbo.tblSec_Users SET [Group ID]=" & IIf(UserView.GetRowCellValue(i, "Selected"), strID, "NULL") & ", LastUpdatedBy='" & LastUpdatedBy & "' WHERE [User ID]=" & UserView.GetRowCellValue(i, "UserID"))
@@ -100,12 +113,12 @@ Public Class SECGROUPS
                 End If
                 'Add permission to the WRH Report Section.
                 If bHasWRHRep And Not bHasCrewWRH Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
                     clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
 
                     sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE ObjectID='PMSREP' AND SecID=" & strID)
 
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Permissions", strCaption) 'neil
                     sqls.Add("INSERT INTO dbo.tblSec_Objects(ObjectID, SecID, SecType, Permission, LastUpdatedBy) VALUES('PMSREP', " & strID & ", 1, 1, '" & LastUpdatedBy & "')")
                 End If
 

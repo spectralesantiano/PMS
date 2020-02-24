@@ -17,6 +17,7 @@ Public Module Util
     Public REQUIRED_COLOR As System.Drawing.Color = System.Drawing.Color.FromArgb(253, 249, 234)
     Public REQUIRED_SELECTED_COLOR As System.Drawing.Color = System.Drawing.Color.FromArgb(226, 248, 217)
     Public USER_NAME As String = "ADMIN", USER_ID As Integer = 0, GROUP_ID As Integer = 0, DEFAULT_PASSWORD As String = "12345", USER_PASSWORD As String
+    Public USER_REAL As String = "ADMIN"
     Public IMO_NUMBER As String = "", VESSEL As String, FLAG_DESC As String, TYPE_DESC As String
     Public APP_PATH As String, DATE_LAST_EXPORT As String = "2000-01-01", DATE_LAST_EXPORT_IMG As String = "2000-01-01", LOCATION_ID As String, EXPORT_DIR
     Public GRID_ROW_SEP As Byte = 0, LOGO As Bitmap, FONT_INCREASE As Double = 0, IMAGE_MAX_RES As Single
