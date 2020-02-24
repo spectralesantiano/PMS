@@ -100,4 +100,32 @@ Public Class VENDORLIST
         End If
     End Sub
 
+    Public Overrides Sub ExecCustomFunction(ByVal param() As Object)
+        Select Case param(0)
+            Case "Paste", "PasteFromFile"
+                PasteData(param(0))
+        End Select
+    End Sub
+
+    Sub PasteData(strMode As String)
+        Dim nRow() As DataRow, crow As DataRow
+        If strMode = "Paste" Then
+            nRow = ImportFromClipboard("Vendor", "")
+        Else
+            nRow = ImportFromFile("Vendor", "")
+        End If
+        If Not nRow Is Nothing Then
+            For Each crow In nRow
+                Dim bExist As Boolean = True, strValue As String = crow("Vendor")
+                Dim strCode As String = PasteAdminData(DB, "VendorCode", "tblAdmVendor", strValue, bExist)
+                If Not bExist Then
+                    MainView.AddNewRow()
+                    MainView.SetRowCellValue(MainView.FocusedRowHandle, "VendorCode", strCode)
+                    MainView.SetRowCellValue(MainView.FocusedRowHandle, "Vendor", strValue)
+                    MainView.UpdateCurrentRow()
+                    MainView.CloseEditor()
+                End If
+            Next
+        End If
+    End Sub
 End Class

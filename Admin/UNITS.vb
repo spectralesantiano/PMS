@@ -12,7 +12,7 @@ Public Class UNITS
     Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Dim downHitInfo As GridHitInfo = Nothing, tblUnitSource As DataTable, tblUnitCopy As DataTable, sqls As New ArrayList, strCurrView As String
-    Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False
+    Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False, bMainComponentHasCounter As Boolean
     Dim strCounterCode As String, strCounter As String, nReading As Integer, strActiveCounter As String, nRunningHours As Integer, nCurrNode As TreeListNode
     Dim dDateIssue As Object = DBNull.Value, strEditor As String, bUpdating As Boolean, bHasCritical As Boolean, bHasInactive As Boolean
 
@@ -978,6 +978,12 @@ Public Class UNITS
                 strRootNode = GetRootNode(nNode).GetValue("UnitCode")
                 tlUnits.FindNodeByFieldValue("UnitCode", strRootNode).ExpandAll()
                 tlUnits.SetFocusedNode(nNode)
+            End If
+        End If
+
+        If Not (tlUnits.FocusedNode Is Nothing Or strRootNode = "") Then
+            If tlUnits.FocusedNode.GetValue("UnitCode") <> strRootNode Then
+                bMainComponentHasCounter = DB.DLookUp("COUNT(*)", "dbo.tblAdmCounter", 0, "UnitCode='" & strRootNode & "'") > 0
             End If
         End If
 

@@ -25,18 +25,23 @@ Partial Class PART
         Dim GridLevelNode2 As DevExpress.XtraGrid.GridLevelNode = New DevExpress.XtraGrid.GridLevelNode()
         Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
         Me.header = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl3 = New DevExpress.XtraEditors.GroupControl()
+        Me.uGrid = New DevExpress.XtraGrid.GridControl()
+        Me.uView = New DevExpress.XtraGrid.Views.Grid.GridView()
+        Me.UnitDesc = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.RepositoryItemLookUpEdit4 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
         Me.GroupControl2 = New DevExpress.XtraEditors.GroupControl()
         Me.mGrid = New DevExpress.XtraGrid.GridControl()
         Me.mView = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.DateMissing = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.mNumber = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.NumberEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
         Me.mRemarks = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Part_MissingID = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Edited = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Delete = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.DeleteEdit = New DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit()
         Me.RepositoryItemLookUpEdit3 = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
-        Me.cmdAdd = New DevExpress.XtraEditors.SimpleButton()
         Me.cboStorageCode = New DevExpress.XtraEditors.LookUpEdit()
         Me.LabelControl5 = New DevExpress.XtraEditors.LabelControl()
         Me.cboLocCode = New DevExpress.XtraEditors.LookUpEdit()
@@ -64,13 +69,19 @@ Partial Class PART
         Me.txtPartNumber = New DevExpress.XtraEditors.TextEdit()
         Me.txtName = New DevExpress.XtraEditors.TextEdit()
         Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
-        Me.NumberEdit = New DevExpress.XtraEditors.Repository.RepositoryItemTextEdit()
+        Me.chkCritical = New DevExpress.XtraEditors.CheckEdit()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
+        CType(Me.GroupControl3, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupControl3.SuspendLayout()
+        CType(Me.uGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.uView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.RepositoryItemLookUpEdit4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GroupControl2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupControl2.SuspendLayout()
         CType(Me.mGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.mView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RepositoryItemLookUpEdit3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cboStorageCode.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -90,7 +101,7 @@ Partial Class PART
         CType(Me.txtOnStock.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtPartNumber.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.txtName.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.chkCritical.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'LabelControl12
@@ -104,8 +115,9 @@ Partial Class PART
         'header
         '
         Me.header.AppearanceCaption.Options.UseFont = True
+        Me.header.Controls.Add(Me.chkCritical)
+        Me.header.Controls.Add(Me.GroupControl3)
         Me.header.Controls.Add(Me.GroupControl2)
-        Me.header.Controls.Add(Me.cmdAdd)
         Me.header.Controls.Add(Me.cboStorageCode)
         Me.header.Controls.Add(Me.LabelControl5)
         Me.header.Controls.Add(Me.cboLocCode)
@@ -125,15 +137,96 @@ Partial Class PART
         Me.header.Dock = System.Windows.Forms.DockStyle.Fill
         Me.header.Location = New System.Drawing.Point(0, 0)
         Me.header.Name = "header"
-        Me.header.Size = New System.Drawing.Size(834, 604)
+        Me.header.Size = New System.Drawing.Size(893, 604)
         Me.header.TabIndex = 36
+        '
+        'GroupControl3
+        '
+        Me.GroupControl3.Controls.Add(Me.uGrid)
+        Me.GroupControl3.Location = New System.Drawing.Point(15, 88)
+        Me.GroupControl3.Name = "GroupControl3"
+        Me.GroupControl3.Size = New System.Drawing.Size(408, 239)
+        Me.GroupControl3.TabIndex = 206
+        Me.GroupControl3.Text = "Used in"
+        '
+        'uGrid
+        '
+        Me.uGrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.uGrid.Location = New System.Drawing.Point(2, 20)
+        Me.uGrid.LookAndFeel.SkinName = "iMaginary"
+        Me.uGrid.MainView = Me.uView
+        Me.uGrid.Name = "uGrid"
+        Me.uGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit4})
+        Me.uGrid.Size = New System.Drawing.Size(404, 217)
+        Me.uGrid.TabIndex = 11
+        Me.uGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.uView})
+        '
+        'uView
+        '
+        Me.uView.Appearance.RowSeparator.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.uView.Appearance.RowSeparator.Options.UseBackColor = True
+        Me.uView.Appearance.ViewCaption.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.uView.Appearance.ViewCaption.ForeColor = System.Drawing.Color.Black
+        Me.uView.Appearance.ViewCaption.Options.UseFont = True
+        Me.uView.Appearance.ViewCaption.Options.UseForeColor = True
+        Me.uView.Appearance.ViewCaption.Options.UseTextOptions = True
+        Me.uView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
+        Me.uView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.UnitDesc})
+        Me.uView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
+        Me.uView.GridControl = Me.uGrid
+        Me.uView.Name = "uView"
+        Me.uView.NewItemRowText = "Click here to add new record"
+        Me.uView.OptionsBehavior.AutoPopulateColumns = False
+        Me.uView.OptionsBehavior.AutoSelectAllInEditor = False
+        Me.uView.OptionsBehavior.Editable = False
+        Me.uView.OptionsBehavior.ReadOnly = True
+        Me.uView.OptionsCustomization.AllowColumnMoving = False
+        Me.uView.OptionsCustomization.AllowColumnResizing = False
+        Me.uView.OptionsCustomization.AllowFilter = False
+        Me.uView.OptionsCustomization.AllowGroup = False
+        Me.uView.OptionsCustomization.AllowQuickHideColumns = False
+        Me.uView.OptionsCustomization.AllowSort = False
+        Me.uView.OptionsFilter.AllowFilterEditor = False
+        Me.uView.OptionsFind.AllowFindPanel = False
+        Me.uView.OptionsSelection.EnableAppearanceFocusedCell = False
+        Me.uView.OptionsSelection.EnableAppearanceFocusedRow = False
+        Me.uView.OptionsSelection.EnableAppearanceHideSelection = False
+        Me.uView.OptionsSelection.UseIndicatorForSelection = False
+        Me.uView.OptionsView.HeaderFilterButtonShowMode = DevExpress.XtraEditors.Controls.FilterButtonShowMode.Button
+        Me.uView.OptionsView.RowAutoHeight = True
+        Me.uView.OptionsView.ShowGroupPanel = False
+        '
+        'UnitDesc
+        '
+        Me.UnitDesc.Caption = "Machines & Equipments"
+        Me.UnitDesc.FieldName = "UnitDesc"
+        Me.UnitDesc.Name = "UnitDesc"
+        Me.UnitDesc.OptionsColumn.AllowEdit = False
+        Me.UnitDesc.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.[False]
+        Me.UnitDesc.OptionsColumn.ReadOnly = True
+        Me.UnitDesc.Visible = True
+        Me.UnitDesc.VisibleIndex = 0
+        Me.UnitDesc.Width = 556
+        '
+        'RepositoryItemLookUpEdit4
+        '
+        Me.RepositoryItemLookUpEdit4.AutoHeight = False
+        Me.RepositoryItemLookUpEdit4.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.RepositoryItemLookUpEdit4.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("CounterCode", "Name10", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Counter", "Name12")})
+        Me.RepositoryItemLookUpEdit4.DisplayMember = "Counter"
+        Me.RepositoryItemLookUpEdit4.DropDownRows = 10
+        Me.RepositoryItemLookUpEdit4.Name = "RepositoryItemLookUpEdit4"
+        Me.RepositoryItemLookUpEdit4.NullText = ""
+        Me.RepositoryItemLookUpEdit4.ShowFooter = False
+        Me.RepositoryItemLookUpEdit4.ShowHeader = False
+        Me.RepositoryItemLookUpEdit4.ValueMember = "CounterCode"
         '
         'GroupControl2
         '
         Me.GroupControl2.Controls.Add(Me.mGrid)
         Me.GroupControl2.Location = New System.Drawing.Point(429, 335)
         Me.GroupControl2.Name = "GroupControl2"
-        Me.GroupControl2.Size = New System.Drawing.Size(386, 254)
+        Me.GroupControl2.Size = New System.Drawing.Size(445, 254)
         Me.GroupControl2.TabIndex = 215
         Me.GroupControl2.Text = "Missing"
         '
@@ -147,7 +240,7 @@ Partial Class PART
         Me.mGrid.MainView = Me.mView
         Me.mGrid.Name = "mGrid"
         Me.mGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit3, Me.DeleteEdit, Me.NumberEdit})
-        Me.mGrid.Size = New System.Drawing.Size(382, 232)
+        Me.mGrid.Size = New System.Drawing.Size(441, 232)
         Me.mGrid.TabIndex = 11
         Me.mGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.mView})
         '
@@ -213,6 +306,13 @@ Partial Class PART
         Me.mNumber.VisibleIndex = 1
         Me.mNumber.Width = 70
         '
+        'NumberEdit
+        '
+        Me.NumberEdit.AutoHeight = False
+        Me.NumberEdit.Mask.EditMask = "\d+"
+        Me.NumberEdit.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
+        Me.NumberEdit.Name = "NumberEdit"
+        '
         'mRemarks
         '
         Me.mRemarks.Caption = "Description"
@@ -266,18 +366,9 @@ Partial Class PART
         Me.RepositoryItemLookUpEdit3.ShowHeader = False
         Me.RepositoryItemLookUpEdit3.ValueMember = "CounterCode"
         '
-        'cmdAdd
-        '
-        Me.cmdAdd.Location = New System.Drawing.Point(139, 20)
-        Me.cmdAdd.Name = "cmdAdd"
-        Me.cmdAdd.Size = New System.Drawing.Size(143, 23)
-        Me.cmdAdd.TabIndex = 214
-        Me.cmdAdd.Text = "Add missing part(s)"
-        Me.cmdAdd.Visible = False
-        '
         'cboStorageCode
         '
-        Me.cboStorageCode.Location = New System.Drawing.Point(436, 56)
+        Me.cboStorageCode.Location = New System.Drawing.Point(422, 56)
         Me.cboStorageCode.Name = "cboStorageCode"
         Me.cboStorageCode.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
         Me.cboStorageCode.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("StorageCode", "StorageCode", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Storage", "Storage")})
@@ -289,12 +380,12 @@ Partial Class PART
         Me.cboStorageCode.Properties.ShowHeader = False
         Me.cboStorageCode.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard
         Me.cboStorageCode.Properties.ValueMember = "StorageCode"
-        Me.cboStorageCode.Size = New System.Drawing.Size(148, 20)
+        Me.cboStorageCode.Size = New System.Drawing.Size(162, 20)
         Me.cboStorageCode.TabIndex = 3
         '
         'LabelControl5
         '
-        Me.LabelControl5.Location = New System.Drawing.Point(437, 40)
+        Me.LabelControl5.Location = New System.Drawing.Point(422, 40)
         Me.LabelControl5.Name = "LabelControl5"
         Me.LabelControl5.Size = New System.Drawing.Size(38, 13)
         Me.LabelControl5.TabIndex = 213
@@ -314,7 +405,7 @@ Partial Class PART
         Me.cboLocCode.Properties.ShowHeader = False
         Me.cboLocCode.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard
         Me.cboLocCode.Properties.ValueMember = "LocCode"
-        Me.cboLocCode.Size = New System.Drawing.Size(168, 20)
+        Me.cboLocCode.Size = New System.Drawing.Size(154, 20)
         Me.cboLocCode.TabIndex = 2
         '
         'lblLocation
@@ -328,9 +419,9 @@ Partial Class PART
         'GroupControl1
         '
         Me.GroupControl1.Controls.Add(Me.aGrid)
-        Me.GroupControl1.Location = New System.Drawing.Point(15, 84)
+        Me.GroupControl1.Location = New System.Drawing.Point(429, 90)
         Me.GroupControl1.Name = "GroupControl1"
-        Me.GroupControl1.Size = New System.Drawing.Size(800, 239)
+        Me.GroupControl1.Size = New System.Drawing.Size(445, 239)
         Me.GroupControl1.TabIndex = 205
         Me.GroupControl1.Text = "Acquired"
         '
@@ -342,7 +433,7 @@ Partial Class PART
         Me.aGrid.MainView = Me.aView
         Me.aGrid.Name = "aGrid"
         Me.aGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemLookUpEdit1})
-        Me.aGrid.Size = New System.Drawing.Size(796, 217)
+        Me.aGrid.Size = New System.Drawing.Size(441, 217)
         Me.aGrid.TabIndex = 11
         Me.aGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.aView})
         '
@@ -617,26 +708,33 @@ Partial Class PART
         Me.LabelControl3.TabIndex = 40
         Me.LabelControl3.Text = "* Part Number"
         '
-        'NumberEdit
+        'chkCritical
         '
-        Me.NumberEdit.AutoHeight = False
-        Me.NumberEdit.Mask.EditMask = "\d+"
-        Me.NumberEdit.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx
-        Me.NumberEdit.Name = "NumberEdit"
+        Me.chkCritical.Location = New System.Drawing.Point(819, 56)
+        Me.chkCritical.Name = "chkCritical"
+        Me.chkCritical.Properties.Caption = "Critical"
+        Me.chkCritical.Size = New System.Drawing.Size(55, 19)
+        Me.chkCritical.TabIndex = 216
         '
         'PART
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.Controls.Add(Me.header)
         Me.Name = "PART"
-        Me.Size = New System.Drawing.Size(834, 604)
+        Me.Size = New System.Drawing.Size(893, 604)
         CType(Me.header, System.ComponentModel.ISupportInitialize).EndInit()
         Me.header.ResumeLayout(False)
         Me.header.PerformLayout()
+        CType(Me.GroupControl3, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupControl3.ResumeLayout(False)
+        CType(Me.uGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.uView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.RepositoryItemLookUpEdit4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GroupControl2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupControl2.ResumeLayout(False)
         CType(Me.mGrid, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.mView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DeleteEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RepositoryItemLookUpEdit3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cboStorageCode.Properties, System.ComponentModel.ISupportInitialize).EndInit()
@@ -656,7 +754,7 @@ Partial Class PART
         CType(Me.txtOnStock.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtPartNumber.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.txtName.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.chkCritical.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -689,7 +787,6 @@ Partial Class PART
     Friend WithEvents lblLocation As DevExpress.XtraEditors.LabelControl
     Friend WithEvents cboStorageCode As DevExpress.XtraEditors.LookUpEdit
     Friend WithEvents LabelControl5 As DevExpress.XtraEditors.LabelControl
-    Friend WithEvents cmdAdd As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents GroupControl2 As DevExpress.XtraEditors.GroupControl
     Friend WithEvents mGrid As DevExpress.XtraGrid.GridControl
     Friend WithEvents mView As DevExpress.XtraGrid.Views.Grid.GridView
@@ -702,5 +799,11 @@ Partial Class PART
     Friend WithEvents Delete As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents DeleteEdit As DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit
     Friend WithEvents NumberEdit As DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
+    Friend WithEvents GroupControl3 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents uGrid As DevExpress.XtraGrid.GridControl
+    Friend WithEvents uView As DevExpress.XtraGrid.Views.Grid.GridView
+    Friend WithEvents UnitDesc As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents RepositoryItemLookUpEdit4 As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
+    Friend WithEvents chkCritical As DevExpress.XtraEditors.CheckEdit
 
 End Class

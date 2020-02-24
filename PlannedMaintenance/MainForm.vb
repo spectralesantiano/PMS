@@ -8,10 +8,35 @@ Public Class MainForm
 
     Dim IsLoaded As Boolean = False, strFirstContent As String, ContentsObject As DataView
 
+
     Dim clsAudit As New clsAudit 'neil
     Dim auditlogid As Long 'neil
     Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
     Dim retid As Long
+
+    Sub SetDefaultSettings()
+        Dim sqls As New ArrayList
+        sqls.Add("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tbl" & APP_SHORT_NAME & "Config') CREATE TABLE [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code] [varchar](30) NOT NULL,[Value] [varchar](max) NULL, CONSTRAINT [PK_tbl" & APP_SHORT_NAME & "Config] PRIMARY KEY CLUSTERED([Code] ASC)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) ON [PRIMARY]")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='tblCompanyInfo') CREATE TABLE [dbo].[tblCompanyInfo]([Name] [varchar](50) NOT NULL,[Phone] [varchar](15) NULL,[Email] [varchar](30) NULL,[Address] [varchar](max) NULL,[Logo] [varbinary](max) NULL) ON [PRIMARY]")
+
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'LOCATION_ID') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('LOCATION_ID','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'HIDE_COPY_INSTRUCTION') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('HIDE_COPY_INSTRUCTION','0')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'KPITHRESHOLD') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('KPITHRESHOLD','4.0')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DATE_LAST_EXPORT') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DATE_LAST_EXPORT','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DATE_LAST_EXPORT_IMG') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DATE_LAST_EXPORT_IMG','2000-01-01')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'EXPORT_DIR') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('EXPORT_DIR','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DUE_DAYS') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DUE_DAYS','30')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'DUE_HOURS') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('DUE_HOURS','100')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'SPARE_VENDOR_SELECTED') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('SPARE_VENDOR_SELECTED','True')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'SPARE_ADDRESS_VALUE') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('SPARE_ADDRESS_VALUE','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'IMAGE_MAX_RES') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('IMAGE_MAX_RES','800')")
+
+        '*********Settings for Versioning,License And Program Distribution************
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'UpdatesFolder') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('UpdatesFolder','')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'LTYPE') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('LTYPE','025047065065148052055028037015022026145')")
+        sqls.Add("IF NOT EXISTS (SELECT * FROM [dbo].[tbl" & APP_SHORT_NAME & "Config] WHERE [Code] = 'PROGRAMFILES') INSERT INTO [dbo].[tbl" & APP_SHORT_NAME & "Config]([Code],[Value]) VALUES('PROGRAMFILES','Admin.dll;BaseControl.dll;Crewing.dll;License.dll;Security.dll;Tools.dll;Utility.dll;Maintenance.dll;PlannedMaintenance.exe;PMSReports.dll')")
+    End Sub
+
 
     Private Sub BypassLogonForDebugging(Optional ByVal bloggedon As Boolean = False)
         IsLoaded = False
@@ -61,13 +86,14 @@ Public Class MainForm
             txtDateDue.EditValue = PMSDB.ReaderItem("DUE_DAYS", 30)
             txtDueHours.EditValue = PMSDB.ReaderItem("DUE_HOURS", 100)
             IMAGE_MAX_RES = PMSDB.ReaderItem("IMAGE_MAX_RES", 800)
+            HIDE_COPY_INSTRUCTION = CType(PMSDB.ReaderItem("HIDE_COPY_INSTRUCTION", "0"), Boolean)
         End If
         PMSDB.CloseReader()
         'DateDueEdit.MinValue = Now.Date.AddDays(1)
         'txtDateDue.EditValue = Now.Date.AddMonths(1)
         bbSaveLayout.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
         bbResetLayout.Visibility = DevExpress.XtraBars.BarItemVisibility.Never
-        Me.Text = "<< " & GetAppName() & " - " & GetUserName() & " - " & Now.ToShortDateString & GetServerName() & ">>"
+        'Me.Text = "<< " & GetAppName() & " - " & GetUserName() & " - " & Now.ToShortDateString & GetServerName() & ">>"
     End Sub
 
     Private Sub MainForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
@@ -418,8 +444,8 @@ Public Class MainForm
         Me.bbShowAllMaintenance.Visibility = IIf((cContent = "WORKDUE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.rpgToolsOptions.Visible = nPermission > 1
         Me.bbCopy.Visibility = IIf((cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-        Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-        Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbPaste.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE" Or cContent = "VENDOR" Or cContent = "MAKER") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+        Me.bbImportFromFile.Visibility = IIf((cContent = "CATEGORY" Or cContent = "VLOCATION" Or cContent = "STORAGE" Or cContent = "MAINTENANCE" Or cContent = "VENDOR" Or cContent = "MAKER") And (nPermission And 4) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.bbCritical.Visibility = IIf((cContent = "PARTPURCHASE" Or cContent = "PART" Or cContent = "WORKDUE" Or cContent = "WORKDONE" Or cContent = "UNITS") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         Me.bbFlatView.Visibility = IIf((cContent = "WORKDONE") And (nPermission And 1) > 0, DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
         If cContent = "WORKDONE" And CURRENT_FLATVIEW_CHECKED Then MainPanel.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel2
@@ -1493,4 +1519,5 @@ Public Class MainForm
     Private Sub cmdReportPreview_ItemClick(sender As Object, e As DevExpress.XtraBars.ItemClickEventArgs) Handles cmdReportPreview.ItemClick
         maincontent.ExecCustomFunction(New Object() {"PREVIEWREPORT", Me.chkAuditWithDetails.Checked})
     End Sub
+
 End Class

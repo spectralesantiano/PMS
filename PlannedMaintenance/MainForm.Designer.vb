@@ -19,6 +19,7 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.RibbonControl = New DevExpress.XtraBars.Ribbon.RibbonControl()
         Me.bbAdd = New DevExpress.XtraBars.BarButtonItem()
@@ -147,10 +148,10 @@ Partial Class MainForm
         Me.DateDueEdit = New DevExpress.XtraEditors.Repository.RepositoryItemDateEdit()
         Me.RibbonStatusBar = New DevExpress.XtraBars.Ribbon.RibbonStatusBar()
         Me.MainPanel = New DevExpress.XtraEditors.SplitContainerControl()
-        Me.pmMainMenu = New DevExpress.XtraBars.PopupMenu()
-        Me.pmListMenu = New DevExpress.XtraBars.PopupMenu()
+        Me.pmMainMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
+        Me.pmListMenu = New DevExpress.XtraBars.PopupMenu(Me.components)
         Me.rpgVslAccount = New DevExpress.XtraBars.Ribbon.RibbonPageGroup()
-        Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController()
+        Me.dbdController = New DevExpress.XtraBars.DefaultBarAndDockingController(Me.components)
         CType(Me.RibbonControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledDepartmentRep, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ledRankRep, System.ComponentModel.ISupportInitialize).BeginInit()
