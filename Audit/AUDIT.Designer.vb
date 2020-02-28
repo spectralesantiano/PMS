@@ -44,6 +44,7 @@ Partial Class Audit
         Me.GridColumn9 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn10 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn11 = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.GridColumn19 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.LayoutControl1 = New DevExpress.XtraLayout.LayoutControl()
         Me.LayoutControl2 = New DevExpress.XtraLayout.LayoutControl()
         Me.LayoutControl3 = New DevExpress.XtraLayout.LayoutControl()
@@ -85,7 +86,6 @@ Partial Class Audit
         Me.Header = New DevExpress.XtraEditors.GroupControl()
         Me.btnViewReport = New DevExpress.XtraEditors.SimpleButton()
         Me.CheckEdit1 = New DevExpress.XtraEditors.CheckEdit()
-        Me.GridColumn19 = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.GridViewDetails, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridAudit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridViewLog, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -265,7 +265,7 @@ Partial Class Audit
         '
         Me.GridColumn17.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
         Me.GridColumn17.AppearanceHeader.Options.UseFont = True
-        Me.GridColumn17.Caption = "Record Keyword"
+        Me.GridColumn17.Caption = "Record Name"
         Me.GridColumn17.FieldName = "RecordName"
         Me.GridColumn17.Name = "GridColumn17"
         Me.GridColumn17.Visible = True
@@ -338,6 +338,14 @@ Partial Class Audit
         Me.GridColumn11.Name = "GridColumn11"
         Me.GridColumn11.Visible = True
         Me.GridColumn11.VisibleIndex = 8
+        '
+        'GridColumn19
+        '
+        Me.GridColumn19.Caption = "Machine"
+        Me.GridColumn19.FieldName = "Machine"
+        Me.GridColumn19.Name = "GridColumn19"
+        Me.GridColumn19.Visible = True
+        Me.GridColumn19.VisibleIndex = 9
         '
         'LayoutControl1
         '
@@ -807,14 +815,6 @@ Partial Class Audit
         Me.CheckEdit1.Size = New System.Drawing.Size(75, 19)
         Me.CheckEdit1.StyleController = Me.LayoutControl2
         Me.CheckEdit1.TabIndex = 6
-        '
-        'GridColumn19
-        '
-        Me.GridColumn19.Caption = "Machine"
-        Me.GridColumn19.FieldName = "Machine"
-        Me.GridColumn19.Name = "GridColumn19"
-        Me.GridColumn19.Visible = True
-        Me.GridColumn19.VisibleIndex = 9
         '
         'Audit
         '

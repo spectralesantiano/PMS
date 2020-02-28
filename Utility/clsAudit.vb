@@ -181,8 +181,8 @@ Public Class clsAudit
 
                 sqlComm.Parameters.AddWithValue("AuditLogID", iAuditLogID)
                 sqlComm.Parameters.AddWithValue("FieldName", sFieldName)
-                sqlComm.Parameters.AddWithValue("OldValue ", sNewValue)
-                sqlComm.Parameters.AddWithValue("NewValue", sOldValue)
+                sqlComm.Parameters.AddWithValue("OldValue ", sOldValue)
+                sqlComm.Parameters.AddWithValue("NewValue", sNewValue)
 
                 Try
                     sqlComm.ExecuteNonQuery()

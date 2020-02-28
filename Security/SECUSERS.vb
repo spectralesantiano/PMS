@@ -37,7 +37,7 @@ Public Class SECUSERS
 
     'Overriden From Base Control
     Public Overrides Sub SaveData()
-        If ValidateFields(New DevExpress.XtraEditors.TextEdit() {Me.txtUserName, Me.GroupList}) Then
+        If ValidateFields(New DevExpress.XtraEditors.TextEdit() {Me.txtUserName, Me.GroupList, Me.txtFamilyName, Me.txtFirstName, Me.lkuRank, Me.dteDateSON}) Then
             Dim groupid As String, strFleetFilter As String = ""
             If Me.GroupList.EditValue Is Nothing Or Me.GroupList.EditValue Is System.DBNull.Value Then
                 groupid = "NULL"
@@ -78,14 +78,16 @@ Public Class SECUSERS
     'Overriden From Base Control
     Public Overrides Sub AddData()
         If Not bAddMode Then
-            ClearFields(Me.header, False)
+            'ClearFields(Me.header, False)
+            ClearFields(LayoutControlGroup2, False)
             AllowSaving(Name, False) 'Disable save button 
             AllowDeletion(Name, False) 'Disable Delete button
             bAddMode = True
             blList.HideSelection()
             strID = ""
             strDesc = "New Record"
-            Me.txtUserName.Focus()
+            'Me.txtUserName.Focus()
+            Me.txtFamilyName.Focus()
             Me.txtUserName.BackColor = REQUIRED_COLOR
             Me.GroupList.BackColor = REQUIRED_COLOR
             Me.txtFamilyName.BackColor = REQUIRED_COLOR
@@ -101,7 +103,7 @@ Public Class SECUSERS
     End Function
 
     Public Overrides Sub RefreshData()
-        strRequiredFields = "txtUserName;GroupList;txtFammilyName;txtFirstName"
+        strRequiredFields = "txtUserName;GroupList;txtFammilyName;txtFirstName;lkuRank;dteDateSON"
         RemoveEditListener(Me.txtUserName)
         RemoveEditListener(Me.GroupList)
         header.Text = "EDIT USERS - " & blList.GetDesc.ToUpper

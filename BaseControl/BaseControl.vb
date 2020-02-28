@@ -374,4 +374,97 @@
     Public Overridable Sub DataRefresh() 'use in audit.vb
 
     End Sub
+
+    Public Sub ClearFields(ByVal cContainer As DevExpress.XtraLayout.LayoutControlGroup, ByVal bFormatOnly As Boolean)
+        For a As Integer = 0 To cContainer.Items.Count - 1
+            If TypeOf cContainer.Items(a) Is DevExpress.XtraLayout.LayoutControlItem Then
+                Dim cItem As DevExpress.XtraLayout.LayoutControlItem = TryCast(cContainer.Items(a), DevExpress.XtraLayout.LayoutControlItem)
+                Dim ctr As System.Windows.Forms.Control = cItem.Control
+                If TypeOf (ctr) Is DevExpress.XtraEditors.TextEdit Then 'Includes TextEdit, DateEdit, LookupEdit
+                    'If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.TextEdit).EditValue = System.DBNull.Value 'Original
+                    If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.TextEdit).EditValue = Nothing
+                    If InStr(1, strRequiredFields, ctr.Name) > 0 Then
+                        ctr.BackColor = REQUIRED_COLOR
+                    Else
+                        ctr.BackColor = Drawing.Color.White
+                    End If
+                    ctr.Tag = 0
+                End If
+                If TypeOf (ctr) Is DevExpress.XtraEditors.CheckEdit Then
+                    If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.CheckEdit).Checked = False
+                    ctr.Tag = 0
+                End If
+            ElseIf TypeOf cContainer.Items(a) Is DevExpress.XtraLayout.LayoutControlGroup Then
+                ClearFields(cContainer.Items(a), bFormatOnly)
+            End If
+        Next
+        'BRECORDUPDATEDs = False 'Test
+    End Sub
+
+    Public Sub ClearFields(ByVal cContainers() As DevExpress.XtraLayout.LayoutControlGroup, ByVal bFormatOnly As Boolean)
+        For Each cContainer As DevExpress.XtraLayout.LayoutControlGroup In cContainers
+            For a As Integer = 0 To cContainer.Items.Count - 1
+                If TypeOf cContainer.Items(a) Is DevExpress.XtraLayout.LayoutControlItem Then
+                    Dim cItem As DevExpress.XtraLayout.LayoutControlItem = TryCast(cContainer.Items(a), DevExpress.XtraLayout.LayoutControlItem)
+                    Dim ctr As System.Windows.Forms.Control = cItem.Control
+                    If TypeOf (ctr) Is DevExpress.XtraEditors.TextEdit Then 'Includes TextEdit, DateEdit, LookupEdit
+                        If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.TextEdit).EditValue = System.DBNull.Value
+                        If InStr(1, strRequiredFields, ctr.Name) > 0 Then
+                            ctr.BackColor = REQUIRED_COLOR
+                        Else
+                            ctr.BackColor = Drawing.Color.White
+                        End If
+                        ctr.Tag = 0
+                    End If
+                    If TypeOf (ctr) Is DevExpress.XtraEditors.CheckEdit Then
+                        If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.CheckEdit).Checked = False
+                        ctr.Tag = 0
+                    End If
+                End If
+            Next
+        Next
+        'BRECORDUPDATEDs = False 'Test
+    End Sub
+
+    'this section is added by tony20170328)
+    'this uses a recursive approach for cases wherein there are layoutcontrolgroup/s within a layoutcontrolgroup
+    Public Sub ClearFields_Recursive(ByVal cContainers() As DevExpress.XtraLayout.LayoutControlGroup, ByVal bFormatOnly As Boolean)
+        For Each cContainer As DevExpress.XtraLayout.LayoutControlGroup In cContainers
+            For a As Integer = 0 To cContainer.Items.Count - 1
+                If TypeOf cContainer.Items(a) Is DevExpress.XtraLayout.LayoutControlItem Then
+                    ClearFieldsOfLayoutControlItem(cContainer.Items(a), bFormatOnly)
+                ElseIf TypeOf cContainer.Items(a) Is DevExpress.XtraLayout.LayoutControlGroup Then
+                    ClearFieldsInLayoutControlGroup(cContainer.Items(a), bFormatOnly)
+                End If
+            Next
+        Next
+        'BRECORDUPDATEDs = False 'Test
+    End Sub
+
+    Public Sub ClearFieldsInLayoutControlGroup(ByVal cContainer As DevExpress.XtraLayout.LayoutControlGroup, ByVal bFormatOnly As Boolean)
+        For a As Integer = 0 To cContainer.Items.Count - 1
+            If TypeOf cContainer.Items(a) Is DevExpress.XtraLayout.LayoutControlItem Then
+                ClearFieldsOfLayoutControlItem(cContainer.Items(a), bFormatOnly)
+            ElseIf TypeOf cContainer.Items(a) Is DevExpress.XtraLayout.LayoutControlGroup Then
+                ClearFieldsInLayoutControlGroup(cContainer.Items(a), bFormatOnly)
+            End If
+        Next
+    End Sub
+
+    Public Sub ClearFieldsOfLayoutControlItem(ByVal cItem As DevExpress.XtraLayout.LayoutControlItem, ByVal bFormatOnly As Boolean)
+        Dim ctr As System.Windows.Forms.Control = cItem.Control
+        If TypeOf (ctr) Is DevExpress.XtraEditors.TextEdit Then 'Includes TextEdit, DateEdit, LookupEdit
+            If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.TextEdit).EditValue = System.DBNull.Value
+            If InStr(1, strRequiredFields, ctr.Name) > 0 Then
+                ctr.BackColor = REQUIRED_COLOR
+            Else
+                ctr.BackColor = Drawing.Color.White
+            End If
+            ctr.Tag = 0
+        End If
+        If TypeOf (ctr) Is DevExpress.XtraEditors.CheckEdit Then
+            If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.CheckEdit).Checked = False
+            ctr.Tag = 0
+        End If
+    End Sub
 End Class

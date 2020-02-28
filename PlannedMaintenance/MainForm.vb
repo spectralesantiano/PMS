@@ -869,18 +869,18 @@ Public Class MainForm
         If frmComInfo.bSaved Then
             If bAddMode Then
                 clsAudit.saveAuditLog("ADD", USER_REAL, retid, System.Environment.MachineName, 10, "sti_sys.dbo.tblCompanyInfo", , , , "Company Name", "Company Information")
-                clsAudit.saveAuditDetails(retid, "Name", frmComInfo.txtName.EditValue)
-                clsAudit.saveAuditDetails(retid, "Phone", frmComInfo.txtPhone.EditValue)
-                clsAudit.saveAuditDetails(retid, "Email", frmComInfo.txtEmail.EditValue)
-                clsAudit.saveAuditDetails(retid, "Address", frmComInfo.txtAddress.EditValue)
+                clsAudit.saveAuditDetails(retid, "Name", IfNull(frmComInfo.txtName.EditValue, ""))
+                clsAudit.saveAuditDetails(retid, "Phone", IfNull(frmComInfo.txtPhone.EditValue, ""))
+                clsAudit.saveAuditDetails(retid, "Email", IfNull(frmComInfo.txtEmail.EditValue, ""))
+                clsAudit.saveAuditDetails(retid, "Address", IfNull(frmComInfo.txtAddress.EditValue, ""))
 
                 PMSDB.InitSqlWithParameters("INSERT INTO sti_sys.dbo.tblCompanyInfo VALUES(@Name,@Phone,@Email,@Address,@Logo)")
             Else
                 clsAudit.saveAuditLog("Edit", USER_REAL, retid, System.Environment.MachineName, 10, "sti_sys.dbo.tblCompanyInfo", , , , "Company Name", "Company Information")
-                clsAudit.saveAuditDetails(retid, "Name", frmComInfo.txtName.EditValue, PMSDB.ReaderItem("Name", ""))
-                clsAudit.saveAuditDetails(retid, "Phone", frmComInfo.txtPhone.EditValue, PMSDB.ReaderItem("Phone", ""))
-                clsAudit.saveAuditDetails(retid, "Email", frmComInfo.txtEmail.EditValue, PMSDB.ReaderItem("Email", ""))
-                clsAudit.saveAuditDetails(retid, "Address", frmComInfo.txtAddress.EditValue, PMSDB.ReaderItem("Address", ""))
+                clsAudit.saveAuditDetails(retid, "Name", IfNull(frmComInfo.txtName.EditValue, ""), PMSDB.ReaderItem("Name", ""))
+                clsAudit.saveAuditDetails(retid, "Phone", IfNull(frmComInfo.txtPhone.EditValue, ""), PMSDB.ReaderItem("Phone", ""))
+                clsAudit.saveAuditDetails(retid, "Email", IfNull(frmComInfo.txtEmail.EditValue, ""), PMSDB.ReaderItem("Email", ""))
+                clsAudit.saveAuditDetails(retid, "Address", IfNull(frmComInfo.txtAddress.EditValue, ""), PMSDB.ReaderItem("Address", ""))
 
                 PMSDB.InitSqlWithParameters("UPDATE sti_sys.dbo.tblCompanyInfo SET Name=@Name, Phone=@Phone, Email=@Email, Address=@Address, Logo=@Logo")
             End If
