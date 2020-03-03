@@ -174,8 +174,10 @@ Public Class MainForm
             Logon()
         End If
 
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Lock Maintenance", "PMS", , 0) 'neil
+
         'Lock PMS Records
-        PMSDB.RunSql("UPDATE dbo.tblMaintenanceWork SET Locked=1 WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
+        PMSDB.RunSql("UPDATE dbo.tblMaintenanceWork SET Locked=1, LastUpdatedBy = '" & LastUpdatedBy & "' WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
 
         EXPDOCUMENTS.Enabled = LOCATION_ID <> ""
         EXPMAINTENANCE.Enabled = LOCATION_ID <> ""
