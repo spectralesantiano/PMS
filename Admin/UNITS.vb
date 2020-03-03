@@ -770,7 +770,7 @@ Public Class UNITS
             If chkActive.Tag = 1 AndAlso chkActive.Checked Then bHasInactive = False
             sqls.Clear()
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , , txtUnitDesc.EditValue) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , 0, txtUnitDesc.EditValue) 'neil
 
             If DB.DLookUp("UnitDesc", "dbo.tblAdmUnit", "", "UnitDesc='" & txtUnitDesc.EditValue & "' AND UnitCode<>'" & strID & "' AND (ParentCode IS NULL OR ParentCode='" & strParentID & "')") <> "" Then
                 MsgBox(txtUnitDesc.EditValue & " already exists.", vbCritical, GetAppName)

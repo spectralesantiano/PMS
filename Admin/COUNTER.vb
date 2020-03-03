@@ -7,7 +7,7 @@ Public Class COUNTER
         If MsgBox("Are you sure want to delete the " & strDesc & " Counter?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList, strUnitCode As String = blList.GetFocusedRowData("UnitCode")
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Counter", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Counter", strCaption, , , blList.GetFocusedRowData("UnitDesc")) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmCounter", strID, LastUpdatedBy)
 
             sqls.Add("DELETE FROM dbo.tblAdmCounter WHERE CounterCode='" & strID & "'")
@@ -21,7 +21,7 @@ Public Class COUNTER
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Counter", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Counter", strCaption,,,blList.GetFocusedRowData("UnitDesc")) 'neil
 
             If bAddMode Then
                 strID = GenerateID(DB, "CounterCode", "tblAdmCounter")

@@ -265,7 +265,7 @@ Partial Class Audit
         '
         Me.GridColumn17.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
         Me.GridColumn17.AppearanceHeader.Options.UseFont = True
-        Me.GridColumn17.Caption = "Record Name"
+        Me.GridColumn17.Caption = "Record Name/Code"
         Me.GridColumn17.FieldName = "RecordName"
         Me.GridColumn17.Name = "GridColumn17"
         Me.GridColumn17.Visible = True

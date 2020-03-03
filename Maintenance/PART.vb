@@ -34,7 +34,7 @@ Public Class PART
             mView.CloseEditor()
             mView.UpdateCurrentRow()
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "missing or damage part", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "MISSING OR DAMAGE PART " & txtName.Text, strCaption) 'neil
 
             For i = 0 To mView.RowCount - 1
                 If mView.GetRowCellValue(i, "Edited") Then
@@ -85,7 +85,7 @@ Public Class PART
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmLocation(LocCode, Name, LastUpdatedBy) VALUES('" & strLocCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("LocCode") = strLocCode
@@ -102,7 +102,7 @@ Public Class PART
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Storage", strCaption) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmStorage(StorageCode, Name, LastUpdatedBy) VALUES('" & strStorageCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("StorageCode") = strStorageCode
