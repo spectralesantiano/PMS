@@ -425,14 +425,17 @@ Public Class UNITS
         Dim row As DataRow, tbl As DataTable = TryCast(e.Data.GetData(GetType(DataTable)), DataTable), rowNew As DataRow
         Dim info As TreeListHitInfo = treeList.CalcHitInfo(treeList.PointToClient(New Point(e.X, e.Y))), parent As Object, strParent As String = ""
         Dim nCompNum As Integer
+        Dim parenttext As String = ""
         sqls.Clear()
         If info.Node Is Nothing Then 'Root Node
             parent = System.DBNull.Value
             strParent = "NULL"
+            parenttext = ""
             bRootUpdated = True
         Else
             parent = info.Node.GetValue(info.Node.TreeList.KeyFieldName)
             strParent = "'" & parent & "'"
+            parenttext = info.Node.GetDisplayText(info.Node.TreeList.KeyFieldName)
         End If
 
 
@@ -745,7 +748,7 @@ Public Class UNITS
                 Dim crow() As DataRow = tblUnitSource.Select("ParentCode='" & strUnitCode & "'")
                 sqls.Clear()
 
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , , xNode.GetValue("UnitDesc")) 'neil
                 clsAudit.saveAuditPreDelDetails("tblAdmUnit", strID, LastUpdatedBy)
 
                 sqls.Add("DELETE FROM dbo.tblAdmUnit WHERE UnitCode='" & strUnitCode & "'")
