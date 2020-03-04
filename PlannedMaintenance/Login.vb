@@ -24,7 +24,7 @@
     End Sub
 
     Private Sub Login_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Me.cboUsers.Properties.DataSource = PMSDB.CreateTable("SELECT * FROM dbo.LOGIN")
+        Me.cboUsers.Properties.DataSource = PMSDB.CreateTable("SELECT * FROM dbo.LOGIN where Active = 1")
     End Sub
 
 End Class
