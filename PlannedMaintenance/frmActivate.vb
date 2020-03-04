@@ -106,13 +106,20 @@ Public Class frmActivate
 
     Private Sub cmdSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSave.Click
         Dim mdCompInfo As New mdComputerInfo
-
+        
+        Dim ImoNo As String = PMSDB.DLookUp("IMONo", "sas_tbl.dbo.tblAdmVsl", "", "")
+        Dim VslName As String = PMSDB.DLookUp("Name", "sas_tbl.dbo.tblAdmVsl", "", "")
+        Dim VslEmail As String = PMSDB.DLookUp("Email", "sas_tbl.dbo.tblAdmVsl", "", "")
+        
         Dim odMain As New System.Windows.Forms.SaveFileDialog
         odMain.Filter = "Text Documents (*.txt)|*.txt"
         odMain.FileName = "HardwareID"
         If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
             Using sw As System.IO.StreamWriter = System.IO.File.CreateText(odMain.FileName)
                 sw.WriteLine(mdCompInfo.GetHardwareID)
+                sw.WriteLine(ImoNo)
+                sw.WriteLine(VslName)
+                sw.WriteLine(VslEmail)
             End Using
             MsgBox("Text file created in: " & odMain.FileName, MsgBoxStyle.Information)
         End If
