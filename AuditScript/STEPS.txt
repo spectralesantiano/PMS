@@ -12,6 +12,7 @@ STEPS TO ADD AUDIT FUNCTIONALITY TO PMS. DATABASE SIDE
 	To_VarChar_tblAdmMaintenance.sql
 	To_VarChar_tblMaintenanceWork.sql
 	ALTER VIEW [dbo].[USERLIST].sql
+	ALTER VIEW [dbo].[LOGIN]
 
 2. Add tables/functions/procedures of audit
 	Audit_Setup_1.sql

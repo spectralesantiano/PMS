@@ -994,6 +994,12 @@
         "Entry"
         {
         "MsmKey" = "8:_835E92734A329263C10BC15A137F25DD"
+        "OwnerKey" = "8:_2380922FD0274A1EABB2DE0997CE8E68"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_835E92734A329263C10BC15A137F25DD"
         "OwnerKey" = "8:_81774B185DF95E87A733D3546F370060"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -4171,7 +4177,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PMS"
         "ProductCode" = "8:{6AAE18C5-9DFE-4FFB-B734-CE0A6FDC9449}"
-        "PackageCode" = "8:{4DE1C36D-6D96-410E-993F-BEF4D9E0D752}"
+        "PackageCode" = "8:{31071E27-CD50-4564-A98A-136D647BCD57}"
         "UpgradeCode" = "8:{1E2FB3CC-81AC-4220-BD49-259B66575154}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
