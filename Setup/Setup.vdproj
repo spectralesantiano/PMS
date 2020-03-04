@@ -1449,30 +1449,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA14578E3269399373880829EDD5FCD9"
-        "OwnerKey" = "8:_2F7F6BF1B1FF44A9B108E7DC95B99B2C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CA14578E3269399373880829EDD5FCD9"
-        "OwnerKey" = "8:_CD63A7DB085345CD9DFFB031FC489F37"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CA14578E3269399373880829EDD5FCD9"
-        "OwnerKey" = "8:_8EEF45254F84416AB137A49B3E5A697F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CA14578E3269399373880829EDD5FCD9"
-        "OwnerKey" = "8:_6968D758163CEFAEFB1D90C3D48F78BF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_CD63A7DB085345CD9DFFB031FC489F37"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2057,12 +2033,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2F7F6BF1B1FF44A9B108E7DC95B99B2C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CA14578E3269399373880829EDD5FCD9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -3793,37 +3763,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CA14578E3269399373880829EDD5FCD9"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ChilkatDotNet4, Version=9.4.1.0, Culture=neutral, PublicKeyToken=eb5fc1fc52ef09bd, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_CA14578E3269399373880829EDD5FCD9"
-                    {
-                    "Name" = "8:ChilkatDotNet4.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ChilkatDotNet4.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_82640D3102A14C9DB23325EC3C753016"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CD63A7DB085345CD9DFFB031FC489F37"
             {
             "AssemblyRegister" = "3:1"
@@ -4286,7 +4225,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PMS"
         "ProductCode" = "8:{6AAE18C5-9DFE-4FFB-B734-CE0A6FDC9449}"
-        "PackageCode" = "8:{7407A8EA-FBA6-469B-AFD8-B7847089AC38}"
+        "PackageCode" = "8:{44FD934D-1CB0-4E38-9EBE-BE1E2DDE3C95}"
         "UpgradeCode" = "8:{1E2FB3CC-81AC-4220-BD49-259B66575154}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
