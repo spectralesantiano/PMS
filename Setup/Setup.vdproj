@@ -4225,7 +4225,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PMS"
         "ProductCode" = "8:{6AAE18C5-9DFE-4FFB-B734-CE0A6FDC9449}"
-        "PackageCode" = "8:{44FD934D-1CB0-4E38-9EBE-BE1E2DDE3C95}"
+        "PackageCode" = "8:{CE3D6999-744A-4512-85AF-028B9152740A}"
         "UpgradeCode" = "8:{1E2FB3CC-81AC-4220-BD49-259B66575154}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

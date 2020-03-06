@@ -1,2 +1,4 @@
-1. added Audit.dll in tbpmsconfig
-2. Added Audit entry in tblObjects
+xxx?1. added Audit.dll in tbpmsconfig
+2. Added Audit entry in tblObjects (*note: ObjectList should not be NULL, make it empty string)
+	ObjectID	ObjectList	DLL	Filter	Draggable	Caption	Type	MaxPermission	SortCode	ObjectListDefaultWidth	Category	CategoryCode	PrintOption	HelpUrl
+AUDIT          	               	Audit                    	NULL	0	AUDIT	0	15	2000	0	AUDIT          	AUDIT          	0	

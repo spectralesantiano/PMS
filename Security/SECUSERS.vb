@@ -123,7 +123,7 @@ Public Class SECUSERS
             Me.txtMiddleName.EditValue = blList.GetFocusedRowData("MName")
             Me.lkuRank.EditValue = blList.GetFocusedRowData("RankCode")
             Me.dteDateSON.EditValue = blList.GetFocusedRowData("DateSOn")
-            Me.chkActive.Checked = blList.GetFocusedRowData("Active")
+            Me.chkActive.Checked = IfNull(blList.GetFocusedRowData("Active"), 0)
             AllowDeletion(Name, (bPermission And 8) > 0)
         End If
         MyBase.RefreshData()

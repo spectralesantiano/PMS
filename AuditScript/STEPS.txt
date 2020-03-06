@@ -25,3 +25,5 @@ STEPS TO ADD AUDIT FUNCTIONALITY TO PMS. DATABASE SIDE
 	In the result set "Insert_Triggers", select all values and copy into a new query tab
 		click Execute, to apply the insert triggers
 		do also for "Update_Trigger" and "Delete_Tiggers"
+
+4. do AddiotionalProcedures.txt

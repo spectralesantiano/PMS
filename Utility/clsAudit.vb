@@ -90,7 +90,8 @@ Public Class clsAudit
                                  Optional sAdditionalInfo As String = Nothing, Optional sCrewID As String = "N/A",
                                  Optional sDataDescrip As String = Nothing, Optional sScreenCaption As String = "N/A",
                                  Optional dDateUpdated As Date = Nothing, Optional sPKeyField As String = "pkey",
-                                 Optional sMachine As String = Nothing
+                                 Optional sMachine As String = Nothing, Optional sTypeofWork As String = Nothing,
+                                 Optional iCritical As Integer = Nothing, Optional sMaintenance As String = Nothing
                                  ) As String
 
         '/// for inserting data directly to Audit parent table "AuditLog"
@@ -130,6 +131,9 @@ Public Class clsAudit
                 sqlComm.Parameters.AddWithValue("AdditionalInfo", sAdditionalInfo)
                 sqlComm.Parameters.AddWithValue("UserName", sUserName)
                 sqlComm.Parameters.AddWithValue("Machine", sMachine)
+                sqlComm.Parameters.AddWithValue("TypeofWork", sTypeofWork)
+                sqlComm.Parameters.AddWithValue("Critical", iCritical)
+                sqlComm.Parameters.AddWithValue("Maintenance", sMaintenance)
 
                 sqlComm.Parameters.Add("insertedID", SqlDbType.BigInt)
                 sqlComm.Parameters("insertedID").Direction = ParameterDirection.Output
@@ -234,8 +238,8 @@ Public Class clsAudit
 
 
                     sqlComm.ExecuteNonQuery()
-               
-            End If
+
+                End If
 
                 sqlConn.Close()
 
@@ -254,7 +258,8 @@ Public Class clsAudit
 
     Public Function AssembleLastUBy(sUserName As String, sActionDescrip As String, iModuleCode As Integer, sComputerName As String,
                                     Optional sDataDescrip As String = "", Optional sScreenCaption As String = "N/A",
-                                    Optional sCrewID As String = "N/A", Optional iAuditBa As Integer = 1, Optional sMachine As String = "") As String
+                                    Optional sCrewID As String = "N/A", Optional iAuditBa As Integer = 1, Optional sMachine As String = "",
+                                    Optional sTypeofWork As String = "", Optional Critical As Integer = 0, Optional Maintenance As String = "") As String
 
         Dim tempReturn As String
 
@@ -262,7 +267,7 @@ Public Class clsAudit
             'Pattern is same as in the Stored proc. Pattern should be followed
             tempReturn = "<" & sUserName & "><" & sCrewID & "><" & sComputerName & "><" & iModuleCode & "><" &
                             sDataDescrip & "><" & sScreenCaption & "><" & sActionDescrip & "><" & iAuditBa & "><" &
-                             sMachine & ">"
+                             sMachine & "><" & sTypeofWork & "><" & Critical & "><" & Maintenance & ">"
 
         Catch ex As Exception
             tempReturn = ""

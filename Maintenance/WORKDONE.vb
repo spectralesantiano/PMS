@@ -98,7 +98,11 @@ Public Class WORKDONE
                     strDateDue = ChangeToSQLDate(dDueDate)
             End Select
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text & " Maintenance", strCaption, , , strDesc) 'neil
+            'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text & " maintenance", strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                                  Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text & " maintenance",
+                                                  strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0), IIf(frm.strIntCode <> "", 1, 0), IIf(bCritical, 1, 0), frm.cboMaintenance.Text) 'neil
+
 
             sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) & ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", LastUpdatedBy='" & LastUpdatedBy & "', HasImage=" & IIf(frm.IView.RowCount > 0, 1, 0) & " Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
@@ -180,9 +184,20 @@ Public Class WORKDONE
                 Case "SYSYEARS"
                     strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
             End Select
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text & " Maintenance", strCaption, , , strDesc) 'neil
+
+            LastUpdatedBy = GetUserName()
+
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                                 Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text & " maintenance",
+                                                 strCaption, , 0, strDesc.Split(New String() {" ->"}, 0)(0), IIf(frm.strIntCode <> "", 1, 0), IIf(bCritical, 1, 0), frm.cboMaintenance.Text) 'neil
 
             sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0, LastUpdatedBy='" & LastUpdatedBy & "' WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                                   Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text & " maintenance",
+                                                   strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0), IIf(frm.strIntCode <> "", 1, 0), IIf(bCritical, 1, 0), frm.cboMaintenance.Text) 'neil
+
             sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
             frm.MainView.CloseEditor()
             frm.MainView.UpdateCurrentRow()
@@ -357,8 +372,12 @@ Public Class WORKDONE
             If MsgBox("Are you sure want to remove the <" & IfNull(MainView.GetFocusedRowCellDisplayText("Maintenance"), "New Record") & "> Work Record?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                 If Not MainView.GetFocusedRowCellValue("MaintenanceWorkID") Is System.DBNull.Value Then
                     Dim sqls As New ArrayList, strMaintenanceCode As String = MainView.GetFocusedRowCellValue("MaintenanceCode"), strUnitCode As String = MainView.GetFocusedRowCellValue("UnitCode")
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, MainView.GetFocusedRowCellDisplayText("Maintenance") & " Maintenance", strCaption, , , strDesc) 'neil
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                                             Replace(strDesc, "->", " - ") & " : " & MainView.GetFocusedRowCellDisplayText("Maintenance") & " maintenance",
+                                                             strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
                     clsAudit.saveAuditPreDelDetails("tblMaintenanceWork", MainView.GetFocusedRowCellValue("MaintenanceWorkID"), LastUpdatedBy)
+
                     sqls.Add("DELETE FROM dbo.tblMaintenanceWork WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
                     LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance", strCaption, , 0, strDesc) 'neil
