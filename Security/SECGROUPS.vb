@@ -328,7 +328,7 @@ Public Class SECGROUPS
         MainView.RefreshData()
         txtFilter.EditValue = "ALL"
         txtFilter.BackColor = Drawing.Color.White
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

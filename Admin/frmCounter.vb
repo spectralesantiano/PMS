@@ -121,7 +121,7 @@
     Private Sub frmCounter_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         'CounterEdit.DataSource = db.CreateTable("SELECT * FROM dbo.COUNTERLIST WHERE UnitCode='" & strUnitCode & "'")
         GetTotalHours()
-        clsAudit.propSQLConnStr = db.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = db.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

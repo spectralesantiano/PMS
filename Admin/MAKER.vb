@@ -80,7 +80,7 @@ Public Class MAKER
         MyBase.RefreshData()
         Me.header.Text = "EDIT MAKER DETAILS - " & blList.GetDesc.ToUpper
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

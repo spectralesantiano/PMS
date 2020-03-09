@@ -201,7 +201,7 @@ Public Class WORKDUE
         MainView.EndSort()
         MainView.ExpandAllGroups()
         MainView.TopRowIndex = 0
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

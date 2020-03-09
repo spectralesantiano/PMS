@@ -115,7 +115,7 @@ Public Class RUNNINGHOURS
         PrevBand.Visible = True
         bLoaded = True
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

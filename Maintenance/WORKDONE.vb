@@ -263,7 +263,7 @@ Public Class WORKDONE
         Me.MainView.ActiveFilterString = ""
         MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "',@bFlatView=" & CURRENT_FLATVIEW_CHECKED & ",@bCritical=" & CURRENT_CRITICAL_CHECKED)
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
         If CURRENT_FLATVIEW_CHECKED Then
             Me.header.Text = "MAINTENANCE DETAILS"
@@ -380,7 +380,7 @@ Public Class WORKDONE
 
                     sqls.Add("DELETE FROM dbo.tblMaintenanceWork WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance", strCaption, , 0, strDesc) 'neil
+                    'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance", strCaption, , 0, strDesc) 'neil
                     sqls.Add("UPDATE t SET bLatest=1,LastUpdatedBy='" & LastUpdatedBy & "' FROM dbo.tblMaintenanceWork t INNER JOIN (SELECT TOP 1 MaintenanceWorkID FROM dbo.tblMaintenanceWork WHERE UnitCode='" & strUnitCode & "' AND MaintenanceCode='" & strMaintenanceCode & "' ORDER BY WorkDate DESC) tx ON t.MaintenanceWorkID=tx.MaintenanceWorkID")
 
                     'clsAudit.saveAuditPreDelDetails("tblNC", MainView.GetFocusedRowCellValue("MaintenanceWorkID"), LastUpdatedBy)

@@ -64,7 +64,7 @@ Public Class NONCONFORM
         MainGrid.DataSource = DB.CreateTable("SELECT * FROM NCLIST" & strFilter)
         Me.header.Text = "NON-CONFORMANCES"
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

@@ -64,7 +64,7 @@
         Me.Type.Properties.DataSource = PMSDB.CreateTable("Select VslTypeCode, Name from sas_tbl.dbo.tblAdmVslType")
         Me.Flag.Properties.DataSource = PMSDB.CreateTable("SELECT * FROM dbo.COUNTRYLIST ORDER BY Country")
 
-        clsAudit.propSQLConnStr = PMSDB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = PMSDB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
         oldVessel = txtVessel.Text
         oldFlag = Flag.EditValue
         oldType = Type.EditValue

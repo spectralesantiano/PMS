@@ -81,7 +81,7 @@ Public Class STORAGE
         MyBase.RefreshData()
         Me.header.Text = "EDIT STORAGE DETAILS - " & blList.GetDesc.ToUpper
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
         txtName.Focus()
     End Sub

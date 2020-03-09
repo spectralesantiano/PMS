@@ -132,7 +132,7 @@ Public Class SECUSERS
             AddEditListener(Me.GroupList)
         End If
         'GroupList.Enabled = (USER_ID = 1)
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

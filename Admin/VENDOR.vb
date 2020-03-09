@@ -84,7 +84,7 @@ Public Class VENDOR
         MyBase.RefreshData()
         Me.header.Text = "EDIT VENDOR DETAILS - " & blList.GetDesc.ToUpper
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

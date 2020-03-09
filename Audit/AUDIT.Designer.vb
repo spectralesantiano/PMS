@@ -86,6 +86,9 @@ Partial Class Audit
         Me.Header = New DevExpress.XtraEditors.GroupControl()
         Me.btnViewReport = New DevExpress.XtraEditors.SimpleButton()
         Me.CheckEdit1 = New DevExpress.XtraEditors.CheckEdit()
+        Me.GridColumn20 = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.GridColumn21 = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.GridColumn22 = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.GridViewDetails, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridAudit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GridViewLog, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -192,7 +195,7 @@ Partial Class Audit
         '
         'GridViewLog
         '
-        Me.GridViewLog.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GridColumn1, Me.GridColumn5, Me.GridColumn12, Me.GridColumn6, Me.GridColumn14, Me.GridColumn16, Me.GridColumn17, Me.GridColumn18, Me.GridColumn7, Me.GridColumn15, Me.GridColumn8, Me.GridColumn9, Me.GridColumn10, Me.GridColumn11, Me.GridColumn19})
+        Me.GridViewLog.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GridColumn1, Me.GridColumn5, Me.GridColumn12, Me.GridColumn6, Me.GridColumn14, Me.GridColumn16, Me.GridColumn17, Me.GridColumn18, Me.GridColumn7, Me.GridColumn15, Me.GridColumn8, Me.GridColumn9, Me.GridColumn10, Me.GridColumn11, Me.GridColumn19, Me.GridColumn20, Me.GridColumn21, Me.GridColumn22})
         Me.GridViewLog.DetailHeight = 200
         Me.GridViewLog.GridControl = Me.GridAudit
         Me.GridViewLog.HorzScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always
@@ -341,6 +344,8 @@ Partial Class Audit
         '
         'GridColumn19
         '
+        Me.GridColumn19.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.GridColumn19.AppearanceHeader.Options.UseFont = True
         Me.GridColumn19.Caption = "Machine"
         Me.GridColumn19.FieldName = "Machine"
         Me.GridColumn19.Name = "GridColumn19"
@@ -816,6 +821,36 @@ Partial Class Audit
         Me.CheckEdit1.StyleController = Me.LayoutControl2
         Me.CheckEdit1.TabIndex = 6
         '
+        'GridColumn20
+        '
+        Me.GridColumn20.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.GridColumn20.AppearanceHeader.Options.UseFont = True
+        Me.GridColumn20.Caption = "Type of Work"
+        Me.GridColumn20.FieldName = "TypeOfWork"
+        Me.GridColumn20.Name = "GridColumn20"
+        Me.GridColumn20.Visible = True
+        Me.GridColumn20.VisibleIndex = 10
+        '
+        'GridColumn21
+        '
+        Me.GridColumn21.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.GridColumn21.AppearanceHeader.Options.UseFont = True
+        Me.GridColumn21.Caption = "Critical"
+        Me.GridColumn21.FieldName = "Critical"
+        Me.GridColumn21.Name = "GridColumn21"
+        Me.GridColumn21.Visible = True
+        Me.GridColumn21.VisibleIndex = 11
+        '
+        'GridColumn22
+        '
+        Me.GridColumn22.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.GridColumn22.AppearanceHeader.Options.UseFont = True
+        Me.GridColumn22.Caption = "Maintenance"
+        Me.GridColumn22.FieldName = "Maintenance"
+        Me.GridColumn22.Name = "GridColumn22"
+        Me.GridColumn22.Visible = True
+        Me.GridColumn22.VisibleIndex = 12
+        '
         'Audit
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -936,6 +971,9 @@ Partial Class Audit
     Friend WithEvents btnViewReport As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents CheckEdit1 As DevExpress.XtraEditors.CheckEdit
     Friend WithEvents GridColumn19 As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents GridColumn20 As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents GridColumn21 As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents GridColumn22 As DevExpress.XtraGrid.Columns.GridColumn
     'Friend WithEvents ToolTipController1 As DevExpress.Utils.ToolTipController
 
 End Class

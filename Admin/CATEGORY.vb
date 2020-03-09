@@ -83,7 +83,7 @@ Public Class CATEGORY
         MyBase.RefreshData()
         Me.header.Text = "EDIT CATEGORY DETAILS - " & blList.GetDesc.ToUpper
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
     End Sub
 
     Private Sub header_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles header.MouseUp

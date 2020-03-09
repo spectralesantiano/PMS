@@ -48,7 +48,7 @@ Public Class NCMEASURES
         bRecordUpdated = False
         Me.header.Text = "PENDING CORRECTIVE MEASURES"
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

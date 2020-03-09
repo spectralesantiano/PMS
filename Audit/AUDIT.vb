@@ -220,7 +220,7 @@ Public Class Audit
         DevExpress.XtraSplashScreen.SplashScreenManager.ShowForm(GetType(WaitForm1))
 
         Try
-            ctempconnstr = DB.GetConnectionString & "Password=" & SQL_PASSWORD ' Replace(DB.GetConnectionString, "Database=MPS", "Database=MPS4A")
+            ctempconnstr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD ' Replace(DB.GetConnectionString, "Database=MPS", "Database=MPS4A")
 
             clsA.propSQLConnStr = ctempconnstr
             cProcRet = clsA.getAuditData(dt, p_ccrewid, p_ccrewname, p_cupdatedby, p_ddatefrom, p_ddateto, p_cscreen, r_imodulecode, p_irecordstart, p_irowcount)
@@ -726,7 +726,7 @@ Public Class Audit
 
         Try
             If ctempconnstr = "" Then
-                ctempconnstr = DB.GetConnectionString & "Password=" & SQL_PASSWORD ' Replace(DB.GetConnectionString, "Database=MPS", "Database=MPS4A")
+                ctempconnstr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD ' Replace(DB.GetConnectionString, "Database=MPS", "Database=MPS4A")
                 clsA.propSQLConnStr = ctempconnstr
             End If
             cProcRet = clsA.getAuditData(dt, p_ccrewid, p_ccrewname, p_cupdatedby, p_ddatefrom, p_ddateto, p_cscreen, r_imodulecode, p_irecordstart, p_irowcount, p_byPassRecCnt)

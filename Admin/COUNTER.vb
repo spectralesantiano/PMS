@@ -84,7 +84,7 @@ Public Class COUNTER
         Me.lblCounter.Text = "* Counter - " & blList.GetFocusedRowData("UnitDesc")
         Me.header.Text = "EDIT COUNTER DETAILS - " & blList.GetDesc.ToUpper
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

@@ -155,7 +155,7 @@ Public Class PART
         txtInitStock.Enabled = aView.RowCount = 0 And cView.RowCount = 0 And mView.RowCount = 0
         Me.header.Text = "EDIT PART DETAILS - " & blList.GetDesc.ToUpper
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

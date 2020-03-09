@@ -80,7 +80,7 @@ Public Class MAINTENANCE
         MyBase.RefreshData()
         Me.header.Text = "EDIT MAINTENANCE DETAILS - " & blList.GetDesc.ToUpper
 
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 

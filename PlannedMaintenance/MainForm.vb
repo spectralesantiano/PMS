@@ -164,7 +164,7 @@ Public Class MainForm
             End If
         End If
 
-        clsAudit.propSQLConnStr = PMSDB.GetConnectionString & "Password=" & SQL_PASSWORD 'neil
+        clsAudit.propSQLConnStr = PMSDB.GetConnectionString '& "Password=" & SQL_PASSWORD 'neil
 
         LoadSettings()
         If Debugger.IsAttached Then

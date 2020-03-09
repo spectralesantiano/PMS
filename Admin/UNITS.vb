@@ -994,7 +994,7 @@ Public Class UNITS
         AllowDeletion(Name, (tblUnitSource.Rows.Count > 0 And (bPermission And 8) > 0))
         bRecordUpdated = False
         bLoaded = True
-        clsAudit.propSQLConnStr = DB.GetConnectionString & "Password=" & SQL_PASSWORD  'neil
+        clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
     End Sub
 
