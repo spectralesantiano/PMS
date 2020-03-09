@@ -9,7 +9,7 @@ Imports DevExpress.XtraTreeList.Columns
 
 Public Class UNITS
     Dim clsAudit As New clsAudit 'neil
-    Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+    'Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
 
     Dim downHitInfo As GridHitInfo = Nothing, tblUnitSource As DataTable, tblUnitCopy As DataTable, sqls As New ArrayList, strCurrView As String
     Dim nMaxUnitID As Integer, strEditMode As String, bRefreshMaintenance As Boolean, bRefreshCounter As Boolean, bRefreshParts As Boolean, bHasListeners As Boolean = False, bMainComponentHasCounter As Boolean
@@ -22,7 +22,8 @@ Public Class UNITS
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption) 'neil
+        Dim lastupdatedby As String = GetUserName()
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, e.DisplayValue & "Location", strCaption) 'neil
         DB.RunSql("INSERT INTO dbo.tblAdmLocation(LocCode, Name, LastUpdatedBy) VALUES('" & strLocCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("LocCode") = strLocCode
         row("LocName") = e.DisplayValue
@@ -35,9 +36,10 @@ Public Class UNITS
     Private Sub DeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles DeleteEdit.ButtonClick
         Dim editor As DevExpress.XtraEditors.ButtonEdit = TryCast(sender, DevExpress.XtraEditors.ButtonEdit)
         Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
+        Dim lastupdatedby As String = GetUserName()
         If grid.Name = "MainGrid" Then
             If MsgBox("Are you sure want to delete the " & MainView.GetFocusedRowCellDisplayText("Component") & " Component?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Component", strCaption) 'neil
+                lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, MainView.GetFocusedRowCellDisplayText("Component") & " Component?", strCaption) 'neil
                 clsAudit.saveAuditPreDelDetails("tblAdmComponent", MainView.GetFocusedRowCellValue("ComponentCode"), LastUpdatedBy)
                 DB.RunSql("DELETE FROM dbo.tblAdmComponent WHERE ComponentCode='" & MainView.GetFocusedRowCellValue("ComponentCode") & "'")
                 MainView.DeleteRow(MainView.FocusedRowHandle)
@@ -51,6 +53,7 @@ Public Class UNITS
     Private Sub Edit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles Edit.ButtonClick
         Dim editor As DevExpress.XtraEditors.ButtonEdit = TryCast(sender, DevExpress.XtraEditors.ButtonEdit)
         Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
+        Dim lastupdatedby As String = GetUserName()
         If grid.Name = "MainGrid" Then
             Dim frm As New frmComponent
             frm.txtComponent.EditValue = MainView.GetFocusedRowCellValue("Component")
@@ -64,7 +67,7 @@ Public Class UNITS
                         Exit Sub
                     End If
                 End If
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Component", strCaption) 'neil
+                lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, strComponent & " Component", strCaption) 'neil
 
                 DB.RunSql("UPDATE dbo.tblAdmComponent SET Name='" & strComponent & "',LastUpdatedBy='" & LastUpdatedBy & "' WHERE ComponentCode='" & strComponentCode & "'")
                 MainView.SetRowCellValue(MainView.FocusedRowHandle, "Component", frm.txtComponent.EditValue)
@@ -426,6 +429,8 @@ Public Class UNITS
         Dim info As TreeListHitInfo = treeList.CalcHitInfo(treeList.PointToClient(New Point(e.X, e.Y))), parent As Object, strParent As String = ""
         Dim nCompNum As Integer
         Dim parenttext As String = "", machinename As String = ""
+        Dim lastupdatedby As String = GetUserName()
+
         sqls.Clear()
         If info.Node Is Nothing Then 'Root Node
             parent = System.DBNull.Value
@@ -617,6 +622,8 @@ Public Class UNITS
         If e.Column.Name = "Component" Then
             Dim strComponent As String = MainView.GetFocusedRowCellValue("Component").ToString.Replace("'", "''")
             Dim strComponentCode As String = IfNull(MainView.GetFocusedRowCellValue("ComponentCode"), "") '= GenerateID(DB, "ComponentCode", "tblAdmComponent")
+            Dim lastupdatedby As String = GetUserName()
+
             If strComponentCode = "" Then
                 strComponentCode = GenerateID(DB, "ComponentCode", "tblAdmComponent")
                 If DB.DLookUp("Name", "dbo.tblAdmComponent", "", "Name='" & strComponent & "'") <> "" Then
@@ -624,7 +631,7 @@ Public Class UNITS
                     MainView.DeleteRow(MainView.FocusedRowHandle)
                     Exit Sub
                 End If
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Component", strCaption) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, strComponent & " Component", strCaption) 'neil
 
                 DB.RunSql("INSERT INTO dbo.tblAdmComponent(ComponentCode, Name, LastUpdatedBy) VALUES('" & strComponentCode & "', '" & strComponent & "','" & LastUpdatedBy & "')")
                 MainView.SetRowCellValue(MainView.FocusedRowHandle, "ComponentCode", strComponentCode)
@@ -771,6 +778,7 @@ Public Class UNITS
 
     Public Overrides Sub DeleteData()
         Dim xNode As TreeListNode = tlUnits.FocusedNode, bRootUpdated As Boolean = xNode.Level = 0, strUnitCode As String = xNode.GetValue("UnitCode"), bHasMaintenance As Boolean = False
+        Dim lastupdatedby As String = GetUserName()
         DB.BeginReader("[dbo].[CHECKEXISTINGMAINTENANCE] @strUnitCode='" & strUnitCode & "'")
         DB.Read()
         bHasMaintenance = DB.ReaderItem(0) > 0
@@ -807,10 +815,19 @@ Public Class UNITS
             Dim i As Integer, strPartID As String
             Dim nNode As TreeListNode = tlUnits.FindNodeByFieldValue("UnitCode", strID)
             Dim strParentID As String = IfNull(nNode.GetValue("ParentCode"), "")
+            Dim lastupdatedby As String = GetUserName()
             If chkActive.Tag = 1 AndAlso chkActive.Checked Then bHasInactive = False
             sqls.Clear()
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , 0, txtUnitDesc.EditValue) 'neil
+            'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , 0, txtUnitDesc.EditValue) 'neil
+            'lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+            '                                     Replace(strDesc, "->", " - ") & " : " & mView.GetRowCellDisplayText(i, "WorkCode"),
+            '                                     strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0), ,
+            '                                       IIf(chkCritical.Checked, 1, 2)) 'neil
+
+            lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                                 Replace(strDesc, "->", " - ") & " : " & mView.GetRowCellDisplayText(i, "WorkCode"),
+                                                 strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
 
             If DB.DLookUp("UnitDesc", "dbo.tblAdmUnit", "", "UnitDesc='" & txtUnitDesc.EditValue & "' AND UnitCode<>'" & strID & "' AND (ParentCode IS NULL OR ParentCode='" & strParentID & "')") <> "" Then
                 MsgBox(txtUnitDesc.EditValue & " already exists.", vbCritical, GetAppName)
@@ -850,10 +867,13 @@ Public Class UNITS
                     Dim strDateIssue As String = "NULL"
                     If Not mView.GetRowCellValue(i, "InsDateIssue") Is System.DBNull.Value Then strDateIssue = ChangeToSQLDate(mView.GetRowCellValue(i, "InsDateIssue"))
 
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
-                                                 Replace(strDesc, "->", " - ") & " : " & mView.GetRowCellDisplayText(i, "WorkCode") & " maintenance",
-                                                 strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0), IIf(IfNull(mView.GetRowCellValue(mView.FocusedRowHandle, "IntCode"), "") = "", 0, 1),
-                                                 chkCritical.Tag, mView.GetRowCellDisplayText(i, "WorkCode")) 'neil
+                    'lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                    '                             Replace(strDesc, "->", " - ") & " : " & mView.GetRowCellDisplayText(i, "WorkCode") & " maintenance",
+                    '                             strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0), IIf(IfNull(mView.GetRowCellValue(mView.FocusedRowHandle, "IntCode"), "") = "", 2, 1),
+                    '                             chkCritical.Tag, mView.GetRowCellDisplayText(i, "WorkCode")) 'neil
+                    lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                               Replace(strDesc, "->", " - ") & " : " & mView.GetRowCellDisplayText(i, "WorkCode") & " maintenance",
+                                               strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
 
 
                     If mView.GetRowCellValue(i, "MaintenanceCode") Is System.DBNull.Value Then
@@ -1106,12 +1126,13 @@ Public Class UNITS
 
     Sub UpdateCriticalParent(pNode As TreeListNode)
         Dim nNode As TreeListNode, en As IEnumerator = pNode.Nodes.GetEnumerator(), bHasCritical As Boolean = False
+        Dim lastupdatedby As String = GetUserName()
         While en.MoveNext
             nNode = CType(en.Current, TreeListNode)
             If nNode.GetValue("Critical") Or nNode.GetValue("HasCritical") Then bHasCritical = True
         End While
         pNode.SetValue("HasCritical", bHasCritical)
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+        lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , 0, strDesc.Split(New String() {" ->"}, 0)(0), , IIf(chkCritical.Checked, 1, 2)) 'neil
         sqls.Add("UPDATE dbo.tblAdmUnit SET HasCritical=" & IIf(bHasCritical, 1, 0) & ", LastUpdatedBy ='" & LastUpdatedBy & "' WHERE UnitCode='" & pNode.GetValue("UnitCode") & "'")
         If Not pNode.ParentNode Is Nothing Then
             UpdateCriticalParent(pNode.ParentNode)
@@ -1120,12 +1141,13 @@ Public Class UNITS
 
     Sub UpdateActiveParent(pNode As TreeListNode)
         Dim nNode As TreeListNode, en As IEnumerator = pNode.Nodes.GetEnumerator(), bHasInactive As Boolean = False
+        Dim lastupdatedby As String = GetUserName()
         While en.MoveNext
             nNode = CType(en.Current, TreeListNode)
             If Not nNode.GetValue("Active") Or nNode.GetValue("HasInactive") Then bHasInactive = True
         End While
         pNode.SetValue("HasInactive", bHasInactive)
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Macine", strCaption, , , txtUnitDesc.EditValue) 'neil
+        lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Macine", strCaption, , 0, strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
         sqls.Add("UPDATE dbo.tblAdmUnit SET HasInactive=" & IIf(bHasInactive, 1, 0) & ",LastUpdatedBy='" & LastUpdatedBy & "' WHERE UnitCode='" & pNode.GetValue("UnitCode") & "'")
         If Not pNode.ParentNode Is Nothing Then
             UpdateActiveParent(pNode.ParentNode)
@@ -1135,7 +1157,8 @@ Public Class UNITS
     Sub UpdateActiveChild(pNode As TreeListNode, bActive As Boolean)
         If pNode.HasChildren Then
             Dim nNode As TreeListNode, en As IEnumerator = pNode.Nodes.GetEnumerator()
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , , txtUnitDesc.EditValue) 'neil
+            Dim lastupdatedby As String = GetUserName()
+            lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Unit", strCaption, , 0, txtUnitDesc.EditValue) 'neil
 
             While en.MoveNext
                 nNode = CType(en.Current, TreeListNode)
@@ -1150,6 +1173,7 @@ Public Class UNITS
     Sub Copy()
         If Not tlUnits.FocusedNode Is Nothing Then
             Dim frm As New frmNumber, nStartNumber As Integer, bRootUpdated As Boolean = False
+
             nMaxUnitID = DB.DLookUp("ISNULL(MAX(CAST(right(UnitCode,8) AS INT)),0)", "dbo.tblAdmUnit", "0")
             If tlUnits.FocusedNode.ParentNode Is Nothing Then
                 nStartNumber = GetMaxNumber(tlUnits.Nodes.GetEnumerator, tlUnits.FocusedNode.GetValue("UnitDesc"))
@@ -1229,7 +1253,8 @@ Public Class UNITS
             rowNew("VendorCode") = pNode.GetValue("VendorCode")
         End If
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , , rowNew("UnitDesc")) 'neil
+        Dim lastupdatedby As String = GetUserName()
+        lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, ":Copy Unit", 10, System.Environment.MachineName, rowNew("UnitDesc"), strCaption, , , rowNew("UnitDesc")) 'neil
 
         sqls.Add("[dbo].[COPYUNIT] @OldUnitCode='" & pNode.GetValue("UnitCode") & "', @NewUnitCode='" & rowNew("UnitCode") & "', @ParentCode=" & strParent & ", @ComponentCode='" & rowNew("ComponentCode") & "', @UnitDesc='" & rowNew("UnitDesc") & "', @LastUpdatedBy='" & LastUpdatedBy & "', @LocCode=" & strLoc & ", @CatCode=" & strCat & ", @DeptCode=" & strDept & ", @MakerCode=" & strMaker & ", @Type='" & rowNew("Type") & "', @Model='" & rowNew("Model") & "', @RefNo='" & rowNew("RefNo") & "', @VendorCode=" & strVendor & ", @Critical=" & IIf(rowNew("Critical"), 1, 0))
         tblUnitCopy.Rows.Add(rowNew)
@@ -1252,11 +1277,12 @@ Public Class UNITS
 
     Sub CreateDeleteSQLs(xrow() As DataRow)
         Dim i As Integer
+        Dim lastupdatedby As String = GetUserName()
 
         For i = 0 To xrow.Length - 1
             Dim crow() As DataRow = tblUnitSource.Select("ParentCode='" & xrow(i)("UnitCode") & "'")
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Machine", strCaption, , , xrow(i)("UnitDesc")) 'neil
+            lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Unit", strCaption, , , xrow(i)("UnitDesc"), , IIf(chkCritical.Checked, 1, 2)) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmUnit", xrow(i)("UnitCode"), LastUpdatedBy)
             sqls.Add("DELETE FROM dbo.tblAdmUnit WHERE UnitCode='" & xrow(i)("UnitCode") & "'")
             If crow.Length > 0 Then
@@ -1290,7 +1316,8 @@ Public Class UNITS
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Category", strCaption) 'neil
+        Dim lastupdatedby As String = GetUserName()
+        lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, e.DisplayValue & " Category", strCaption) 'neil
         DB.RunSql("INSERT INTO dbo.tblAdmCategory(CatCode, Name, LastUpdatedBy) VALUES('" & strCatCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("CatCode") = strCatCode
         row("Category") = e.DisplayValue
@@ -1306,7 +1333,8 @@ Public Class UNITS
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maker", strCaption) 'neil
+        Dim lastupdatedby As String = GetUserName()
+        lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, e.DisplayValue & " Maker", strCaption) 'neil
         DB.RunSql("INSERT INTO dbo.tblAdmMaker(MakerCode, Name, LastUpdatedBy) VALUES('" & strMakerCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("MakerCode") = strMakerCode
         row("Maker") = e.DisplayValue
@@ -1322,7 +1350,8 @@ Public Class UNITS
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Vendor", strCaption) 'neil
+        Dim lastupdatedby As String = GetUserName()
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, e.DisplayValue & " Vendor", strCaption) 'neil
         DB.RunSql("INSERT INTO dbo.tblAdmVendor(VendorCode, Name, LastUpdatedBy) VALUES('" & strVendorCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("VendorCode") = strVendorCode
         row("Vendor") = e.DisplayValue
@@ -1398,11 +1427,15 @@ Public Class UNITS
                 nRow = ImportFromFile("Maintenance", "")
             End If
             If Not nRow Is Nothing Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance", strCaption) 'neil
+
+                Dim lastupdatedby As String = GetUserName()
 
                 For Each crow In nRow
                     Dim bExist As Boolean = True, strValue As String = crow("Maintenance")
                     Dim strCode As String = PasteAdminData(DB, "WorkCode", "tblAdmWork", strValue, bExist)
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance", strCaption) 'neil
+
                     sqls.Add("INSERT INTO dbo.tblAdmMaintenance(MaintenanceCode, WorkCode, UnitCode, LastUpdatedBy) VALUES(dbo.MAINTENANCEID(),'" & strCode & "', '" & strID & "', '" & LastUpdatedBy & "')")
                     'If Not bExist Then
                     '    MainView.AddNewRow()

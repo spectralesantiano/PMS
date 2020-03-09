@@ -42,6 +42,18 @@ Public Class Audit
 
     Private Sub Audit_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         ' Me.txtRecCount.EditValue = 25
+
+        Dim dtRepoTypeofWork As New DataTable()
+        dtRepoTypeofWork.Columns.Add("TypeofWork", GetType(Integer))
+        dtRepoTypeofWork.Columns.Add("Names")
+        dtRepoTypeofWork.Rows.Add(New Object() {DBNull.Value, "N/A"})
+        dtRepoTypeofWork.Rows.Add(New Object() {0, "N/A"})
+        dtRepoTypeofWork.Rows.Add(New Object() {1, "REPAIR"})
+        dtRepoTypeofWork.Rows.Add(New Object() {2, "EMERGENCY"})
+        dtRepoTypeofWork.Rows.Add(New Object() {3, "PREVENTIVE"})
+        dtRepoTypeofWork.Rows.Add(New Object() {4, "CONDITIONAL"})
+        Me.replkuTypeofWork.DataSource = dtRepoTypeofWork
+
     End Sub
 
     Private Sub initControls()
@@ -51,6 +63,7 @@ Public Class Audit
 
         'clsSec.get_any_fr_db("select name from MSysSec_Users where Name <> 'Administrator'", dt)
         'Me.txtUpdatedBy.Properties.DataSource = dt
+       
     End Sub
 
     Public Overrides Sub RefreshData()
@@ -205,7 +218,7 @@ Public Class Audit
 
         'add your column here
         Dim array() As String = {"AuditLogID", "CrewID", "crewname", "ScreenCaption", "ActionDescrip", "DataDescrip", "RecordName", "UserName", _
-                                  "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID", "Machine"}
+                                  "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID", "Machine", "TypeOfWork", "Critical", "Maintenance"}
 
 
         If p_ddateto = Nothing Then
@@ -258,6 +271,9 @@ Public Class Audit
                     dtChild.Columns.Remove("PKeyValue")
                     dtChild.Columns.Remove("PKeyField")
                     dtChild.Columns.Remove("Machine")
+                    dtChild.Columns.Remove("TypeOfWork")
+                    dtChild.Columns.Remove("Critical")
+                    dtChild.Columns.Remove("Maintenance")
 
                     dtChild.Columns("OldValueName").Caption = "Old Value"
                     dtChild.Columns("NewValueName").Caption = "New Value"
