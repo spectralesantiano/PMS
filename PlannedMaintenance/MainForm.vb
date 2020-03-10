@@ -1078,7 +1078,12 @@ Public Class MainForm
         If frm.bExported Then
             EXPORT_DIR = frm.txtExportDir.EditValue
             ExportPMSData(PMSDB, 3, frm.txtExportDir.EditValue & "\PMS_Maintenance_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.deFrom.EditValue, frm.deTo.EditValue, False)
-            clsAudit.saveAuditLog("Export Maintenance", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", Me.Text)
+
+            If clsAudit.saveAuditLog("Export", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Export Maintenance Data", "EXPORT MAINTENANCE DATA") = "" Then
+                clsAudit.saveAuditDetails(retid, "PeriodFrom", frm.deFrom.EditValue)
+                clsAudit.saveAuditDetails(retid, "Periodto", frm.deTo.EditValue)
+            End If
+
             PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
             PMSDB.SaveConfig("DATE_LAST_EXPORT", DATE_LAST_EXPORT, APP_SHORT_NAME)
         End If
@@ -1093,8 +1098,9 @@ Public Class MainForm
             odMain.FileName = "AdminData"
             If odMain.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
                 ExportPMSData(PMSDB, 1, odMain.FileName, System.DBNull.Value, System.DBNull.Value, False)
-                clsAudit.saveAuditLog("Export Documents", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", Me.Text)
+                clsAudit.saveAuditLog("Export", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Export Admin Data", "EXPORT ADMIN DATA")
             End If
+
         End If
     End Sub
 
@@ -1222,7 +1228,7 @@ Public Class MainForm
                     End Using
 
                     If ZipFile(strFile & ".txt", strFile & ".pmsf") Then
-                        clsAudit.saveAuditLog("Export Admin", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", "Export to SM")
+                        clsAudit.saveAuditLog("Export", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Export Admin Data", "EXPORT ADMIN DATA")
                         Application.DoEvents()
                         Kill(strFile & ".txt")
                     End If
@@ -1285,7 +1291,7 @@ Public Class MainForm
                 Kill(cFile)
                 sqls.Add("EXEC [dbo].[IMPORTDATA] @nExpItem =" & nExpType & ", @strVslCode ='" & IMO_NUMBER & "', @strDesc ='" & strDesc & "', @strFileName ='" & strFile & "', @bIsAuto =0")
                 PMSDB.RunSqls(sqls)
-                clsAudit.saveAuditLog("Make Import", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Make Import", Me.Text)
+                clsAudit.saveAuditLog("Import", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Make Import", "IMPORT DATA")
 
                 'UNCOMMENT TO DEBUG
                 'Using sw As New System.IO.StreamWriter(GetFileDir(cFile) & GetFileNameWithoutExtension(cFile) & ".sql", False, System.Text.Encoding.Unicode)
@@ -1493,7 +1499,7 @@ Public Class MainForm
         If frm.bExported Then
             EXPORT_DIR = frm.txtExportDir.EditValue
             ExportPMSDocuments(PMSDB, frm.txtExportDir.EditValue & "\PMS_Documents_" & Now.ToString("yyyyMMddhhmm") & ".xxx", frm.strDocs)
-            clsAudit.saveAuditLog("Export Documents", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Generate Export File", Me.Text)
+            clsAudit.saveAuditLog("Export", USER_REAL, retid, System.Environment.MachineName, 10, , , , , "Export Document Data", "EXPORT DOCUMENT DATA")
             PMSDB.SaveConfig("EXPORT_DIR", EXPORT_DIR, APP_SHORT_NAME)
             PMSDB.SaveConfig("DATE_LAST_EXPORT_IMG", DATE_LAST_EXPORT_IMG, APP_SHORT_NAME)
         End If

@@ -53,7 +53,6 @@ Public Class PARTPURCHASE
     'Overriden From Base Control
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.BaseEdit() {txtPurchaseDate}) Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition", strCaption) 'neil
 
             If MainView.RowCount = 0 Then
                 MsgBox("Please fill in the Purchase Details section.", MsgBoxStyle.Critical, GetAppName)
@@ -61,6 +60,9 @@ Public Class PARTPURCHASE
             End If
             Dim i As Integer, strDateReceived As String = "NULL", bHasUnreceived As Boolean = False, bHasReceived As Boolean = False
             sqls.Clear()
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition", strCaption) 'neil
+
             If bAddMode Then
                 strID = GenerateID(DB, "PartPurchaseCode", "tblPartPurchase")
                 sqls.Add("INSERT INTO dbo.tblPartPurchase(PartPurchaseCode,PurchaseDate, PortCode,Status,LastUpdatedBy) VALUES('" & strID & "', " & ChangeToSQLDate(txtPurchaseDate.EditValue) & ",'" & IfNull(cboPortCode.EditValue, "") & "', 'Pending', '" & LastUpdatedBy & "')")
@@ -88,6 +90,8 @@ Public Class PARTPURCHASE
                         strDateReceived = ChangeToSQLDate(MainView.GetRowCellValue(i, "DateReceived"))
                     End If
 
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition Detail : " & MainView.GetRowCellDisplayText(i, "PartCode"), strCaption) 'neil
+
                     If IfNull(MainView.GetRowCellValue(i, "PartPurchaseDetailID"), 0) = 0 Then
                         sqls.Add("INSERT Into dbo.tblPartPurchaseDetail([PartPurchaseCode],[PartCode],[MakerCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[Price],[LastUpdatedBy]) Values('" & strID & "','" & MainView.GetRowCellValue(i, "PartCode") & "','" & MainView.GetRowCellValue(i, "MakerCode") & "','" & MainView.GetRowCellValue(i, "VendorCode") & "'," & MainView.GetRowCellValue(i, "Quantity") & "," & strDateReceived & "," & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & "," & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",'" & LastUpdatedBy & "')")
                     Else
@@ -97,6 +101,9 @@ Public Class PARTPURCHASE
                 If MainView.GetRowCellValue(i, "Received") Then bHasReceived = True
                 If Not MainView.GetRowCellValue(i, "Received") Then bHasUnreceived = True
             Next
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition Detail : " & MainView.GetRowCellDisplayText(i, "PartCode"), strCaption, , 0) 'neil
+
             If bHasReceived And bHasUnreceived Then
                 sqls.Add("UPDATE dbo.tblPartPurchase SET Status='Partially Delivered', LastUpdatedBy='" & LastUpdatedBy & "', DateUpdated=Getdate() WHERE PartPurchaseCode='" & strID & "'")
             ElseIf Not bHasUnreceived Then
@@ -233,6 +240,10 @@ Public Class PARTPURCHASE
         If txtStatus.Text = "Delivered" Then
             MsgBox("Deleting delivered purchases is not allowed.", MsgBoxStyle.Information)
         ElseIf MsgBox("Are you sure want to remove this Purchase?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Purchase", strCaption) 'neil
+            clsAudit.saveAuditPreDelDetails("tblPartPurchase", strID, LastUpdatedBy)
+
             DB.RunSql("DELETE FROM dbo.tblPartPurchase  WHERE PartPurchaseCode='" & strID & "'")
             bRecordUpdated = False
             blList.RefreshData()

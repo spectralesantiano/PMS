@@ -28,7 +28,9 @@ Public Class Audit
              cupdatedby As String = "<NOCRITERIA>",
              ddatefrom As Date = Nothing, ddateto As Date = Nothing,
              cscreen As String = "<NOCRITERIA>", smodulecode As String = Nothing,
-             irecordstart As Long = 1, irowcount As Long = 25  'imodulecode As Integer = MPS,
+             irecordstart As Long = 1, irowcount As Long = 25,
+             stypeofaction As String = Nothing, smachine As String = Nothing, itypeofwork As Integer = Nothing,
+             icritical As Integer = Nothing    'imodulecode As Integer = MPS,
 
     '//// for report
     Dim r_ccrewid As String = "<NOCRITERIA>", r_ccrewname As String = "<NOCRITERIA>",
@@ -43,16 +45,7 @@ Public Class Audit
     Private Sub Audit_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         ' Me.txtRecCount.EditValue = 25
 
-        Dim dtRepoTypeofWork As New DataTable()
-        dtRepoTypeofWork.Columns.Add("TypeofWork", GetType(Integer))
-        dtRepoTypeofWork.Columns.Add("Names")
-        dtRepoTypeofWork.Rows.Add(New Object() {DBNull.Value, "N/A"})
-        dtRepoTypeofWork.Rows.Add(New Object() {0, "N/A"})
-        dtRepoTypeofWork.Rows.Add(New Object() {1, "REPAIR"})
-        dtRepoTypeofWork.Rows.Add(New Object() {2, "EMERGENCY"})
-        dtRepoTypeofWork.Rows.Add(New Object() {3, "PREVENTIVE"})
-        dtRepoTypeofWork.Rows.Add(New Object() {4, "CONDITIONAL"})
-        Me.replkuTypeofWork.DataSource = dtRepoTypeofWork
+       
 
     End Sub
 
@@ -84,6 +77,39 @@ Public Class Audit
         Me.txtRecCount.EditValue = 25
 
         'SetAuditRefreshVisibility(Name, True)
+        Dim dtRepoTypeofWork As New DataTable()
+        dtRepoTypeofWork.Columns.Add("TypeofWork", GetType(Integer))
+        dtRepoTypeofWork.Columns.Add("Names")
+        dtRepoTypeofWork.Rows.Add(New Object() {DBNull.Value, "N/A"})
+        dtRepoTypeofWork.Rows.Add(New Object() {0, "N/A"})
+        dtRepoTypeofWork.Rows.Add(New Object() {1, "REPAIR"})
+        dtRepoTypeofWork.Rows.Add(New Object() {2, "EMERGENCY"})
+        dtRepoTypeofWork.Rows.Add(New Object() {3, "PREVENTIVE"})
+        dtRepoTypeofWork.Rows.Add(New Object() {4, "CONDITIONAL"})
+        Me.replkuTypeofWork.DataSource = dtRepoTypeofWork
+
+        Dim dtScreen As New DataTable
+        dtScreen = DB.CreateTable("select Caption from tblobjects order by Caption")
+        'dtScreen.Rows.Add(New Object() {"EXPORT MAINTENANCE"})
+        dtScreen.Rows.Add(New Object() {"EXPORT DOCUMENTS DATA"})
+        'dtScreen.Rows.Add(New Object() {"EXPORT ADMIN"})
+        Dim dataView As New DataView(dtScreen)
+        dataView.Sort = "Caption ASC"
+        Dim dtScreen2 As DataTable = dataView.ToTable()
+        lkuScreen.Properties.DataSource = dtScreen2
+
+        Dim dtMachine As New DataTable
+        dtMachine = DB.CreateTable("select UnitDesc from [pms_db].[dbo].[tblAdmUnit] group by UnitDesc")
+        lkuMachine.Properties.DataSource = dtMachine
+
+        Dim dtTypeofWork As New DataTable()
+        dtTypeofWork.Columns.Add("TypeofWork", GetType(Integer))
+        dtTypeofWork.Columns.Add("Names")
+        dtTypeofWork.Rows.Add(New Object() {1, "REPAIR"})
+        dtTypeofWork.Rows.Add(New Object() {2, "EMERGENCY"})
+        dtTypeofWork.Rows.Add(New Object() {3, "PREVENTIVE"})
+        dtTypeofWork.Rows.Add(New Object() {4, "CONDITIONAL"})
+        lkuTypeofWork.Properties.DataSource = dtTypeofWork
     End Sub
 
     Function isPrepInputs() As Boolean
@@ -126,11 +152,45 @@ Public Class Audit
                 smodulecode = Nothing
             End If
 
-            'If txtRecCount.EditValue Is Nothing Then
-            irowcount = txtRecCount.EditValue
-            'End If
+            If Not Me.cboTypeAction.EditValue Is Nothing Then
+                stypeofaction = cboTypeAction.EditValue
+            Else
+                stypeofaction = Nothing
+            End If
 
-            Return True
+            If Not Me.lkuScreen.EditValue Is Nothing Then
+                cscreen = lkuScreen.EditValue
+            Else
+                cscreen = Nothing
+            End If
+
+            If Not Me.lkuMachine.EditValue Is Nothing Then
+                smachine = lkuMachine.EditValue
+            Else
+                smachine = Nothing
+            End If
+
+            If Not Me.lkuTypeofWork.EditValue Is Nothing Then
+                itypeofwork = lkuTypeofWork.EditValue
+            Else
+                itypeofwork = Nothing
+            End If
+
+            If Not Me.cboCritical.EditValue Is Nothing Then
+                If cboCritical.EditValue = "YES" Then
+                    icritical = 1
+                ElseIf cboCritical.EditValue = "NO" Then
+                    icritical = 2
+                End If
+            Else
+                icritical = Nothing
+            End If
+
+                'If txtRecCount.EditValue Is Nothing Then
+                irowcount = txtRecCount.EditValue
+                'End If
+
+                Return True
         Catch
             Return False
         End Try
@@ -179,7 +239,8 @@ Public Class Audit
         If isPrepInputs() Then
             iRecBatch = 1
             If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
-                           cscreen, smodulecode, iRecBatch - 1, irowcount, , True) Then
+                           cscreen, smodulecode, iRecBatch - 1, irowcount, , True, stypeofaction,
+                           smachine, itypeofwork, icritical) Then
             End If
         End If
 
@@ -210,7 +271,9 @@ Public Class Audit
                          Optional p_cupdatedby As String = "<NOCRITERIA>", Optional p_ddatefrom As Date = Nothing,
                          Optional p_ddateto As Date = Nothing, Optional p_cscreen As String = "<NOCRITERIA>",
                          Optional p_smoduleName As String = Nothing, Optional p_irecordstart As Long = 0,
-                         Optional p_irowcount As Long = 25, Optional exmsg As String = "", Optional btnApplyClick As Boolean = False) As Boolean
+                         Optional p_irowcount As Long = 25, Optional exmsg As String = "", Optional btnApplyClick As Boolean = False,
+                         Optional p_typeofaction As String = Nothing, Optional p_machine As String = Nothing,
+                         Optional p_typeofwork As Integer = Nothing, Optional p_critical As Integer = Nothing) As Boolean
 
         Dim ret As Boolean, r_imodulecode As Integer
 
@@ -236,7 +299,10 @@ Public Class Audit
             ctempconnstr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD ' Replace(DB.GetConnectionString, "Database=MPS", "Database=MPS4A")
 
             clsA.propSQLConnStr = ctempconnstr
-            cProcRet = clsA.getAuditData(dt, p_ccrewid, p_ccrewname, p_cupdatedby, p_ddatefrom, p_ddateto, p_cscreen, r_imodulecode, p_irecordstart, p_irowcount)
+            cProcRet = clsA.getAuditData(dt, p_ccrewid, p_ccrewname, p_cupdatedby,
+                                         p_ddatefrom, p_ddateto, p_cscreen, r_imodulecode,
+                                         p_irecordstart, p_irowcount, , p_typeofwork, p_critical, p_machine,
+                                         p_typeofaction)
             If cProcRet = "" Then
                 If dt.Rows.Count > 0 Then
                     Me.GridAudit.DataSource = Nothing
@@ -367,7 +433,8 @@ Public Class Audit
         'If isPrepInputs() Then
         iRecBatch = iRecBatch + 1
         If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
-                       cscreen, smodulecode, ((iRecBatch * irowcount) - (irowcount - 1)) - 1, irowcount) Then
+                       cscreen, smodulecode, ((iRecBatch * irowcount) - (irowcount - 1)) - 1, irowcount, ,
+                       , stypeofaction, smachine, itypeofwork, icritical) Then
         End If
         'End If
 
@@ -402,7 +469,8 @@ Public Class Audit
             iRecBatch = iRecBatch - 1
         End If
         If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
-                       cscreen, smodulecode, ((iRecBatch * irowcount) - (irowcount - 1)) - 1, irowcount) Then
+                       cscreen, smodulecode, ((iRecBatch * irowcount) - (irowcount - 1)) - 1, irowcount, , , stypeofaction,
+                           smachine, itypeofwork, icritical) Then
         End If
         'End If
 
@@ -568,34 +636,36 @@ Public Class Audit
 
                 If isPrepInputs() Then
                     If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
-                                   cscreen, , (tempCurrBatch * irowcount) - (irowcount - 1) - 1, irowcount) Then
+                                   cscreen, , (tempCurrBatch * irowcount) - (irowcount - 1) - 1, irowcount, , , stypeofaction,
+                           smachine, itypeofwork, icritical) Then
                     End If
                 End If
 
 
-                'possible record count return: 0 / < irowcount / = irowcount,
-                'possible entered batch number: 0 / > total batch count(w/c could be known or not yet) / < total batch 
 
-                If iRecRetCnt < irowcount And iRecRetCnt <> 0 Then
-                    ' Me.lblOf.Text = "of " & tempCurrBatch
-                    iRecBatch = tempCurrBatch 'set global var
-                ElseIf iRecRetCnt = 0 Then '0 means end of record or no record at all
-                    If tempCurrBatch = 1 Then
-                        iRecBatch = 0
-                        ' Me.lblOf.Text = "of 0"
-                    Else
-                        ' Me.lblOf.Text = "of " & iRecBatch
+                    'possible record count return: 0 / < irowcount / = irowcount,
+                    'possible entered batch number: 0 / > total batch count(w/c could be known or not yet) / < total batch 
+
+                    If iRecRetCnt < irowcount And iRecRetCnt <> 0 Then
+                        ' Me.lblOf.Text = "of " & tempCurrBatch
+                        iRecBatch = tempCurrBatch 'set global var
+                    ElseIf iRecRetCnt = 0 Then '0 means end of record or no record at all
+                        If tempCurrBatch = 1 Then
+                            iRecBatch = 0
+                            ' Me.lblOf.Text = "of 0"
+                        Else
+                            ' Me.lblOf.Text = "of " & iRecBatch
+                        End If
+                    ElseIf iRecRetCnt = irowcount Then
+                        iRecBatch = tempCurrBatch 'set global var
                     End If
-                ElseIf iRecRetCnt = irowcount Then
-                    iRecBatch = tempCurrBatch 'set global var
-                End If
 
-                If iRecRetCnt > 1 Then
-                    Call setBarButtons(irowcount, tempCurrBatch, iRecRetCnt)
-                End If
+                    If iRecRetCnt > 1 Then
+                        Call setBarButtons(irowcount, tempCurrBatch, iRecRetCnt)
+                    End If
 
+                End If
             End If
-        End If
     End Sub
 
     Private Sub txtUpdatedBy_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles txtUpdatedBy.ButtonClick
@@ -1123,4 +1193,36 @@ Public Class Audit
     'Private Sub GridViewLog_ShownEditor(sender As Object, e As System.EventArgs) Handles GridViewLog.ShownEditor
     '    stopnaba = True
     'End Sub
+
+    Private Sub cboTypeAction_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles cboTypeAction.ButtonClick
+        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph Then
+            Me.cboTypeAction.EditValue = Nothing
+        End If
+    End Sub
+
+    Private Sub lkuScreen_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles lkuScreen.ButtonClick
+        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph Then
+            Me.lkuScreen.EditValue = Nothing
+        End If
+    End Sub
+
+    Private Sub lkuMachine_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles lkuMachine.ButtonClick
+        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph Then
+            Me.lkuMachine.EditValue = Nothing
+        End If
+    End Sub
+
+    Private Sub lkuTypeofWork_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles lkuTypeofWork.ButtonClick
+        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph Then
+            Me.lkuTypeofWork.EditValue = Nothing
+        End If
+    End Sub
+
+    Private Sub cboCritical_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles cboCritical.ButtonClick
+        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph Then
+            Me.cboCritical.EditValue = Nothing
+        End If
+    End Sub
+
+
 End Class

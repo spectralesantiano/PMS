@@ -18,7 +18,7 @@ Public Class PART
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName, txtPartNumber}) Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Parts", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Parts", strCaption, , 0) 'neil
 
             Dim sqls As New ArrayList, bUpdateList As Boolean = False, i As Integer
             If bAddMode Then

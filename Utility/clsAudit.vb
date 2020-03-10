@@ -20,6 +20,7 @@ Public Class clsAudit
                           Optional modulecode As Integer = 999, Optional recordstart As Long = 1,
                           Optional rowcount As Long = 25, Optional byPassRecCnt As Integer = 0,
                           Optional typeofwork As Integer = Nothing, Optional critical As Integer = Nothing,
+                          Optional machine As String = Nothing, Optional typeofaction As String = Nothing,
                           Optional maintenance As String = Nothing) As String
 
         Dim tempreturn As String = ""
@@ -70,6 +71,12 @@ Public Class clsAudit
                 End If
                 If maintenance <> Nothing Then
                     sqlComm.Parameters.AddWithValue("p_maintenance", maintenance)
+                End If
+                If machine <> Nothing Then
+                    sqlComm.Parameters.AddWithValue("p_machine", machine)
+                End If
+                If typeofaction <> Nothing Then
+                    sqlComm.Parameters.AddWithValue("p_typeofaction", typeofaction)
                 End If
 
                 da.SelectCommand = sqlComm
