@@ -402,6 +402,7 @@ Partial Class Audit
         Me.replkuTypeofWork.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Names", "Names"), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("TypeofWork", "Type")})
         Me.replkuTypeofWork.DisplayMember = "Names"
         Me.replkuTypeofWork.Name = "replkuTypeofWork"
+        Me.replkuTypeofWork.NullText = ""
         Me.replkuTypeofWork.ValueMember = "TypeofWork"
         '
         'GridColumn21
@@ -455,7 +456,7 @@ Partial Class Audit
         '
         Me.LayoutControl2.Controls.Add(Me.LayoutControl3)
         Me.LayoutControl2.Controls.Add(Me.GridAudit)
-        Me.LayoutControl2.Location = New System.Drawing.Point(12, 12)
+        Me.LayoutControl2.Location = New System.Drawing.Point(12, -222)
         Me.LayoutControl2.Name = "LayoutControl2"
         Me.LayoutControl2.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = New System.Drawing.Rectangle(557, 222, 491, 350)
         Me.LayoutControl2.Root = Me.Root
@@ -1021,7 +1022,7 @@ Partial Class Audit
         Me.LayoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.[True]
         Me.LayoutControlGroup1.GroupBordersVisible = False
         Me.LayoutControlGroup1.Items.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem2})
-        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, 0)
+        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, -234)
         Me.LayoutControlGroup1.Name = "Root"
         Me.LayoutControlGroup1.Size = New System.Drawing.Size(833, 592)
         Me.LayoutControlGroup1.TextVisible = False
