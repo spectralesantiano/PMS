@@ -122,8 +122,11 @@ Public Class MainForm
             End If
         End If
 
+        'MsgBox("before audit")
         clsAudit.saveAuditLog("User log in", USER_REAL, auditlogid, System.Environment.MachineName, 0,
                                , , , , , "PMS", Date.Now) 'neil
+        'MsgBox("after audit")
+
 
         LoadUserPref()
         InitUserSettings()
@@ -165,7 +168,8 @@ Public Class MainForm
         End If
 
         clsAudit.propSQLConnStr = PMSDB.GetConnectionString '& "Password=" & SQL_PASSWORD 'neil
-
+        'MsgBox(clsAudit.propSQLConnStr) '(clsAudit.propSQLConnStr)
+        'MsgBox(CONNSTRING)
         LoadSettings()
         If Debugger.IsAttached Then
             BypassLogonForDebugging()
@@ -175,7 +179,6 @@ Public Class MainForm
         End If
 
         LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Lock Maintenance", "PMS", , 0) 'neil
-
         'Lock PMS Records
         PMSDB.RunSql("UPDATE dbo.tblMaintenanceWork SET Locked=1, LastUpdatedBy = '" & LastUpdatedBy & "' WHERE GETDATE()>=DATEADD(D,7,DateAdded )")
 

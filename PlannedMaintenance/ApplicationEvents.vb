@@ -33,6 +33,7 @@ Namespace My
             SQL_SERVER = GetIni("SERVER")
             If SQL_SERVER <> "" Then
                 PMSDB = New SQLDB(GetConnectionString)
+                'CONNSTRING = PMSDB.GetConnectionString 'get connstring before connection open..before persist security taking effect
                 If Not PMSDB.Connect Then
                     SQL_SERVER = ""
                 End If

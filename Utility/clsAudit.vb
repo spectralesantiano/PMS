@@ -28,75 +28,76 @@ Public Class clsAudit
         Using sqlConn
             sqlConn.ConnectionString = propSQLConnStr
             'dbconn.closeconn()
-            sqlConn.Open()
 
-            If sqlConn.State <> ConnectionState.Open Then
-                tempreturn = "sql connection is nothing"
-            Else
-                Dim sqlComm As New SqlCommand()
-                Dim da As New SqlDataAdapter
-                'Dim dt As New DataTable
+            Try
 
-                If dateto = Nothing Then
-                    dateto = Now
-                End If
-                If datefrom = Nothing Then
-                    datefrom = DateAdd(DateInterval.Day, -5, Now)
-                End If
+                sqlConn.Open()
+
+                If sqlConn.State <> ConnectionState.Open Then
+                    tempreturn = "sql connection is nothing"
+                Else
+
+                    Dim sqlComm As New SqlCommand()
+                    Dim da As New SqlDataAdapter
+                    'Dim dt As New DataTable
+
+                    If dateto = Nothing Then
+                        dateto = Now
+                    End If
+                    If datefrom = Nothing Then
+                        datefrom = DateAdd(DateInterval.Day, -5, Now)
+                    End If
 
 
-                sqlComm.Connection = sqlConn
+                    sqlComm.Connection = sqlConn
 
-                sqlComm.CommandText = "audit_main"
-                sqlComm.CommandType = CommandType.StoredProcedure
-                sqlComm.CommandTimeout = 300
+                    sqlComm.CommandText = "audit_main"
+                    sqlComm.CommandType = CommandType.StoredProcedure
+                    sqlComm.CommandTimeout = 300
 
-                'da = New SqlDataAdapter(sqlComm)
-                sqlComm.Parameters.AddWithValue("p_crewid", crewid)
-                sqlComm.Parameters.AddWithValue("p_crewname", crewname)
-                sqlComm.Parameters.AddWithValue("p_updatedby", updatedby)
-                sqlComm.Parameters.AddWithValue("p_datefrom", datefrom)
-                sqlComm.Parameters.AddWithValue("p_dateto", dateto)
-                sqlComm.Parameters.AddWithValue("p_screen", screen)
-                sqlComm.Parameters.AddWithValue("p_modulecode", modulecode)
-                sqlComm.Parameters.AddWithValue("p_recordstart", recordstart)
-                sqlComm.Parameters.AddWithValue("p_rowcount", rowcount)
-                sqlComm.Parameters.AddWithValue("p_bypassreccnt", byPassRecCnt)
+                    'da = New SqlDataAdapter(sqlComm)
+                    sqlComm.Parameters.AddWithValue("p_crewid", crewid)
+                    sqlComm.Parameters.AddWithValue("p_crewname", crewname)
+                    sqlComm.Parameters.AddWithValue("p_updatedby", updatedby)
+                    sqlComm.Parameters.AddWithValue("p_datefrom", datefrom)
+                    sqlComm.Parameters.AddWithValue("p_dateto", dateto)
+                    sqlComm.Parameters.AddWithValue("p_screen", screen)
+                    sqlComm.Parameters.AddWithValue("p_modulecode", modulecode)
+                    sqlComm.Parameters.AddWithValue("p_recordstart", recordstart)
+                    sqlComm.Parameters.AddWithValue("p_rowcount", rowcount)
+                    sqlComm.Parameters.AddWithValue("p_bypassreccnt", byPassRecCnt)
 
-                If typeofwork <> Nothing Then
-                    sqlComm.Parameters.AddWithValue("p_typeofwork", typeofwork)
-                End If
-                If critical <> Nothing Then
-                    sqlComm.Parameters.AddWithValue("p_critical", critical)
-                End If
-                If maintenance <> Nothing Then
-                    sqlComm.Parameters.AddWithValue("p_maintenance", maintenance)
-                End If
-                If machine <> Nothing Then
-                    sqlComm.Parameters.AddWithValue("p_machine", machine)
-                End If
-                If typeofaction <> Nothing Then
-                    sqlComm.Parameters.AddWithValue("p_typeofaction", typeofaction)
-                End If
+                    If typeofwork <> Nothing Then
+                        sqlComm.Parameters.AddWithValue("p_typeofwork", typeofwork)
+                    End If
+                    If critical <> Nothing Then
+                        sqlComm.Parameters.AddWithValue("p_critical", critical)
+                    End If
+                    If maintenance <> Nothing Then
+                        sqlComm.Parameters.AddWithValue("p_maintenance", maintenance)
+                    End If
+                    If machine <> Nothing Then
+                        sqlComm.Parameters.AddWithValue("p_machine", machine)
+                    End If
+                    If typeofaction <> Nothing Then
+                        sqlComm.Parameters.AddWithValue("p_typeofaction", typeofaction)
+                    End If
 
-                da.SelectCommand = sqlComm
-
-                Try
+                    da.SelectCommand = sqlComm
 
                     da.Fill(dt)
 
                     'sqlComm.ExecuteNonQuery()
                     'returnKo = ""
-                Catch SqlEx As SqlException
-                    Dim myError As SqlError
-                    Debug.WriteLine("Errors Count:" & SqlEx.Errors.Count)
-                    For Each myError In SqlEx.Errors
-                        tempreturn = tempreturn & " / " & (myError.Number & " - " & myError.Message)
-                    Next
-                End Try
-
-
-            End If
+                    sqlConn.Close()
+                End If
+            Catch SqlEx As SqlException
+                Dim myError As SqlError
+                Debug.WriteLine("Errors Count:" & SqlEx.Errors.Count)
+                For Each myError In SqlEx.Errors
+                    tempreturn = tempreturn & " / " & (myError.Number & " - " & myError.Message)
+                Next
+            End Try
         End Using
 
         Return tempreturn
@@ -122,56 +123,57 @@ Public Class clsAudit
         Using sqlConn
             sqlConn.ConnectionString = propSQLConnStr
             'dbconn.closeconn()
-            sqlConn.Open()
 
-            If sqlConn.State <> ConnectionState.Open Then
-                sRetString = "sql connection is nothing"
-            Else
+            Try
+                sqlConn.Open()
 
-                sqlComm.Connection = sqlConn
-
-                sqlComm.CommandText = "auditSaveLog"
-                sqlComm.CommandType = CommandType.StoredProcedure
-
-                sqlComm.Parameters.AddWithValue("CrewID", sCrewID)
-                sqlComm.Parameters.AddWithValue("ComputerName", sComputerName)
-                sqlComm.Parameters.AddWithValue("ModuleCode", iModuleCode)
-                sqlComm.Parameters.AddWithValue("DataDescrip", sDataDescrip)
-                sqlComm.Parameters.AddWithValue("ScreenCaption", sScreenCaption)
-                sqlComm.Parameters.AddWithValue("ActionDescrip", sActionDescrip)
-                If dDateUpdated = Nothing Then
-                    sqlComm.Parameters.AddWithValue("DateUpdated", DBNull.Value)
+                If sqlConn.State <> ConnectionState.Open Then
+                    sRetString = "sql connection is nothing"
                 Else
-                    sqlComm.Parameters.AddWithValue("DateUpdated", dDateUpdated)
-                End If
-                sqlComm.Parameters.AddWithValue("Tablename", sTablename)
-                sqlComm.Parameters.AddWithValue("PKeyField", sPKeyField)
-                sqlComm.Parameters.AddWithValue("PKeyVal", sPKeyVal)
-                sqlComm.Parameters.AddWithValue("AdditionalInfo", sAdditionalInfo)
-                sqlComm.Parameters.AddWithValue("UserName", sUserName)
-                sqlComm.Parameters.AddWithValue("Machine", sMachine)
-                sqlComm.Parameters.AddWithValue("TypeofWork", iTypeofWork)
-                sqlComm.Parameters.AddWithValue("Critical", iCritical)
-                sqlComm.Parameters.AddWithValue("Maintenance", sMaintenance)
+                    sqlComm.Connection = sqlConn
 
-                sqlComm.Parameters.Add("insertedID", SqlDbType.BigInt)
-                sqlComm.Parameters("insertedID").Direction = ParameterDirection.Output
+                    sqlComm.CommandText = "auditSaveLog"
+                    sqlComm.CommandType = CommandType.StoredProcedure
 
-                Try
+                    sqlComm.Parameters.AddWithValue("CrewID", sCrewID)
+                    sqlComm.Parameters.AddWithValue("ComputerName", sComputerName)
+                    sqlComm.Parameters.AddWithValue("ModuleCode", iModuleCode)
+                    sqlComm.Parameters.AddWithValue("DataDescrip", sDataDescrip)
+                    sqlComm.Parameters.AddWithValue("ScreenCaption", sScreenCaption)
+                    sqlComm.Parameters.AddWithValue("ActionDescrip", sActionDescrip)
+                    If dDateUpdated = Nothing Then
+                        sqlComm.Parameters.AddWithValue("DateUpdated", DBNull.Value)
+                    Else
+                        sqlComm.Parameters.AddWithValue("DateUpdated", dDateUpdated)
+                    End If
+                    sqlComm.Parameters.AddWithValue("Tablename", sTablename)
+                    sqlComm.Parameters.AddWithValue("PKeyField", sPKeyField)
+                    sqlComm.Parameters.AddWithValue("PKeyVal", sPKeyVal)
+                    sqlComm.Parameters.AddWithValue("AdditionalInfo", sAdditionalInfo)
+                    sqlComm.Parameters.AddWithValue("UserName", sUserName)
+                    sqlComm.Parameters.AddWithValue("Machine", sMachine)
+                    sqlComm.Parameters.AddWithValue("TypeofWork", iTypeofWork)
+                    sqlComm.Parameters.AddWithValue("Critical", iCritical)
+                    sqlComm.Parameters.AddWithValue("Maintenance", sMaintenance)
+
+                    sqlComm.Parameters.Add("insertedID", SqlDbType.BigInt)
+                    sqlComm.Parameters("insertedID").Direction = ParameterDirection.Output
+
+
                     sqlComm.ExecuteNonQuery()
                     iRetLogID = sqlComm.Parameters("insertedID").Value
-                Catch SqlEx As SqlException
-                    Dim myError As SqlError
-                    Debug.WriteLine("Errors Count:" & SqlEx.Errors.Count)
-                    For Each myError In SqlEx.Errors
-                        sRetString = sRetString & " / " & (myError.Number & " - " & myError.Message)
-                    Next
-                End Try
 
+                    sqlConn.Close()
 
-            End If
+                End If
 
-            sqlConn.Close()
+            Catch SqlEx As SqlException
+                Dim myError As SqlError
+                Debug.WriteLine("Errors Count:" & SqlEx.Errors.Count)
+                For Each myError In SqlEx.Errors
+                    sRetString = sRetString & " / " & (myError.Number & " - " & myError.Message)
+                Next
+            End Try
         End Using
 
         Return sRetString
@@ -191,36 +193,38 @@ Public Class clsAudit
         Using sqlConn
             sqlConn.ConnectionString = propSQLConnStr
             'dbconn.closeconn()
-            sqlConn.Open()
 
-            If sqlConn.State <> ConnectionState.Open Then
-                sRetString = "sql connection is nothing"
-            Else
+            Try
+                sqlConn.Open()
 
-                sqlComm.Connection = sqlConn
+                If sqlConn.State <> ConnectionState.Open Then
+                    sRetString = "sql connection is nothing"
+                Else
 
-                sqlComm.CommandText = "auditSaveDetails"
-                sqlComm.CommandType = CommandType.StoredProcedure
+                    sqlComm.Connection = sqlConn
 
-                sqlComm.Parameters.AddWithValue("AuditLogID", iAuditLogID)
-                sqlComm.Parameters.AddWithValue("FieldName", sFieldName)
-                sqlComm.Parameters.AddWithValue("OldValue ", sOldValue)
-                sqlComm.Parameters.AddWithValue("NewValue", sNewValue)
+                    sqlComm.CommandText = "auditSaveDetails"
+                    sqlComm.CommandType = CommandType.StoredProcedure
 
-                Try
+                    sqlComm.Parameters.AddWithValue("AuditLogID", iAuditLogID)
+                    sqlComm.Parameters.AddWithValue("FieldName", sFieldName)
+                    sqlComm.Parameters.AddWithValue("OldValue ", sOldValue)
+                    sqlComm.Parameters.AddWithValue("NewValue", sNewValue)
+
+
                     sqlComm.ExecuteNonQuery()
-                Catch SqlEx As SqlException
-                    Dim myError As SqlError
-                    Debug.WriteLine("Errors Count:" & SqlEx.Errors.Count)
-                    For Each myError In SqlEx.Errors
-                        sRetString = sRetString & " / " & (myError.Number & " - " & myError.Message)
-                    Next
-                End Try
+               
+                    sqlConn.Close()
 
+                End If
 
-            End If
-
-            sqlConn.Close()
+            Catch SqlEx As SqlException
+                Dim myError As SqlError
+                Debug.WriteLine("Errors Count:" & SqlEx.Errors.Count)
+                For Each myError In SqlEx.Errors
+                    sRetString = sRetString & " / " & (myError.Number & " - " & myError.Message)
+                Next
+            End Try
         End Using
 
         Return sRetString

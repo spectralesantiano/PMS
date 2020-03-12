@@ -110,6 +110,8 @@ Public Class Audit
         dtTypeofWork.Rows.Add(New Object() {3, "PREVENTIVE"})
         dtTypeofWork.Rows.Add(New Object() {4, "CONDITIONAL"})
         lkuTypeofWork.Properties.DataSource = dtTypeofWork
+
+        clsA.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD 'neil
     End Sub
 
     Function isPrepInputs() As Boolean
@@ -411,7 +413,7 @@ Public Class Audit
                     iRecRetCnt = 0
                 End If
             Else
-                ' MsgBox("Error: " & cProcRet)
+                MsgBox("Error: " & cProcRet)
             End If
 
             DevExpress.XtraSplashScreen.SplashScreenManager.CloseForm()
