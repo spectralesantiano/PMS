@@ -10,7 +10,7 @@ GO
 
 ALTER VIEW [dbo].[LOGIN]
 AS
-SELECT        [User ID] AS UserID, [User Name] AS UserName, Password, ISNULL([Group ID], 0) AS GroupID, LName, FName, MName
+SELECT        [User ID] AS UserID, [User Name] AS UserName, Password, ISNULL([Group ID], 0) AS GroupID, LName, FName, MName , Active
 FROM            dbo.tblSec_Users
 
 GO

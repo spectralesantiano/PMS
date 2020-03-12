@@ -518,6 +518,7 @@ Partial Class Audit
         Me.lkuScreen.Properties.NullText = ""
         Me.lkuScreen.Properties.ShowFooter = False
         Me.lkuScreen.Properties.ShowHeader = False
+        Me.lkuScreen.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard
         Me.lkuScreen.Properties.ValueMember = "Caption"
         Me.lkuScreen.Size = New System.Drawing.Size(257, 22)
         Me.lkuScreen.StyleController = Me.LayoutControl3

@@ -1225,4 +1225,10 @@ Public Class Audit
     End Sub
 
 
+    Private Sub lkuScreen_ProcessNewValue(sender As Object, e As DevExpress.XtraEditors.Controls.ProcessNewValueEventArgs) Handles lkuScreen.ProcessNewValue
+        If CStr(e.DisplayValue) <> String.Empty Then
+            TryCast((TryCast(sender, DevExpress.XtraEditors.LookUpEdit)).Properties.DataSource, DataTable).Rows.Add(New DataTable(e.DisplayValue.ToString()))
+            e.Handled = True
+        End If
+    End Sub
 End Class
