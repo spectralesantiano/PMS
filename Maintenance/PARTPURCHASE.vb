@@ -61,7 +61,7 @@ Public Class PARTPURCHASE
             Dim i As Integer, strDateReceived As String = "NULL", bHasUnreceived As Boolean = False, bHasReceived As Boolean = False
             sqls.Clear()
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition", strCaption, , 1) 'neil
 
             If bAddMode Then
                 strID = GenerateID(DB, "PartPurchaseCode", "tblPartPurchase")
@@ -90,7 +90,7 @@ Public Class PARTPURCHASE
                         strDateReceived = ChangeToSQLDate(MainView.GetRowCellValue(i, "DateReceived"))
                     End If
 
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition Detail : " & MainView.GetRowCellDisplayText(i, "PartCode"), strCaption) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Requisition Detail : " & MainView.GetRowCellDisplayText(i, "PartCode"), strCaption, , 1) 'neil
 
                     If IfNull(MainView.GetRowCellValue(i, "PartPurchaseDetailID"), 0) = 0 Then
                         sqls.Add("INSERT Into dbo.tblPartPurchaseDetail([PartPurchaseCode],[PartCode],[MakerCode],[VendorCode],[Quantity],[DateReceived],[ReceivedQuantity],[Price],[LastUpdatedBy]) Values('" & strID & "','" & MainView.GetRowCellValue(i, "PartCode") & "','" & MainView.GetRowCellValue(i, "MakerCode") & "','" & MainView.GetRowCellValue(i, "VendorCode") & "'," & MainView.GetRowCellValue(i, "Quantity") & "," & strDateReceived & "," & IfNull(MainView.GetRowCellValue(i, "ReceivedQuantity"), "NULL") & "," & IfNull(MainView.GetRowCellValue(i, "Price"), "NULL") & ",'" & LastUpdatedBy & "')")
@@ -114,7 +114,7 @@ Public Class PARTPURCHASE
 
             If strDeletedImages <> "" Then
                 Dim strDeletedID() As String = strDeletedImages.ToString.Split(";"c), strDocID As String
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , 1) 'neil
 
                 For Each strDocID In strDeletedID
                     clsAudit.saveAuditPreDelDetails("tblDocuments", strDocID, LastUpdatedBy)
@@ -125,7 +125,7 @@ Public Class PARTPURCHASE
             IView.CloseEditor()
             IView.UpdateCurrentRow()
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , 1) 'neil
 
             For i = 0 To IView.RowCount - 1
                 If IfNull(IView.GetRowCellValue(i, "DocID"), 0) = 0 Then
@@ -241,7 +241,7 @@ Public Class PARTPURCHASE
             MsgBox("Deleting delivered purchases is not allowed.", MsgBoxStyle.Information)
         ElseIf MsgBox("Are you sure want to remove this Purchase?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Purchase", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Purchase", strCaption, , 1) 'neil
             clsAudit.saveAuditPreDelDetails("tblPartPurchase", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblPartPurchase  WHERE PartPurchaseCode='" & strID & "'")
@@ -326,7 +326,7 @@ Public Class PARTPURCHASE
 
     Private Sub DeleteEdit_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles DeleteEdit.ButtonClick
         If IfNull(MainView.GetFocusedRowCellValue("PartPurchaseDetailID"), 0) > 0 Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Part Purchase", strCaption, , 1) 'neil
             clsAudit.saveAuditPreDelDetails("tblPartPurchaseDetail", MainView.GetFocusedRowCellValue("PartPurchaseDetailID"), LastUpdatedBy)
             DB.RunSql("DELETE FROM dbo.tblPartPurchaseDetail WHERE PartPurchaseDetailID=" & MainView.GetFocusedRowCellValue("PartPurchaseDetailID"))
         End If
@@ -357,7 +357,7 @@ Public Class PARTPURCHASE
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, e.DisplayValue & " Vendor", strCaption, , 1) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmVendor(VendorCode, Name, LastUpdatedBy) VALUES('" & strVendorCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("VendorCode") = strVendorCode
@@ -374,7 +374,7 @@ Public Class PARTPURCHASE
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, e.DisplayValue & " Maker", strCaption) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmMaker(MakerCode, Name, LastUpdatedBy) VALUES('" & strMakerCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("MakerCode") = strMakerCode

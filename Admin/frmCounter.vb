@@ -7,7 +7,7 @@
     Private Sub cmdOk_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdSave.Click
         Dim i As Integer, strActiveCounter As String = ""
         sqls.Clear()
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Counter", Me.Text) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Counter", Me.Text, , 1) 'neil
 
         For i = 0 To MainView.RowCount - 1
             If MainView.GetRowCellValue(i, "Edited") Then

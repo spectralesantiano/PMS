@@ -119,7 +119,7 @@ Public Class WORKDONE
             End If
             LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
                                                   Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text & " maintenance",
-                                                  strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(bCritical, 1, 0), frm.cboMaintenance.Text) 'neil
+                                                  strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(bCritical, 1, 0), frm.cboMaintenance.Text) 'neil
 
 
             sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) & ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", LastUpdatedBy='" & LastUpdatedBy & "', HasImage=" & IIf(frm.IView.RowCount > 0, 1, 0) & " Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
@@ -139,7 +139,7 @@ Public Class WORKDONE
             Next
 
             If frm.strDeletedImages <> "" Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , , strDesc) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , 1, strDesc) 'neil
 
                 Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
                 For Each strDocID In strDeletedID
@@ -149,7 +149,7 @@ Public Class WORKDONE
             End If
 
             If frm.strAddedImages <> "" Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , , strDesc) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , 1, strDesc) 'neil
 
                 Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                 For Each strImg In strImages
@@ -224,7 +224,7 @@ Public Class WORKDONE
 
             LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
                                                    Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text & " maintenance",
-                                                   strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(bCritical, 1, 2), frm.cboMaintenance.Text) 'neil
+                                                   strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(bCritical, 1, 2), frm.cboMaintenance.Text) 'neil
 
             sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
             frm.MainView.CloseEditor()
@@ -232,7 +232,7 @@ Public Class WORKDONE
 
             For i = 0 To frm.MainView.RowCount - 1
                 If frm.MainView.GetRowCellValue(i, "Edited") Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Part Consumption: " & frm.cboMaintenance.Text & " " & strDesc, strCaption, , , strDesc) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Part Consumption: " & frm.cboMaintenance.Text & " " & strDesc, strCaption, , 1, strDesc) 'neil
 
                     sqls.Add("INSERT INTO [dbo].[tblPartConsumption]([PartCode],[MaintenanceWorkID],[DateConsumed],[Number],[Remarks],[LastUpdatedBy])" & _
                      "SELECT '" & frm.MainView.GetRowCellValue(i, "PartCode") & "',[MaintenanceWorkID],[WorkDate]," & frm.MainView.GetRowCellValue(i, "Number") & ",'" & strDesc & " - " & frm.cboMaintenance.Text & "','" & LastUpdatedBy & "' FROM [dbo].[tblMaintenanceWork] WHERE UnitCode='" & frm.cboUnit.EditValue & "' AND MaintenanceCode='" & frm.cboMaintenance.EditValue & "' AND bLatest=1")
@@ -241,7 +241,7 @@ Public Class WORKDONE
 
             If frm.strDeletedImages <> "" Then
                 Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , , strDesc) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , 1, strDesc) 'neil
                 For Each strDocID In strDeletedID
                     clsAudit.saveAuditPreDelDetails("tblDocuments", strDocID, LastUpdatedBy)
 
@@ -250,7 +250,7 @@ Public Class WORKDONE
             End If
 
             If frm.strAddedImages <> "" Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , , strDesc) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , 1, strDesc) 'neil
 
                 Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                 For Each strImg In strImages
@@ -403,7 +403,7 @@ Public Class WORKDONE
 
                     LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
                                                              Replace(strDesc, "->", " - ") & " : " & MainView.GetFocusedRowCellDisplayText("Maintenance") & " maintenance",
-                                                             strCaption, , , strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
+                                                             strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
                     clsAudit.saveAuditPreDelDetails("tblMaintenanceWork", MainView.GetFocusedRowCellValue("MaintenanceWorkID"), LastUpdatedBy)
 
                     sqls.Add("DELETE FROM dbo.tblMaintenanceWork WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))

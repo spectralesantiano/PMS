@@ -5,7 +5,7 @@ Public Class PART
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Part?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Parts", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Parts", strCaption, , 1) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmPart", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmPart WHERE PartCode='" & strID & "'")
@@ -34,7 +34,7 @@ Public Class PART
             mView.CloseEditor()
             mView.UpdateCurrentRow()
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "MISSING OR DAMAGE PART " & txtName.Text, strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "MISSING OR DAMAGE PART " & txtName.Text, strCaption, , 1) 'neil
 
             For i = 0 To mView.RowCount - 1
                 If mView.GetRowCellValue(i, "Edited") Then
@@ -85,7 +85,7 @@ Public Class PART
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption, , 1) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmLocation(LocCode, Name, LastUpdatedBy) VALUES('" & strLocCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("LocCode") = strLocCode
@@ -102,7 +102,7 @@ Public Class PART
         If IfNull(e.DisplayValue, "") = "" Then Exit Sub
         row = tbl.NewRow
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Storage", strCaption) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Storage", strCaption, , 1) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmStorage(StorageCode, Name, LastUpdatedBy) VALUES('" & strStorageCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("StorageCode") = strStorageCode
@@ -186,7 +186,7 @@ Public Class PART
         Dim grid As DevExpress.XtraGrid.GridControl = TryCast(editor.Parent, DevExpress.XtraGrid.GridControl)
         If mView.RowCount > 0 Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , 1) 'neil
 
             If mView.GetFocusedRowCellDisplayText("DateMissing").ToString <> "" Then
                 If MsgBox("Are you sure want to delete the missing parts on " & CDate(mView.GetFocusedRowCellDisplayText("DateMissing")).ToShortDateString & "?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then

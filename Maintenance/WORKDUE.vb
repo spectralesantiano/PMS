@@ -50,7 +50,7 @@ Public Class WORKDUE
         End If
         frm.ShowDialog()
         If frm.IS_SAVED Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Planned Work", strCaption, , 1) 'neil
 
             If bAdd Then
                 DB.RunSql("INSERT INTO dbo.tblPlannedWork VALUES(" & MainView.GetFocusedRowCellValue("MaintenanceWorkID") & "," & ChangeToSQLDate(frm.txtPlannedDate.EditValue) & ",'" & frm.txtReason.EditValue.ToString.Replace("'", "''") & "', '" & frm.txtApprovedBy.EditValue.ToString.Replace("'", "''") & "','" & LastUpdatedBy & "')")
@@ -100,23 +100,25 @@ Public Class WORKDUE
                         strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
                 End Select
 
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text & " Maintenance", strCaption, , , MainView.GetFocusedRowCellValue("UnitDesc")) 'neil
 
                 sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0, LastUpdatedBy='" & LastUpdatedBy & "' WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
                 'sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & MainView.GetFocusedRowCellValue("UnitCode") & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0)")
+
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text & " Maintenance", strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc")) 'neil
                 sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
 
                 frm.MainView.CloseEditor()
                 frm.MainView.UpdateCurrentRow()
                 For i = 0 To frm.MainView.RowCount - 1
                     If frm.MainView.GetRowCellValue(i, "Edited") Then
+                        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text & " Maintenance : Part", strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc")) 'neil
                         sqls.Add("INSERT INTO [dbo].[tblPartConsumption]([PartCode],[MaintenanceWorkID],[DateConsumed],[Number],[Remarks],[LastUpdatedBy])" & _
                          "SELECT '" & frm.MainView.GetRowCellValue(i, "PartCode") & "',[MaintenanceWorkID],[WorkDate]," & frm.MainView.GetRowCellValue(i, "Number") & ",'" & strDesc & " - " & frm.cboMaintenance.Text & "','" & LastUpdatedBy & "' FROM [dbo].[tblMaintenanceWork] WHERE UnitCode='" & frm.cboUnit.EditValue & "' AND MaintenanceCode='" & frm.cboMaintenance.EditValue & "' AND bLatest=1")
                     End If
                 Next
 
                 If frm.strDeletedImages <> "" Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , 1) 'neil
 
                     Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
                     For Each strDocID In strDeletedID
@@ -126,7 +128,7 @@ Public Class WORKDUE
                 End If
 
                 If frm.strAddedImages <> "" Then
-                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strcaption) 'neil
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , 1) 'neil
 
                     Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                     For Each strImg In strImages
@@ -165,7 +167,7 @@ Public Class WORKDUE
                     strDateDue = ChangeToSQLDate(CDate(frm.txtWorkDate.EditValue).AddYears(frm.nInterval))
             End Select
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , , ) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.EditValue & " Maintenance Work", strCaption, , 1) 'neil
 
             DB.RunSql("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & strID & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0)")
         End If

@@ -18,7 +18,7 @@ Public Class NCMEASURES
         MainView.CloseEditor()
         MainView.UpdateCurrentRow()
 
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , 1) 'neil
 
         For i = 0 To MainView.RowCount - 1
             If MainView.GetRowCellValue(i, "Edited") Then
@@ -68,7 +68,7 @@ Public Class NCMEASURES
             Dim sqls As New ArrayList
 
             If Not MainView.GetFocusedRowCellValue("NCID") Is System.DBNull.Value Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", strCaption, , 1) 'neil
                 clsAudit.saveAuditPreDelDetails("tblNC", MainView.GetFocusedRowCellValue("NCID"), LastUpdatedBy)
 
                 sqls.Add("DELETE FROM dbo.tblNC WHERE NCID='" & MainView.GetFocusedRowCellValue("NCID") & "'")

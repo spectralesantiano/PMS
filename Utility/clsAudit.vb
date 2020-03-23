@@ -281,7 +281,7 @@ Public Class clsAudit
 
     Public Function AssembleLastUBy(sUserName As String, sActionDescrip As String, iModuleCode As Integer, sComputerName As String,
                                     Optional sDataDescrip As String = "", Optional sScreenCaption As String = "N/A",
-                                    Optional sCrewID As String = "N/A", Optional iAuditBa As Integer = 1, Optional sMachine As String = "",
+                                    Optional sCrewID As String = "N/A", Optional iAuditBa As Integer = 0, Optional sMachine As String = "",
                                     Optional iTypeofWork As Integer = Nothing, Optional iCritical As Integer = Nothing, Optional Maintenance As String = "") As String
 
         Dim tempReturn As String

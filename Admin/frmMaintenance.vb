@@ -18,7 +18,7 @@
         Dim row As DataRow, tbl As DataTable, strWorkCode As String = GenerateID(DB, "WorkCode", "tblAdmWork")
         tbl = cboWorkCode.Properties.DataSource
         row = tbl.NewRow
-        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", Me.Text) 'neil
+        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "", Me.Text, , 1) 'neil
 
         DB.RunSql("INSERT INTO dbo.tblAdmWork(WorkCode, Name, LastUpdatedBy) VALUES('" & strWorkCode & "', '" & e.DisplayValue & "','" & LastUpdatedBy & "')")
         row("WorkCode") = strWorkCode

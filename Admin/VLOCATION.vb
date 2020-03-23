@@ -6,7 +6,7 @@ Public Class VLOCATION
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Location?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption, , 1) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmLocation", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmLocation WHERE LocCode='" & strID & "'")
@@ -19,7 +19,7 @@ Public Class VLOCATION
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Location", strCaption, , 1) 'neil
 
             If bAddMode Then
                 strID = GenerateID(DB, "LocCode", "tblAdmLocation")

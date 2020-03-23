@@ -8,7 +8,7 @@ Public Class CATEGORY
 
     Public Overrides Sub DeleteData()
         If MsgBox("Are you sure want to delete the " & strDesc & " Category?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Category", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Category", strCaption, , 1) 'neil
             clsAudit.saveAuditPreDelDetails("tblAdmCategory", strID, LastUpdatedBy)
 
             DB.RunSql("DELETE FROM dbo.tblAdmCategory WHERE CatCode='" & strID & "'")
@@ -21,7 +21,7 @@ Public Class CATEGORY
     Public Overrides Sub SaveData()
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {txtName}) Then
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Category", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Category", strCaption, , 1) 'neil
 
             If bAddMode Then
                 strID = GenerateID(DB, "CatCode", "tblAdmCategory")

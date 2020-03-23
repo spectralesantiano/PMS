@@ -6,7 +6,7 @@ Public Class SECUSERS
 
     Private Sub ResetPassword()
         If MsgBox("Continuing will reset " & strDesc & "'s password to " & DEFAULT_PASSWORD & ", would you like to continue?", MsgBoxStyle.Question Or MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Reset Password", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Reset Password", strCaption, , 1) 'neil
             DB.RunSql("UPDATE tblSec_Users SET [Password]='" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "',LastUpdatedBy='" & LastUpdatedBy & "' WHERE [User ID]=" & strID)
         End If
     End Sub
@@ -22,7 +22,7 @@ Public Class SECUSERS
         If MsgBox("Are you sure want to delete " & strDesc & " as User?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             Dim sqls As New ArrayList
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "User", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "User", strCaption, , 1) 'neil
             clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
 
             sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE SecID=" & strID & " AND SecType=0")
@@ -45,7 +45,7 @@ Public Class SECUSERS
                 groupid = Me.GroupList.EditValue.ToString
             End If
 
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "User", strCaption) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "User", strCaption, , 1) 'neil
 
             If bAddMode Then
                 DB.RunSql("INSERT INTO dbo.tblSec_Users([User Name], [Password], [Group ID], LastUpdatedBy, LName, FName, MName, RankCode, DateSOn, Active) " & _
