@@ -25,12 +25,13 @@ Public Class Audit
     Dim ctempconnstr As String = ""
 
     Dim ccrewid As String = "<NOCRITERIA>", ccrewname As String = "<NOCRITERIA>",
-             cupdatedby As String = "<NOCRITERIA>",
-             ddatefrom As Date = Nothing, ddateto As Date = Nothing,
-             cscreen As String = "<NOCRITERIA>", smodulecode As String = Nothing,
-             irecordstart As Long = 1, irowcount As Long = 25,
-             stypeofaction As String = Nothing, smachine As String = Nothing, itypeofwork As Integer = Nothing,
-             icritical As Integer = Nothing    'imodulecode As Integer = MPS,
+       cupdatedby As String = "<NOCRITERIA>",
+       ddatefrom As Date = Nothing, ddateto As Date = Nothing,
+       cscreen As String = "<NOCRITERIA>", smodulecode As String = Nothing,
+       irecordstart As Long = 1, irowcount As Long = 25,
+       stypeofaction As String = Nothing, smachine As String = Nothing, itypeofwork As Integer = Nothing,
+       icritical As Integer = Nothing, srank As String = Nothing  'imodulecode As Integer = MPS,
+
 
     '//// for report
     Dim r_ccrewid As String = "<NOCRITERIA>", r_ccrewname As String = "<NOCRITERIA>",
@@ -112,6 +113,8 @@ Public Class Audit
         dtTypeofWork.Rows.Add(New Object() {4, "CONDITIONAL"})
         lkuTypeofWork.Properties.DataSource = dtTypeofWork
 
+        lkuRank.Properties.DataSource = AdmRank
+
         clsA.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD 'neil
     End Sub
 
@@ -189,6 +192,11 @@ Public Class Audit
                 icritical = Nothing
             End If
 
+            If Not Me.lkuRank.EditValue Is Nothing Then
+                srank = lkuRank.EditValue
+            Else
+                srank = Nothing
+            End If
                 'If txtRecCount.EditValue Is Nothing Then
                 irowcount = txtRecCount.EditValue
                 'End If
@@ -243,7 +251,7 @@ Public Class Audit
             iRecBatch = 1
             If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
                            cscreen, smodulecode, iRecBatch - 1, irowcount, , True, stypeofaction,
-                           smachine, itypeofwork, icritical) Then
+                           smachine, itypeofwork, icritical, srank) Then
             End If
         End If
 
@@ -276,7 +284,8 @@ Public Class Audit
                          Optional p_smoduleName As String = Nothing, Optional p_irecordstart As Long = 0,
                          Optional p_irowcount As Long = 25, Optional exmsg As String = "", Optional btnApplyClick As Boolean = False,
                          Optional p_typeofaction As String = Nothing, Optional p_machine As String = Nothing,
-                         Optional p_typeofwork As Integer = Nothing, Optional p_critical As Integer = Nothing) As Boolean
+                         Optional p_typeofwork As Integer = Nothing, Optional p_critical As Integer = Nothing,
+                         Optional p_rank As String = Nothing) As Boolean
 
         Dim ret As Boolean, r_imodulecode As Integer
 
@@ -284,7 +293,8 @@ Public Class Audit
 
         'add your column here
         Dim array() As String = {"AuditLogID", "CrewID", "crewname", "ScreenCaption", "ActionDescrip", "DataDescrip", "RecordName", "UserName", _
-                                  "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID", "Machine", "TypeOfWork", "Critical", "Maintenance"}
+                                 "TableName", "PKeyValue", "ComputerName", "ModuleCode", "Dateupdated", "SiteID", "Machine", "TypeOfWork", _
+                                 "Critical", "Maintenance", "Rank"}
 
 
         If p_ddateto = Nothing Then
@@ -305,7 +315,7 @@ Public Class Audit
             cProcRet = clsA.getAuditData(dt, p_ccrewid, p_ccrewname, p_cupdatedby,
                                          p_ddatefrom, p_ddateto, p_cscreen, r_imodulecode,
                                          p_irecordstart, p_irowcount, , p_typeofwork, p_critical, p_machine,
-                                         p_typeofaction)
+                                         p_typeofaction, , p_rank)
             If cProcRet = "" Then
                 If dt.Rows.Count > 0 Then
                     Me.GridAudit.DataSource = Nothing
@@ -343,6 +353,7 @@ Public Class Audit
                     dtChild.Columns.Remove("TypeOfWork")
                     dtChild.Columns.Remove("Critical")
                     dtChild.Columns.Remove("Maintenance")
+                    dtChild.Columns.Remove("Rank")
 
                     dtChild.Columns("OldValueName").Caption = "Old Value"
                     dtChild.Columns("NewValueName").Caption = "New Value"
@@ -437,7 +448,7 @@ Public Class Audit
         iRecBatch = iRecBatch + 1
         If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
                        cscreen, smodulecode, ((iRecBatch * irowcount) - (irowcount - 1)) - 1, irowcount, ,
-                       , stypeofaction, smachine, itypeofwork, icritical) Then
+                       , stypeofaction, smachine, itypeofwork, icritical, srank) Then
         End If
         'End If
 
@@ -473,7 +484,7 @@ Public Class Audit
         End If
         If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
                        cscreen, smodulecode, ((iRecBatch * irowcount) - (irowcount - 1)) - 1, irowcount, , , stypeofaction,
-                           smachine, itypeofwork, icritical) Then
+                           smachine, itypeofwork, icritical, srank) Then
         End If
         'End If
 
@@ -640,7 +651,7 @@ Public Class Audit
                 If isPrepInputs() Then
                     If RefreshGrid(iRecRetCnt, ccrewid, ccrewname, cupdatedby, ddatefrom, ddateto,
                                    cscreen, , (tempCurrBatch * irowcount) - (irowcount - 1) - 1, irowcount, , , stypeofaction,
-                           smachine, itypeofwork, icritical) Then
+                           smachine, itypeofwork, icritical, srank) Then
                     End If
                 End If
 
@@ -818,7 +829,8 @@ Public Class Audit
                 ctempconnstr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD ' Replace(DB.GetConnectionString, "Database=MPS", "Database=MPS4A")
                 clsA.propSQLConnStr = ctempconnstr
             End If
-            cProcRet = clsA.getAuditData(dt, p_ccrewid, p_ccrewname, p_cupdatedby, p_ddatefrom, p_ddateto, p_cscreen, r_imodulecode, p_irecordstart, p_irowcount, p_byPassRecCnt)
+            cProcRet = clsA.getAuditData(dt, p_ccrewid, p_ccrewname, p_cupdatedby, p_ddatefrom, p_ddateto, p_cscreen,
+                                         r_imodulecode, p_irecordstart, p_irowcount, p_byPassRecCnt)
             If cProcRet = "" Then
                 If dt.Rows.Count > 0 Then
                     'Me.GridAudit.DataSource = Nothing
@@ -1232,6 +1244,12 @@ Public Class Audit
         If CStr(e.DisplayValue) <> String.Empty Then
             TryCast((TryCast(sender, DevExpress.XtraEditors.LookUpEdit)).Properties.DataSource, DataTable).Rows.Add(New DataTable(e.DisplayValue.ToString()))
             e.Handled = True
+        End If
+    End Sub
+
+    Private Sub lkuRank_ButtonClick(sender As Object, e As DevExpress.XtraEditors.Controls.ButtonPressedEventArgs) Handles lkuRank.ButtonClick
+        If e.Button.Kind = DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph Then
+            Me.lkuRank.EditValue = Nothing
         End If
     End Sub
 End Class

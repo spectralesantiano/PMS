@@ -28,6 +28,7 @@ Partial Class Audit
         Dim SerializableAppearanceObject5 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Dim SerializableAppearanceObject6 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Dim SerializableAppearanceObject7 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
+        Dim SerializableAppearanceObject8 As DevExpress.Utils.SerializableAppearanceObject = New DevExpress.Utils.SerializableAppearanceObject()
         Me.GridViewDetails = New DevExpress.XtraGrid.Views.Grid.GridView()
         Me.GridColumn13 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn2 = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -47,6 +48,7 @@ Partial Class Audit
         Me.GridColumn15 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn8 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn9 = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.GridColumn23 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn10 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn11 = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.GridColumn19 = New DevExpress.XtraGrid.Columns.GridColumn()
@@ -59,6 +61,7 @@ Partial Class Audit
         Me.LayoutControl1 = New DevExpress.XtraLayout.LayoutControl()
         Me.LayoutControl2 = New DevExpress.XtraLayout.LayoutControl()
         Me.LayoutControl3 = New DevExpress.XtraLayout.LayoutControl()
+        Me.lkuRank = New DevExpress.XtraEditors.LookUpEdit()
         Me.lkuMachine = New DevExpress.XtraEditors.LookUpEdit()
         Me.lkuScreen = New DevExpress.XtraEditors.LookUpEdit()
         Me.cboAppMod = New DevExpress.XtraEditors.ComboBoxEdit()
@@ -98,6 +101,7 @@ Partial Class Audit
         Me.LayoutControlItem20 = New DevExpress.XtraLayout.LayoutControlItem()
         Me.LayoutControlItem21 = New DevExpress.XtraLayout.LayoutControlItem()
         Me.LayoutControlItem10 = New DevExpress.XtraLayout.LayoutControlItem()
+        Me.LayoutControlItem22 = New DevExpress.XtraLayout.LayoutControlItem()
         Me.Root = New DevExpress.XtraLayout.LayoutControlGroup()
         Me.LayoutControlItem1 = New DevExpress.XtraLayout.LayoutControlItem()
         Me.SplitterItem1 = New DevExpress.XtraLayout.SplitterItem()
@@ -119,6 +123,7 @@ Partial Class Audit
         Me.LayoutControl2.SuspendLayout()
         CType(Me.LayoutControl3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.LayoutControl3.SuspendLayout()
+        CType(Me.lkuRank.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.lkuMachine.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.lkuScreen.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cboAppMod.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -155,6 +160,7 @@ Partial Class Audit
         CType(Me.LayoutControlItem20, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LayoutControlItem21, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LayoutControlItem10, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.LayoutControlItem22, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Root, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LayoutControlItem1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SplitterItem1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -221,13 +227,13 @@ Partial Class Audit
         Me.GridAudit.MainView = Me.GridViewLog
         Me.GridAudit.Name = "GridAudit"
         Me.GridAudit.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RepositoryItemCheckEdit1, Me.RepositoryItemComboBox1, Me.replkuTypeofWork})
-        Me.GridAudit.Size = New System.Drawing.Size(543, 544)
+        Me.GridAudit.Size = New System.Drawing.Size(543, 584)
         Me.GridAudit.TabIndex = 0
         Me.GridAudit.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.GridViewLog, Me.GridViewDetails})
         '
         'GridViewLog
         '
-        Me.GridViewLog.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GridColumn1, Me.GridColumn5, Me.GridColumn12, Me.GridColumn6, Me.GridColumn14, Me.GridColumn16, Me.GridColumn17, Me.GridColumn18, Me.GridColumn7, Me.GridColumn15, Me.GridColumn8, Me.GridColumn9, Me.GridColumn10, Me.GridColumn11, Me.GridColumn19, Me.GridColumn20, Me.GridColumn21, Me.GridColumn22})
+        Me.GridViewLog.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.GridColumn1, Me.GridColumn5, Me.GridColumn12, Me.GridColumn6, Me.GridColumn14, Me.GridColumn16, Me.GridColumn17, Me.GridColumn18, Me.GridColumn7, Me.GridColumn15, Me.GridColumn8, Me.GridColumn9, Me.GridColumn23, Me.GridColumn10, Me.GridColumn11, Me.GridColumn19, Me.GridColumn20, Me.GridColumn21, Me.GridColumn22})
         Me.GridViewLog.DetailHeight = 200
         Me.GridViewLog.GridControl = Me.GridAudit
         Me.GridViewLog.HorzScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always
@@ -304,7 +310,7 @@ Partial Class Audit
         Me.GridColumn17.FieldName = "RecordName"
         Me.GridColumn17.Name = "GridColumn17"
         Me.GridColumn17.Visible = True
-        Me.GridColumn17.VisibleIndex = 11
+        Me.GridColumn17.VisibleIndex = 12
         '
         'GridColumn18
         '
@@ -322,7 +328,7 @@ Partial Class Audit
         Me.GridColumn7.FieldName = "UserName"
         Me.GridColumn7.Name = "GridColumn7"
         Me.GridColumn7.Visible = True
-        Me.GridColumn7.VisibleIndex = 7
+        Me.GridColumn7.VisibleIndex = 8
         '
         'GridColumn15
         '
@@ -332,7 +338,7 @@ Partial Class Audit
         Me.GridColumn15.FieldName = "TableName"
         Me.GridColumn15.Name = "GridColumn15"
         Me.GridColumn15.Visible = True
-        Me.GridColumn15.VisibleIndex = 9
+        Me.GridColumn15.VisibleIndex = 10
         '
         'GridColumn8
         '
@@ -342,7 +348,7 @@ Partial Class Audit
         Me.GridColumn8.FieldName = "ComputerName"
         Me.GridColumn8.Name = "GridColumn8"
         Me.GridColumn8.Visible = True
-        Me.GridColumn8.VisibleIndex = 8
+        Me.GridColumn8.VisibleIndex = 9
         '
         'GridColumn9
         '
@@ -353,6 +359,16 @@ Partial Class Audit
         Me.GridColumn9.Name = "GridColumn9"
         Me.GridColumn9.OptionsColumn.AllowShowHide = False
         '
+        'GridColumn23
+        '
+        Me.GridColumn23.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.GridColumn23.AppearanceHeader.Options.UseFont = True
+        Me.GridColumn23.Caption = "Rank"
+        Me.GridColumn23.FieldName = "Rank"
+        Me.GridColumn23.Name = "GridColumn23"
+        Me.GridColumn23.Visible = True
+        Me.GridColumn23.VisibleIndex = 5
+        '
         'GridColumn10
         '
         Me.GridColumn10.AppearanceHeader.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
@@ -362,7 +378,7 @@ Partial Class Audit
         Me.GridColumn10.FieldName = "DateUpdated"
         Me.GridColumn10.Name = "GridColumn10"
         Me.GridColumn10.Visible = True
-        Me.GridColumn10.VisibleIndex = 5
+        Me.GridColumn10.VisibleIndex = 6
         '
         'GridColumn11
         '
@@ -372,7 +388,7 @@ Partial Class Audit
         Me.GridColumn11.FieldName = "SiteID"
         Me.GridColumn11.Name = "GridColumn11"
         Me.GridColumn11.Visible = True
-        Me.GridColumn11.VisibleIndex = 10
+        Me.GridColumn11.VisibleIndex = 11
         '
         'GridColumn19
         '
@@ -414,7 +430,7 @@ Partial Class Audit
         Me.GridColumn21.FieldName = "Critical"
         Me.GridColumn21.Name = "GridColumn21"
         Me.GridColumn21.Visible = True
-        Me.GridColumn21.VisibleIndex = 6
+        Me.GridColumn21.VisibleIndex = 7
         '
         'RepositoryItemCheckEdit1
         '
@@ -456,16 +472,17 @@ Partial Class Audit
         '
         Me.LayoutControl2.Controls.Add(Me.LayoutControl3)
         Me.LayoutControl2.Controls.Add(Me.GridAudit)
-        Me.LayoutControl2.Location = New System.Drawing.Point(12, -167)
+        Me.LayoutControl2.Location = New System.Drawing.Point(12, -207)
         Me.LayoutControl2.Name = "LayoutControl2"
         Me.LayoutControl2.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = New System.Drawing.Rectangle(557, 222, 491, 350)
         Me.LayoutControl2.Root = Me.Root
-        Me.LayoutControl2.Size = New System.Drawing.Size(884, 568)
+        Me.LayoutControl2.Size = New System.Drawing.Size(884, 608)
         Me.LayoutControl2.TabIndex = 4
         Me.LayoutControl2.Text = "LayoutControl2"
         '
         'LayoutControl3
         '
+        Me.LayoutControl3.Controls.Add(Me.lkuRank)
         Me.LayoutControl3.Controls.Add(Me.lkuMachine)
         Me.LayoutControl3.Controls.Add(Me.lkuScreen)
         Me.LayoutControl3.Controls.Add(Me.cboAppMod)
@@ -488,17 +505,32 @@ Partial Class Audit
         Me.LayoutControl3.HiddenItems.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem4, Me.LayoutControlItem8})
         Me.LayoutControl3.Location = New System.Drawing.Point(12, 12)
         Me.LayoutControl3.Name = "LayoutControl3"
-        Me.LayoutControl3.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = New System.Drawing.Rectangle(539, 207, 497, 350)
+        Me.LayoutControl3.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = New System.Drawing.Rectangle(539, 107, 497, 450)
         Me.LayoutControl3.Root = Me.LayoutControlGroup2
-        Me.LayoutControl3.Size = New System.Drawing.Size(308, 544)
+        Me.LayoutControl3.Size = New System.Drawing.Size(308, 584)
         Me.LayoutControl3.TabIndex = 4
         Me.LayoutControl3.Text = "LayoutControl3"
         '
+        'lkuRank
+        '
+        Me.lkuRank.Location = New System.Drawing.Point(12, 210)
+        Me.lkuRank.Name = "lkuRank"
+        Me.lkuRank.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("lkuRank.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject1, "", Nothing, Nothing, True)})
+        Me.lkuRank.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Abbrv", "Rank")})
+        Me.lkuRank.Properties.DisplayMember = "Abbrv"
+        Me.lkuRank.Properties.NullText = ""
+        Me.lkuRank.Properties.ShowFooter = False
+        Me.lkuRank.Properties.ShowHeader = False
+        Me.lkuRank.Properties.ValueMember = "Abbrv"
+        Me.lkuRank.Size = New System.Drawing.Size(284, 22)
+        Me.lkuRank.StyleController = Me.LayoutControl3
+        Me.lkuRank.TabIndex = 25
+        '
         'lkuMachine
         '
-        Me.lkuMachine.Location = New System.Drawing.Point(12, 252)
+        Me.lkuMachine.Location = New System.Drawing.Point(12, 292)
         Me.lkuMachine.Name = "lkuMachine"
-        Me.lkuMachine.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("lkuMachine.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject1, "", Nothing, Nothing, True)})
+        Me.lkuMachine.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("lkuMachine.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject2, "", Nothing, Nothing, True)})
         Me.lkuMachine.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("UnitDesc", "UnitDesc")})
         Me.lkuMachine.Properties.DisplayMember = "UnitDesc"
         Me.lkuMachine.Properties.NullText = ""
@@ -511,9 +543,9 @@ Partial Class Audit
         '
         'lkuScreen
         '
-        Me.lkuScreen.Location = New System.Drawing.Point(12, 210)
+        Me.lkuScreen.Location = New System.Drawing.Point(12, 250)
         Me.lkuScreen.Name = "lkuScreen"
-        Me.lkuScreen.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("lkuScreen.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject2, "", Nothing, Nothing, True)})
+        Me.lkuScreen.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("lkuScreen.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject3, "", Nothing, Nothing, True)})
         Me.lkuScreen.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Caption", "Screen")})
         Me.lkuScreen.Properties.DisplayMember = "Caption"
         Me.lkuScreen.Properties.NullText = ""
@@ -527,9 +559,9 @@ Partial Class Audit
         '
         'cboAppMod
         '
-        Me.cboAppMod.Location = New System.Drawing.Point(12, 458)
+        Me.cboAppMod.Location = New System.Drawing.Point(12, 498)
         Me.cboAppMod.Name = "cboAppMod"
-        Me.cboAppMod.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("cboAppMod.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject3, "", Nothing, Nothing, True)})
+        Me.cboAppMod.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("cboAppMod.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject4, "", Nothing, Nothing, True)})
         Me.cboAppMod.Properties.Items.AddRange(New Object() {"Admin", "Crewing"})
         Me.cboAppMod.Size = New System.Drawing.Size(284, 22)
         Me.cboAppMod.StyleController = Me.LayoutControl3
@@ -539,7 +571,7 @@ Partial Class Audit
         '
         Me.lblOf.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.lblOf.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None
-        Me.lblOf.Location = New System.Drawing.Point(230, 484)
+        Me.lblOf.Location = New System.Drawing.Point(230, 524)
         Me.lblOf.Name = "lblOf"
         Me.lblOf.Size = New System.Drawing.Size(27, 22)
         Me.lblOf.StyleController = Me.LayoutControl3
@@ -548,7 +580,7 @@ Partial Class Audit
         '
         'txtCurrentBatch
         '
-        Me.txtCurrentBatch.Location = New System.Drawing.Point(166, 484)
+        Me.txtCurrentBatch.Location = New System.Drawing.Point(166, 524)
         Me.txtCurrentBatch.Name = "txtCurrentBatch"
         Me.txtCurrentBatch.Properties.Mask.BeepOnError = True
         Me.txtCurrentBatch.Properties.Mask.EditMask = "n0"
@@ -561,7 +593,7 @@ Partial Class Audit
         '
         'btnNext
         '
-        Me.btnNext.Location = New System.Drawing.Point(261, 484)
+        Me.btnNext.Location = New System.Drawing.Point(261, 524)
         Me.btnNext.Name = "btnNext"
         Me.btnNext.Size = New System.Drawing.Size(35, 22)
         Me.btnNext.StyleController = Me.LayoutControl3
@@ -570,7 +602,7 @@ Partial Class Audit
         '
         'btnPrevious
         '
-        Me.btnPrevious.Location = New System.Drawing.Point(98, 484)
+        Me.btnPrevious.Location = New System.Drawing.Point(98, 524)
         Me.btnPrevious.Name = "btnPrevious"
         Me.btnPrevious.Size = New System.Drawing.Size(64, 22)
         Me.btnPrevious.StyleController = Me.LayoutControl3
@@ -587,7 +619,7 @@ Partial Class Audit
         '
         'txtCrewName
         '
-        Me.txtCrewName.Location = New System.Drawing.Point(12, 418)
+        Me.txtCrewName.Location = New System.Drawing.Point(12, 458)
         Me.txtCrewName.Name = "txtCrewName"
         Me.txtCrewName.Size = New System.Drawing.Size(284, 20)
         Me.txtCrewName.StyleController = Me.LayoutControl3
@@ -596,7 +628,7 @@ Partial Class Audit
         '
         'btnClear
         '
-        Me.btnClear.Location = New System.Drawing.Point(12, 510)
+        Me.btnClear.Location = New System.Drawing.Point(12, 550)
         Me.btnClear.Name = "btnClear"
         Me.btnClear.Size = New System.Drawing.Size(284, 22)
         Me.btnClear.StyleController = Me.LayoutControl3
@@ -606,7 +638,7 @@ Partial Class Audit
         '
         'btnApply
         '
-        Me.btnApply.Location = New System.Drawing.Point(12, 484)
+        Me.btnApply.Location = New System.Drawing.Point(12, 524)
         Me.btnApply.Name = "btnApply"
         Me.btnApply.Size = New System.Drawing.Size(82, 22)
         Me.btnApply.StyleController = Me.LayoutControl3
@@ -616,7 +648,7 @@ Partial Class Audit
         'txtRecCount
         '
         Me.txtRecCount.EditValue = CType(25, Long)
-        Me.txtRecCount.Location = New System.Drawing.Point(12, 378)
+        Me.txtRecCount.Location = New System.Drawing.Point(12, 418)
         Me.txtRecCount.Name = "txtRecCount"
         Me.txtRecCount.Properties.Mask.BeepOnError = True
         Me.txtRecCount.Properties.Mask.EditMask = "n0"
@@ -674,7 +706,7 @@ Partial Class Audit
         Me.txtUpdatedBy.Properties.Appearance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(53, Byte), Integer))
         Me.txtUpdatedBy.Properties.Appearance.Options.UseBackColor = True
         Me.txtUpdatedBy.Properties.Appearance.Options.UseForeColor = True
-        Me.txtUpdatedBy.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("txtUpdatedBy.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject4, "", Nothing, Nothing, True)})
+        Me.txtUpdatedBy.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("txtUpdatedBy.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject5, "", Nothing, Nothing, True)})
         Me.txtUpdatedBy.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("name", "User")})
         Me.txtUpdatedBy.Properties.DisplayMember = "name"
         Me.txtUpdatedBy.Properties.NullText = ""
@@ -691,9 +723,9 @@ Partial Class Audit
         '
         Me.cboTypeAction.Location = New System.Drawing.Point(12, 168)
         Me.cboTypeAction.Name = "cboTypeAction"
-        SerializableAppearanceObject5.Image = CType(resources.GetObject("SerializableAppearanceObject5.Image"), System.Drawing.Image)
-        SerializableAppearanceObject5.Options.UseImage = True
-        Me.cboTypeAction.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("cboTypeAction.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject5, "", Nothing, Nothing, True)})
+        SerializableAppearanceObject6.Image = CType(resources.GetObject("SerializableAppearanceObject6.Image"), System.Drawing.Image)
+        SerializableAppearanceObject6.Options.UseImage = True
+        Me.cboTypeAction.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("cboTypeAction.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject6, "", Nothing, Nothing, True)})
         Me.cboTypeAction.Properties.DropDownRows = 5
         Me.cboTypeAction.Properties.Items.AddRange(New Object() {"Add", "Edit", "Delete", "Export", "Import", "User log out", "User log in"})
         Me.cboTypeAction.Size = New System.Drawing.Size(284, 22)
@@ -702,9 +734,9 @@ Partial Class Audit
         '
         'lkuTypeofWork
         '
-        Me.lkuTypeofWork.Location = New System.Drawing.Point(12, 294)
+        Me.lkuTypeofWork.Location = New System.Drawing.Point(12, 334)
         Me.lkuTypeofWork.Name = "lkuTypeofWork"
-        Me.lkuTypeofWork.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("lkuTypeofWork.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject6, "", Nothing, Nothing, True)})
+        Me.lkuTypeofWork.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("lkuTypeofWork.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject7, "", Nothing, Nothing, True)})
         Me.lkuTypeofWork.Properties.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("TypeofWork", "TypeofWork", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("Names", "Names")})
         Me.lkuTypeofWork.Properties.DisplayMember = "Names"
         Me.lkuTypeofWork.Properties.NullText = ""
@@ -717,9 +749,9 @@ Partial Class Audit
         '
         'cboCritical
         '
-        Me.cboCritical.Location = New System.Drawing.Point(12, 336)
+        Me.cboCritical.Location = New System.Drawing.Point(12, 376)
         Me.cboCritical.Name = "cboCritical"
-        Me.cboCritical.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("cboCritical.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject7, "", Nothing, Nothing, True)})
+        Me.cboCritical.Properties.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo), New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, True, True, False, DevExpress.XtraEditors.ImageLocation.MiddleCenter, CType(resources.GetObject("cboCritical.Properties.Buttons"), System.Drawing.Image), New DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), SerializableAppearanceObject8, "", Nothing, Nothing, True)})
         Me.cboCritical.Properties.Items.AddRange(New Object() {"YES", "NO"})
         Me.cboCritical.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor
         Me.cboCritical.Size = New System.Drawing.Size(284, 22)
@@ -747,10 +779,10 @@ Partial Class Audit
         'LayoutControlGroup2
         '
         Me.LayoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.[True]
-        Me.LayoutControlGroup2.Items.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem5, Me.LayoutControlItem6, Me.LayoutControlItem7, Me.LayoutControlItem9, Me.LayoutControlItem11, Me.LayoutControlItem14, Me.LayoutControlItem13, Me.LayoutControlItem15, Me.LayoutControlItem12, Me.LayoutControlItem16, Me.layCurrentBatch, Me.LayoutControlItem17, Me.LayoutControlItem18, Me.LayoutControlItem19, Me.LayoutControlItem20, Me.LayoutControlItem21, Me.LayoutControlItem10})
+        Me.LayoutControlGroup2.Items.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem5, Me.LayoutControlItem6, Me.LayoutControlItem7, Me.LayoutControlItem9, Me.LayoutControlItem11, Me.LayoutControlItem14, Me.LayoutControlItem13, Me.LayoutControlItem15, Me.LayoutControlItem12, Me.LayoutControlItem16, Me.layCurrentBatch, Me.LayoutControlItem17, Me.LayoutControlItem18, Me.LayoutControlItem19, Me.LayoutControlItem20, Me.LayoutControlItem21, Me.LayoutControlItem10, Me.LayoutControlItem22})
         Me.LayoutControlGroup2.Location = New System.Drawing.Point(0, 0)
         Me.LayoutControlGroup2.Name = "Root"
-        Me.LayoutControlGroup2.Size = New System.Drawing.Size(308, 544)
+        Me.LayoutControlGroup2.Size = New System.Drawing.Size(308, 584)
         Me.LayoutControlGroup2.Text = "Filter"
         '
         'LayoutControlItem5
@@ -761,8 +793,10 @@ Partial Class Audit
         Me.LayoutControlItem5.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem5.Control = Me.txtUpdatedBy
         Me.LayoutControlItem5.Location = New System.Drawing.Point(0, 0)
+        Me.LayoutControlItem5.MinSize = New System.Drawing.Size(131, 42)
         Me.LayoutControlItem5.Name = "LayoutControlItem5"
         Me.LayoutControlItem5.Size = New System.Drawing.Size(288, 42)
+        Me.LayoutControlItem5.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom
         Me.LayoutControlItem5.Text = "User:"
         Me.LayoutControlItem5.TextLocation = DevExpress.Utils.Locations.Top
         Me.LayoutControlItem5.TextSize = New System.Drawing.Size(127, 13)
@@ -775,8 +809,10 @@ Partial Class Audit
         Me.LayoutControlItem6.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem6.Control = Me.dteStart
         Me.LayoutControlItem6.Location = New System.Drawing.Point(0, 42)
+        Me.LayoutControlItem6.MinSize = New System.Drawing.Size(131, 40)
         Me.LayoutControlItem6.Name = "LayoutControlItem6"
         Me.LayoutControlItem6.Size = New System.Drawing.Size(288, 40)
+        Me.LayoutControlItem6.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom
         Me.LayoutControlItem6.Text = "Date Start:"
         Me.LayoutControlItem6.TextLocation = DevExpress.Utils.Locations.Top
         Me.LayoutControlItem6.TextSize = New System.Drawing.Size(127, 13)
@@ -789,8 +825,10 @@ Partial Class Audit
         Me.LayoutControlItem7.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem7.Control = Me.dteEnd
         Me.LayoutControlItem7.Location = New System.Drawing.Point(0, 82)
+        Me.LayoutControlItem7.MinSize = New System.Drawing.Size(131, 40)
         Me.LayoutControlItem7.Name = "LayoutControlItem7"
         Me.LayoutControlItem7.Size = New System.Drawing.Size(288, 40)
+        Me.LayoutControlItem7.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom
         Me.LayoutControlItem7.Text = "Date End:"
         Me.LayoutControlItem7.TextLocation = DevExpress.Utils.Locations.Top
         Me.LayoutControlItem7.TextSize = New System.Drawing.Size(127, 13)
@@ -798,7 +836,7 @@ Partial Class Audit
         'LayoutControlItem9
         '
         Me.LayoutControlItem9.Control = Me.btnApply
-        Me.LayoutControlItem9.Location = New System.Drawing.Point(0, 454)
+        Me.LayoutControlItem9.Location = New System.Drawing.Point(0, 494)
         Me.LayoutControlItem9.Name = "LayoutControlItem9"
         Me.LayoutControlItem9.Size = New System.Drawing.Size(86, 26)
         Me.LayoutControlItem9.TextSize = New System.Drawing.Size(0, 0)
@@ -807,7 +845,7 @@ Partial Class Audit
         'LayoutControlItem11
         '
         Me.LayoutControlItem11.Control = Me.btnClear
-        Me.LayoutControlItem11.Location = New System.Drawing.Point(0, 480)
+        Me.LayoutControlItem11.Location = New System.Drawing.Point(0, 520)
         Me.LayoutControlItem11.Name = "LayoutControlItem11"
         Me.LayoutControlItem11.Size = New System.Drawing.Size(288, 26)
         Me.LayoutControlItem11.TextSize = New System.Drawing.Size(0, 0)
@@ -817,7 +855,7 @@ Partial Class Audit
         'LayoutControlItem14
         '
         Me.LayoutControlItem14.Control = Me.btnNext
-        Me.LayoutControlItem14.Location = New System.Drawing.Point(249, 454)
+        Me.LayoutControlItem14.Location = New System.Drawing.Point(249, 494)
         Me.LayoutControlItem14.Name = "LayoutControlItem14"
         Me.LayoutControlItem14.Size = New System.Drawing.Size(39, 26)
         Me.LayoutControlItem14.TextSize = New System.Drawing.Size(0, 0)
@@ -826,7 +864,7 @@ Partial Class Audit
         'LayoutControlItem13
         '
         Me.LayoutControlItem13.Control = Me.btnPrevious
-        Me.LayoutControlItem13.Location = New System.Drawing.Point(86, 454)
+        Me.LayoutControlItem13.Location = New System.Drawing.Point(86, 494)
         Me.LayoutControlItem13.Name = "LayoutControlItem13"
         Me.LayoutControlItem13.Size = New System.Drawing.Size(68, 26)
         Me.LayoutControlItem13.TextSize = New System.Drawing.Size(0, 0)
@@ -835,7 +873,7 @@ Partial Class Audit
         'LayoutControlItem15
         '
         Me.LayoutControlItem15.Control = Me.lblOf
-        Me.LayoutControlItem15.Location = New System.Drawing.Point(218, 454)
+        Me.LayoutControlItem15.Location = New System.Drawing.Point(218, 494)
         Me.LayoutControlItem15.MinSize = New System.Drawing.Size(14, 17)
         Me.LayoutControlItem15.Name = "LayoutControlItem15"
         Me.LayoutControlItem15.Size = New System.Drawing.Size(31, 26)
@@ -850,7 +888,7 @@ Partial Class Audit
         Me.LayoutControlItem12.AppearanceItemCaption.Options.UseFont = True
         Me.LayoutControlItem12.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem12.Control = Me.txtCrewName
-        Me.LayoutControlItem12.Location = New System.Drawing.Point(0, 372)
+        Me.LayoutControlItem12.Location = New System.Drawing.Point(0, 412)
         Me.LayoutControlItem12.Name = "LayoutControlItem12"
         Me.LayoutControlItem12.Size = New System.Drawing.Size(288, 40)
         Me.LayoutControlItem12.Text = "Seaman Name:"
@@ -865,7 +903,7 @@ Partial Class Audit
         Me.LayoutControlItem16.AppearanceItemCaption.Options.UseFont = True
         Me.LayoutControlItem16.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem16.Control = Me.cboAppMod
-        Me.LayoutControlItem16.Location = New System.Drawing.Point(0, 412)
+        Me.LayoutControlItem16.Location = New System.Drawing.Point(0, 452)
         Me.LayoutControlItem16.Name = "LayoutControlItem16"
         Me.LayoutControlItem16.Size = New System.Drawing.Size(288, 42)
         Me.LayoutControlItem16.Text = "Application Module:"
@@ -877,7 +915,7 @@ Partial Class Audit
         '
         Me.layCurrentBatch.BestFitWeight = 0
         Me.layCurrentBatch.Control = Me.txtCurrentBatch
-        Me.layCurrentBatch.Location = New System.Drawing.Point(154, 454)
+        Me.layCurrentBatch.Location = New System.Drawing.Point(154, 494)
         Me.layCurrentBatch.Name = "layCurrentBatch"
         Me.layCurrentBatch.Size = New System.Drawing.Size(64, 26)
         Me.layCurrentBatch.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.SupportHorzAlignment
@@ -909,7 +947,7 @@ Partial Class Audit
         Me.LayoutControlItem18.AppearanceItemCaption.Options.UseFont = True
         Me.LayoutControlItem18.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem18.Control = Me.lkuScreen
-        Me.LayoutControlItem18.Location = New System.Drawing.Point(0, 164)
+        Me.LayoutControlItem18.Location = New System.Drawing.Point(0, 204)
         Me.LayoutControlItem18.MinSize = New System.Drawing.Size(131, 42)
         Me.LayoutControlItem18.Name = "LayoutControlItem18"
         Me.LayoutControlItem18.Size = New System.Drawing.Size(288, 42)
@@ -925,7 +963,7 @@ Partial Class Audit
         Me.LayoutControlItem19.AppearanceItemCaption.Options.UseFont = True
         Me.LayoutControlItem19.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem19.Control = Me.lkuMachine
-        Me.LayoutControlItem19.Location = New System.Drawing.Point(0, 206)
+        Me.LayoutControlItem19.Location = New System.Drawing.Point(0, 246)
         Me.LayoutControlItem19.MinSize = New System.Drawing.Size(131, 42)
         Me.LayoutControlItem19.Name = "LayoutControlItem19"
         Me.LayoutControlItem19.Size = New System.Drawing.Size(288, 42)
@@ -942,7 +980,7 @@ Partial Class Audit
         Me.LayoutControlItem20.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem20.Control = Me.lkuTypeofWork
         Me.LayoutControlItem20.CustomizationFormText = "Type of Work:"
-        Me.LayoutControlItem20.Location = New System.Drawing.Point(0, 248)
+        Me.LayoutControlItem20.Location = New System.Drawing.Point(0, 288)
         Me.LayoutControlItem20.MinSize = New System.Drawing.Size(131, 42)
         Me.LayoutControlItem20.Name = "LayoutControlItem20"
         Me.LayoutControlItem20.Size = New System.Drawing.Size(288, 42)
@@ -959,7 +997,7 @@ Partial Class Audit
         Me.LayoutControlItem21.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem21.Control = Me.cboCritical
         Me.LayoutControlItem21.CustomizationFormText = "Critical:"
-        Me.LayoutControlItem21.Location = New System.Drawing.Point(0, 290)
+        Me.LayoutControlItem21.Location = New System.Drawing.Point(0, 330)
         Me.LayoutControlItem21.MinSize = New System.Drawing.Size(131, 42)
         Me.LayoutControlItem21.Name = "LayoutControlItem21"
         Me.LayoutControlItem21.Size = New System.Drawing.Size(288, 42)
@@ -975,12 +1013,28 @@ Partial Class Audit
         Me.LayoutControlItem10.AppearanceItemCaption.Options.UseFont = True
         Me.LayoutControlItem10.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem10.Control = Me.txtRecCount
-        Me.LayoutControlItem10.Location = New System.Drawing.Point(0, 332)
+        Me.LayoutControlItem10.Location = New System.Drawing.Point(0, 372)
         Me.LayoutControlItem10.Name = "LayoutControlItem10"
         Me.LayoutControlItem10.Size = New System.Drawing.Size(288, 40)
         Me.LayoutControlItem10.Text = "Record Count to Show:"
         Me.LayoutControlItem10.TextLocation = DevExpress.Utils.Locations.Top
         Me.LayoutControlItem10.TextSize = New System.Drawing.Size(127, 13)
+        '
+        'LayoutControlItem22
+        '
+        Me.LayoutControlItem22.AppearanceItemCaption.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.LayoutControlItem22.AppearanceItemCaption.ForeColor = System.Drawing.Color.Navy
+        Me.LayoutControlItem22.AppearanceItemCaption.Options.UseFont = True
+        Me.LayoutControlItem22.AppearanceItemCaption.Options.UseForeColor = True
+        Me.LayoutControlItem22.Control = Me.lkuRank
+        Me.LayoutControlItem22.Location = New System.Drawing.Point(0, 164)
+        Me.LayoutControlItem22.MinSize = New System.Drawing.Size(131, 40)
+        Me.LayoutControlItem22.Name = "LayoutControlItem22"
+        Me.LayoutControlItem22.Size = New System.Drawing.Size(288, 40)
+        Me.LayoutControlItem22.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom
+        Me.LayoutControlItem22.Text = "Rank:"
+        Me.LayoutControlItem22.TextLocation = DevExpress.Utils.Locations.Top
+        Me.LayoutControlItem22.TextSize = New System.Drawing.Size(127, 13)
         '
         'Root
         '
@@ -989,7 +1043,7 @@ Partial Class Audit
         Me.Root.Items.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem1, Me.SplitterItem1, Me.LayoutControlItem3})
         Me.Root.Location = New System.Drawing.Point(0, 0)
         Me.Root.Name = "Root"
-        Me.Root.Size = New System.Drawing.Size(884, 568)
+        Me.Root.Size = New System.Drawing.Size(884, 608)
         Me.Root.TextVisible = False
         '
         'LayoutControlItem1
@@ -997,7 +1051,7 @@ Partial Class Audit
         Me.LayoutControlItem1.Control = Me.GridAudit
         Me.LayoutControlItem1.Location = New System.Drawing.Point(317, 0)
         Me.LayoutControlItem1.Name = "LayoutControlItem1"
-        Me.LayoutControlItem1.Size = New System.Drawing.Size(547, 548)
+        Me.LayoutControlItem1.Size = New System.Drawing.Size(547, 588)
         Me.LayoutControlItem1.TextSize = New System.Drawing.Size(0, 0)
         Me.LayoutControlItem1.TextVisible = False
         '
@@ -1006,14 +1060,14 @@ Partial Class Audit
         Me.SplitterItem1.AllowHotTrack = True
         Me.SplitterItem1.Location = New System.Drawing.Point(312, 0)
         Me.SplitterItem1.Name = "SplitterItem1"
-        Me.SplitterItem1.Size = New System.Drawing.Size(5, 548)
+        Me.SplitterItem1.Size = New System.Drawing.Size(5, 588)
         '
         'LayoutControlItem3
         '
         Me.LayoutControlItem3.Control = Me.LayoutControl3
         Me.LayoutControlItem3.Location = New System.Drawing.Point(0, 0)
         Me.LayoutControlItem3.Name = "LayoutControlItem3"
-        Me.LayoutControlItem3.Size = New System.Drawing.Size(312, 548)
+        Me.LayoutControlItem3.Size = New System.Drawing.Size(312, 588)
         Me.LayoutControlItem3.TextSize = New System.Drawing.Size(0, 0)
         Me.LayoutControlItem3.TextVisible = False
         '
@@ -1022,9 +1076,9 @@ Partial Class Audit
         Me.LayoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.[True]
         Me.LayoutControlGroup1.GroupBordersVisible = False
         Me.LayoutControlGroup1.Items.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem2})
-        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, -179)
+        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, -219)
         Me.LayoutControlGroup1.Name = "Root"
-        Me.LayoutControlGroup1.Size = New System.Drawing.Size(908, 592)
+        Me.LayoutControlGroup1.Size = New System.Drawing.Size(908, 632)
         Me.LayoutControlGroup1.TextVisible = False
         '
         'LayoutControlItem2
@@ -1032,7 +1086,7 @@ Partial Class Audit
         Me.LayoutControlItem2.Control = Me.LayoutControl2
         Me.LayoutControlItem2.Location = New System.Drawing.Point(0, 0)
         Me.LayoutControlItem2.Name = "LayoutControlItem2"
-        Me.LayoutControlItem2.Size = New System.Drawing.Size(888, 572)
+        Me.LayoutControlItem2.Size = New System.Drawing.Size(888, 612)
         Me.LayoutControlItem2.TextSize = New System.Drawing.Size(0, 0)
         Me.LayoutControlItem2.TextVisible = False
         '
@@ -1086,6 +1140,7 @@ Partial Class Audit
         Me.LayoutControl2.ResumeLayout(False)
         CType(Me.LayoutControl3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.LayoutControl3.ResumeLayout(False)
+        CType(Me.lkuRank.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.lkuMachine.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.lkuScreen.Properties, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cboAppMod.Properties, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1122,6 +1177,7 @@ Partial Class Audit
         CType(Me.LayoutControlItem20, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.LayoutControlItem21, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.LayoutControlItem10, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.LayoutControlItem22, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Root, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.LayoutControlItem1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SplitterItem1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1217,6 +1273,9 @@ Partial Class Audit
     Friend WithEvents cboTypeAction As DevExpress.XtraEditors.ComboBoxEdit
     Friend WithEvents lkuTypeofWork As DevExpress.XtraEditors.LookUpEdit
     Friend WithEvents cboCritical As DevExpress.XtraEditors.ComboBoxEdit
+    Friend WithEvents GridColumn23 As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents lkuRank As DevExpress.XtraEditors.LookUpEdit
+    Friend WithEvents LayoutControlItem22 As DevExpress.XtraLayout.LayoutControlItem
     'Friend WithEvents ToolTipController1 As DevExpress.Utils.ToolTipController
 
 End Class

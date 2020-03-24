@@ -21,7 +21,7 @@ Public Class clsAudit
                           Optional rowcount As Long = 25, Optional byPassRecCnt As Integer = 0,
                           Optional typeofwork As Integer = Nothing, Optional critical As Integer = Nothing,
                           Optional machine As String = Nothing, Optional typeofaction As String = Nothing,
-                          Optional maintenance As String = Nothing) As String
+                          Optional maintenance As String = Nothing, Optional rank As String = Nothing) As String
 
         Dim tempreturn As String = ""
 
@@ -82,6 +82,9 @@ Public Class clsAudit
                     If typeofaction <> Nothing Then
                         sqlComm.Parameters.AddWithValue("p_typeofaction", typeofaction)
                     End If
+                    If rank <> Nothing Then
+                        sqlComm.Parameters.AddWithValue("p_rank", rank)
+                    End If
 
                     da.SelectCommand = sqlComm
 
@@ -111,7 +114,8 @@ Public Class clsAudit
                                  Optional sDataDescrip As String = Nothing, Optional sScreenCaption As String = "N/A",
                                  Optional dDateUpdated As Date = Nothing, Optional sPKeyField As String = "pkey",
                                  Optional sMachine As String = Nothing, Optional iTypeofWork As Integer = Nothing,
-                                 Optional iCritical As Integer = Nothing, Optional sMaintenance As String = Nothing
+                                 Optional iCritical As Integer = Nothing, Optional sMaintenance As String = Nothing,
+                                 Optional sRank As String = Nothing
                                  ) As String
 
         '/// for inserting data directly to Audit parent table "AuditLog"
@@ -155,6 +159,7 @@ Public Class clsAudit
                     sqlComm.Parameters.AddWithValue("TypeofWork", iTypeofWork)
                     sqlComm.Parameters.AddWithValue("Critical", iCritical)
                     sqlComm.Parameters.AddWithValue("Maintenance", sMaintenance)
+                    sqlComm.Parameters.AddWithValue("Rank", sRank)
 
                     sqlComm.Parameters.Add("insertedID", SqlDbType.BigInt)
                     sqlComm.Parameters("insertedID").Direction = ParameterDirection.Output
@@ -279,10 +284,29 @@ Public Class clsAudit
         Return sRetString
     End Function
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="sUserName"></param>
+    ''' <param name="sActionDescrip"></param>
+    ''' <param name="iModuleCode"></param>
+    ''' <param name="sComputerName"></param>
+    ''' <param name="sDataDescrip"></param>
+    ''' <param name="sScreenCaption"></param>
+    ''' <param name="sCrewID"></param>
+    ''' <param name="iAuditBa"></param>
+    ''' <param name="sMachine"></param>
+    ''' <param name="iTypeofWork"></param>
+    ''' <param name="iCritical"></param>
+    ''' <param name="Maintenance">Skipe this. Not Needed</param>
+    ''' <param name="Rank"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function AssembleLastUBy(sUserName As String, sActionDescrip As String, iModuleCode As Integer, sComputerName As String,
                                     Optional sDataDescrip As String = "", Optional sScreenCaption As String = "N/A",
                                     Optional sCrewID As String = "N/A", Optional iAuditBa As Integer = 0, Optional sMachine As String = "",
-                                    Optional iTypeofWork As Integer = Nothing, Optional iCritical As Integer = Nothing, Optional Maintenance As String = "") As String
+                                    Optional iTypeofWork As Integer = Nothing, Optional iCritical As Integer = Nothing,
+                                    Optional Maintenance As String = "", Optional Rank As String = "") As String
 
         Dim tempReturn As String
 
@@ -290,7 +314,7 @@ Public Class clsAudit
             'Pattern is same as in the Stored proc. Pattern should be followed
             tempReturn = "<" & sUserName & "><" & sCrewID & "><" & sComputerName & "><" & iModuleCode & "><" &
                             sDataDescrip & "><" & sScreenCaption & "><" & sActionDescrip & "><" & iAuditBa & "><" &
-                             sMachine & "><" & iTypeofWork & "><" & iCritical & "><" & Maintenance & ">"
+                             sMachine & "><" & iTypeofWork & "><" & iCritical & "><" & Maintenance & "><" & Rank & ">"
 
         Catch ex As Exception
             tempReturn = ""

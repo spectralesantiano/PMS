@@ -1,5 +1,5 @@
-STEPS TO ADD AUDIT FUNCTIONALITY TO PMS. DATABASE SIDE
-1. Update PMS tables
+STEPS TO ADD AUDIT FUNCTIONALITY TO PMS. DATABASE SIDE.
+1. Update PMS tables (APPLY ONLY ONCE)
 	Add_lastupdatedby_tblPart_Missing.sql
 	Add_lastupdatedby_tblPartConsumption.sql
 	Add_lastupdatedby_tblPlannedWork.sql
@@ -12,14 +12,15 @@ STEPS TO ADD AUDIT FUNCTIONALITY TO PMS. DATABASE SIDE
 	To_VarChar_tblAdmMaintenance.sql
 	To_VarChar_tblMaintenanceWork.sql
 	ALTER VIEW [dbo].[USERLIST].sql
-	ALTER VIEW [dbo].[LOGIN]
+	ALTER VIEW [dbo].[LOGIN].sql
+	alter tblPlannedWork.sql
 
-2. Add tables/functions/procedures of audit
+2. Add tables/functions/procedures of audit (SHOULD BE APPLIED EVERYTIME TABLES UPDATED)
 	Audit_Setup_1.sql
 	Audit_Setup_2.sql
 	Add_table_MSystblTblNameFld.sql
 	
-3. create add/update/delete trigger
+3. create add/update/delete trigger (SHOULD BE APPLIED EVERYTIME TABLES UPDATED)
 	execute Stored Proc AuditSetup (do not pass value to @forDropTrigger)
 	This SP will produce insert,update, delete triggers for tables with column lastupdatedby
 	In the result set "Insert_Triggers", select all values and copy into a new query tab
