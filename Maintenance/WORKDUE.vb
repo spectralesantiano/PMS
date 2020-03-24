@@ -50,7 +50,7 @@ Public Class WORKDUE
         End If
         frm.ShowDialog()
         If frm.IS_SAVED Then
-            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, MainView.GetFocusedRowCellDisplayText("UnitDesc").Replace(">", "") & " : Planned Work", strCaption, , 1) 'neil
+            LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, MainView.GetFocusedRowCellDisplayText("UnitDesc").Replace(">", "") & " : Planned Work", strCaption, , 1, , , IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 0)) 'neil
 
             If bAdd Then
                 DB.RunSql("INSERT INTO dbo.tblPlannedWork VALUES(" & MainView.GetFocusedRowCellValue("MaintenanceWorkID") & "," & ChangeToSQLDate(frm.txtPlannedDate.EditValue) & ",'" & frm.txtReason.EditValue.ToString.Replace("'", "''") & "', '" & frm.txtApprovedBy.EditValue.ToString.Replace("'", "''") & "','" & LastUpdatedBy & "')")
@@ -112,7 +112,9 @@ Public Class WORKDUE
                 frm.MainView.UpdateCurrentRow()
                 For i = 0 To frm.MainView.RowCount - 1
                     If frm.MainView.GetRowCellValue(i, "Edited") Then
-                        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text & " Maintenance : Part " & frm.MainView.GetRowCellDisplayText(i, "Part"), strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc")) 'neil
+                        LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                                                 frm.cboMaintenance.Text & " Maintenance : Part " & frm.MainView.GetRowCellDisplayText(i, "Part"),
+                                                                 strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc"), , IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 0)) 'neil
                         sqls.Add("INSERT INTO [dbo].[tblPartConsumption]([PartCode],[MaintenanceWorkID],[DateConsumed],[Number],[Remarks],[LastUpdatedBy])" & _
                          "SELECT '" & frm.MainView.GetRowCellValue(i, "PartCode") & "',[MaintenanceWorkID],[WorkDate]," & frm.MainView.GetRowCellValue(i, "Number") & ",'" & strDesc & " - " & frm.cboMaintenance.Text & "','" & LastUpdatedBy & "' FROM [dbo].[tblMaintenanceWork] WHERE UnitCode='" & frm.cboUnit.EditValue & "' AND MaintenanceCode='" & frm.cboMaintenance.EditValue & "' AND bLatest=1")
                     End If
