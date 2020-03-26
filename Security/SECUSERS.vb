@@ -49,54 +49,54 @@ Public Class SECUSERS
 
             LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "User", strCaption, , 1) 'neil
 
-            If bAddMode Then
-                DB.RunSql("INSERT INTO dbo.tblSec_Users([User Name], [Password], [Group ID], LastUpdatedBy, LName, FName, MName, RankCode, DateSOn, Active) " & _
-                          "VALUES('" & txtUserName.EditValue & "', '" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "', " & groupid & ", '" & LastUpdatedBy & "'" & _
-                          ",'" & txtFamilyName.EditValue & "','" & txtFirstName.EditValue & "','" & txtMiddleName.EditValue & "','" & lkuRank.EditValue & "','" & dteDateSON.EditValue & "'," & chkActive.EditValue & ")")
-                strID = DB.DLookUp("[User ID]", "dbo.tblSec_Users", "", "[User Name]='" & txtUserName.EditValue & "'")
-                bRecordUpdated = False
-                blList.RefreshData()
-                blList.SetSelection(strID)
-                RefreshData()
-            Else
-                Dim sql As String = ""
-                If txtUserName.Tag = 1 Then
-                    sql = "[User Name]='" & txtUserName.EditValue & "', "
-                End If
-                If GroupList.Tag = 1 Then
-                    sql = sql & "[Group ID]=" & groupid & ", "
-                End If
-                If txtFamilyName.Tag = 1 Then
-                    sql = sql & "[LName]='" & txtFamilyName.EditValue & "', "
-                End If
-                If txtFirstName.Tag = 1 Then
-                    sql = sql & "[FName]='" & txtFirstName.EditValue & "', "
-                End If
-                If txtMiddleName.Tag = 1 Then
-                    sql = sql & "[MName]='" & txtMiddleName.EditValue & "', "
-                End If
-                If lkuRank.Tag = 1 Then
-                    sql = sql & "[RankCode]='" & lkuRank.EditValue & "', "
-                End If
-                If dteDateSON.Tag = 1 Then
-                    sql = sql & "[DateSOn]='" & dteDateSON.EditValue & "', "
-                End If
-                If chkActive.Tag = 1 Then
-                    sql = sql & "[Active]=" & chkActive.EditValue & ", "
-                End If
+                If bAddMode Then
+                    DB.RunSql("INSERT INTO dbo.tblSec_Users([User Name], [Password], [Group ID], LastUpdatedBy, LName, FName, MName, RankCode, DateSOn, Active) " & _
+                              "VALUES('" & txtUserName.EditValue & "', '" & sysMpsUserPassword("encrypt", DEFAULT_PASSWORD) & "', " & groupid & ", '" & LastUpdatedBy & "'" & _
+                              ",'" & txtFamilyName.EditValue & "','" & txtFirstName.EditValue & "','" & txtMiddleName.EditValue & "','" & lkuRank.EditValue & "'," & ChangeToSQLDate(dteDateSON.EditValue) & "," & chkActive.EditValue & ")")
+                    strID = DB.DLookUp("[User ID]", "dbo.tblSec_Users", "", "[User Name]='" & txtUserName.EditValue & "'")
+                    bRecordUpdated = False
+                    blList.RefreshData()
+                    blList.SetSelection(strID)
+                    RefreshData()
+                Else
+                    Dim sql As String = ""
+                    If txtUserName.Tag = 1 Then
+                        sql = "[User Name]='" & txtUserName.EditValue & "', "
+                    End If
+                    If GroupList.Tag = 1 Then
+                        sql = sql & "[Group ID]=" & groupid & ", "
+                    End If
+                    If txtFamilyName.Tag = 1 Then
+                        sql = sql & "[LName]='" & txtFamilyName.EditValue & "', "
+                    End If
+                    If txtFirstName.Tag = 1 Then
+                        sql = sql & "[FName]='" & txtFirstName.EditValue & "', "
+                    End If
+                    If txtMiddleName.Tag = 1 Then
+                        sql = sql & "[MName]='" & txtMiddleName.EditValue & "', "
+                    End If
+                    If lkuRank.Tag = 1 Then
+                        sql = sql & "[RankCode]='" & lkuRank.EditValue & "', "
+                    End If
+                    If dteDateSON.Tag = 1 Then
+                        sql = sql & "[DateSOn]=" & ChangeToSQLDate(dteDateSON.EditValue) & ", "
+                    End If
+                    If chkActive.Tag = 1 Then
+                        sql = sql & "[Active]=" & chkActive.EditValue & ", "
+                    End If
 
-                If sql <> "" Then
-                    DB.RunSql("UPDATE dbo.tblSec_Users SET " & sql & " LastUpdatedBy = '" & LastUpdatedBy & "' WHERE [User ID]=" & strID)
+                    If sql <> "" Then
+                        DB.RunSql("UPDATE dbo.tblSec_Users SET " & sql & " LastUpdatedBy = '" & LastUpdatedBy & "' WHERE [User ID]=" & strID)
+                    End If
+                    bRecordUpdated = False
+                    blList.RefreshData()
+                    RefreshData()
                 End If
-                bRecordUpdated = False
-                blList.RefreshData()
-                RefreshData()
-            End If
             bAddMode = False
             End If
 
         Catch ex As Exception
-            MsgBox("Error encountered. " & ex.Message, MsgBoxStyle.Exclamation)
+            MsgBox("Error encountered. " & ex.Message & ":" & ex.Source, MsgBoxStyle.Exclamation)
         End Try
     End Sub
 
