@@ -37,6 +37,8 @@ Public Class SECUSERS
 
     'Overriden From Base Control
     Public Overrides Sub SaveData()
+        Try
+
         If ValidateFields(New DevExpress.XtraEditors.TextEdit() {Me.txtUserName, Me.GroupList, Me.txtFamilyName, Me.txtFirstName, Me.lkuRank, Me.dteDateSON}) Then
             Dim groupid As String, strFleetFilter As String = ""
             If Me.GroupList.EditValue Is Nothing Or Me.GroupList.EditValue Is System.DBNull.Value Then
@@ -64,6 +66,25 @@ Public Class SECUSERS
                 If GroupList.Tag = 1 Then
                     sql = sql & "[Group ID]=" & groupid & ", "
                 End If
+                If txtFamilyName.Tag = 1 Then
+                    sql = sql & "[LName]='" & txtFamilyName.EditValue & "', "
+                End If
+                If txtFirstName.Tag = 1 Then
+                    sql = sql & "[FName]='" & txtFirstName.EditValue & "', "
+                End If
+                If txtMiddleName.Tag = 1 Then
+                    sql = sql & "[MName]='" & txtMiddleName.EditValue & "', "
+                End If
+                If lkuRank.Tag = 1 Then
+                    sql = sql & "[RankCode]='" & lkuRank.EditValue & "', "
+                End If
+                If dteDateSON.Tag = 1 Then
+                    sql = sql & "[DateSOn]='" & dteDateSON.EditValue & "', "
+                End If
+                If chkActive.Tag = 1 Then
+                    sql = sql & "[Active]=" & chkActive.EditValue & ", "
+                End If
+
                 If sql <> "" Then
                     DB.RunSql("UPDATE dbo.tblSec_Users SET " & sql & " LastUpdatedBy = '" & LastUpdatedBy & "' WHERE [User ID]=" & strID)
                 End If
@@ -72,7 +93,11 @@ Public Class SECUSERS
                 RefreshData()
             End If
             bAddMode = False
-        End If
+            End If
+
+        Catch ex As Exception
+            MsgBox("Error encountered. " & ex.Message, MsgBoxStyle.Exclamation)
+        End Try
     End Sub
 
     'Overriden From Base Control
@@ -130,6 +155,13 @@ Public Class SECUSERS
         If (bPermission And 4) > 0 Then
             AddEditListener(Me.txtUserName)
             AddEditListener(Me.GroupList)
+            AddEditListener(Me.txtFamilyName)
+            AddEditListener(Me.txtFirstName)
+            AddEditListener(Me.txtMiddleName)
+            AddEditListener(Me.lkuRank)
+            AddEditListener(Me.dteDateSON)
+            AddEditListener(Me.chkActive)
+
         End If
         'GroupList.Enabled = (USER_ID = 1)
         clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
