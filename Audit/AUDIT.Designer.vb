@@ -472,7 +472,7 @@ Partial Class Audit
         '
         Me.LayoutControl2.Controls.Add(Me.LayoutControl3)
         Me.LayoutControl2.Controls.Add(Me.GridAudit)
-        Me.LayoutControl2.Location = New System.Drawing.Point(12, -207)
+        Me.LayoutControl2.Location = New System.Drawing.Point(12, 12)
         Me.LayoutControl2.Name = "LayoutControl2"
         Me.LayoutControl2.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = New System.Drawing.Rectangle(557, 222, 491, 350)
         Me.LayoutControl2.Root = Me.Root
@@ -889,8 +889,10 @@ Partial Class Audit
         Me.LayoutControlItem12.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem12.Control = Me.txtCrewName
         Me.LayoutControlItem12.Location = New System.Drawing.Point(0, 412)
+        Me.LayoutControlItem12.MinSize = New System.Drawing.Size(131, 40)
         Me.LayoutControlItem12.Name = "LayoutControlItem12"
         Me.LayoutControlItem12.Size = New System.Drawing.Size(288, 40)
+        Me.LayoutControlItem12.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom
         Me.LayoutControlItem12.Text = "Seaman Name:"
         Me.LayoutControlItem12.TextLocation = DevExpress.Utils.Locations.Top
         Me.LayoutControlItem12.TextSize = New System.Drawing.Size(127, 13)
@@ -904,8 +906,10 @@ Partial Class Audit
         Me.LayoutControlItem16.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem16.Control = Me.cboAppMod
         Me.LayoutControlItem16.Location = New System.Drawing.Point(0, 452)
+        Me.LayoutControlItem16.MinSize = New System.Drawing.Size(131, 42)
         Me.LayoutControlItem16.Name = "LayoutControlItem16"
         Me.LayoutControlItem16.Size = New System.Drawing.Size(288, 42)
+        Me.LayoutControlItem16.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom
         Me.LayoutControlItem16.Text = "Application Module:"
         Me.LayoutControlItem16.TextLocation = DevExpress.Utils.Locations.Top
         Me.LayoutControlItem16.TextSize = New System.Drawing.Size(127, 13)
@@ -1014,8 +1018,10 @@ Partial Class Audit
         Me.LayoutControlItem10.AppearanceItemCaption.Options.UseForeColor = True
         Me.LayoutControlItem10.Control = Me.txtRecCount
         Me.LayoutControlItem10.Location = New System.Drawing.Point(0, 372)
+        Me.LayoutControlItem10.MinSize = New System.Drawing.Size(131, 40)
         Me.LayoutControlItem10.Name = "LayoutControlItem10"
         Me.LayoutControlItem10.Size = New System.Drawing.Size(288, 40)
+        Me.LayoutControlItem10.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom
         Me.LayoutControlItem10.Text = "Record Count to Show:"
         Me.LayoutControlItem10.TextLocation = DevExpress.Utils.Locations.Top
         Me.LayoutControlItem10.TextSize = New System.Drawing.Size(127, 13)
@@ -1076,7 +1082,7 @@ Partial Class Audit
         Me.LayoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.[True]
         Me.LayoutControlGroup1.GroupBordersVisible = False
         Me.LayoutControlGroup1.Items.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem2})
-        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, -219)
+        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, 0)
         Me.LayoutControlGroup1.Name = "Root"
         Me.LayoutControlGroup1.Size = New System.Drawing.Size(908, 632)
         Me.LayoutControlGroup1.TextVisible = False
