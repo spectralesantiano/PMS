@@ -1243,7 +1243,7 @@ Public Class UNITS
         Dim lastupdatedby As String = GetUserName()
         lastupdatedby = clsAudit.AssembleLastUBy(USER_REAL, ":Copy Unit", 10, System.Environment.MachineName, rowNew("UnitDesc"), strCaption, , , rowNew("UnitDesc")) 'neil
 
-        sqls.Add("[dbo].[COPYUNIT] @OldUnitCode='" & pNode.GetValue("UnitCode") & "', @NewUnitCode='" & rowNew("UnitCode") & "', @ParentCode=" & strParent & ", @ComponentCode='" & rowNew("ComponentCode") & "', @UnitDesc='" & rowNew("UnitDesc") & "', @LastUpdatedBy='" & LastUpdatedBy & "', @LocCode=" & strLoc & ", @CatCode=" & strCat & ", @DeptCode=" & strDept & ", @MakerCode=" & strMaker & ", @Type='" & rowNew("Type") & "', @Model='" & rowNew("Model") & "', @RefNo='" & rowNew("RefNo") & "', @VendorCode=" & strVendor & ", @Critical=" & IIf(rowNew("Critical"), 1, 0))
+        sqls.Add("[dbo].[COPYUNIT] @OldUnitCode='" & pNode.GetValue("UnitCode") & "', @NewUnitCode='" & rowNew("UnitCode") & "', @ParentCode=" & strParent & ", @ComponentCode='" & rowNew("ComponentCode") & "', @UnitDesc='" & rowNew("UnitDesc") & "', @LastUpdatedBy='" & lastupdatedby & "', @LocCode=" & strLoc & ", @CatCode=" & strCat & ", @DeptCode=" & strDept & ", @MakerCode=" & strMaker & ", @Type='" & rowNew("Type") & "', @Model='" & rowNew("Model") & "', @RefNo='" & rowNew("RefNo") & "', @VendorCode=" & strVendor & ", @Critical=" & IIf(rowNew("Critical"), 1, 2))
         tblUnitCopy.Rows.Add(rowNew)
         While en.MoveNext
             CopyNodes(CType(en.Current, TreeListNode), rowNew("UnitCode"), -1, nMaxUnitID, nLevel + 1)

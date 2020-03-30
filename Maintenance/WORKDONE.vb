@@ -120,7 +120,7 @@ Public Class WORKDONE
             LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
                                                   Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text,
                                                   strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0), WORKTYPE,
-                                                  IIf(bCritical, 1, 0), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+                                                  IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
 
             sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) & ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", LastUpdatedBy='" & LastUpdatedBy & "', HasImage=" & IIf(frm.IView.RowCount > 0, 1, 0) & " Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
@@ -131,7 +131,7 @@ Public Class WORKDONE
                 If frm.MainView.GetRowCellValue(i, "Edited") Then
                     LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
                                                Replace(strDesc, "->", " - ") & " : " & frm.cboMaintenance.Text & " : Part " & frm.MainView.GetRowCellDisplayText(i, "Part"),
-                                               strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(bCritical, 1, 0), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+                                               strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
 
                     If IfNull(frm.MainView.GetRowCellValue(i, "PartConsumptionID"), 0) > 0 Then
                         sqls.Add("UPDATE [dbo].[tblPartConsumption] SET Number=" & frm.MainView.GetRowCellValue(i, "Number") & ",[LastUpdatedBy]='" & LastUpdatedBy & "' WHERE PartConsumptionID=" & frm.MainView.GetRowCellValue(i, "PartConsumptionID"))
