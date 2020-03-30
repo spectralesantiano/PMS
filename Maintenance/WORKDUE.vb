@@ -4,6 +4,11 @@ Public Class WORKDUE
 
     Dim clsAudit As New clsAudit 'neil
     Private LastUpdatedBy As String '= clsAudit.AssembleLastUBy(USER_NAME, "", 10, System.Environment.MachineName, "", FormName) 'neil
+    Const REPAIR = 1
+    Const EMERGENCY = 2
+    Const PREVENTIVE = 3
+    Const CONDITIONAL = 4
+    Dim WORKTYPE As Integer = 0
 
     Public Overrides Sub SetLayout(strLayout As String)
         MainView.RestoreLayoutFromStream(StringToStream(strLayout))
@@ -104,17 +109,36 @@ Public Class WORKDUE
                 sqls.Add("UPDATE dbo.tblMaintenanceWork SET bLatest=0, LastUpdatedBy='" & GetUserName() & "' WHERE [UnitCode]='" & frm.cboUnit.EditValue & "' AND [MaintenanceCode]='" & frm.cboMaintenance.EditValue & "'")
                 'sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & MainView.GetFocusedRowCellValue("UnitCode") & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & GetUserName() & "',0)")
 
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text,
-                                                          strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc"), , IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2), , frm.cboRankCode.Text) 'neil
+                If frm.cboMaintenance.Text = "REPAIR" Then
+                    WORKTYPE = 1
+                ElseIf frm.cboMaintenance.Text = "EMERGENCY" Then
+                    WORKTYPE = 2
+                Else
+                    If frm.strIntCode <> "" And Not frm.strIntCode Is DBNull.Value Then
+                        WORKTYPE = PREVENTIVE
+                    Else
+                        WORKTYPE = CONDITIONAL
+                    End If
+                End If
+                'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text,
+                '                                          strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc"), WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2), , frm.cboRankCode.Text) 'neil
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                               Replace(frm.cboMaintenance.Text, "->", " - ") & " : " & frm.cboMaintenance.Text & " maintenance",
+                                              strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+
                 sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
 
                 frm.MainView.CloseEditor()
                 frm.MainView.UpdateCurrentRow()
                 For i = 0 To frm.MainView.RowCount - 1
                     If frm.MainView.GetRowCellValue(i, "Edited") Then
+                        'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                        '                                         frm.cboMaintenance.Text & " : Part " & frm.MainView.GetRowCellDisplayText(i, "Part"),
+                        '                                         strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc"), WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2), , frm.cboRankCode.Text) 'neil
                         LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
-                                                                 frm.cboMaintenance.Text & " : Part " & frm.MainView.GetRowCellDisplayText(i, "Part"),
-                                                                 strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc"), , IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2), , frm.cboRankCode.Text) 'neil
+                                                                Replace(frm.cboMaintenance.Text, "->", " - ") & " : Part " & frm.MainView.GetRowCellDisplayText(i, "Part"),
+                                                                strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0), WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+
                         sqls.Add("INSERT INTO [dbo].[tblPartConsumption]([PartCode],[MaintenanceWorkID],[DateConsumed],[Number],[Remarks],[LastUpdatedBy])" & _
                          "SELECT '" & frm.MainView.GetRowCellValue(i, "PartCode") & "',[MaintenanceWorkID],[WorkDate]," & frm.MainView.GetRowCellValue(i, "Number") & ",'" & strDesc & " - " & frm.cboMaintenance.Text & "','" & LastUpdatedBy & "' FROM [dbo].[tblMaintenanceWork] WHERE UnitCode='" & frm.cboUnit.EditValue & "' AND MaintenanceCode='" & frm.cboMaintenance.EditValue & "' AND bLatest=1")
                     End If
