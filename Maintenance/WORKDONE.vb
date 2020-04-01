@@ -418,7 +418,7 @@ Public Class WORKDONE
                     sqls.Add("DELETE FROM dbo.tblMaintenanceWork WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
                     'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Maintenance", strCaption, , 0, strDesc) 'neil
-                    sqls.Add("UPDATE t SET bLatest=1,LastUpdatedBy='" & LastUpdatedBy & "' FROM dbo.tblMaintenanceWork t INNER JOIN (SELECT TOP 1 MaintenanceWorkID FROM dbo.tblMaintenanceWork WHERE UnitCode='" & strUnitCode & "' AND MaintenanceCode='" & strMaintenanceCode & "' ORDER BY WorkDate DESC) tx ON t.MaintenanceWorkID=tx.MaintenanceWorkID")
+                    sqls.Add("UPDATE t SET bLatest=1,LastUpdatedBy='" & GetUserName() & "' FROM dbo.tblMaintenanceWork t INNER JOIN (SELECT TOP 1 MaintenanceWorkID FROM dbo.tblMaintenanceWork WHERE UnitCode='" & strUnitCode & "' AND MaintenanceCode='" & strMaintenanceCode & "' ORDER BY WorkDate DESC) tx ON t.MaintenanceWorkID=tx.MaintenanceWorkID")
 
                     'clsAudit.saveAuditPreDelDetails("tblNC", MainView.GetFocusedRowCellValue("MaintenanceWorkID"), LastUpdatedBy)
                     sqls.Add("DELETE FROM dbo.tblNC WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))

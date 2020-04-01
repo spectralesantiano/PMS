@@ -1252,4 +1252,29 @@ Public Class Audit
             Me.lkuRank.EditValue = Nothing
         End If
     End Sub
+
+    Public Overrides Sub SetLayout(strLayout As String)
+        GridViewLog.RestoreLayoutFromStream(StringToStream(strLayout))
+
+    End Sub
+
+    Public Overrides Function GetLayout() As String
+        Dim str As New System.IO.MemoryStream
+        GridViewLog.SaveLayoutToStream(str)
+        Return StreamToString(str)
+    End Function
+
+    Public Sub SaveLayout(ByVal fileName As String)
+        GridViewLog.SaveLayoutToXml(fileName)
+    End Sub
+
+    Public Overrides Sub SendAcceptAnyValue(name As String, value As Object)
+        If name = "SplitterPosition" Then
+            Me.SplitterItem1.X = Convert.ToInt32(value)
+        End If
+    End Sub
+
+    Private Sub SplitterItem1_MouseUp(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles SplitterItem1.MouseUp
+        iSplitterPos = Me.SplitterItem1.X
+    End Sub
 End Class

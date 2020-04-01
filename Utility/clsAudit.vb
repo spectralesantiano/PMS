@@ -298,7 +298,7 @@ Public Class clsAudit
     ''' <param name="sMachine"></param>
     ''' <param name="iTypeofWork"></param>
     ''' <param name="iCritical"></param>
-    ''' <param name="Maintenance">Skipe this. Not Needed</param>
+    ''' <param name="Maintenance">Skip this. Not Needed</param>
     ''' <param name="Rank"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
@@ -313,7 +313,7 @@ Public Class clsAudit
         Try
             'Pattern is same as in the Stored proc. Pattern should be followed
             tempReturn = "<" & sUserName & "><" & sCrewID & "><" & sComputerName & "><" & iModuleCode & "><" &
-                            sDataDescrip & "><" & sScreenCaption & "><" & sActionDescrip & "><" & iAuditBa & "><" &
+                            sDataDescrip.Replace("->", ":") & "><" & sScreenCaption & "><" & sActionDescrip & "><" & iAuditBa & "><" &
                              sMachine & "><" & iTypeofWork & "><" & iCritical & "><" & Maintenance & "><" & Rank & ">"
 
         Catch ex As Exception

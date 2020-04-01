@@ -10,12 +10,12 @@ Public Class SECGROUPS
             Dim sqls As New ArrayList
 
             LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, strDesc & " Group", strCaption, , 1) 'neil
-            clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
+            'clsAudit.saveAuditPreDelDetails("tblSec_Objects", strID, LastUpdatedBy)
 
             sqls.Add("DELETE FROM dbo.tblSec_Objects WHERE SecID=" & strID & " AND SecType=1")
 
             'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group Deleted", strCaption, , 1) 'neil
-            sqls.Add("UPDATE dbo.tblSec_Users SET [Group ID]=NULL, LastUpdatedBy='" & LastUpdatedBy & "' WHERE [Group ID]=" & strID)
+            sqls.Add("UPDATE dbo.tblSec_Users SET [Group ID]=NULL, LastUpdatedBy='" & GetUserName() & "' WHERE [Group ID]=" & strID)
 
             'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Group", strCaption, , 1) 'neil
             clsAudit.saveAuditPreDelDetails("tblSec_Groups", strID, LastUpdatedBy)

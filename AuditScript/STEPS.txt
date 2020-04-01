@@ -7,6 +7,7 @@ STEPS TO ADD AUDIT FUNCTIONALITY TO PMS. DATABASE SIDE.
 	Add_lastupdatedby_tblSec_Users_Pref.sql
 	Add_lastupdatedby_tblSec_Users_Settings.sql
 	Add_lastupdatedby_tblUnitPart.sql
+	run query result of this script length_lastupdatedby.sql
 	tblSec_Users_add_realname.sql
 	To_VarChar_imp_tblAdmMaintenance.sql
 	To_VarChar_tblAdmMaintenance.sql

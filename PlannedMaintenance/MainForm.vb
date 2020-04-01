@@ -410,11 +410,21 @@ Public Class MainForm
                         gGroup.Visible = xrow(0)("PrintOption") And (xrow(0)("Permission") And 1) > 0
                     End If
                 Next
+
+                If maincontent.Name = "AUDIT" Then
+                    If IfNull(xrow(0)("ListWidth"), 0) = 0 Then
+                        maincontent.SendAcceptAnyValue("SplitterPosition", xrow(0)("ObjectListDefaultWidth"))
+                    Else
+                        maincontent.SendAcceptAnyValue("SplitterPosition", CType(xrow(0)("ListWidth"), Integer))
+                    End If
+                End If
+
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.Critical, GetAppName)
             End Try
-            bbSaveLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
-            bbResetLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            bbSaveLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS" Or cContent = "AUDIT", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+            bbResetLayout.Visibility = IIf(blList <> "" Or cContent = "WORKDUE" Or cContent = "RUNNINGHOURS" Or cContent = "AUDIT", DevExpress.XtraBars.BarItemVisibility.Always, DevExpress.XtraBars.BarItemVisibility.Never)
+
             Me.Cursor = Cursors.Default
         End If
         IsLoaded = True
@@ -565,8 +575,13 @@ Public Class MainForm
     End Sub
 
     Private Sub cmdSaveLayout_ItemClick(ByVal sender As System.Object, ByVal e As DevExpress.XtraBars.ItemClickEventArgs) Handles bbSaveLayout.ItemClick
-        If maincontent.Name = "WORKDONE" Or maincontent.Name = "WORKDUE" Or maincontent.Name = "PART" Then 'new Implementation experiment
+        If maincontent.Name = "WORKDONE" Or maincontent.Name = "WORKDUE" Or maincontent.Name = "PART" Or maincontent.Name = "AUDIT" Then 'new Implementation experiment
             Dim ListLayout As String = IIf(mainlist.Name = "   ", "", mainlist.GetLayout), ListWidth As Integer = IIf(mainlist.Name = "   ", 0, MainPanel.SplitterPosition), ContentLayout As String = maincontent.GetLayout, i As Integer
+
+            If maincontent.Name = "AUDIT" Then
+                ListWidth = maincontent.iSplitterPos
+            End If
+
             PMSDB.InitSqlWithParametersSP("UPDATEUSERSETTINGS")
             PMSDB.AddSqlParameter("@UserID", SqlDbType.Int, USER_ID)
             PMSDB.AddSqlParameter("@ObjectID", SqlDbType.Text, maincontent.Name)

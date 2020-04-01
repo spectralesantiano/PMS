@@ -26,6 +26,8 @@
     Public Event OnSwitchContent(ByVal sender As String, ByVal value As String, ByVal cmd() As String) 'Event that will let to sub class to switch to another class.
     Public Event OnCustomEvent(ByVal sender As String, ByVal param() As Object) 'Event that will fire  when the user edit sub class data. This will enable the save button on main form.
 
+    Public iSplitterPos As Integer 'use in audit
+
     'Custom layout saving.
     Public Overridable Sub SetLayout(strLayout As String)
 
@@ -466,5 +468,9 @@
             If Not bFormatOnly Then CType(ctr, DevExpress.XtraEditors.CheckEdit).Checked = False
             ctr.Tag = 0
         End If
+    End Sub
+
+    Public Overridable Sub SendAcceptAnyValue(name As String, value As Object) 'neil use to send any value to your form
+
     End Sub
 End Class
