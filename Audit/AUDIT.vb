@@ -743,7 +743,12 @@ Public Class Audit
                         End If
                     End If
                 End If
-
+            Case "SaveLayout"
+                GridViewLog.SaveLayoutToXml(param(1))
+            Case "RestoreLayout"
+                If System.IO.File.Exists(param(1)) Then
+                    GridViewLog.RestoreLayoutFromXml(param(1))
+                End If
         End Select
     End Sub
 
