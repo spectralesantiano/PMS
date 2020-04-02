@@ -48,12 +48,16 @@ Partial Class WORKDONE
         Me.Active = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.Critical = New DevExpress.XtraGrid.Columns.GridColumn()
         Me.CriticalDisplay = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.CreatedBy = New DevExpress.XtraGrid.Columns.GridColumn()
+        Me.replkuCreatedBY = New DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit()
+        Me.DateUpdated = New DevExpress.XtraGrid.Columns.GridColumn()
         CType(Me.header, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.header.SuspendLayout()
         CType(Me.MainGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.RemarksEdit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.replkuCreatedBY, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'header
@@ -73,7 +77,7 @@ Partial Class WORKDONE
         Me.MainGrid.LookAndFeel.SkinName = "iMaginary"
         Me.MainGrid.MainView = Me.MainView
         Me.MainGrid.Name = "MainGrid"
-        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RemarksEdit, Me.NumberEdit})
+        Me.MainGrid.RepositoryItems.AddRange(New DevExpress.XtraEditors.Repository.RepositoryItem() {Me.RemarksEdit, Me.NumberEdit, Me.replkuCreatedBY})
         Me.MainGrid.Size = New System.Drawing.Size(1149, 488)
         Me.MainGrid.TabIndex = 8
         Me.MainGrid.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.MainView})
@@ -93,7 +97,7 @@ Partial Class WORKDONE
         Me.MainView.Appearance.ViewCaption.Options.UseTextOptions = True
         Me.MainView.Appearance.ViewCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near
         Me.MainView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
-        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.PrevDueDate, Me.PrevDueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.AddedImages, Me.DeletedImages, Me.Locked, Me.DueDate, Me.DueCounter, Me.Active, Me.Critical, Me.CriticalDisplay})
+        Me.MainView.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.MaintenanceWorkID, Me.UnitCode, Me.Description, Me.Maintenance, Me.WorkDate, Me.WorkCounter, Me.ExecutedBy, Me.Abbrv, Me.Remarks, Me.PrevDueDate, Me.PrevDueCounter, Me.bNC, Me.Edited, Me.bLatest, Me.MaintenanceCode, Me.RankCode, Me.AddedImages, Me.DeletedImages, Me.Locked, Me.DueDate, Me.DueCounter, Me.Active, Me.Critical, Me.CriticalDisplay, Me.CreatedBy, Me.DateUpdated})
         Me.MainView.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None
         Me.MainView.GridControl = Me.MainGrid
         Me.MainView.GroupFormat = "{1} {2}"
@@ -143,7 +147,7 @@ Partial Class WORKDONE
         Me.Description.SortMode = DevExpress.XtraGrid.ColumnSortMode.DisplayText
         Me.Description.Visible = True
         Me.Description.VisibleIndex = 0
-        Me.Description.Width = 105
+        Me.Description.Width = 83
         '
         'RemarksEdit
         '
@@ -158,7 +162,7 @@ Partial Class WORKDONE
         Me.Maintenance.Name = "Maintenance"
         Me.Maintenance.Visible = True
         Me.Maintenance.VisibleIndex = 2
-        Me.Maintenance.Width = 80
+        Me.Maintenance.Width = 63
         '
         'WorkDate
         '
@@ -170,7 +174,7 @@ Partial Class WORKDONE
         Me.WorkDate.Name = "WorkDate"
         Me.WorkDate.Visible = True
         Me.WorkDate.VisibleIndex = 5
-        Me.WorkDate.Width = 81
+        Me.WorkDate.Width = 80
         '
         'WorkCounter
         '
@@ -183,7 +187,7 @@ Partial Class WORKDONE
         Me.WorkCounter.Name = "WorkCounter"
         Me.WorkCounter.Visible = True
         Me.WorkCounter.VisibleIndex = 6
-        Me.WorkCounter.Width = 91
+        Me.WorkCounter.Width = 90
         '
         'NumberEdit
         '
@@ -199,7 +203,7 @@ Partial Class WORKDONE
         Me.ExecutedBy.Name = "ExecutedBy"
         Me.ExecutedBy.Visible = True
         Me.ExecutedBy.VisibleIndex = 7
-        Me.ExecutedBy.Width = 85
+        Me.ExecutedBy.Width = 67
         '
         'Abbrv
         '
@@ -209,7 +213,7 @@ Partial Class WORKDONE
         Me.Abbrv.Name = "Abbrv"
         Me.Abbrv.Visible = True
         Me.Abbrv.VisibleIndex = 8
-        Me.Abbrv.Width = 71
+        Me.Abbrv.Width = 70
         '
         'Remarks
         '
@@ -219,7 +223,7 @@ Partial Class WORKDONE
         Me.Remarks.Name = "Remarks"
         Me.Remarks.Visible = True
         Me.Remarks.VisibleIndex = 9
-        Me.Remarks.Width = 327
+        Me.Remarks.Width = 96
         '
         'PrevDueDate
         '
@@ -232,7 +236,7 @@ Partial Class WORKDONE
         Me.PrevDueDate.Name = "PrevDueDate"
         Me.PrevDueDate.Visible = True
         Me.PrevDueDate.VisibleIndex = 3
-        Me.PrevDueDate.Width = 101
+        Me.PrevDueDate.Width = 100
         '
         'PrevDueCounter
         '
@@ -245,7 +249,7 @@ Partial Class WORKDONE
         Me.PrevDueCounter.OptionsColumn.ReadOnly = True
         Me.PrevDueCounter.Visible = True
         Me.PrevDueCounter.VisibleIndex = 4
-        Me.PrevDueCounter.Width = 135
+        Me.PrevDueCounter.Width = 133
         '
         'bNC
         '
@@ -326,7 +330,40 @@ Partial Class WORKDONE
         Me.CriticalDisplay.Name = "CriticalDisplay"
         Me.CriticalDisplay.Visible = True
         Me.CriticalDisplay.VisibleIndex = 1
-        Me.CriticalDisplay.Width = 57
+        Me.CriticalDisplay.Width = 45
+        '
+        'CreatedBy
+        '
+        Me.CreatedBy.Caption = "Record Created by"
+        Me.CreatedBy.ColumnEdit = Me.replkuCreatedBY
+        Me.CreatedBy.FieldName = "CreatedBy"
+        Me.CreatedBy.Name = "CreatedBy"
+        Me.CreatedBy.OptionsColumn.AllowEdit = False
+        Me.CreatedBy.OptionsColumn.ReadOnly = True
+        Me.CreatedBy.Visible = True
+        Me.CreatedBy.VisibleIndex = 10
+        Me.CreatedBy.Width = 93
+        '
+        'replkuCreatedBY
+        '
+        Me.replkuCreatedBY.AutoHeight = False
+        Me.replkuCreatedBY.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
+        Me.replkuCreatedBY.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("UserID", "UserID", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("fullname", "fullname")})
+        Me.replkuCreatedBY.DisplayMember = "fullname"
+        Me.replkuCreatedBY.Name = "replkuCreatedBY"
+        Me.replkuCreatedBY.NullText = ""
+        Me.replkuCreatedBY.ValueMember = "userid"
+        '
+        'DateUpdated
+        '
+        Me.DateUpdated.Caption = "Date Edited"
+        Me.DateUpdated.FieldName = "DateUpdated"
+        Me.DateUpdated.Name = "DateUpdated"
+        Me.DateUpdated.OptionsColumn.AllowEdit = False
+        Me.DateUpdated.OptionsColumn.ReadOnly = True
+        Me.DateUpdated.Visible = True
+        Me.DateUpdated.VisibleIndex = 11
+        Me.DateUpdated.Width = 96
         '
         'WORKDONE
         '
@@ -340,6 +377,7 @@ Partial Class WORKDONE
         CType(Me.MainView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.RemarksEdit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumberEdit, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.replkuCreatedBY, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -372,5 +410,8 @@ Partial Class WORKDONE
     Friend WithEvents Active As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents Critical As DevExpress.XtraGrid.Columns.GridColumn
     Friend WithEvents CriticalDisplay As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents CreatedBy As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents DateUpdated As DevExpress.XtraGrid.Columns.GridColumn
+    Friend WithEvents replkuCreatedBY As DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit
 
 End Class

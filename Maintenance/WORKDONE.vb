@@ -227,7 +227,11 @@ Public Class WORKDONE
                             strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0), getTypeOfWork(frm.cboMaintenance.Text, frm.strIntCode),
                             IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
 
-            sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
+            sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter],[CreatedBy]) Values('" &
+                     frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & _
+                     frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & _
+                     IfNull(frm.pDueCounter, "NULL") & "," & USER_ID & ")")
+
             frm.MainView.CloseEditor()
             frm.MainView.UpdateCurrentRow()
 
@@ -296,6 +300,7 @@ Public Class WORKDONE
         bCritical = IfNull(blList.GetFocusedRowData("Critical"), True)
         Me.MainView.ActiveFilterString = ""
         MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "',@bFlatView=" & CURRENT_FLATVIEW_CHECKED & ",@bCritical=" & CURRENT_CRITICAL_CHECKED)
+        Me.replkuCreatedBY.DataSource = DB.CreateTable("select tblSec_Users.[User ID] as userid,isnull(tblSec_Users.lName,'') + isnull(', ' + tblSec_Users.FName,'') +  isnull(' ' + tblSec_Users.MName,'') as fullname from tblSec_Users")
 
         clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 
