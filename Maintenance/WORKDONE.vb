@@ -295,12 +295,13 @@ Public Class WORKDONE
             bLoaded = True
         End If
         MyBase.RefreshData()
+        Me.replkuCreatedBY.DataSource = DB.CreateTable("select tblSec_Users.[User ID] as userid,isnull(tblSec_Users.lName,'') + isnull(', ' + tblSec_Users.FName,'') +  isnull(' ' + tblSec_Users.MName,'') as fullname from tblSec_Users")
         SetSaveVisibility(Name, DevExpress.XtraBars.BarItemVisibility.Never)
         If Not CURRENT_FLATVIEW_CHECKED Then bActiveUnit = IfNull(blList.GetFocusedRowData("Active"), True)
         bCritical = IfNull(blList.GetFocusedRowData("Critical"), True)
         Me.MainView.ActiveFilterString = ""
         MainGrid.DataSource = DB.CreateTable("EXEC dbo.[MAINTENANCEWORK] @strUnitCode='" & strID & "',@bFlatView=" & CURRENT_FLATVIEW_CHECKED & ",@bCritical=" & CURRENT_CRITICAL_CHECKED)
-        Me.replkuCreatedBY.DataSource = DB.CreateTable("select tblSec_Users.[User ID] as userid,isnull(tblSec_Users.lName,'') + isnull(', ' + tblSec_Users.FName,'') +  isnull(' ' + tblSec_Users.MName,'') as fullname from tblSec_Users")
+      
 
         clsAudit.propSQLConnStr = DB.GetConnectionString '& "Password=" & SQL_PASSWORD  'neil
 

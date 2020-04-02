@@ -348,7 +348,7 @@ Partial Class WORKDONE
         '
         Me.replkuCreatedBY.AutoHeight = False
         Me.replkuCreatedBY.Buttons.AddRange(New DevExpress.XtraEditors.Controls.EditorButton() {New DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)})
-        Me.replkuCreatedBY.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("UserID", "UserID", 20, DevExpress.Utils.FormatType.None, "", False, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("fullname", "fullname")})
+        Me.replkuCreatedBY.Columns.AddRange(New DevExpress.XtraEditors.Controls.LookUpColumnInfo() {New DevExpress.XtraEditors.Controls.LookUpColumnInfo("userid", "Name40", 20, DevExpress.Utils.FormatType.Numeric, "", True, DevExpress.Utils.HorzAlignment.[Default]), New DevExpress.XtraEditors.Controls.LookUpColumnInfo("fullname", "Name39")})
         Me.replkuCreatedBY.DisplayMember = "fullname"
         Me.replkuCreatedBY.Name = "replkuCreatedBY"
         Me.replkuCreatedBY.NullText = ""
@@ -356,7 +356,7 @@ Partial Class WORKDONE
         '
         'DateUpdated
         '
-        Me.DateUpdated.Caption = "Date Edited"
+        Me.DateUpdated.Caption = "Last Edited"
         Me.DateUpdated.FieldName = "DateUpdated"
         Me.DateUpdated.Name = "DateUpdated"
         Me.DateUpdated.OptionsColumn.AllowEdit = False

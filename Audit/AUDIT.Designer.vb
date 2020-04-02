@@ -475,7 +475,7 @@ Partial Class Audit
         '
         Me.LayoutControl2.Controls.Add(Me.LayoutControl3)
         Me.LayoutControl2.Controls.Add(Me.GridAudit)
-        Me.LayoutControl2.Location = New System.Drawing.Point(12, -211)
+        Me.LayoutControl2.Location = New System.Drawing.Point(12, 12)
         Me.LayoutControl2.Name = "LayoutControl2"
         Me.LayoutControl2.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = New System.Drawing.Rectangle(482, 222, 491, 350)
         Me.LayoutControl2.Root = Me.Root
@@ -886,7 +886,7 @@ Partial Class Audit
         '
         Me.LayoutControlItem15.Control = Me.lblOf
         Me.LayoutControlItem15.Location = New System.Drawing.Point(221, 494)
-        Me.LayoutControlItem15.MaxSize = New System.Drawing.Size(80, 30)
+        Me.LayoutControlItem15.MaxSize = New System.Drawing.Size(60, 30)
         Me.LayoutControlItem15.MinSize = New System.Drawing.Size(14, 30)
         Me.LayoutControlItem15.Name = "LayoutControlItem15"
         Me.LayoutControlItem15.Size = New System.Drawing.Size(47, 30)
@@ -932,6 +932,7 @@ Partial Class Audit
         '
         Me.layCurrentBatch.BestFitWeight = 0
         Me.layCurrentBatch.Control = Me.txtCurrentBatch
+        Me.layCurrentBatch.ControlAlignment = System.Drawing.ContentAlignment.MiddleCenter
         Me.layCurrentBatch.Location = New System.Drawing.Point(151, 494)
         Me.layCurrentBatch.MaxSize = New System.Drawing.Size(70, 30)
         Me.layCurrentBatch.MinSize = New System.Drawing.Size(54, 30)
@@ -1107,7 +1108,7 @@ Partial Class Audit
         Me.LayoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.[True]
         Me.LayoutControlGroup1.GroupBordersVisible = False
         Me.LayoutControlGroup1.Items.AddRange(New DevExpress.XtraLayout.BaseLayoutItem() {Me.LayoutControlItem2})
-        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, -223)
+        Me.LayoutControlGroup1.Location = New System.Drawing.Point(0, 0)
         Me.LayoutControlGroup1.Name = "Root"
         Me.LayoutControlGroup1.Size = New System.Drawing.Size(908, 636)
         Me.LayoutControlGroup1.TextVisible = False
