@@ -112,11 +112,16 @@ Public Class WORKDUE
                 'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.Text,
                 '                                          strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc"), WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2), , frm.cboRankCode.Text) 'neil
                 WORKTYPE = getTypeOfWork(frm.cboMaintenance.Text, frm.strIntCode)
+                'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                '                               Replace(frm.cboMaintenance.Text, "->", " - ") & " : " & frm.cboMaintenance.Text,
+                '                              strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0),
+                '                               WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
+                '                              frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
                 LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
-                                               Replace(frm.cboMaintenance.Text, "->", " - ") & " : " & frm.cboMaintenance.Text,
-                                              strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0),
-                                               WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
-                                              frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+                                           Replace(frm.cboMaintenance.Text, "->", " - "),
+                                          strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0),
+                                           WORKTYPE, IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
+                                          frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
 
                 sqls.Add("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],[bNC],[HasImage],[Locked],[DateAdded],[PrevDueDate],[PrevDueCounter]) Values('" & frm.cboUnit.EditValue & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0," & IIf(frm.IView.RowCount > 0, 1, 0) & ", 0," & ChangeToSQLDate(Now.Date) & "," & IfNull(frm.pDueDate, "NULL") & "," & IfNull(frm.pDueCounter, "NULL") & ")")
 
@@ -187,11 +192,16 @@ Public Class WORKDUE
             End Select
 
             'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, frm.cboMaintenance.EditValue & " Maintenance Work", strCaption, , 1, ) 'neil
+            'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+            '                             Replace(frm.cboMaintenance.Text, "->", " - ") & " : " & frm.cboMaintenance.Text,
+            '                             strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0),
+            '                              getTypeOfWork(frm.cboMaintenance.Text, frm.strIntCode), IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
+            '                              frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
             LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
-                                         Replace(frm.cboMaintenance.Text, "->", " - ") & " : " & frm.cboMaintenance.Text,
-                                         strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0),
-                                          getTypeOfWork(frm.cboMaintenance.Text, frm.strIntCode), IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
-                                          frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+                                       Replace(frm.cboMaintenance.Text, "->", " - "),
+                                       strCaption, , 1, MainView.GetFocusedRowCellValue("UnitDesc").Split(New String() {" ->"}, 0)(0),
+                                        getTypeOfWork(frm.cboMaintenance.Text, frm.strIntCode), IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
+                                        frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
 
 
             DB.RunSql("Insert Into dbo.tblMaintenanceWork([UnitCode],[MaintenanceCode],[ExecutedBy],[RankCode],[WorkDate],[WorkCounter],[Remarks],[DueCounter],[DueDate],[LastUpdatedBy],bNC) Values('" & strID & "', '" & frm.cboMaintenance.EditValue & "', '" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', '" & frm.cboRankCode.EditValue & "'," & ChangeToSQLDate(frm.txtWorkDate.EditValue) & "," & strCounter & ",'" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "'," & strDueCounter & "," & strDateDue & ",'" & LastUpdatedBy & "',0)")
@@ -298,12 +308,16 @@ Public Class WORKDUE
                     '                                       MainView.GetFocusedRowCellDisplayText("Maintenance"),
                     '                                      strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0)) 'neil
 
+                    'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                    '                        Replace(strDesc, "->", " - ") & " : " & MainView.GetFocusedRowCellDisplayText("Maintenance"),
+                    '                       strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0),
+                    '                       , IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
+                    '                       MainView.GetFocusedRowCellDisplayText("Maintenance"), MainView.GetFocusedRowCellDisplayText("Rank")) 'neil
                     LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
-                                            Replace(strDesc, "->", " - ") & " : " & MainView.GetFocusedRowCellDisplayText("Maintenance"),
+                                            Replace(strDesc, "->", " - "),
                                            strCaption, , 1, strDesc.Split(New String() {" ->"}, 0)(0),
                                            , IIf(MainView.GetFocusedRowCellValue("Critical"), 1, 2),
                                            MainView.GetFocusedRowCellDisplayText("Maintenance"), MainView.GetFocusedRowCellDisplayText("Rank")) 'neil
-
                     clsAudit.saveAuditPreDelDetails("tblMaintenanceWork", MainView.GetFocusedRowCellValue("MaintenanceWorkID"), LastUpdatedBy)
 
                     sqls.Add("DELETE FROM dbo.tblMaintenanceWork WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
