@@ -288,13 +288,13 @@ Public Class clsAudit
     ''' 
     ''' </summary>
     ''' <param name="sUserName"></param>
-    ''' <param name="sActionDescrip"></param>
+    ''' <param name="sActionDescrip"> Automatic unless enter any string </param>
     ''' <param name="iModuleCode"></param>
     ''' <param name="sComputerName"></param>
     ''' <param name="sDataDescrip"></param>
     ''' <param name="sScreenCaption"></param>
     ''' <param name="sCrewID"></param>
-    ''' <param name="iAuditBa"></param>
+    ''' <param name="iAuditBa"> pass 1 to trigger audit </param>
     ''' <param name="sMachine"></param>
     ''' <param name="iTypeofWork"></param>
     ''' <param name="iCritical"></param>

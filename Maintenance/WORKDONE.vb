@@ -134,7 +134,11 @@ Public Class WORKDONE
             Next
 
             If frm.strDeletedImages <> "" Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , 1, strDesc) 'neil
+                'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , 1, strDesc) 'neil
+
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                            Replace(strDesc, "->", " - ").Substring(macname.Length) & " : " & frm.cboMaintenance.Text & " : Document",
+                                            strCaption, , 1, macname, WORKTYPE, IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
 
                 Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
                 For Each strDocID In strDeletedID
@@ -144,10 +148,15 @@ Public Class WORKDONE
             End If
 
             If frm.strAddedImages <> "" Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , 1, strDesc) 'neil
+                'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Document", strCaption, , 1, strDesc) 'neil
 
                 Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                 For Each strImg In strImages
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                         Replace(strDesc, "->", " - ").Substring(macname.Length) & " : " & frm.cboMaintenance.Text & " : Document " & strImg,
+                                         strCaption, , 1, macname, WORKTYPE, IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+
                     sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc, LastUpdateBy) VALUES('" & frm.nMaintenanceID.ToString.Trim & "','WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "','" & LastUpdatedBy & "')")
                 Next
             End If
@@ -253,7 +262,13 @@ Public Class WORKDONE
 
             If frm.strDeletedImages <> "" Then
                 Dim strDeletedID() As String = frm.strDeletedImages.ToString.Split(";"c), strDocID As String
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , 1, strDesc) 'neil
+
+                'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , 1, strDesc) 'neil
+
+                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                       Replace(strDesc, "->", " - ").Substring(macname.Length) & " : " & frm.cboMaintenance.Text & " : Documents",
+                                       strCaption, , 1, macname, WORKTYPE, IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+
                 For Each strDocID In strDeletedID
                     clsAudit.saveAuditPreDelDetails("tblDocuments", strDocID, LastUpdatedBy)
 
@@ -262,10 +277,15 @@ Public Class WORKDONE
             End If
 
             If frm.strAddedImages <> "" Then
-                LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , 1, strDesc) 'neil
+                'LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName, "Documents", strCaption, , 1, strDesc) 'neil
 
                 Dim strImages() As String = frm.strAddedImages.ToString.Split(";"c), strImg As String
                 For Each strImg In strImages
+
+                    LastUpdatedBy = clsAudit.AssembleLastUBy(USER_REAL, "", 10, System.Environment.MachineName,
+                                     Replace(strDesc, "->", " - ").Substring(macname.Length) & " : " & frm.cboMaintenance.Text & " : Documents " & strImg,
+                                     strCaption, , 1, macname, WORKTYPE, IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
+
                     sqls.Add("INSERT INTO dbo.tblDocuments(RefID, DocType, FileName, Doc, LastUpdatedBy) VALUES([dbo].[GETMAINTENANCEWORKID]('" & frm.cboMaintenance.EditValue & "','" & frm.cboUnit.EditValue & "'),'WORKDONE', '" & strImg & "','" & SetDefaultImageSizeToString(New Bitmap(strImg)) & "','" & LastUpdatedBy & "')")
                 Next
             End If
@@ -420,7 +440,7 @@ Public Class WORKDONE
                                                              Replace(strDesc, "->", " - ").Substring(macname.Length) & " : " & MainView.GetFocusedRowCellDisplayText("Maintenance"),
                                                              strCaption, , 1, macname,
                                                              getTypeOfWork(MainView.GetFocusedRowCellDisplayText("Maintenance"), DB.DLookUp("IntCode", "tblAdmMaintenance", "MaintenanceCode='" & MainView.GetFocusedRowCellDisplayText("MaintenanceCode") & "'")),
-                                                             IIf(MainView.GetFocusedRowCellDisplayText("Critical") = 1, 1, 2), , MainView.GetFocusedRowCellDisplayText("Abbrv")) 'neil
+                                                             IIf(bCritical, 1, 2), , MainView.GetFocusedRowCellDisplayText("Abbrv")) 'neil
                     clsAudit.saveAuditPreDelDetails("tblMaintenanceWork", MainView.GetFocusedRowCellValue("MaintenanceWorkID"), LastUpdatedBy)
 
                     sqls.Add("DELETE FROM dbo.tblMaintenanceWork WHERE MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
