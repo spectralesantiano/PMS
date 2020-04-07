@@ -113,7 +113,12 @@ Public Class WORKDONE
                                                   strCaption, , 1, macname, WORKTYPE,
                                                   IIf(bCritical, 1, 2), frm.cboMaintenance.Text, frm.cboRankCode.Text) 'neil
 
-            sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") & "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) & ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") & "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", LastUpdatedBy='" & LastUpdatedBy & "', HasImage=" & IIf(frm.IView.RowCount > 0, 1, 0) & " Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
+            sqls.Add("Update dbo.tblMaintenanceWork set ExecutedBy='" & frm.txtExecutedBy.EditValue.ToString.Replace("'", "''") &
+                     "', RankCode='" & frm.cboRankCode.EditValue & "', WorkDate=" & ChangeToSQLDate(frm.txtWorkDate.EditValue) &
+                     ", WorkCounter=" & strCounter & ", Remarks='" & frm.txtRemarks.EditValue.ToString.Replace("'", "''") &
+                     "', DueCounter=" & strDueCounter & ", DueDate=" & strDateDue & ", LastUpdatedBy='" & LastUpdatedBy &
+                     "', HasImage=" & IIf(frm.IView.RowCount > 0, 1, 0) & ", CreatedBy = " & USER_ID &
+                     " Where MaintenanceWorkID=" & MainView.GetFocusedRowCellValue("MaintenanceWorkID"))
 
             frm.MainView.CloseEditor()
             frm.MainView.UpdateCurrentRow()
@@ -169,7 +174,8 @@ Public Class WORKDONE
             MainView.SetRowCellValue(MainView.FocusedRowHandle, "Remarks", frm.txtRemarks.EditValue)
             If strDueCounter <> "null" Then MainView.SetRowCellValue(MainView.FocusedRowHandle, "DueCounter", strDueCounter)
             If strDateDue <> "null" Then MainView.SetRowCellValue(MainView.FocusedRowHandle, "DueDate", dDueDate)
-            MainView.RefreshRow(MainView.FocusedRowHandle)
+            'MainView.RefreshRow(MainView.FocusedRowHandle)
+            RefreshData()
         End If
     End Sub
 
