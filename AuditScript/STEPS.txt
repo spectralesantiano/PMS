@@ -16,6 +16,7 @@ STEPS TO ADD AUDIT FUNCTIONALITY TO PMS. DATABASE SIDE.
 	ALTER VIEW [dbo].[USERLIST].sql
 	ALTER VIEW [dbo].[LOGIN].sql
 	alter tblPlannedWork.sql
+	create TRIGGER [dbo].[tblMaintenanceWork_AfterUpdate].sql
 
 2. Add tables/functions/procedures of audit (SHOULD BE APPLIED EVERYTIME TABLES UPDATED)
 	Audit_Setup_1.sql
